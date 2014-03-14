@@ -40,6 +40,7 @@ public abstract class IdUtil {
         IdEntity idEntity = idDAO.loadById(1);
         if (idEntity == null) {
             idEntity = new IdEntity();
+            idEntity.id = 1;
         }
         return idEntity;
     }

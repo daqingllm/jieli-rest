@@ -35,6 +35,7 @@ public class UserDAOTest {
 
         User newUser = userDAO.loadById(userId);
         System.out.println(newUser.getObjectId().toString());
+        System.out.println(newUser.id);
         System.out.println(newUser.person.name);
         for (InterestTag interestTag : newUser.interestTags) {
             System.out.println(interestTag);
