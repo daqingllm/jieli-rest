@@ -17,18 +17,18 @@ import java.io.Serializable;
  */
 public class Model implements Serializable {
     @JsonProperty("_id")
-    protected ObjectId id;
+    protected ObjectId objectId;
 
     @XmlJavaTypeAdapter(ObjectIdAdaptor.class)
-    public org.bson.types.ObjectId getId() {
-        return id;
+    public org.bson.types.ObjectId getObjectId() {
+        return objectId;
     }
 
-    public void setId(org.bson.types.ObjectId id) {
-        this.id = id;
+    public void setObjectId(org.bson.types.ObjectId id) {
+        this.objectId = id;
     }
 
-    public String name="";
+    public int id = 0;
 
     @Override
     public boolean equals(Object o) {
@@ -37,24 +37,21 @@ public class Model implements Serializable {
 
         Model model = (Model) o;
 
-        if (!id.equals(model.id)) return false;
-        if (!name.equals(model.name)) return false;
+        if (!objectId.equals(model.objectId)) return false;
+        if (id != model.id) return false;
 
         return true;
     }
 
     @Override
-    public int hashCode() {
-        if(id==null){
-            return name.hashCode();
-        }
-        int result = id.hashCode();
-        result = 31 * result + name.hashCode();
-        return result;
+    public String toString() {
+        return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
     }
 
     @Override
-    public String toString() {
-        return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+    public int hashCode() {
+        int result = objectId.hashCode();
+        result = 31 * result + id;
+        return result;
     }
 }

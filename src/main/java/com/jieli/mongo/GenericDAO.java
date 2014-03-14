@@ -19,8 +19,8 @@ public abstract class GenericDAO<T extends Model> {
         this.col = JongoClient.getInstance().getCollection(StringUtils.lowerCase(getType().getSimpleName()));
     }
 
-    public T loadByName(String name) {
-        return col.findOne("{name:#}", name).as(getType());
+    public T loadById(int id) {
+        return col.findOne("{id:#}", id).as(getType());
     }
 
     public Iterable<T> find(String query, Object... params) {
@@ -32,13 +32,13 @@ public abstract class GenericDAO<T extends Model> {
         return t;
     }
 
-    public T updateByName(T t) {
-        col.update("{name:'" + t.name + "'}").merge(t);
+    public T updateById(T t) {
+        col.update("{id:'" + t.id + "'}").merge(t);
         return t;
     }
 
-    public void deleteByName(String name) {
-        col.remove("{name:#}", name);
+    public void deleteById(int id) {
+        col.remove("{id:#}", id);
     }
 
     private Class<T> getType(){

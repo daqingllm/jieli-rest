@@ -16,6 +16,7 @@ import javax.ws.rs.core.MediaType;
 public class HelloService {
     // This method is called if TEXT_PLAIN is request
     @GET
+    @Path("/hello1")
     @Produces(MediaType.TEXT_PLAIN)
     public String sayPlainTextHello() {
         return "Hello Jersey";
@@ -23,6 +24,7 @@ public class HelloService {
 
     // This method is called if XML is request
     @GET
+    @Path("/hello1")
     @Produces(MediaType.TEXT_XML)
     public String sayXMLHello() {
         return "<?xml version=\"1.0\"?>" + "<hello> Hello Jersey" + "</hello>";
@@ -30,6 +32,7 @@ public class HelloService {
 
     // This method is called if HTML is request
     @GET
+    @Path("/hello1")
     @Produces(MediaType.TEXT_HTML)
     public String sayHtmlHello() {
         return "<html> " + "<title>" + "Hello Jersey" + "</title>"
