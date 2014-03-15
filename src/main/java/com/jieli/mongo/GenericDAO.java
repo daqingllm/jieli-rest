@@ -41,6 +41,11 @@ public abstract class GenericDAO<T extends Model> {
         col.remove("{id:#}", id);
     }
 
+    //慎用，测试使用
+    public void clear() {
+        col.remove();
+    }
+
     private Class<T> getType(){
         ParameterizedType type = (ParameterizedType)this.getClass().getGenericSuperclass();
         return (Class) type.getActualTypeArguments()[0];
