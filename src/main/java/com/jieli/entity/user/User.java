@@ -14,15 +14,40 @@ import java.util.List;
  */
 public class User extends Model {
 
+    //头像
     public String userFace;
 
-    public PersonalDetail person;
+    public String name;
 
-    public AppInfo appInfo;
+    //0：女，1：男
+    public int sex;
 
-    public Education education;
+    public String birthday;
 
-    public Contact contact;
+    //星座
+    public String constellation;
+
+    //协会身份
+    public String identity;
+
+    //积分
+    public int score;
+
+    //0：国内，1：海外
+    public String area;
+
+    public String school;
+
+    public String degree;
+
+    //行业、专业
+    public String profession;
+
+    public String phone;
+
+    public String mail;
+
+    public String weixin;
 
     public List<InterestTag> interestTags;
 }

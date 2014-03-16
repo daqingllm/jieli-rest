@@ -11,4 +11,5 @@ import com.jieli.mongo.GenericDAO;
  * To change this template use File | Settings | File Templates.
  */
 public class UserDAO extends GenericDAO<User> {
+
 }

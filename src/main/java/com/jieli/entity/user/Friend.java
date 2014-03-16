@@ -3,15 +3,15 @@ package com.jieli.entity.user;
 /**
  * Created with IntelliJ IDEA.
  * User: liming_liu
- * Date: 14-3-15
- * Time: 上午12:26
+ * Date: 14-3-16
+ * Time: 下午3:23
  * To change this template use File | Settings | File Templates.
  */
-public class Contact {
+public class Friend {
 
-    public String phone;
+    public int userId;
 
-    public String mail;
+    public boolean special;
 
-    public String weixin;
+    public String group;
 }

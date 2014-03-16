@@ -51,9 +51,8 @@ public class AccountService {
         } else {
             responseEntity.code = 200;
             responseEntity.msg = "登陆成功";
-            User user = userDAO.loadById(account.userId);
             JSONObject json = new JSONObject();
-            json.put("sessionId", user.getObjectId());
+            json.put("sessionId", account.getObjectId());
             responseEntity.body = json.toString();
             return Response.status(200).entity(responseEntity).build();
         }

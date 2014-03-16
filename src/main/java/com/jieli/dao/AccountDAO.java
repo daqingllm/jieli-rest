@@ -2,6 +2,7 @@ package com.jieli.dao;
 
 import com.jieli.entity.common.Account;
 import com.jieli.mongo.GenericDAO;
+import org.bson.types.ObjectId;
 
 /**
  * Created with IntelliJ IDEA.
@@ -16,4 +17,7 @@ public class AccountDAO extends GenericDAO<Account> {
         return col.findOne("{username:#}", username).as(Account.class);
     }
 
+    public Account loadByObjectId(String objectId) {
+        return col.findOne("{_id:#}", new ObjectId(objectId)).as(Account.class);
+    }
 }

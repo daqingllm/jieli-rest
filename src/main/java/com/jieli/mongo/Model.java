@@ -16,6 +16,9 @@ import java.io.Serializable;
  * To change this template use File | Settings | File Templates.
  */
 public class Model implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
     @JsonProperty("_id")
     protected ObjectId objectId;
 
