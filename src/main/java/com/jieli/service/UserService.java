@@ -1,15 +1,16 @@
 package com.jieli.service;
 
-import com.jieli.dao.DirectoryDAO;
-import com.jieli.dao.UserDAO;
-import com.jieli.entity.common.ResponseEntity;
-import com.jieli.entity.user.Directory;
-import com.jieli.entity.user.Friend;
-import com.jieli.entity.user.User;
-import com.jieli.entity.user.UserBasicInfo;
+import com.jieli.user.dao.DirectoryDAO;
+import com.jieli.user.dao.UserDAO;
+import com.jieli.common.entity.ResponseEntity;
+import com.jieli.user.entity.Directory;
+import com.jieli.user.entity.Friend;
+import com.jieli.user.entity.User;
+import com.jieli.user.entity.UserBasicInfo;
 import com.jieli.util.CollectionUtils;
 import com.jieli.util.IdentifyUtils;
 import org.apache.commons.lang.StringUtils;
+import org.bson.types.ObjectId;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -38,14 +39,13 @@ public class UserService {
         }
 
         ResponseEntity responseEntity = new ResponseEntity();
-        if (StringUtils.isEmpty(userId) || !StringUtils.isNumeric(userId)) {
+        if (StringUtils.isEmpty(userId)) {
             responseEntity.code = 1101;
-            responseEntity.msg = "参数错误";
+            responseEntity.msg = "缺少参数";
             return Response.status(200).entity(responseEntity).build();
         }
 
-        int uid = Integer.parseInt(userId);
-        User user = userDAO.loadById(uid);
+        User user = userDAO.loadById(userId);
         if (user == null) {
             responseEntity.code = 1102;
             responseEntity.msg = "用户不存在";
@@ -66,8 +66,8 @@ public class UserService {
         }
 
         ResponseEntity responseEntity = new ResponseEntity();
-        int userId = IdentifyUtils.getUserId(sessionId);
-        if (userId < 0) {
+        String userId = IdentifyUtils.getUserId(sessionId);
+        if (StringUtils.isEmpty(userId)) {
             responseEntity.code = 1103;
             responseEntity.msg = "账户出错";
             return Response.status(200).entity(responseEntity).build();
@@ -94,9 +94,9 @@ public class UserService {
         }
 
         ResponseEntity responseEntity = new ResponseEntity();
-        int userId = IdentifyUtils.getUserId(sessionId);
-        user.id = userId;
-        userDAO.updateById(user);
+        String userId = IdentifyUtils.getUserId(sessionId);
+        user.setObjectId(new ObjectId(userId));
+        userDAO.update(user);
         return Response.status(200).entity(responseEntity).build();
     }
 
@@ -109,7 +109,7 @@ public class UserService {
         }
 
         ResponseEntity responseEntity = new ResponseEntity();
-        int userId = IdentifyUtils.getUserId(sessionId);
+        String userId = IdentifyUtils.getUserId(sessionId);
         Directory directory = directoryDAO.loadByUserId(userId);
         if (directory == null || CollectionUtils.isEmpty(directory.content)) {
             responseEntity.code = 200;
@@ -150,7 +150,7 @@ public class UserService {
         }
 
         ResponseEntity responseEntity = new ResponseEntity();
-        int userId = IdentifyUtils.getUserId(sessionId);
+        String userId = IdentifyUtils.getUserId(sessionId);
         directoryDAO.upsertFriend(userId, friend);
         responseEntity.code = 200;
         return Response.status(200).entity(responseEntity).build();
@@ -159,19 +159,19 @@ public class UserService {
     @GET
     @Path("/directory/delete")
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-    public Response deleteFriend(@HeaderParam("sessionId")String sessionId, @QueryParam("userId")String userId) {
+    public Response deleteFriend(@HeaderParam("sessionId")String sessionId, @QueryParam("friendId")String friendId) {
         if (!IdentifyUtils.isValidate(sessionId)) {
             return Response.status(403).build();
         }
         ResponseEntity responseEntity = new ResponseEntity();
-        if (StringUtils.isEmpty(userId) || !StringUtils.isNumeric(userId)) {
+        if (StringUtils.isEmpty(friendId)) {
             responseEntity.code = 1101;
-            responseEntity.msg = "参数错误";
+            responseEntity.msg = "缺少参数";
             return Response.status(200).entity(responseEntity).build();
         }
 
-        int uid = IdentifyUtils.getUserId(sessionId);
-        directoryDAO.deleteFriend(uid, Integer.parseInt(userId));
+        String uid = IdentifyUtils.getUserId(sessionId);
+        directoryDAO.deleteFriend(uid, friendId);
         responseEntity.code = 200;
         return Response.status(200).entity(responseEntity).build();
     }

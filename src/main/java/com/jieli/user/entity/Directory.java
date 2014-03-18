@@ -1,4 +1,4 @@
-package com.jieli.entity.user;
+package com.jieli.user.entity;
 
 import com.jieli.mongo.Model;
 
@@ -13,7 +13,7 @@ import java.util.List;
  */
 public class Directory extends Model {
 
-    public int userId;
+    public String userId;
 
     public List<Friend> content;
 }

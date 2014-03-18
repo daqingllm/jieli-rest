@@ -1,4 +1,4 @@
-package com.jieli.entity.common;
+package com.jieli.common.entity;
 
 import com.jieli.mongo.Model;
 
@@ -15,7 +15,7 @@ public class Account extends Model {
 
     public String password;
 
-    public int userId;
+    public String userId;
 
     public AccountState state = AccountState.ENABLE;
 }

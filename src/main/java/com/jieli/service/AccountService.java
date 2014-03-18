@@ -1,11 +1,10 @@
 package com.jieli.service;
 
-import com.jieli.dao.AccountDAO;
-import com.jieli.dao.UserDAO;
-import com.jieli.entity.common.Account;
-import com.jieli.entity.common.ResponseEntity;
-import com.jieli.entity.user.User;
-import com.jieli.util.IdUtil;
+import com.jieli.common.entity.Account;
+import com.jieli.common.entity.ResponseEntity;
+import com.jieli.user.dao.UserDAO;
+import com.jieli.user.entity.User;
+import com.jieli.common.dao.AccountDAO;
 import com.jieli.util.PasswordGenerator;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
@@ -71,15 +70,13 @@ public class AccountService {
             return Response.status(200).entity(responseEntity).build();
         } else {
             String password = PasswordGenerator.getRandomString(8);
+            User user = new User();
+            String userId = userDAO.save(user).getObjectId().toString();
             Account newAccount = new Account();
             newAccount.username = username;
             newAccount.password = PasswordGenerator.md5Encode(password);
-            int userId = IdUtil.getUserId();
             newAccount.userId = userId;
             accountDAO.save(newAccount);
-            User user = new User();
-            user.id = userId;
-            userDAO.save(user);
 
             JSONObject json = new JSONObject();
             json.put("userId", userId);

@@ -1,4 +1,4 @@
-package com.jieli.entity.user;
+package com.jieli.user.entity;
 
 import java.io.Serializable;
 
@@ -13,7 +13,7 @@ public class UserBasicInfo implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    public int userId;
+    public String userId;
 
     public String name;
 

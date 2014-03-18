@@ -1,4 +1,4 @@
-package com.jieli.entity.common;
+package com.jieli.common.entity;
 
 import java.io.Serializable;
 

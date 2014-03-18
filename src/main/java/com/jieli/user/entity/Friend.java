@@ -1,4 +1,4 @@
-package com.jieli.entity.user;
+package com.jieli.user.entity;
 
 /**
  * Created with IntelliJ IDEA.
@@ -9,7 +9,7 @@ package com.jieli.entity.user;
  */
 public class Friend {
 
-    public int userId;
+    public String userId;
 
     public boolean special;
 

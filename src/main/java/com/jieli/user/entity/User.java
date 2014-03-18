@@ -1,6 +1,6 @@
-package com.jieli.entity.user;
+package com.jieli.user.entity;
 
-import com.jieli.entity.common.InterestTag;
+import com.jieli.common.entity.InterestTag;
 import com.jieli.mongo.Model;
 
 import java.util.List;

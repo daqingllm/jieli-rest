@@ -1,11 +1,10 @@
 package com.jieli.test.mongo;
 
-import com.jieli.dao.AccountDAO;
-import com.jieli.dao.UserDAO;
-import com.jieli.entity.common.Account;
-import com.jieli.entity.common.InterestTag;
-import com.jieli.entity.user.*;
-import com.jieli.util.IdUtil;
+import com.jieli.common.entity.Account;
+import com.jieli.common.entity.InterestTag;
+import com.jieli.user.dao.UserDAO;
+import com.jieli.user.entity.User;
+import com.jieli.common.dao.AccountDAO;
 import org.testng.annotations.Test;
 
 import java.util.ArrayList;
@@ -29,13 +28,11 @@ public class UserDAOTest {
         List<InterestTag> interestTags = new ArrayList<InterestTag>();
         interestTags.add(InterestTag.FOOTBALL);
         user.interestTags = interestTags;
-        int userId = IdUtil.getUserId();
-        user.id = userId;
-        userDAO.save(user);
+        String userId = userDAO.save(user).getObjectId().toString();
+        System.out.println(userId);
 
         User newUser = userDAO.loadById(userId);
         System.out.println(newUser.getObjectId().toString());
-        System.out.println(newUser.id);
         for (InterestTag interestTag : newUser.interestTags) {
             System.out.println(interestTag);
         }
@@ -59,7 +56,7 @@ public class UserDAOTest {
     public void getUser() {
         Account account = accountDAO.loadByUsername("test");
         System.out.println(account.getObjectId());
-        Account account1 = accountDAO.loadByObjectId(account.getObjectId().toString());
+        Account account1 = accountDAO.loadById(account.getObjectId().toString());
         System.out.println(account1.userId);
     }
 }

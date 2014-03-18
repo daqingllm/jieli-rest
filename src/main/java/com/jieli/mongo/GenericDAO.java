@@ -1,6 +1,7 @@
 package com.jieli.mongo;
 
 import org.apache.commons.lang.StringUtils;
+import org.bson.types.ObjectId;
 import org.jongo.MongoCollection;
 
 import java.lang.reflect.ParameterizedType;
@@ -19,8 +20,8 @@ public abstract class GenericDAO<T extends Model> {
         this.col = JongoClient.getInstance().getCollection(StringUtils.lowerCase(getType().getSimpleName()));
     }
 
-    public T loadById(int id) {
-        return col.findOne("{id:#}", id).as(getType());
+    public T loadById(String id) {
+        return col.findOne(new ObjectId(id)).as(getType());
     }
 
     public Iterable<T> find(String query, Object... params) {
@@ -32,13 +33,13 @@ public abstract class GenericDAO<T extends Model> {
         return t;
     }
 
-    public T updateById(T t) {
-        col.update("{id:'" + t.id + "'}").merge(t);
+    public T update(T t) {
+        col.update(t.objectId).merge(t);
         return t;
     }
 
-    public void deleteById(int id) {
-        col.remove("{id:#}", id);
+    public void deleteById(String id) {
+        col.remove(new ObjectId(id));
     }
 
     //慎用，测试使用

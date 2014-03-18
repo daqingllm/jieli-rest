@@ -1,6 +1,6 @@
-package com.jieli.dao;
+package com.jieli.user.dao;
 
-import com.jieli.entity.user.User;
+import com.jieli.user.entity.User;
 import com.jieli.mongo.GenericDAO;
 
 /**

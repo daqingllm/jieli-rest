@@ -1,8 +1,8 @@
 package com.jieli.util;
 
-import com.jieli.dao.AccountDAO;
-import com.jieli.entity.common.Account;
-import com.jieli.entity.common.AccountState;
+import com.jieli.common.dao.AccountDAO;
+import com.jieli.common.entity.Account;
+import com.jieli.common.entity.AccountState;
 import org.apache.commons.lang.StringUtils;
 
 /**
@@ -19,7 +19,7 @@ public abstract class IdentifyUtils {
             return false;
         }
         AccountDAO accountDAO = new AccountDAO();
-        Account account = accountDAO.loadByObjectId(sessionId);
+        Account account = accountDAO.loadById(sessionId);
         if (account != null && account.state == AccountState.ENABLE) {
             return true;
         } else {
@@ -27,16 +27,16 @@ public abstract class IdentifyUtils {
         }
     }
 
-    public static int getUserId(String sessionId) {
+    public static String getUserId(String sessionId) {
         if (StringUtils.isEmpty(sessionId)) {
-            return -1;
+            return null;
         }
         AccountDAO accountDAO = new AccountDAO();
-        Account account = accountDAO.loadByObjectId(sessionId);
+        Account account = accountDAO.loadById(sessionId);
         if (account != null) {
             return account.userId;
         } else {
-            return -1;
+            return null;
         }
     }
 }

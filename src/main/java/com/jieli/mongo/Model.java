@@ -31,8 +31,6 @@ public class Model implements Serializable {
         this.objectId = id;
     }
 
-    public int id = 0;
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -41,7 +39,6 @@ public class Model implements Serializable {
         Model model = (Model) o;
 
         if (!objectId.equals(model.objectId)) return false;
-        if (id != model.id) return false;
 
         return true;
     }
@@ -53,8 +50,6 @@ public class Model implements Serializable {
 
     @Override
     public int hashCode() {
-        int result = objectId.hashCode();
-        result = 31 * result + id;
-        return result;
+        return objectId.hashCode();
     }
 }
