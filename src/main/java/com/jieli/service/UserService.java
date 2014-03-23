@@ -1,14 +1,15 @@
 package com.jieli.service;
 
+import com.jieli.common.entity.ResponseEntity;
 import com.jieli.user.dao.DirectoryDAO;
 import com.jieli.user.dao.UserDAO;
-import com.jieli.common.entity.ResponseEntity;
 import com.jieli.user.entity.Directory;
 import com.jieli.user.entity.Friend;
 import com.jieli.user.entity.User;
 import com.jieli.user.entity.UserBasicInfo;
 import com.jieli.util.CollectionUtils;
 import com.jieli.util.IdentifyUtils;
+import com.jieli.util.MongoUtils;
 import org.apache.commons.lang.StringUtils;
 import org.bson.types.ObjectId;
 
@@ -37,11 +38,15 @@ public class UserService {
         if (!IdentifyUtils.isValidate(sessionId)) {
             return Response.status(403).build();
         }
-
         ResponseEntity responseEntity = new ResponseEntity();
         if (StringUtils.isEmpty(userId)) {
             responseEntity.code = 1101;
             responseEntity.msg = "缺少参数";
+            return Response.status(200).entity(responseEntity).build();
+        }
+        if (!MongoUtils.isValidObjectId(userId)) {
+            responseEntity.code = 1105;
+            responseEntity.msg = "参数Id无效";
             return Response.status(200).entity(responseEntity).build();
         }
 
@@ -167,6 +172,11 @@ public class UserService {
         if (StringUtils.isEmpty(friendId)) {
             responseEntity.code = 1101;
             responseEntity.msg = "缺少参数";
+            return Response.status(200).entity(responseEntity).build();
+        }
+        if (!MongoUtils.isValidObjectId(friendId)) {
+            responseEntity.code = 1105;
+            responseEntity.msg = "参数Id无效";
             return Response.status(200).entity(responseEntity).build();
         }
 

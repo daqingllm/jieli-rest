@@ -18,7 +18,7 @@ public class UserServiceTest {
     @Test
     public void testLoadUser() throws IOException {
         Response response = Request.Get("http://localhost:8080/rest/user?userId=9")
-                .addHeader("sessionId", "532445c6ef86bca0cdf2795b")
+                .addHeader("Cookie", "u=532445c6ef86bca0cdf2795b")
                 .execute();
 
         System.out.println(response.returnContent().asString());
@@ -27,7 +27,7 @@ public class UserServiceTest {
     @Test
     public void testLoadSelf() throws IOException {
         Response response = Request.Get("http://localhost:8080/rest/user/self")
-                .addHeader("sessionId", "532445c6ef86bca0cdf2795b")
+                .addHeader("Cookie", "u=532445c6ef86bca0cdf2795b")
                 .execute();
 
         System.out.println(response.returnContent().asString());

@@ -1,7 +1,8 @@
-package com.jieli.activity;
+package com.jieli.service;
 
+import com.jieli.activity.Activity;
+import com.jieli.activity.ActivityDAO;
 import com.jieli.common.entity.ResponseEntity;
-import com.jieli.mongo.GenericDAO;
 import com.jieli.user.dao.UserDAO;
 import com.jieli.util.IdentifyUtils;
 import com.sun.jersey.spi.resource.Singleton;
@@ -18,14 +19,13 @@ import javax.ws.rs.core.Response;
 @Path("/activity")
 public class ActivityService {
 
-    private final GenericDAO<Activity> activityDAO= new GenericDAO<Activity>();
+    private final ActivityDAO activityDAO= new ActivityDAO();
 
     private final UserDAO userDAO = new UserDAO();
 
     private final int PAGE_SIZE=15;
 
     @GET
-    @Path("/")
     @Produces(MediaType.APPLICATION_JSON)
     public Response findActivity(@CookieParam("u")String userId,@QueryParam("type") String type,@QueryParam("page") int page) {
         if (!IdentifyUtils.isValidate(userId)) {
@@ -55,7 +55,6 @@ public class ActivityService {
     }
 
     @POST
-    @Path("/")
     @Produces(MediaType.APPLICATION_JSON)
     public Response createActivity(@CookieParam("u")String userId,Activity activity) {
         if (!IdentifyUtils.isValidate(userId)) {
