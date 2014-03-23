@@ -9,11 +9,13 @@ import java.util.Date;
  * Created by YolandaLeo on 14-3-19.
  */
 public class Comment extends Model {
-    public Integer id;
+    public String id;
+    public String helpId;
+    public boolean isTop;
     /**
      * 评论发表人id
      */
-    public Integer commentUserId;
+    public String commentUserId;
     /**
      * 评论内容
      */
@@ -23,11 +25,33 @@ public class Comment extends Model {
      */
     public Date addTime;
 
-    public Integer getId() {
+    public String getHelpId() {
+        return helpId;
+    }
+
+    public void setHelpId(String helpId) {
+        this.helpId = helpId;
+    }
+
+    public boolean isTop() { return isTop; }
+
+    public void setTop(boolean isTop) {
+        this.isTop = isTop;
+    }
+
+    public String getCommentUserId() {
+        return commentUserId;
+    }
+
+    public void setCommentUserId(String commentUserId) {
+        this.commentUserId = commentUserId;
+    }
+
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 

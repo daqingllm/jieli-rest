@@ -1,5 +1,6 @@
 package com.jieli.util;
 
+import bsh.StringUtil;
 import com.jieli.common.dao.AccountDAO;
 import com.jieli.common.entity.Account;
 import com.jieli.common.entity.AccountState;
@@ -39,4 +40,5 @@ public abstract class IdentifyUtils {
             return null;
         }
     }
+
 }

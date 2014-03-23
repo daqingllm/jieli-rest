@@ -10,8 +10,12 @@ import java.util.Date;
  * Created by YolandaLeo on 14-3-19.
  */
 public class SimpleHelpInfo extends Model{
-    public Integer id;
-    public Integer userId;
+    public String id;
+    public String userId;
+    /**
+     * 协会Id
+     */
+    public String associationId;
     /**
      * 互帮互助标题
      */
@@ -29,20 +33,28 @@ public class SimpleHelpInfo extends Model{
      */
     public Date addTime;
 
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public Integer getUserId() {
+    public String getUserId() {
         return userId;
     }
 
-    public void setUserId(Integer userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
+    }
+
+    public String getAssociationId() {
+        return associationId;
+    }
+
+    public void setAssociationId(String associationId) {
+        this.associationId = associationId;
     }
 
     public String getTitle() {
