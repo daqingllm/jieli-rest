@@ -50,4 +50,7 @@ public class User extends Model {
     public String weixin;
 
     public List<InterestTag> interestTags;
+
+    //协会
+    public String associationId;
 }

@@ -33,7 +33,7 @@ public class UserService {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-    public Response loadUser(@HeaderParam("sessionId")String sessionId, @QueryParam("userId")String userId) {
+    public Response loadUser(@CookieParam("u")String sessionId, @QueryParam("userId")String userId) {
         if (!IdentifyUtils.isValidate(sessionId)) {
             return Response.status(403).build();
         }
@@ -60,7 +60,7 @@ public class UserService {
     @GET
     @Path("/self")
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-    public Response loadSelf(@HeaderParam("sessionId")String sessionId) {
+    public Response loadSelf(@CookieParam("u")String sessionId) {
         if (!IdentifyUtils.isValidate(sessionId)) {
             return Response.status(403).build();
         }
@@ -88,7 +88,7 @@ public class UserService {
     @POST
     @Path("/self")
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-    public Response editSelf(@HeaderParam("sessionId")String sessionId, User user) {
+    public Response editSelf(@CookieParam("u")String sessionId, User user) {
         if (!IdentifyUtils.isValidate(sessionId)) {
             return Response.status(403).build();
         }
@@ -103,7 +103,7 @@ public class UserService {
     @GET
     @Path("/directory")
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-    public Response loadDirectory(@HeaderParam("sessionId")String sessionId) {
+    public Response loadDirectory(@CookieParam("u")String sessionId) {
         if (!IdentifyUtils.isValidate(sessionId)) {
             return Response.status(403).build();
         }
@@ -144,7 +144,7 @@ public class UserService {
     @POST
     @Path("/directory")
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-    public Response upsertFriend(@HeaderParam("sessionId")String sessionId, Friend friend) {
+    public Response upsertFriend(@CookieParam("u")String sessionId, Friend friend) {
         if (!IdentifyUtils.isValidate(sessionId)) {
             return Response.status(403).build();
         }
@@ -159,7 +159,7 @@ public class UserService {
     @GET
     @Path("/directory/delete")
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-    public Response deleteFriend(@HeaderParam("sessionId")String sessionId, @QueryParam("friendId")String friendId) {
+    public Response deleteFriend(@CookieParam("u")String sessionId, @QueryParam("friendId")String friendId) {
         if (!IdentifyUtils.isValidate(sessionId)) {
             return Response.status(403).build();
         }

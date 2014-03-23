@@ -4,6 +4,8 @@ import bsh.StringUtil;
 import com.jieli.common.dao.AccountDAO;
 import com.jieli.common.entity.Account;
 import com.jieli.common.entity.AccountState;
+import com.jieli.user.dao.UserDAO;
+import com.jieli.user.entity.User;
 import org.apache.commons.lang.StringUtils;
 
 /**
@@ -41,4 +43,20 @@ public abstract class IdentifyUtils {
         }
     }
 
+    public static String getAssociationId(String sessionId) {
+        if (StringUtils.isEmpty(sessionId)) {
+            return null;
+        }
+        AccountDAO accountDAO = new AccountDAO();
+        Account account = accountDAO.loadById(sessionId);
+        if (account == null) {
+            return null;
+        }
+        UserDAO userDAO = new UserDAO();
+        User user = userDAO.loadById(account.userId);
+        if (user == null) {
+            return null;
+        }
+        return user.associationId;
+    }
 }
