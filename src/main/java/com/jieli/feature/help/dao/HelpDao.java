@@ -37,4 +37,56 @@ public class HelpDAO extends GenericDAO<HelpInfo>{
         return resultList;
     }
 
+    /**
+     * 获取评论列表
+     * @param helpId
+     * @return
+     */
+    public List<Comment> getCommentList(String helpId) {
+        Iterator<Comment> iterator = col.find("helpId:#", helpId).as(Comment.class).iterator();
+        List<Comment> resultList = new ArrayList<Comment>();
+        for(;iterator.hasNext();) {
+            resultList.add(iterator.next());
+        }
+        return resultList;
+    }
+
+    /**
+     * 增加评论
+     * @param comment
+     * @return
+     */
+    public HelpInfo addComment(Comment comment) {
+        String helpId = comment.getHelpId();
+        HelpInfo help = loadHelpInfo(helpId);
+        if(help == null) {
+            return null;
+        }
+        List<Comment> commentList = help.getCommentList();
+        commentList.add(comment);
+        help.setCommentList(commentList);
+        return save(help);
+    }
+
+    /**
+     * 删除评论
+     * @param comment
+     */
+    public HelpInfo deleteComment(Comment comment) {
+        HelpInfo help = loadHelpInfo(comment.getHelpId());
+        if(help == null) {
+            return null;
+        }
+        List<Comment> commentList = help.getCommentList();
+        if(commentList == null || commentList.isEmpty()) {
+            return null;
+        }
+        if(commentList.remove(comment)) {
+            return help;
+        }
+        else {
+            return null;
+        }
+    }
+
 }

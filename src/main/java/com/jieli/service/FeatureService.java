@@ -1,7 +1,6 @@
 package com.jieli.service;
 
 import com.jieli.common.entity.ResponseEntity;
-import com.jieli.feature.help.dao.CommentDAO;
 import com.jieli.feature.help.dao.HelpDAO;
 import com.jieli.feature.help.entity.Comment;
 import com.jieli.feature.help.entity.HelpInfo;
@@ -26,7 +25,6 @@ import java.util.List;
 public class FeatureService {
     private HelpDAO helpDAO = new HelpDAO();
     private UserDAO userDAO = new UserDAO();
-    private CommentDAO commentDAO = new CommentDAO();
     /**
      * 获取互帮互助列表
      * @param sessionId
@@ -51,7 +49,6 @@ public class FeatureService {
             responseEntity.msg = "账户已被删除";
             return  Response.status(200).entity(responseEntity).build();
         }
-        //TODO 根据userId获取associationId
         String associationId = IdentifyUtils.getAssociationId(sessionId);
         if(StringUtils.isEmpty(associationId)) {
             responseEntity.code = 1105;
@@ -114,7 +111,7 @@ public class FeatureService {
             responseEntity.msg = "缺少参数";
             return Response.status(200).entity(responseEntity).build();
         }
-        List<Comment> commentList = commentDAO.getCommentList(helpId);
+        List<Comment> commentList = helpDAO.getCommentList(helpId);
         if(commentList == null || commentList.isEmpty()) {
             responseEntity.code = 1102;
             responseEntity.msg = "互帮互助信息不存在";
@@ -165,7 +162,8 @@ public class FeatureService {
         comment.setCommentUserId(userId);
         comment.setHelpId(helpId);
         comment.setAddTime(new Date());
-        Comment addResult = commentDAO.addComment(comment);
+        HelpInfo addResult = helpDAO.addComment(comment);
+        //TODO check whether comment is added
         if(addResult == null) {
             responseEntity.code = 1111;
             responseEntity.msg = "评论添加失败";
