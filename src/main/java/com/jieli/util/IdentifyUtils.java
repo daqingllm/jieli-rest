@@ -21,6 +21,9 @@ public abstract class IdentifyUtils {
         if (StringUtils.isEmpty(sessionId)) {
             return false;
         }
+        if (!MongoUtils.isValidObjectId(sessionId)) {
+            return false;
+        }
         AccountDAO accountDAO = new AccountDAO();
         Account account = accountDAO.loadById(sessionId);
         if (account != null && account.state == AccountState.ENABLE) {
@@ -34,6 +37,9 @@ public abstract class IdentifyUtils {
         if (StringUtils.isEmpty(sessionId)) {
             return null;
         }
+        if (!MongoUtils.isValidObjectId(sessionId)) {
+            return null;
+        }
         AccountDAO accountDAO = new AccountDAO();
         Account account = accountDAO.loadById(sessionId);
         if (account != null) {
@@ -45,6 +51,9 @@ public abstract class IdentifyUtils {
 
     public static String getAssociationId(String sessionId) {
         if (StringUtils.isEmpty(sessionId)) {
+            return null;
+        }
+        if (!MongoUtils.isValidObjectId(sessionId)) {
             return null;
         }
         AccountDAO accountDAO = new AccountDAO();

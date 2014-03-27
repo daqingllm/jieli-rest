@@ -13,7 +13,7 @@ import java.lang.reflect.ParameterizedType;
  * Time: 下午8:49
  * To change this template use File | Settings | File Templates.
  */
-public class GenericDAO<T extends Model> {
+public abstract class GenericDAO<T extends Model> {
     protected final MongoCollection col;
 
     public GenericDAO() {

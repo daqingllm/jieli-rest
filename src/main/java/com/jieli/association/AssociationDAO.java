@@ -10,4 +10,8 @@ import com.jieli.mongo.GenericDAO;
  * To change this template use File | Settings | File Templates.
  */
 public class AssociationDAO extends GenericDAO<Association> {
+
+    public Association loadByName(String name) {
+        return col.findOne("{name:#}", name).as(Association.class);
+    }
 }

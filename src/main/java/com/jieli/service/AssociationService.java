@@ -4,6 +4,7 @@ import com.jieli.association.Association;
 import com.jieli.association.AssociationDAO;
 import com.jieli.common.entity.ResponseEntity;
 import com.jieli.util.IdentifyUtils;
+import org.apache.commons.lang.StringUtils;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
@@ -25,14 +26,29 @@ public class AssociationService {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-    public Response getAssociation(@CookieParam("u")String sessionId, @QueryParam("id")String id) {
+    public Response getAssociation(@CookieParam("u")String sessionId, @QueryParam("id")String id, @QueryParam("name")String name) {
         if (!IdentifyUtils.isValidate(sessionId)) {
             return Response.status(403).build();
         }
         ResponseEntity responseEntity = new ResponseEntity();
-        Association association = associationDAO.loadById(id);
-        responseEntity.code = 200;
-        responseEntity.body = association;
+        if (StringUtils.isNotEmpty(id)) {
+            Association association = associationDAO.loadById(id);
+            if (association != null) {
+                responseEntity.code = 200;
+                responseEntity.body = association;
+                return Response.status(200).entity(responseEntity).build();
+            }
+        }
+        if (StringUtils.isNotEmpty(name)) {
+            Association association = associationDAO.loadByName(name);
+            if (association == null) {
+                responseEntity.code = 2102;
+                responseEntity.msg = "协会不存在";
+                return Response.status(200).entity(responseEntity).build();
+            }
+        }
+        responseEntity.code = 2101;
+        responseEntity.msg = "缺少参数";
         return Response.status(200).entity(responseEntity).build();
     }
 
@@ -50,4 +66,5 @@ public class AssociationService {
         responseEntity.body = json.toString();
         return Response.status(200).entity(responseEntity).build();
     }
+
 }
