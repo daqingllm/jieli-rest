@@ -4,6 +4,7 @@ import com.jieli.feature.help.entity.Comment;
 import com.jieli.feature.help.entity.HelpInfo;
 import com.jieli.feature.help.entity.SimpleHelpInfo;
 import com.jieli.mongo.GenericDAO;
+import com.jieli.util.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -70,10 +71,10 @@ public class HelpDAO extends GenericDAO<HelpInfo>{
 
     /**
      * 删除评论
-     * @param comment
+     * @param commentId
      */
-    public HelpInfo deleteComment(Comment comment) {
-        HelpInfo help = loadHelpInfo(comment.getHelpId());
+    public HelpInfo deleteComment(String helpId, String commentId) {
+        HelpInfo help = loadHelpInfo(helpId);
         if(help == null) {
             return null;
         }
@@ -81,12 +82,26 @@ public class HelpDAO extends GenericDAO<HelpInfo>{
         if(commentList == null || commentList.isEmpty()) {
             return null;
         }
+        Comment comment = loadComment(commentId, commentList);
         if(commentList.remove(comment)) {
-            return help;
+            help.setCommentList(commentList);
+            return save(help);
         }
         else {
             return null;
         }
+    }
+
+    private Comment loadComment(String commentId, List<Comment> comments) {
+        if(CollectionUtils.isEmpty(comments)) {
+            return null;
+        }
+        for (Comment comment : comments) {
+            if(comment.getId() == commentId) {
+                return comment;
+            }
+        }
+        return null;
     }
 
 }

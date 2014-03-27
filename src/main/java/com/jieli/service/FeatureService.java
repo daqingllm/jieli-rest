@@ -8,6 +8,7 @@ import com.jieli.feature.help.entity.SimpleHelpInfo;
 import com.jieli.user.dao.UserDAO;
 import com.jieli.user.entity.User;
 import com.jieli.util.IdentifyUtils;
+import com.jieli.util.MongoUtils;
 import org.apache.commons.lang.StringUtils;
 
 import javax.ws.rs.*;
@@ -32,7 +33,7 @@ public class FeatureService {
      */
     @GET
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-    public Response getHelpList(@HeaderParam("sessionId")String sessionId) {
+    public Response getHelpList(@CookieParam("u")String sessionId) {
         if(!IdentifyUtils.isValidate(sessionId)) {
             return Response.status(403).build();
         }
@@ -73,7 +74,7 @@ public class FeatureService {
      */
     @GET
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-    public Response getDetailHelpInfo(@HeaderParam("sessionId")String sessionId, @QueryParam("helpId")String helpId) {
+    public Response getDetailHelpInfo(@CookieParam("u")String sessionId, @QueryParam("helpId")String helpId) {
         if(!IdentifyUtils.isValidate(sessionId)) {
             return Response.status(403).build();
         }
@@ -101,7 +102,7 @@ public class FeatureService {
      */
     @GET
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-    public Response getHelpComment(@HeaderParam("sessionId")String sessionId, @QueryParam("helpId")String helpId) {
+    public Response getHelpComment(@CookieParam("u")String sessionId, @QueryParam("helpId")String helpId) {
         if(!IdentifyUtils.isValidate(sessionId)) {
             return Response.status(403).build();
         }
@@ -139,12 +140,13 @@ public class FeatureService {
      * @param helpId
      * @return
      */
-    @GET
+    @POST
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-    public Response addComment(@HeaderParam("sessionId")String sessionId, @QueryParam("helpId")String helpId, @QueryParam("context")String context) {
+    public Response addComment(@CookieParam("u")String sessionId, String helpId, String context) {
         if(!IdentifyUtils.isValidate(sessionId)) {
             return Response.status(403).build();
-        }String userId = IdentifyUtils.getUserId(sessionId);
+        }
+        String userId = IdentifyUtils.getUserId(sessionId);
         ResponseEntity responseEntity = new ResponseEntity();
         User user = userDAO.loadById(userId);
         if (StringUtils.isEmpty(userId) || StringUtils.isEmpty(context)) {
@@ -179,13 +181,47 @@ public class FeatureService {
      * @param helpId
      * @return
      */
-    public boolean deleteComment(String helpId, String userId);
+    @GET
+    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+    public Response deleteComment(@CookieParam("u")String sessionId, @QueryParam("helpId")String helpId, @QueryParam("commentId") String commentId){
+        if(!IdentifyUtils.isValidate(sessionId)) {
+            return Response.status(403).build();
+        }
+        String userId = IdentifyUtils.getUserId(sessionId);
+        ResponseEntity responseEntity = new ResponseEntity();
+        User user = userDAO.loadById(userId);
+        if (StringUtils.isEmpty(userId)) {
+            responseEntity.code = 1103;
+            responseEntity.msg = "账户出错";
+            return Response.status(200).entity(responseEntity).build();
+        }
+        if (StringUtils.isEmpty(helpId)) {
+            responseEntity.code = 1101;
+            responseEntity.msg = "缺少参数";
+            return Response.status(200).entity(responseEntity).build();
+        }
+        if (!MongoUtils.isValidObjectId(commentId)) {
+            responseEntity.code = 1105;
+            responseEntity.msg = "参数Id无效";
+            return Response.status(200).entity(responseEntity).build();
+        }
+        helpDAO.deleteComment(helpId, commentId);
+        responseEntity.code = 200;
+        return Response.status(200).entity(responseEntity).build();
+    }
 
     /**
      * 加关注
      * @param helpId
      */
-    public void addFocus(String helpId);
+    /*@POST
+    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+    public Response addFocus(@CookieParam("u")String sessionId, String helpId){
+        if(!IdentifyUtils.isValidate(sessionId)) {
+            return Response.status(403).build();
+        }
+        String userId = IdentifyUtils.getUserId(sessionId);
+    }*/
 
     /**
      * 评论置顶，返回是否成功
@@ -193,5 +229,5 @@ public class FeatureService {
      * @param commentId
      * @return
      */
-    public boolean addTop(String helpId, String commentId);
+    //public boolean addTop(String helpId, String commentId);
 }
