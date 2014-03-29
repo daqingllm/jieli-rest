@@ -94,7 +94,7 @@ public class ActivityService {
     @GET
     @Path("/self")
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-    public Response findRelatedActivities(@CookieParam("u")String sessionId, int page, int count) {
+    public Response findRelatedActivities(@CookieParam("u")String sessionId, @QueryParam("page")int page, @QueryParam("size")int count) {
         if (!IdentifyUtils.isValidate(sessionId)) {
             return Response.status(403).build();
         }

@@ -6,7 +6,10 @@ import com.jieli.feature.help.entity.HelpComment;
 import com.jieli.feature.help.entity.HelpInfo;
 import com.jieli.feature.help.entity.SimpleHelpInfo;
 import com.jieli.feature.vote.dao.VoteDAO;
-import com.jieli.feature.vote.entity.*;
+import com.jieli.feature.vote.entity.SimpleVoteInfo;
+import com.jieli.feature.vote.entity.Vote;
+import com.jieli.feature.vote.entity.VoteComment;
+import com.jieli.feature.vote.entity.VoteInfo;
 import com.jieli.user.dao.UserDAO;
 import com.jieli.user.entity.User;
 import com.jieli.util.IdentifyUtils;
@@ -19,14 +22,13 @@ import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 功能列表页接口
  * 包括互帮互助、默契匹配、投票列表
  * Created by YolandaLeo on 14-3-19.
  */
-@Path("/feature")
+//@Path("/feature")
 public class FeatureService {
     private HelpDAO helpDAO = new HelpDAO();
     private UserDAO userDAO = new UserDAO();

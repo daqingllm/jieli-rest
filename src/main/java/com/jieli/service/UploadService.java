@@ -17,7 +17,7 @@ import java.util.Date;
  * Created by xianxing on 2014/3/22.
  * 上传图像
  */
-@Path("file")
+//@Path("file")
 public class UploadService {
     @POST
     @Path("/upload")
