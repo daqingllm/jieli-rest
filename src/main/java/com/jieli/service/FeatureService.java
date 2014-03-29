@@ -28,7 +28,7 @@ import java.util.List;
  * 包括互帮互助、默契匹配、投票列表
  * Created by YolandaLeo on 14-3-19.
  */
-//@Path("/feature")
+@Path("/feature")
 public class FeatureService {
     private HelpDAO helpDAO = new HelpDAO();
     private UserDAO userDAO = new UserDAO();
@@ -103,7 +103,7 @@ public class FeatureService {
     @Path("/help/add")
     @POST
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-    public Response addHelpInfo(@CookieParam("u") String sessionId, @HeaderParam("help") HelpInfo help) {
+    public Response addHelpInfo(@CookieParam("u") String sessionId, HelpInfo help) {
         if(!IdentifyUtils.isValidate(sessionId)) {
             return Response.status(403).build();
         }
@@ -165,7 +165,7 @@ public class FeatureService {
     @Path("/help/detail/comment/add")
     @POST
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-    public Response addComment(@CookieParam("u")String sessionId, @QueryParam("helpId")String helpId, @QueryParam("context")String context) {
+    public Response addHelpComment(@CookieParam("u")String sessionId, @QueryParam("helpId")String helpId, @QueryParam("context")String context) {
         if(!IdentifyUtils.isValidate(sessionId)) {
             return Response.status(403).build();
         }
@@ -375,7 +375,7 @@ public class FeatureService {
      */
     @Path("/vote/detail")
     @GET
-    @Produces(MediaType.APPLICATION_JSON + "charset=utf-8")
+    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     public Response getVoteInfo(@CookieParam("u")String sessionId, @HeaderParam("voteId")String voteId) {
         if(!IdentifyUtils.isValidate(sessionId)) {
             return Response.status(403).build();
@@ -405,8 +405,8 @@ public class FeatureService {
      */
     @Path("/vote/addvote")
     @POST
-    @Produces(MediaType.APPLICATION_JSON + "charset=utf-8")
-    public Response addVote(@CookieParam("u")String sessionId, @HeaderParam("vote")VoteInfo voteInfo) {
+    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+    public Response addVote(@CookieParam("u")String sessionId, VoteInfo voteInfo) {
         if(!IdentifyUtils.isValidate(sessionId)) {
             return Response.status(403).build();
         }
@@ -437,8 +437,8 @@ public class FeatureService {
      */
     @Path("/vote/commitvote")
     @POST
-    @Produces(MediaType.APPLICATION_JSON + "charset=utf-8")
-    public Response vote(@CookieParam("u")String sessionId, @HeaderParam("vote")Vote vote, @HeaderParam("voteId")String voteId) {
+    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+    public Response vote(@CookieParam("u")String sessionId, Vote vote, @HeaderParam("voteId")String voteId) {
         if(!IdentifyUtils.isValidate(sessionId)) {
             return Response.status(403).build();
         }
@@ -470,8 +470,8 @@ public class FeatureService {
      */
     @Path("/vote/comment")
     @POST
-    @Produces(MediaType.APPLICATION_JSON + "charset=utf-8")
-    public Response addComment(@CookieParam("u")String sessionId, @HeaderParam("comment")VoteComment comment, @HeaderParam("voteId")String voteId) {
+    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+    public Response addVoteComment(@CookieParam("u")String sessionId, VoteComment comment, @HeaderParam("voteId")String voteId) {
         if(!IdentifyUtils.isValidate(sessionId)) {
             return Response.status(403).build();
         }
@@ -494,7 +494,7 @@ public class FeatureService {
      */
     /*
     @GET
-    @Produces(MediaType.APPLICATION_JSON + "charset=utf-8")
+    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     public Response getOrientedMatch(@CookieParam("u")String sessionId) {
         if(!IdentifyUtils.isValidate(sessionId)) {
             return Response.status(403).build();
