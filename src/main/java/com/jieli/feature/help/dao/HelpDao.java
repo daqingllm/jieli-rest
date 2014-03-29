@@ -92,6 +92,32 @@ public class HelpDAO extends GenericDAO<HelpInfo>{
         }
     }
 
+    /**
+     * 增加关注
+     * @param helpId
+     * @return
+     */
+    public HelpInfo addFocus(String helpId) {
+        HelpInfo help = loadHelpInfo(helpId);
+        Integer attention = help.getAttentionNum();
+        attention++;
+        help.setAttentionNum(attention);
+        return save(help);
+    }
+
+    /**
+     * 评论置顶
+     * @param helpId
+     * @param commentId
+     * @return
+     */
+    public HelpInfo topComment(String helpId, String commentId) {
+        HelpInfo help = loadHelpInfo(helpId);
+        Comment comment = loadComment(commentId, help.getCommentList());
+        comment.setTop(true);
+        return updateComment(helpId, comment);
+    }
+
     private Comment loadComment(String commentId, List<Comment> comments) {
         if(CollectionUtils.isEmpty(comments)) {
             return null;
@@ -99,6 +125,19 @@ public class HelpDAO extends GenericDAO<HelpInfo>{
         for (Comment comment : comments) {
             if(comment.getId() == commentId) {
                 return comment;
+            }
+        }
+        return null;
+    }
+
+    private HelpInfo updateComment(String helpId, Comment newComment) {
+        HelpInfo help = loadHelpInfo(helpId);
+        List<Comment> commentList = help.getCommentList();
+        for(Comment comment : commentList) {
+            if(comment.getId() == newComment.getId()) {
+                comment = newComment;
+                help.setCommentList(commentList);
+                return save(help);
             }
         }
         return null;
