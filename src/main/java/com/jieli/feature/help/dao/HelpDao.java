@@ -24,8 +24,6 @@ public class HelpDAO extends GenericDAO<HelpInfo>{
         return col.findOne("helpId:#",helpId).as(HelpInfo.class);
     }
 
-
-    
     /**
      * 获取协会内互帮互助帖子列表
      * @param associationId
