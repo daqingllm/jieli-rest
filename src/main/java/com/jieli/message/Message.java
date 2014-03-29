@@ -19,6 +19,8 @@ public class Message extends Model {
 
     public String content;
 
+    public String objectId;
+
     public Date date;
 
     public boolean read;

@@ -1,7 +1,6 @@
 package com.jieli.activity;
 
 import com.jieli.mongo.Model;
-import com.jieli.user.entity.User;
 
 import java.util.Date;
 import java.util.LinkedHashMap;
@@ -12,6 +11,8 @@ import java.util.Map;
  * @author ltebean
  */
 public class Activity extends Model {
+
+    public AcivityTag tag;
 
     public String type;
 
@@ -33,16 +34,19 @@ public class Activity extends Model {
 
     public String sponsorInfo;
 
-    public List<User> followMembers;
+    public List<String> followMembers;
 
-    public Map<User,String> joinMembers=new LinkedHashMap<User, String>();
+    public Map<String, String> joinMembers=new LinkedHashMap<String, String>();
 
     public List<Comment> comments;
 
+    public String associationId;
+
+    public String sponsorUserId;
 
     public static final class Comment{
 
-        public User user;
+        public String userId;
 
         public String content;
 

@@ -2,6 +2,8 @@ package com.jieli.activity;
 
 import com.jieli.mongo.GenericDAO;
 
+import java.util.Date;
+
 /**
  * Created with IntelliJ IDEA.
  * User: liming_liu
@@ -10,4 +12,19 @@ import com.jieli.mongo.GenericDAO;
  * To change this template use File | Settings | File Templates.
  */
 public class ActivityDAO extends GenericDAO<Activity> {
+
+    public Iterable<Activity> loadAll() {
+        return col.find().as(Activity.class);
+    }
+
+    public Iterable<Activity> findOngoingOfficial(String associationId) {
+        Date now = new Date();
+        return col.find("{tag:#, associationId:#, beginDate:{$gt:#}}", "OFFICIAL", associationId, now).sort("{beginDate:-1}").as(Activity.class);
+    }
+
+    public Iterable<Activity> findOngoingRecommend() {
+        Date now = new Date();
+        return col.find("{tag:#, beginDate:{$gt:#}}", "OFFICIAL", now).sort("{beginDate:-1}").as(Activity.class);
+    }
+
 }

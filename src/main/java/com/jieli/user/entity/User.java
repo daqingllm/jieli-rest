@@ -33,9 +33,6 @@ public class User extends Model {
     //积分
     public int score;
 
-    //0：国内，1：海外
-    public String area;
-
     public String school;
 
     public String degree;
