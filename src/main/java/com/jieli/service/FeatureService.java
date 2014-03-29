@@ -36,6 +36,7 @@ public class FeatureService {
      * @param sessionId
      * @return
      */
+    @Path("/help")
     @GET
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     public Response getHelpList(@CookieParam("u")String sessionId) {
@@ -73,6 +74,7 @@ public class FeatureService {
      * @param helpId
      * @return
      */
+    @Path("/help/detail")
     @GET
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     public Response getDetailHelpInfo(@CookieParam("u")String sessionId, @QueryParam("helpId")String helpId) {
@@ -96,6 +98,7 @@ public class FeatureService {
         return Response.status(200).entity(helpInfo).build();
     }
 
+    @Path("/help/add")
     @POST
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     public Response addHelpInfo(@CookieParam("u") String sessionId, @HeaderParam("help") HelpInfo help) {
@@ -126,6 +129,7 @@ public class FeatureService {
      * @param helpId
      * @return
      */
+    @Path("help/detail/comment")
     @GET
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     public Response getHelpComment(@CookieParam("u")String sessionId, @QueryParam("helpId")String helpId) {
@@ -156,6 +160,7 @@ public class FeatureService {
      * @param helpId
      * @return
      */
+    @Path("/help/detail/comment/add")
     @POST
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     public Response addComment(@CookieParam("u")String sessionId, @QueryParam("helpId")String helpId, @QueryParam("context")String context) {
@@ -197,6 +202,7 @@ public class FeatureService {
      * @param helpId
      * @return
      */
+    @Path("/help/detail/comment/delete")
     @POST
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     public Response deleteComment(@CookieParam("u")String sessionId, @QueryParam("helpId")String helpId, @QueryParam("commentId") String commentId){
@@ -236,6 +242,7 @@ public class FeatureService {
      * @param helpId
      * return HelpInfo 用于刷新更新关注数
      */
+    @Path("/help/detail/comment/focus")
     @POST
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     public Response addFocus(@CookieParam("u")String sessionId, String helpId){
@@ -273,6 +280,7 @@ public class FeatureService {
      * @param commentId
      * @return
      */
+    @Path("/help/detail/comment/top")
      @POST
      @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
      public Response addTop(@CookieParam("u")String sessionId, String helpId, String commentId) {
@@ -325,6 +333,7 @@ public class FeatureService {
      * @param sessionId
      * @return
      */
+    @Path("/vote")
     @GET
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     public Response getVoteList(@CookieParam("u")String sessionId) {
@@ -362,6 +371,7 @@ public class FeatureService {
      * @param voteId
      * @return
      */
+    @Path("/vote/detail")
     @GET
     @Produces(MediaType.APPLICATION_JSON + "charset=utf-8")
     public Response getVoteInfo(@CookieParam("u")String sessionId, @HeaderParam("voteId")String voteId) {
@@ -391,6 +401,7 @@ public class FeatureService {
      * @param voteInfo
      * @return
      */
+    @Path("/vote/addvote")
     @POST
     @Produces(MediaType.APPLICATION_JSON + "charset=utf-8")
     public Response addVote(@CookieParam("u")String sessionId, @HeaderParam("vote")VoteInfo voteInfo) {
@@ -422,6 +433,7 @@ public class FeatureService {
      * @param vote
      * @return
      */
+    @Path("/vote/commitvote")
     @POST
     @Produces(MediaType.APPLICATION_JSON + "charset=utf-8")
     public Response vote(@CookieParam("u")String sessionId, @HeaderParam("vote")Vote vote, @HeaderParam("voteId")String voteId) {
@@ -454,6 +466,9 @@ public class FeatureService {
      * @param voteId
      * @return
      */
+    @Path("/vote/comment")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON + "charset=utf-8")
     public Response addComment(@CookieParam("u")String sessionId, @HeaderParam("comment")VoteComment comment, @HeaderParam("voteId")String voteId) {
         if(!IdentifyUtils.isValidate(sessionId)) {
             return Response.status(403).build();
@@ -469,5 +484,21 @@ public class FeatureService {
         responseEntity.body = result;
         return Response.status(200).entity(result).build();
     }
-}
 
+    /**
+     * 定向匹配
+     * @param sessionId
+     * @return
+     */
+    /*
+    @GET
+    @Produces(MediaType.APPLICATION_JSON + "charset=utf-8")
+    public Response getOrientedMatch(@CookieParam("u")String sessionId) {
+        if(!IdentifyUtils.isValidate(sessionId)) {
+            return Response.status(403).build();
+        }
+        ResponseEntity responseEntity = new ResponseEntity();
+        String userId = IdentifyUtils.getUserId(sessionId);
+        User user = userDAO.loadById(userId);
+    }*/
+}
