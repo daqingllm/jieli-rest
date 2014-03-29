@@ -39,7 +39,7 @@ public class HelpInfo extends Model{
     /**
      * 评论列表
      */
-    public List<Comment> commentList;
+    public List<HelpComment> commentList;
 
     public String getId() {
         return id;
@@ -105,11 +105,11 @@ public class HelpInfo extends Model{
         this.topCommentId = topCommentId;
     }
 
-    public List<Comment> getCommentList() {
+    public List<HelpComment> getCommentList() {
         return commentList;
     }
 
-    public void setCommentList(List<Comment> commentList) {
+    public void setCommentList(List<HelpComment> commentList) {
         this.commentList = commentList;
     }
 }

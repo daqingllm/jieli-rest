@@ -1,4 +1,4 @@
-package com.jieli.feature.help.entity;
+package com.jieli.feature;
 
 import com.jieli.mongo.Model;
 
@@ -8,10 +8,8 @@ import java.util.Date;
  * 互帮互助评论
  * Created by YolandaLeo on 14-3-19.
  */
-public class Comment extends Model {
+public class BaseComment extends Model {
     public String id;
-    public String helpId;
-    public boolean isTop;
     /**
      * 评论发表人id
      */
@@ -24,20 +22,6 @@ public class Comment extends Model {
      * 发表时间
      */
     public Date addTime;
-
-    public String getHelpId() {
-        return helpId;
-    }
-
-    public void setHelpId(String helpId) {
-        this.helpId = helpId;
-    }
-
-    public boolean isTop() { return isTop; }
-
-    public void setTop(boolean isTop) {
-        this.isTop = isTop;
-    }
 
     public String getCommentUserId() {
         return commentUserId;
