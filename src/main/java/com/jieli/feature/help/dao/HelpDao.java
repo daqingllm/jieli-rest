@@ -1,6 +1,6 @@
 package com.jieli.feature.help.dao;
 
-import com.jieli.feature.help.entity.Comment;
+import com.jieli.feature.help.entity.HelpComment;
 import com.jieli.feature.help.entity.HelpInfo;
 import com.jieli.feature.help.entity.SimpleHelpInfo;
 import com.jieli.mongo.GenericDAO;
@@ -39,13 +39,22 @@ public class HelpDAO extends GenericDAO<HelpInfo>{
     }
 
     /**
+     * 发表互帮互助帖子
+     * @param help
+     * @return
+     */
+    public HelpInfo addHelp(HelpInfo help) {
+        return save(help);
+    }
+
+    /**
      * 获取评论列表
      * @param helpId
      * @return
      */
-    public List<Comment> getCommentList(String helpId) {
-        Iterator<Comment> iterator = col.find("helpId:#", helpId).as(Comment.class).iterator();
-        List<Comment> resultList = new ArrayList<Comment>();
+    public List<HelpComment> getCommentList(String helpId) {
+        Iterator<HelpComment> iterator = col.find("helpId:#", helpId).as(HelpComment.class).iterator();
+        List<HelpComment> resultList = new ArrayList<HelpComment>();
         for(;iterator.hasNext();) {
             resultList.add(iterator.next());
         }
@@ -57,13 +66,13 @@ public class HelpDAO extends GenericDAO<HelpInfo>{
      * @param comment
      * @return
      */
-    public HelpInfo addComment(Comment comment) {
+    public HelpInfo addComment(HelpComment comment) {
         String helpId = comment.getHelpId();
         HelpInfo help = loadHelpInfo(helpId);
         if(help == null) {
             return null;
         }
-        List<Comment> commentList = help.getCommentList();
+        List<HelpComment> commentList = help.getCommentList();
         commentList.add(comment);
         help.setCommentList(commentList);
         return save(help);
@@ -78,11 +87,11 @@ public class HelpDAO extends GenericDAO<HelpInfo>{
         if(help == null) {
             return null;
         }
-        List<Comment> commentList = help.getCommentList();
+        List<HelpComment> commentList = help.getCommentList();
         if(commentList == null || commentList.isEmpty()) {
             return null;
         }
-        Comment comment = loadComment(commentId, commentList);
+        HelpComment comment = loadComment(commentId, commentList);
         if(commentList.remove(comment)) {
             help.setCommentList(commentList);
             return save(help);
@@ -113,16 +122,16 @@ public class HelpDAO extends GenericDAO<HelpInfo>{
      */
     public HelpInfo topComment(String helpId, String commentId) {
         HelpInfo help = loadHelpInfo(helpId);
-        Comment comment = loadComment(commentId, help.getCommentList());
+        HelpComment comment = loadComment(commentId, help.getCommentList());
         comment.setTop(true);
         return updateComment(helpId, comment);
     }
 
-    private Comment loadComment(String commentId, List<Comment> comments) {
+    private HelpComment loadComment(String commentId, List<HelpComment> comments) {
         if(CollectionUtils.isEmpty(comments)) {
             return null;
         }
-        for (Comment comment : comments) {
+        for (HelpComment comment : comments) {
             if(comment.getId() == commentId) {
                 return comment;
             }
@@ -130,10 +139,10 @@ public class HelpDAO extends GenericDAO<HelpInfo>{
         return null;
     }
 
-    private HelpInfo updateComment(String helpId, Comment newComment) {
+    private HelpInfo updateComment(String helpId, HelpComment newComment) {
         HelpInfo help = loadHelpInfo(helpId);
-        List<Comment> commentList = help.getCommentList();
-        for(Comment comment : commentList) {
+        List<HelpComment> commentList = help.getCommentList();
+        for(HelpComment comment : commentList) {
             if(comment.getId() == newComment.getId()) {
                 comment = newComment;
                 help.setCommentList(commentList);

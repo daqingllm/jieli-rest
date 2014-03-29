@@ -1,35 +1,63 @@
 package com.jieli.feature.vote.entity;
 
-import com.jieli.common.entity.InterestTag;
+import com.jieli.feature.vote.entity.VoteComment;
 import com.jieli.mongo.Model;
 
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
- * 投票
- * Created by YolandaLeo on 14-3-19.
+ * Created by YolandaLeo on 14-3-29.
  */
-public class VoteInfo extends Model{
-    public Integer id;
-    /**
-     * 投票标题
-     */
-    public String title;
-    /**
-     * 截止日期
-     */
-    public Date deadline;
-    /**
-     * 投票参与人数
-     */
-    public Integer voteNum;
+public class VoteInfo extends Model {
+    private String id;
+    private String title;
+    private String associationId;
+    private String userId;
+    private Date deadLine;
+    private Date addTime;
+    private String picture;
+    private String description;
+    private List<String> options; //投票选项
+    private Map<Integer, String> optionPicsMap; //投票选项，对应图片
+    private Map<Integer, Integer> optionVotes; //投票选项，投票人数
+    boolean multiple; //是否多选
+    private List<VoteComment> commentList;
+    private List<Vote> voteList; //投票记录
+    private Integer totalVote; //每个选项投票数总和
 
-    public Integer getId() {
+
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
+    }
+
+    public String getAssociationId() {
+        return associationId;
+    }
+
+    public void setAssociationId(String associationId) {
+        this.associationId = associationId;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public Date getAddTime() {
+        return addTime;
+    }
+
+    public void setAddTime(Date addTime) {
+        this.addTime = addTime;
     }
 
     public String getTitle() {
@@ -40,19 +68,79 @@ public class VoteInfo extends Model{
         this.title = title;
     }
 
-    public Date getDeadline() {
-        return deadline;
+    public Date getDeadLine() {
+        return deadLine;
     }
 
-    public void setDeadline(Date deadline) {
-        this.deadline = deadline;
+    public void setDeadLine(Date deadLine) {
+        this.deadLine = deadLine;
     }
 
-    public Integer getVoteNum() {
-        return voteNum;
+    public String getPicture() {
+        return picture;
     }
 
-    public void setVoteNum(Integer voteNum) {
-        this.voteNum = voteNum;
+    public void setPicture(String picture) {
+        this.picture = picture;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public List<String> getOptions() {
+        return options;
+    }
+
+    public void setOptions(List<String> options) {
+        this.options = options;
+    }
+
+    public Map<Integer, String> getOptionPicsMap() {
+        return optionPicsMap;
+    }
+
+    public void setOptionPicsMap(Map<Integer, String> optionPicsMap) {
+        this.optionPicsMap = optionPicsMap;
+    }
+
+    public Map<Integer, Integer> getOptionVotes() {
+        return optionVotes;
+    }
+
+    public void setOptionVotes(Map<Integer, Integer> optionVotes) {
+        this.optionVotes = optionVotes;
+    }
+
+    public boolean isMultiple() {
+        return multiple;
+    }
+
+    public void setMultiple(boolean multiple) {
+        this.multiple = multiple;
+    }
+
+    public List<VoteComment> getCommentList() {
+        return commentList;
+    }
+
+    public void setCommentList(List<VoteComment> commentList) {
+        this.commentList = commentList;
+    }
+
+    public List<Vote> getVoteList() { return voteList; }
+
+    public void setVoteList(List<Vote> voteList) { this.voteList = voteList; }
+
+    public Integer getTotalVote() {
+        return totalVote;
+    }
+
+    public void setTotalVote(Integer totalVote) {
+        this.totalVote = totalVote;
     }
 }
