@@ -1,6 +1,5 @@
 package com.jieli.service;
 
-import com.jieli.common.entity.InterestTag;
 import com.jieli.common.entity.ResponseEntity;
 import com.jieli.feature.help.dao.HelpDAO;
 import com.jieli.feature.help.entity.HelpComment;
@@ -124,9 +123,14 @@ public class FeatureService {
         help.setUserId(userId);
         help.setCommentList(new ArrayList<HelpComment>());
         HelpInfo result = helpDAO.addHelp(help);
+        if(result == null) {
+            responseEntity.code = 1210;
+            responseEntity.msg = "互帮互助帖子添加失败";
+            return Response.status(200).entity(responseEntity).build();
+        }
         responseEntity.code = 200;
         responseEntity.body = result;
-        return Response.status(200).entity(result).build();
+        return Response.status(200).entity(result.get_id()).build();
     }
 
     /**
@@ -168,27 +172,34 @@ public class FeatureService {
     @Path("/help/detail/comment/add")
     @POST
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-    public Response addHelpComment(@CookieParam("u")String sessionId, @QueryParam("helpId")String helpId, @QueryParam("context")String context) {
+    public Response addHelpComment(@CookieParam("u")String sessionId, @QueryParam("helpId")String helpId, String context) {
         if(!IdentifyUtils.isValidate(sessionId)) {
             return Response.status(403).build();
         }
         String userId = IdentifyUtils.getUserId(sessionId);
         ResponseEntity responseEntity = new ResponseEntity();
         User user = userDAO.loadById(userId);
-        if (StringUtils.isEmpty(userId) || StringUtils.isEmpty(context)) {
+        if (StringUtils.isEmpty(userId) ) {
             responseEntity.code = 1103;
             responseEntity.msg = "账户出错";
             return Response.status(200).entity(responseEntity).build();
         }
-        if (StringUtils.isEmpty(helpId)) {
+        if (StringUtils.isEmpty(helpId) || StringUtils.isEmpty(context)) {
             responseEntity.code = 1101;
             responseEntity.msg = "缺少参数";
             return Response.status(200).entity(responseEntity).build();
+        }
+        HelpInfo helpInfo = helpDAO.loadById(helpId);
+        if(helpInfo.getUserId() == userId) {
+            responseEntity.code = 1200;
+            responseEntity.msg = "不能评论自己";
+            return Response.status(403).entity(responseEntity).build();
         }
         HelpComment comment = new HelpComment();
         comment.setComment(context);
         comment.setCommentUserId(userId);
         comment.setHelpId(helpId);
+        comment.setTop(false);
         comment.setAddTime(new Date());
         HelpInfo addResult = helpDAO.addComment(comment);
         //TODO check whether comment is added
@@ -237,6 +248,11 @@ public class FeatureService {
             responseEntity.msg = "参数错误";
             return Response.status(200).entity(responseEntity).build();
         }
+        if(!help.getUserId().equals(userId)) {
+            responseEntity.code = 1200;
+            responseEntity.msg = "只有发帖人可删除评论";
+            return Response.status(403).entity(responseEntity).build();
+        }
         helpDAO.deleteComment(helpId, commentIndex);
         responseEntity.code = 200;
         return Response.status(200).entity(responseEntity).build();
@@ -273,6 +289,23 @@ public class FeatureService {
             responseEntity.msg = "参数错误";
             return Response.status(200).entity(responseEntity).build();
         }
+        //已关注过不能再次关注
+        if(helpInfo.getFocusList() != null) {
+            for(User u : helpInfo.getFocusList()) {
+                if(u.get_id().equals(userId)) {
+                    responseEntity.code = 1209;
+                    responseEntity.msg = "已关注过";
+                    return Response.status(200).entity(responseEntity).build();
+                }
+            }
+        }
+        //自己不能关注自己
+        if(helpInfo.getUserId().equals(userId)) {
+            responseEntity.code = 1200;
+            responseEntity.msg = "不能关注自己";
+            return Response.status(403).entity(responseEntity).build();
+        }
+
         HelpInfo result = helpDAO.addFocus(helpId, user);
         // 互帮互助动态
         Message message = new Message();
@@ -317,6 +350,11 @@ public class FeatureService {
              responseEntity.code = 1205;
              responseEntity.msg = "参数错误";
              return Response.status(200).entity(responseEntity).build();
+         }
+         if(help.getUserId() != userId) {
+             responseEntity.code = 1200;
+             responseEntity.msg = "不是发帖人";
+             return Response.status(403).entity(responseEntity).build();
          }
          List<HelpComment> comments = help.getCommentList();
 
