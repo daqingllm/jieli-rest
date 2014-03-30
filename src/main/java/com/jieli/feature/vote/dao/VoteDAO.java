@@ -8,24 +8,12 @@ import com.jieli.feature.vote.entity.VoteComment;
 import com.jieli.feature.vote.entity.VoteInfo;
 import com.jieli.mongo.GenericDAO;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by YolandaLeo on 14-3-29.
  */
 public class VoteDAO extends GenericDAO<VoteInfo> {
-
-    /**
-     * 获取投票详情
-     * @param voteId
-     * @return
-     */
-    public VoteInfo loadVoteInfo(String voteId) {
-        return col.findOne("{\"voteId\":#}", voteId).as(VoteInfo.class);
-    }
 
     /**
      * 获取投票列表
@@ -57,8 +45,11 @@ public class VoteDAO extends GenericDAO<VoteInfo> {
      * @return
      */
     public VoteInfo vote(Vote vote, String voteId) {
-        VoteInfo v = loadVoteInfo(voteId);
+        VoteInfo v = loadById(voteId);
         List<Vote> voteList = v.getVoteList();
+        if(voteList == null) {
+            voteList = new ArrayList<Vote>();
+        }
         voteList.add(vote);
         Map<Integer, Integer> optionVotes = v.getOptionVotes();
         Integer totalVote = v.getTotalVote();
@@ -81,8 +72,11 @@ public class VoteDAO extends GenericDAO<VoteInfo> {
      * @return
      */
     public VoteInfo addComment(VoteComment comment, String voteId) {
-        VoteInfo voteInfo = loadVoteInfo(voteId);
+        VoteInfo voteInfo = loadById(voteId);
         List<VoteComment> commentList = voteInfo.getCommentList();
+        if(commentList == null) {
+            commentList = new ArrayList<VoteComment>();
+        }
         commentList.add(comment);
         voteInfo.setCommentList(commentList);
         return save(voteInfo);

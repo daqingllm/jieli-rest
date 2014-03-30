@@ -1,5 +1,6 @@
 package com.jieli.service;
 
+import com.jieli.common.entity.InterestTag;
 import com.jieli.common.entity.ResponseEntity;
 import com.jieli.feature.help.dao.HelpDAO;
 import com.jieli.feature.help.entity.HelpComment;
@@ -22,9 +23,7 @@ import org.apache.commons.lang.StringUtils;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * 功能列表页接口
@@ -421,10 +420,22 @@ public class FeatureService {
         }
         String associationId = IdentifyUtils.getAssociationId(sessionId);
         String userId = IdentifyUtils.getUserId(sessionId);
+        if(voteInfo.getOptions() == null || voteInfo.getOptions().isEmpty()) {
+            responseEntity.code = 1205;
+            responseEntity.msg = "参数错误";
+            return Response.status(200).entity(responseEntity).build();
+        }
+        voteInfo.setTotalVote(0);
+        Map<Integer, Integer> optionVotesInit = new HashMap<Integer, Integer>();
+        for(int i = 0; i < voteInfo.getOptions().size(); i++) {
+            optionVotesInit.put(i, 0);
+        }
+        voteInfo.setOptionVotes(optionVotesInit);
         voteInfo.setUserId(userId);
         voteInfo.setAssociationId(associationId);
         voteInfo.setAddTime(new Date());
         voteInfo.setCommentList(new ArrayList<VoteComment>());
+
         VoteInfo result = voteDAO.addVote(voteInfo);
         //发起投票动态
         Message message = new Message();
@@ -438,6 +449,8 @@ public class FeatureService {
         responseEntity.body = result;
         return Response.status(200).entity(responseEntity).build();
     }
+
+    //TODO 关闭投票
 
     /**
      * 投票
