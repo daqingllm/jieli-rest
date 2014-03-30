@@ -56,6 +56,12 @@
             <version>1.9</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.qiniu</groupId>
+            <artifactId>sdk</artifactId>
+            <version>6.1.0</version>
+        </dependency>
+
     </dependencies>
     
 </project>
