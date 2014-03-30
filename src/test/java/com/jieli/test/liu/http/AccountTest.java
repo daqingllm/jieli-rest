@@ -1,4 +1,4 @@
-package com.jieli.test.http.liu;
+package com.jieli.test.liu.http;
 
 import org.apache.http.client.fluent.Request;
 import org.apache.http.client.fluent.Response;

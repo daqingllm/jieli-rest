@@ -1,4 +1,4 @@
-package com.jieli.test.http.liu;
+package com.jieli.test.liu.http;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
