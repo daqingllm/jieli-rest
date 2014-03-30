@@ -1,11 +1,39 @@
 package com.jieli.util;
 
+import com.qiniu.api.auth.digest.Mac;
+import com.qiniu.api.config.Config;
+import com.qiniu.api.rs.PutPolicy;
+
 import java.io.*;
 
 /**
  * Created by xianxing on 2014/3/22.
  */
 public class UploaderUtils {
+    private static Mac mac = null;
+
+    public static void Init(){
+        Config.ACCESS_KEY = "BC1Z-BtDVW8dVxdbBBUXc59k1fIZievdyGCQfFj9";
+        Config.SECRET_KEY = "3dQ3sP9bukfPn6hN6GGbTUnVf7Az6GT2FRHRF7Cd";
+        mac = new Mac(Config.ACCESS_KEY, Config.SECRET_KEY);
+    }
+
+    public static String GetUploadToken(){
+        try{
+        // 空间名称
+        String bucketName = "xianxing-test";
+        // 上传策略，可以进行更多细节设置
+        PutPolicy putPolicy = new PutPolicy(bucketName);
+        if (mac == null)
+            Init();
+        String upTocken = putPolicy.token(mac);
+        return upTocken;
+        }
+        catch (Exception e){
+            return null;
+        }
+    }
+
     public static String writeToFile(InputStream uploadInputStream,String uploadFileLocation,String uploadFileName){
         if (uploadFileLocation.endsWith("\\") || uploadFileLocation.endsWith("/"));else
         uploadFileLocation += "\\";
@@ -13,6 +41,7 @@ public class UploaderUtils {
         String prefix = System.nanoTime()+"_";
         //String FileName = uploadFileLocation + new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss_").format(new Date()).toString() + uploadFileName;
         String FileName = uploadFileLocation + prefix + uploadFileName;
+        
         try {
             OutputStream out= new FileOutputStream(new File(FileName));
             int read = 0;
@@ -32,5 +61,18 @@ public class UploaderUtils {
         }
 
         return FileName;
+    }
+	
+	public static String Upload7Niu(String dir,String fp){
+        String tocken = GetUploadToken();
+        PutExtra extra = new PutExtra();
+        String localFile = fp;
+        String key = fp.substring(dir.length());
+        PutRet ret = IoApi.putFile(tocken, key, localFile, extra);
+        //System.out.println(ret.getHash() + ret.getKey());
+        if (ret.ok())
+            return key;
+        else
+            return "";
     }
 }
