@@ -20,7 +20,7 @@ public class AccountTest {
     public void testLogin() throws IOException {
         Response response = Request.Post("http://localhost:8080/rest/account/login")
                 .setHeader("app", "test")
-                .bodyString("{\"username\":\"test\",\"password\":\"v2bohns5\"}", ContentType.APPLICATION_JSON)
+                .bodyString("{\"username\":\"test\",\"password\":\"t9p160fo\"}", ContentType.APPLICATION_JSON)
                 .execute();
 
         System.out.println(response.returnContent().asString());

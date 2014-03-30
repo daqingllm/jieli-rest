@@ -59,7 +59,7 @@ public class AssociationService {
             return Response.status(403).build();
         }
         ResponseEntity responseEntity = new ResponseEntity();
-        String id = associationDAO.save(association).getObjectId().toString();
+        String id = associationDAO.save(association).get_id().toString();
         JSONObject json = new JSONObject();
         json.put("associationId", id);
         responseEntity.code = 200;

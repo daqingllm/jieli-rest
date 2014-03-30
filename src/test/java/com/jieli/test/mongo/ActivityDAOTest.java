@@ -23,7 +23,7 @@ public class ActivityDAOTest {
 //        activityDAO.save(prepareActivity());
         Iterable<Activity> activities = activityDAO.loadAll();
         for (Activity activity : activities) {
-            System.out.println(activity.getObjectId());
+            System.out.println(activity.get_id());
         }
     }
 
@@ -34,7 +34,7 @@ public class ActivityDAOTest {
         activityDAO.save(activity);
         Iterable<Activity> activities = activityDAO.findOngoingOfficial("testAssId");
         for (Activity activity1 : activities) {
-            System.out.println(activity1.getObjectId());
+            System.out.println(activity1.get_id());
         }
     }
 

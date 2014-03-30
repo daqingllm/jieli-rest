@@ -100,8 +100,9 @@ public class UserService {
 
         ResponseEntity responseEntity = new ResponseEntity();
         String userId = IdentifyUtils.getUserId(sessionId);
-        user.setObjectId(new ObjectId(userId));
+        user.set_id(new ObjectId(userId));
         userDAO.update(user);
+        responseEntity.code = 200;
         return Response.status(200).entity(responseEntity).build();
     }
 

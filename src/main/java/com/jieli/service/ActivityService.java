@@ -1,9 +1,6 @@
 package com.jieli.service;
 
-import com.jieli.activity.Activity;
-import com.jieli.activity.ActivityDAO;
-import com.jieli.activity.ActivityInfo;
-import com.jieli.activity.RelatedActivityDAO;
+import com.jieli.activity.*;
 import com.jieli.common.entity.ResponseEntity;
 import com.jieli.util.IdentifyUtils;
 import com.jieli.util.MongoUtils;
@@ -14,7 +11,9 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author ltebean
@@ -114,11 +113,28 @@ public class ActivityService {
             result = infos.subList((page-1)*count, infos.size());
         } else {
             responseEntity.msg = "无数据";
+            responseEntity.code = 200;
+            return Response.status(200).entity(responseEntity).build();
         }
 
-        responseEntity.body = result;
+        responseEntity.body = generateRelatedActivities(result);
         responseEntity.code = 200;
         return Response.status(200).entity(responseEntity).build();
+    }
+
+    private Map<RelatedType, List<Activity>> generateRelatedActivities(List<ActivityInfo> infos) {
+        Map<RelatedType, List<Activity>> result = new HashMap<RelatedType, List<Activity>>();
+        for (ActivityInfo info : infos) {
+            RelatedType type = info.type;
+            if (result.get(type) == null) {
+                List<Activity> activities = new ArrayList<Activity>();
+                result.put(type, activities);
+            }
+            Activity activity = activityDAO.loadById(info.activityId);
+            result.get(type).add(activity);
+        }
+
+        return result;
     }
 
 }

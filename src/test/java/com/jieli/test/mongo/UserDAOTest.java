@@ -28,11 +28,11 @@ public class UserDAOTest {
         List<InterestTag> interestTags = new ArrayList<InterestTag>();
         interestTags.add(InterestTag.FOOTBALL);
         user.interestTags = interestTags;
-        String userId = userDAO.save(user).getObjectId().toString();
+        String userId = userDAO.save(user).get_id().toString();
         System.out.println(userId);
 
         User newUser = userDAO.loadById(userId);
-        System.out.println(newUser.getObjectId().toString());
+        System.out.println(newUser.get_id().toString());
         for (InterestTag interestTag : newUser.interestTags) {
             System.out.println(interestTag);
         }
@@ -46,7 +46,7 @@ public class UserDAOTest {
         System.out.println(account.password);
     }
 
-//    @Test
+    @Test
     public void clearAll() {
         accountDAO.clear();
         userDAO.clear();
@@ -55,8 +55,8 @@ public class UserDAOTest {
     @Test
     public void getUser() {
         Account account = accountDAO.loadByUsername("test");
-        System.out.println(account.getObjectId());
-        Account account1 = accountDAO.loadById(account.getObjectId().toString());
+        System.out.println(account.get_id());
+        Account account1 = accountDAO.loadById(account.get_id().toString());
         System.out.println(account1.userId);
     }
 }

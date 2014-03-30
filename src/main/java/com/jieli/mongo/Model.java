@@ -19,17 +19,17 @@ public class Model implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @JsonProperty("_id")
-    protected ObjectId objectId;
-
     @XmlJavaTypeAdapter(ObjectIdAdaptor.class)
-    public org.bson.types.ObjectId getObjectId() {
-        return objectId;
+    public ObjectId get_id() {
+        return _id;
     }
 
-    public void setObjectId(org.bson.types.ObjectId id) {
-        this.objectId = id;
+    public void set_id(ObjectId _id) {
+        this._id = _id;
     }
+
+    @JsonProperty("_id")
+    protected ObjectId _id;
 
     @Override
     public boolean equals(Object o) {
@@ -38,7 +38,7 @@ public class Model implements Serializable {
 
         Model model = (Model) o;
 
-        if (!objectId.equals(model.objectId)) return false;
+        if (!_id.equals(model._id)) return false;
 
         return true;
     }
@@ -50,6 +50,6 @@ public class Model implements Serializable {
 
     @Override
     public int hashCode() {
-        return objectId.hashCode();
+        return _id.hashCode();
     }
 }
