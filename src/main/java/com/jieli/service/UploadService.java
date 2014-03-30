@@ -2,9 +2,6 @@ package com.jieli.service;
 
 import com.jieli.common.entity.ResponseEntity;
 import com.jieli.util.UploaderUtils;
-import com.qiniu.api.io.IoApi;
-import com.qiniu.api.io.PutExtra;
-import com.qiniu.api.io.PutRet;
 import com.sun.jersey.core.header.FormDataContentDisposition;
 import com.sun.jersey.multipart.FormDataParam;
 
@@ -39,8 +36,9 @@ public class UploadService {
             responseEntity.msg="请选择文件";
             return Response.status(200).entity(responseEntity).build();
         }
+        String FilePath = "";
 		try{
-            String FilePath = UploaderUtils.writeToFile(uploadInputStream,FileDirectory,FileName);
+            FilePath = UploaderUtils.writeToFile(uploadInputStream,FileDirectory,FileName);
 
             responseEntity.code = 200;
             responseEntity.body = FilePath;
@@ -52,7 +50,6 @@ public class UploadService {
 		
 		String RetFileName = "http://"+UploaderUtils.GetBucketName()+".qiniudn.com/"+UploaderUtils.Upload7Niu(FileDirectory,FilePath);
 
-		
         return Response.status(200).entity(responseEntity).header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON+";charset=UTF-8").build();
     }
 

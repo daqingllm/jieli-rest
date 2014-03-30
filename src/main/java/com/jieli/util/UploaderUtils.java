@@ -2,6 +2,9 @@ package com.jieli.util;
 
 import com.qiniu.api.auth.digest.Mac;
 import com.qiniu.api.config.Config;
+import com.qiniu.api.io.IoApi;
+import com.qiniu.api.io.PutExtra;
+import com.qiniu.api.io.PutRet;
 import com.qiniu.api.rs.PutPolicy;
 
 import java.io.*;
@@ -11,6 +14,7 @@ import java.io.*;
  */
 public class UploaderUtils {
     private static Mac mac = null;
+    private static String bucketName = "xianxing-test";
 
     public static void Init(){
         Config.ACCESS_KEY = "BC1Z-BtDVW8dVxdbBBUXc59k1fIZievdyGCQfFj9";
@@ -18,10 +22,12 @@ public class UploaderUtils {
         mac = new Mac(Config.ACCESS_KEY, Config.SECRET_KEY);
     }
 
+    public static String GetBucketName(){return bucketName;}
+
     public static String GetUploadToken(){
         try{
         // 空间名称
-        String bucketName = "xianxing-test";
+        bucketName = "xianxing-test";
         // 上传策略，可以进行更多细节设置
         PutPolicy putPolicy = new PutPolicy(bucketName);
         if (mac == null)
