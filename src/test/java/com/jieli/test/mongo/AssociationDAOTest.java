@@ -25,7 +25,12 @@ public class AssociationDAOTest {
     @Test
     public void testGet() {
         Association association = associationDAO.loadByName("上海");
-        System.out.println(association.getObjectId());
+        System.out.println(association.get_id());
         System.out.println(association.name);
+    }
+
+    @Test
+    public void clearAll() {
+        associationDAO.clear();
     }
 }

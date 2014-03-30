@@ -51,7 +51,7 @@ public class AccountService {
             responseEntity.code = 200;
             responseEntity.msg = "登陆成功";
             JSONObject json = new JSONObject();
-            json.put("sessionId", account.getObjectId());
+            json.put("sessionId", account.get_id());
             responseEntity.body = json.toString();
             return Response.status(200).entity(responseEntity).build();
         }
@@ -71,7 +71,7 @@ public class AccountService {
         } else {
             String password = PasswordGenerator.getRandomString(8);
             User user = new User();
-            String userId = userDAO.save(user).getObjectId().toString();
+            String userId = userDAO.save(user).get_id().toString();
             Account newAccount = new Account();
             newAccount.username = username;
             newAccount.password = PasswordGenerator.md5Encode(password);

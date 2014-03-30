@@ -34,7 +34,7 @@ public abstract class GenericDAO<T extends Model> {
     }
 
     public T update(T t) {
-        col.update(t.objectId).merge(t);
+        col.update(t._id).merge(t);
         return t;
     }
 

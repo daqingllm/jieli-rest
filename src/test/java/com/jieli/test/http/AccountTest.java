@@ -28,6 +28,7 @@ public class AccountTest {
         Response response = Request.Post("http://localhost:8080/rest/account/login")
                 .setHeader("app", "test")
                 .bodyString("{\"username\":\"小明22\",\"password\":\"pnd96vhd\"}", ContentType.APPLICATION_JSON)
+       //         .bodyString("{\"username\":\"test\",\"password\":\"t9p160fo\"}", ContentType.APPLICATION_JSON)
                 .execute();
 
         System.out.println(response.returnContent().asString());

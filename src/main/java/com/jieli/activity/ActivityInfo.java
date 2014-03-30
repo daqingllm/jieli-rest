@@ -13,19 +13,4 @@ public class ActivityInfo {
 
     public RelatedType type;
 
-
-    public enum RelatedType {
-
-        SPONSER("sponser"), CONCERN("concern"), JOIN("join");
-
-        private String value;
-
-        private RelatedType(String value) {
-            this.value = value;
-        }
-
-        public String toString() {
-            return value;
-        }
-    }
 }
