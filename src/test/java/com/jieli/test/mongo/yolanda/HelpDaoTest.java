@@ -1,4 +1,4 @@
-package com.jieli.test.mongo;
+package com.jieli.test.mongo.yolanda;
 
 import com.jieli.feature.help.dao.HelpDAO;
 import com.jieli.feature.help.entity.HelpInfo;
@@ -17,6 +17,6 @@ public class HelpDaoTest {
         helpInfo.setUserId("5336bbe13004cc09f49432e6");
         helpInfo.setAttentionNum(0);
         helpInfo.setAddTime(new Date());
-        helpInfo.setAssociationId();
+        helpInfo.setAssociationId("5337af643004e0056052bd5a");
     }
 }
