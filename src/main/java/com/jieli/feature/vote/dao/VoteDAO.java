@@ -24,7 +24,7 @@ public class VoteDAO extends GenericDAO<VoteInfo> {
      * @return
      */
     public VoteInfo loadVoteInfo(String voteId) {
-        return col.findOne("voteId:#",voteId).as(VoteInfo.class);
+        return col.findOne("{\"voteId\":#}", voteId).as(VoteInfo.class);
     }
 
     /**
@@ -33,7 +33,7 @@ public class VoteDAO extends GenericDAO<VoteInfo> {
      * @return
      */
     public List<SimpleVoteInfo> getVoteInfoList(String associationId) {
-        Iterator<SimpleVoteInfo> iterator = col.find("associationId:#", associationId).as(SimpleVoteInfo.class).iterator();
+        Iterator<SimpleVoteInfo> iterator = col.find("{\"associationId\":#}", associationId).as(SimpleVoteInfo.class).iterator();
         List<SimpleVoteInfo> resultList = new ArrayList<SimpleVoteInfo>();
         for(;iterator.hasNext();) {
             resultList.add(iterator.next());

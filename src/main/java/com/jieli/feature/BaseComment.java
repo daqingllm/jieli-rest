@@ -9,7 +9,6 @@ import java.util.Date;
  * Created by YolandaLeo on 14-3-19.
  */
 public class BaseComment extends Model {
-    public String id;
     /**
      * 评论发表人id
      */
@@ -29,14 +28,6 @@ public class BaseComment extends Model {
 
     public void setCommentUserId(String commentUserId) {
         this.commentUserId = commentUserId;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     public String getComment() {

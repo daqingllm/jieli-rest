@@ -1,6 +1,7 @@
 package com.jieli.feature.help.entity;
 
 import com.jieli.mongo.Model;
+import com.jieli.user.entity.User;
 
 import java.util.Date;
 import java.util.List;
@@ -10,7 +11,6 @@ import java.util.List;
  * Created by YolandaLeo on 14-3-19.
  */
 public class HelpInfo extends Model{
-    public String id;
     public String userId;
     /**
      * 协会Id
@@ -41,13 +41,7 @@ public class HelpInfo extends Model{
      */
     public List<HelpComment> commentList;
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
+    public List<User> focusList;
 
     public String getUserId() {
         return userId;
@@ -112,4 +106,8 @@ public class HelpInfo extends Model{
     public void setCommentList(List<HelpComment> commentList) {
         this.commentList = commentList;
     }
+
+    public List<User> getFocusList() { return focusList; }
+
+    public void setFocusList(List<User> focusList) { this.focusList = focusList; }
 }

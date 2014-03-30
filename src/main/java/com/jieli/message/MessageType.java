@@ -9,7 +9,7 @@ package com.jieli.message;
  */
 public enum MessageType {
 
-    ACTIVITY("activity"),USER("user"),HELP("help"),ASSOCIATION("association");
+    ACTIVITY("activity"),USER("user"),HELP("help"),ASSOCIATION("association"),VOTE("vote");
 
     private String value;
 

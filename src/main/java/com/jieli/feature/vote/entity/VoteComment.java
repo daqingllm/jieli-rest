@@ -8,18 +8,9 @@ import java.util.Date;
  * Created by YolandaLeo on 14-3-29.
  */
 public class VoteComment extends BaseComment {
-    private String voteId;
     private String userId;
     private String context;
     private Date addTime;
-
-    public String getVoteId() {
-        return voteId;
-    }
-
-    public void setVoteId(String voteId) {
-        this.voteId = voteId;
-    }
 
     public String getUserId() {
         return userId;

@@ -1,12 +1,17 @@
 package com.jieli.feature.help.dao;
 
+import com.jieli.activity.Activity;
 import com.jieli.feature.help.entity.HelpComment;
 import com.jieli.feature.help.entity.HelpInfo;
 import com.jieli.feature.help.entity.SimpleHelpInfo;
+import com.jieli.message.Message;
+import com.jieli.message.MessageType;
 import com.jieli.mongo.GenericDAO;
+import com.jieli.user.entity.User;
 import com.jieli.util.CollectionUtils;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -23,9 +28,9 @@ public class HelpDAO extends GenericDAO<HelpInfo> {
      * @param helpId
      * @return
      */
-    public HelpInfo loadHelpInfo(String helpId) {
-        return col.findOne("helpId:#",helpId).as(HelpInfo.class);
-    }
+    /*public HelpInfo loadById(String helpId) {
+        return loadById(helpId);
+    }*/
 
     /**
      * 获取协会内互帮互助帖子列表
@@ -33,7 +38,7 @@ public class HelpDAO extends GenericDAO<HelpInfo> {
      * @return
      */
     public List<SimpleHelpInfo> getHelpInfoList(String associationId) {
-        Iterator<SimpleHelpInfo> iterator = col.find("associationId:#", associationId).as(SimpleHelpInfo.class).iterator();
+        Iterator<SimpleHelpInfo> iterator = col.find("{\"associationId\":#}", associationId).as(SimpleHelpInfo.class).iterator();
         List<SimpleHelpInfo> resultList = new ArrayList<SimpleHelpInfo>();
         for(;iterator.hasNext();) {
             resultList.add(iterator.next());
@@ -55,14 +60,14 @@ public class HelpDAO extends GenericDAO<HelpInfo> {
      * @param helpId
      * @return
      */
-    public List<HelpComment> getCommentList(String helpId) {
-        Iterator<HelpComment> iterator = col.find("helpId:#", helpId).as(HelpComment.class).iterator();
+    /*public List<HelpComment> getCommentList(String helpId) {
+        Iterator<HelpComment> iterator = col.find("{\"helpId\":#}", helpId).as(HelpComment.class).iterator();
         List<HelpComment> resultList = new ArrayList<HelpComment>();
         for(;iterator.hasNext();) {
             resultList.add(iterator.next());
         }
         return resultList;
-    }
+    }*/
 
     /**
      * 增加评论
@@ -71,11 +76,13 @@ public class HelpDAO extends GenericDAO<HelpInfo> {
      */
     public HelpInfo addComment(HelpComment comment) {
         String helpId = comment.getHelpId();
-        HelpInfo help = loadHelpInfo(helpId);
+        HelpInfo help = loadById(helpId);
         if(help == null) {
             return null;
         }
         List<HelpComment> commentList = help.getCommentList();
+        if(commentList == null)
+            commentList = new ArrayList<HelpComment>();
         commentList.add(comment);
         help.setCommentList(commentList);
         return save(help);
@@ -83,10 +90,10 @@ public class HelpDAO extends GenericDAO<HelpInfo> {
 
     /**
      * 删除评论
-     * @param commentId
+     * @param commentIndex
      */
-    public HelpInfo deleteComment(String helpId, String commentId) {
-        HelpInfo help = loadHelpInfo(helpId);
+    public HelpInfo deleteComment(String helpId, Integer commentIndex) {
+        HelpInfo help = loadById(helpId);
         if(help == null) {
             return null;
         }
@@ -94,14 +101,9 @@ public class HelpDAO extends GenericDAO<HelpInfo> {
         if(commentList == null || commentList.isEmpty()) {
             return null;
         }
-        HelpComment comment = loadComment(commentId, commentList);
-        if(commentList.remove(comment)) {
-            help.setCommentList(commentList);
-            return save(help);
-        }
-        else {
-            return null;
-        }
+        commentList.remove(commentIndex.intValue());
+        help.setCommentList(commentList);
+        return save(help);
     }
 
     /**
@@ -109,49 +111,58 @@ public class HelpDAO extends GenericDAO<HelpInfo> {
      * @param helpId
      * @return
      */
-    public HelpInfo addFocus(String helpId) {
-        HelpInfo help = loadHelpInfo(helpId);
+    public HelpInfo addFocus(String helpId, User user) {
+        HelpInfo help = loadById(helpId);
         Integer attention = help.getAttentionNum();
         attention++;
         help.setAttentionNum(attention);
+        List<User> focusList = help.getFocusList();
+        if(focusList == null) {
+            focusList = new ArrayList<User>();
+        }
+        focusList.add(user);
+        help.setFocusList(focusList);
         return save(help);
     }
 
     /**
      * 评论置顶
      * @param helpId
-     * @param commentId
+     * @param commentIndex
      * @return
      */
-    public HelpInfo topComment(String helpId, String commentId) {
-        HelpInfo help = loadHelpInfo(helpId);
-        HelpComment comment = loadComment(commentId, help.getCommentList());
+    public HelpInfo topComment(String helpId, Integer commentIndex) {
+        HelpInfo help = loadById(helpId);
+        List<HelpComment> commentList = help.getCommentList();
+        HelpComment comment = commentList.get(commentIndex);
         comment.setTop(true);
-        return updateComment(helpId, comment);
+        commentList.set(commentIndex, comment);
+        help.setCommentList(commentList);
+        return save(help);
     }
 
     private HelpComment loadComment(String commentId, List<HelpComment> comments) {
         if(CollectionUtils.isEmpty(comments)) {
             return null;
         }
-        for (HelpComment comment : comments) {
-            if(comment.getId() == commentId) {
+        /*for (HelpComment comment : comments) {
+            if(comment.get_id() .equals(commentId)) {
                 return comment;
             }
-        }
-        return null;
+        }*/
+        return comments.get(Integer.getInteger(commentId));
     }
 
-    private HelpInfo updateComment(String helpId, HelpComment newComment) {
-        HelpInfo help = loadHelpInfo(helpId);
+    /*private HelpInfo updateComment(String helpId, HelpComment newComment) {
+        HelpInfo help = loadById(helpId);
         List<HelpComment> commentList = help.getCommentList();
         for(HelpComment comment : commentList) {
-            if(comment.getId() == newComment.getId()) {
+            if(comment.get_id().equals(newComment.get_id())) {
                 comment = newComment;
                 help.setCommentList(commentList);
                 return save(help);
             }
         }
         return null;
-    }
+    }*/
 }

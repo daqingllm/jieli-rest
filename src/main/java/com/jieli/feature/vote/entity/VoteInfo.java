@@ -11,7 +11,6 @@ import java.util.Map;
  * Created by YolandaLeo on 14-3-29.
  */
 public class VoteInfo extends Model {
-    private String id;
     private String title;
     private String associationId;
     private String userId;
@@ -26,15 +25,6 @@ public class VoteInfo extends Model {
     private List<VoteComment> commentList;
     private List<Vote> voteList; //投票记录
     private Integer totalVote; //每个选项投票数总和
-
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
 
     public String getAssociationId() {
         return associationId;
