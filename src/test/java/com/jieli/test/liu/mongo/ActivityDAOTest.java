@@ -1,4 +1,4 @@
-package com.jieli.test.mongo;
+package com.jieli.test.liu.mongo;
 
 import com.jieli.activity.*;
 import org.testng.annotations.Test;

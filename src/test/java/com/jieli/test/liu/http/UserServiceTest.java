@@ -1,4 +1,4 @@
-package com.jieli.test.http;
+package com.jieli.test.liu.http;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jieli.user.entity.User;

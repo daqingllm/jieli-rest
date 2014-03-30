@@ -1,4 +1,4 @@
-package com.jieli.test.mongo;
+package com.jieli.test.liu.mongo;
 
 import com.jieli.association.Association;
 import com.jieli.association.AssociationDAO;

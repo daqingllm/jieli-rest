@@ -85,9 +85,9 @@ public class ActivityService {
         }
         activityDAO.save(activity);
         ResponseEntity responseEntity = new ResponseEntity();
+        responseEntity.body = "{\"_id\":\"" + activity.get_id() + "\"}";
         responseEntity.code=200;
-        responseEntity.body=activity;
-        return  Response.status(200).entity(responseEntity).build();
+        return  Response.status(200).build();
     }
 
     @GET
