@@ -9,7 +9,7 @@ package com.jieli.activity;
  */
 public enum RelatedType {
 
-    SPONSER("sponser"), CONCERN("concern"), JOIN("join");
+    SPONSER("sponser"), FOLLOW("follow"), JOIN("join");
 
     private String value;
 

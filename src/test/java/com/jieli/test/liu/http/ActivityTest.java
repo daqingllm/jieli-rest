@@ -23,9 +23,9 @@ public class ActivityTest {
     @Test
     public void testCreate() throws IOException {
         Activity activity = new Activity();
-//        activity.associationId = "5337a309ef869d4225397d48";
-        activity.beginDate = new Date(2015,1,1);
-        activity.tag = AcivityTag.RECOMMAND;
+        activity.associationId = "5337a309ef869d4225397d48";
+        activity.beginDate = new Date(new Date().getTime() + 1000000);
+        activity.tag = AcivityTag.OFFICIAL;
 //        activity.sponsorUserId = "533799caef869f8e93d30d9c";
         activity.title = "R1";
 
@@ -39,7 +39,7 @@ public class ActivityTest {
 
     @Test
     public void testLoad() throws IOException {
-        Response response = Request.Get("http://localhost:8080/rest/activity/5337af2cef869d4225397d49")
+        Response response = Request.Get("http://localhost:8080/rest/activity?activityId=5337cf1cef868c3955e498c7")
                 .addHeader("Cookie", "u=533799caef869f8e93d30d9d")
                 .execute();
 
@@ -54,4 +54,33 @@ public class ActivityTest {
 
         System.out.println(response.returnContent().asString());
     }
+
+    @Test
+    public void testFollow() throws IOException {
+        Response response = Request.Get("http://localhost:8080/rest/activity/concern?activityId=5337cf1cef868c3955e498c7")
+                .addHeader("Cookie", "u=533799caef869f8e93d30d9d")
+                .execute();
+
+        System.out.println(response.returnContent().asString());
+    }
+
+    @Test
+    public void testJoin() throws IOException {
+        Response response = Request.Get("http://localhost:8080/rest/activity/join?activityId=5337cf1cef868c3955e498c7&part=part1")
+                .addHeader("Cookie", "u=533799caef869f8e93d30d9d")
+                .execute();
+
+        System.out.println(response.returnContent().asString());
+    }
+
+    @Test
+    public void testComment() throws IOException {
+        Response response = Request.Post("http://localhost:8080/rest/activity/comment?activityId=5337cf1cef868c3955e498c7")
+                .addHeader("Cookie", "u=533799caef869f8e93d30d9d")
+                .bodyString("我是评论", ContentType.APPLICATION_JSON)
+                .execute();
+
+        System.out.println(response.returnContent().asString());
+    }
+
 }

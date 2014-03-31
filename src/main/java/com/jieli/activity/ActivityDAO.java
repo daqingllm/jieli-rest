@@ -24,7 +24,7 @@ public class ActivityDAO extends GenericDAO<Activity> {
 
     public Iterable<Activity> findOngoingRecommend() {
         Date now = new Date();
-        return col.find("{tag:#, beginDate:{$gt:#}}", "OFFICIAL", now).sort("{beginDate:-1}").as(Activity.class);
+        return col.find("{tag:#, beginDate:{$gt:#}}", "RECOMMEND", now).sort("{beginDate:-1}").as(Activity.class);
     }
 
 }
