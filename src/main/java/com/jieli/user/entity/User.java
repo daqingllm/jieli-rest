@@ -50,4 +50,7 @@ public class User extends Model {
 
     //协会
     public String associationId;
+
+    //企业
+    public String enterpriseName;
 }
