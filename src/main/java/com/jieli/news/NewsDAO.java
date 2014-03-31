@@ -1,9 +1,7 @@
 package com.jieli.news;
 
-import com.jieli.activity.Activity;
 import com.jieli.mongo.GenericDAO;
 
-import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -16,9 +14,29 @@ import java.util.List;
  */
 public class NewsDAO extends GenericDAO<News> {
 
-    public Iterable<Activity> findOngoingOfficial(String associationId) {
-        Date now = new Date();
-        return col.find("{tag:#, associationId:#, beginDate:{$gt:#}}", "OFFICIAL", associationId, now).sort("{beginDate:-1}").as(Activity.class);
+
+    public List<News> paginate(int pageNo, int pageSize, String query, Object... params){
+        if(!check(pageNo, pageSize))
+            return null;
+        pageNo = pageNo<=0?1:pageNo;
+        Iterable<News> iterable = col.find(query, params).sort("{_id:-1}").skip((pageNo-1)*pageSize).limit(pageSize).as(News.class);
+        return iterableToList(iterable);
+    }
+
+    public List<News> findWithLimit(int limit, String query, Object... params){
+        if(limit<=0)
+            return null;
+        Iterable<News> iterable = col.find(query, params).sort("{_id:-1}").limit(limit).as(News.class);
+        return iterableToList(iterable);
+    }
+
+
+    private List<News> iterableToList(Iterable<News> iterable){
+        List<News> records = new LinkedList<News>();
+        for(News t : iterable){
+            records.add(t);
+        }
+        return records;
     }
 
     private boolean check(int pageNo, int pageSize){
@@ -26,36 +44,6 @@ public class NewsDAO extends GenericDAO<News> {
         if(pageNo<0 || pageSize<=0)
             return false;
         return result;
-    }
-
-
-    public List<News> paginate(int pageNo, int pageSize, String query, Object... params){
-        if(!check(pageNo, pageSize))
-            return null;
-
-        pageNo = pageNo<=0?1:pageNo;
-        Iterable<News> iterable = col.find(query, params).sort("{_id:-1}").skip((pageNo-1)*pageSize).limit(pageSize).as(News.class);
-
-        List<News> records = new LinkedList<News>();
-        for(News t : iterable){
-            records.add(t);
-        }
-
-        return records;
-    }
-
-    public List<News> findWithLimit(int limit, String query, Object... params){
-        if(limit<=0)
-            return null;
-
-        Iterable<News> iterable = col.find(query, params).sort("{_id:-1}").limit(limit).as(News.class);
-
-        List<News> records = new LinkedList<News>();
-        for(News t : iterable){
-            records.add(t);
-        }
-
-        return records;
     }
 
 
