@@ -42,17 +42,8 @@ public class NewsService {
             return Response.status(403).build();
         }
 
-        List<News> newses = null;
-        if(News.associationType.equals(type)){
-            String associationId = IdentifyUtils.getAssociationId(sessionId);
-            newses = newsDAO.paginate(page, pagesize, "{associationId:#, type:#}", associationId, type);
-        }else if(News.enterpriseType.equals(type)){
-            String userId = IdentifyUtils.getUserId(sessionId);
-            User user = userDAO.loadById(userId);
-            newses = newsDAO.paginate(page, pagesize, "{enterpriseName:#, type:#}", user.enterpriseName, type);
-        }else if(News.newsType.equals(type)) {
-            newses = newsDAO.paginate(page, pagesize, "{type:#}", type);
-        }
+        String associationId = IdentifyUtils.getAssociationId(sessionId);
+        List<News> newses = newsDAO.paginate(page, pagesize, "{associationId:#, type:#}", associationId, type);
 
 
         ResponseEntity responseEntity = new ResponseEntity();
@@ -78,15 +69,6 @@ public class NewsService {
     }
 
 
-//    @POST
-//    @Path("/load")
-//    @Produces(MediaType.APPLICATION_JSON+ ";charset=utf-8")
-//    public Response upsertNews(){
-//
-//    }
-
-
-
     @GET
     @Path("/cover")
     @Produces(MediaType.APPLICATION_JSON+ ";charset=utf-8")
@@ -100,17 +82,8 @@ public class NewsService {
             count = 3;
 
 
-        List<News> newses = null;
-        if(News.associationType.equals(type)){
-            String associationId = IdentifyUtils.getAssociationId(sessionId);
-            newses = newsDAO.findWithLimit(count, "{associationId:#, type:#, imagesCount:{$gt: 0}}", associationId, type);
-        }else if(News.enterpriseType.equals(type)){
-            String userId = IdentifyUtils.getUserId(sessionId);
-            User user = userDAO.loadById(userId);
-            newses = newsDAO.findWithLimit(count, "{enterpriseName:#, type:#, imagesCount:{$gt: 0}}", user.enterpriseName, type);
-        }else if(News.newsType.equals(type)) {
-            newses = newsDAO.findWithLimit(count, "{type:#, imagesCount:{$gt: 0}}", type);
-        }
+        String associationId = IdentifyUtils.getAssociationId(sessionId);
+        List<News> newses = newsDAO.findWithLimit(count, "{associationId:#, type:#, imagesCount:{$gt: 0}}", associationId, type);
 
         List<Image> images = null;
         if(newses!=null && newses.size()>0){
