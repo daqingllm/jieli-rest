@@ -2,8 +2,6 @@ package com.jieli.service;
 
 import com.jieli.activity.*;
 import com.jieli.common.entity.ResponseEntity;
-import com.jieli.message.MessageDAO;
-import com.jieli.user.dao.UserDAO;
 import com.jieli.util.IdentifyUtils;
 import com.jieli.util.MongoUtils;
 import com.sun.jersey.spi.resource.Singleton;
@@ -26,32 +24,25 @@ public class ActivityService {
 
     private final RelatedActivityDAO  relatedDAO = new RelatedActivityDAO();
 
-    private final UserDAO userDAO = new UserDAO();
-
-    private final MessageDAO messageDAO = new MessageDAO();
-
     @GET
     @Path("/ongoing")
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-    public Response findOngoingActivity(@CookieParam("u")String sessionId) {
+    public Response findOngoingActivity(@CookieParam("u")String sessionId, @QueryParam("page")int page, @QueryParam("size")int count) {
         if (!IdentifyUtils.isValidate(sessionId)) {
             return Response.status(403).build();
         }
+        if (page <= 0) {
+            page = 1;
+        }
+        if (count <= 0) {
+            count = 15;
+        }
         String associationId = IdentifyUtils.getAssociationId(sessionId);
-//        Iterable<Activity> result=activityDAO.getCollection().find("{type:#}",type).sort("{beginDate:-1}").skip(page*PAGE_SIZE).limit(PAGE_SIZE).as(Activity.class);
-        Iterable<Activity> officials = activityDAO.findOngoingOfficial(associationId);
-        Iterable<Activity> recommands = activityDAO.findOngoingRecommend();
-        List<Activity> result = new ArrayList<Activity>();
-        for (Activity activity : officials) {
-            result.add(activity);
-        }
-        for (Activity activity : recommands) {
-            result.add(activity);
-        }
+        Iterable<Activity> activities = activityDAO.findOngoing(associationId, page-1, count);
 
         ResponseEntity responseEntity = new ResponseEntity();
         responseEntity.code=200;
-        responseEntity.body=result;
+        responseEntity.body=activities;
 
         return  Response.status(200).entity(responseEntity).build();
     }
@@ -68,11 +59,6 @@ public class ActivityService {
             responseEntity.msg = "缺少参数";
             return Response.status(200).entity(responseEntity).build();
         }
-        if (!MongoUtils.isValidObjectId(activityId)) {
-            responseEntity.code = 3102;
-            responseEntity.msg = "参数Id无效";
-            return Response.status(200).entity(responseEntity).build();
-        }
         Activity result=activityDAO.loadById(activityId);
         responseEntity.code=200;
         responseEntity.body=result;
@@ -87,49 +73,11 @@ public class ActivityService {
         }
 
         activityDAO.save(activity);
-//        handleMessageWhenUpsertActivity(activity);
+
         ResponseEntity responseEntity = new ResponseEntity();
         responseEntity.body = "{\"_id\":\"" + activity.get_id() + "\"}";
         responseEntity.code=200;
         return  Response.status(200).entity(responseEntity).build();
-    }
-
-    private void handleMessageWhenUpsertActivity(Activity activity) {
-        if (activity.get_id() == null) {
-            handleMessageWhenInsertActivity(activity);
-        } else {
-            handleMessageWhenUpdateActivity(activity);
-        }
-    }
-
-    private void handleMessageWhenInsertActivity(Activity activity) {
-        if (activity.tag.equals(AcivityTag.RECOMMEND)) {
-            new MessageTask(activity.title) {
-
-                private static final int SIZE = 50;
-
-                private String title;
-
-//                @Override
-//                public void run() {
-//                    long count = userDAO.getCollection().getDBCollection().count();
-//                    for (int i=0; i*SIZE<count; ++i) {
-//                        Iterable<User> users = userDAO.getCollection().find().skip(i*SIZE).limit(SIZE).as(User.class);
-//                        for (User user : users) {
-//                            Message message = new Message();
-//                            message.messageType = MessageType.ACTIVITY;
-//                            message.read = false;
-//                            message.content = "[官方活动] " + activity.title;
-//                            message
-//                        }
-//                    }
-//                }
-            };
-        }
-    }
-
-    private void handleMessageWhenUpdateActivity(Activity activity) {
-
     }
 
     @GET
@@ -289,19 +237,6 @@ public class ActivityService {
         responseEntity.code = 200;
         responseEntity.msg = "评论成功";
         return Response.status(200).entity(responseEntity).build();
-    }
-
-    private class MessageTask implements Runnable {
-
-        private String content;
-
-        public MessageTask(String content) {
-            this.content = content;
-        }
-
-        @Override
-        public void run() {
-        }
     }
 
 }

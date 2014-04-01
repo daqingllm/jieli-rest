@@ -10,6 +10,7 @@ import com.jieli.user.entity.UserBasicInfo;
 import com.jieli.util.CollectionUtils;
 import com.jieli.util.IdentifyUtils;
 import com.jieli.util.MongoUtils;
+import com.sun.jersey.spi.resource.Singleton;
 import org.apache.commons.lang.StringUtils;
 import org.bson.types.ObjectId;
 
@@ -26,6 +27,7 @@ import java.util.List;
  * Time: 上午10:35
  * To change this template use File | Settings | File Templates.
  */
+@Singleton
 @Path("/user")
 public class UserService {
 

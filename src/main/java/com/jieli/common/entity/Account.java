@@ -15,6 +15,8 @@ public class Account extends Model {
 
     public String password;
 
+    public String associationId;
+
     public String userId;
 
     public AccountState state = AccountState.ENABLE;

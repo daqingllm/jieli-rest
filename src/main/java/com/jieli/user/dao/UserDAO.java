@@ -1,7 +1,7 @@
 package com.jieli.user.dao;
 
-import com.jieli.user.entity.User;
 import com.jieli.mongo.GenericDAO;
+import com.jieli.user.entity.User;
 
 /**
  * Created with IntelliJ IDEA.
