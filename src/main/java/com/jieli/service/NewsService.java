@@ -80,6 +80,14 @@ public class NewsService {
     }
 
 
+//    @POST
+//    @Path("/load")
+//    @Produces(MediaType.APPLICATION_JSON+ ";charset=utf-8")
+//    public Response upsertNews(){
+//
+//    }
+
+
 
     @GET
     @Path("/cover")
