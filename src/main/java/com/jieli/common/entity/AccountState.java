@@ -9,7 +9,7 @@ package com.jieli.common.entity;
  */
 public enum AccountState {
 
-    ENABLE(0),DISABLE(1),ADMIN(2),SUPPER(3);
+    DISABLE(0),ENABLE(1),ADMIN(2),SUPPER(3);
 
     private int value;
 

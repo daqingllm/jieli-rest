@@ -47,7 +47,7 @@ public class UploaderUtils {
         String prefix = System.nanoTime()+"_";
         //String FileName = uploadFileLocation + new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss_").format(new Date()).toString() + uploadFileName;
         String FileName = uploadFileLocation + prefix + uploadFileName;
-        
+
         try {
             OutputStream out= new FileOutputStream(new File(FileName));
             int read = 0;
@@ -68,7 +68,7 @@ public class UploaderUtils {
 
         return FileName;
     }
-	
+
 	public static String Upload7Niu(String dir,String fp){
         String tocken = GetUploadToken();
         PutExtra extra = new PutExtra();

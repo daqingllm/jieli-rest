@@ -47,7 +47,7 @@ public class UploadService {
 		    responseEntity.code = 2002;
             responseEntity.msg = "上传失败";
         }
-		
+
 		String RetFileName = "http://"+UploaderUtils.GetBucketName()+".qiniudn.com/"+UploaderUtils.Upload7Niu(FileDirectory,FilePath);
 
         return Response.status(200).entity(responseEntity).header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON+";charset=UTF-8").build();
