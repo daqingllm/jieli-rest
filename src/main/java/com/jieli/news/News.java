@@ -19,11 +19,7 @@ public class News extends Model {
     private static final long serialVersionUID = -2926128873069182721L;
 
     public String associationId;
-    public String type;
-    public static final String associationType = "association";  // 协会资讯
-    public static final String enterpriseType = "enterprise";  // 企业动态
-    public static final String newsType = "news";  // 新闻
-
+    public String type;  // NewsType
 
     public String title;
 
