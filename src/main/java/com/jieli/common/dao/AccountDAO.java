@@ -1,6 +1,7 @@
 package com.jieli.common.dao;
 
 import com.jieli.common.entity.Account;
+import com.jieli.common.entity.AccountState;
 import com.jieli.mongo.GenericDAO;
 
 /**
@@ -14,6 +15,10 @@ public class AccountDAO extends GenericDAO<Account> {
 
     public Account loadByUsername(String username) {
         return col.findOne("{username:#}", username).as(Account.class);
+    }
+
+    public Iterable<Account> loadByAssociationId(String associationId, AccountState state) {
+        return col.find("{associationId:#, state:#}", associationId, state).as(Account.class);
     }
 
 }

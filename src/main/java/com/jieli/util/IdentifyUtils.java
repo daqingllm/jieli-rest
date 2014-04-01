@@ -1,11 +1,8 @@
 package com.jieli.util;
 
-import bsh.StringUtil;
 import com.jieli.common.dao.AccountDAO;
 import com.jieli.common.entity.Account;
 import com.jieli.common.entity.AccountState;
-import com.jieli.user.dao.UserDAO;
-import com.jieli.user.entity.User;
 import org.apache.commons.lang.StringUtils;
 
 /**
@@ -18,6 +15,21 @@ import org.apache.commons.lang.StringUtils;
 public abstract class IdentifyUtils {
 
     public static boolean isValidate(String sessionId) {
+
+        return checkValue(sessionId, AccountState.ENABLE);
+    }
+
+    public static boolean isAdmin(String sessionId) {
+
+        return checkValue(sessionId, AccountState.ADMIN);
+    }
+
+    public static boolean isSuper(String sessionId) {
+
+        return checkValue(sessionId, AccountState.SUPPER);
+    }
+
+    private static boolean checkValue(String sessionId, AccountState state) {
         if (StringUtils.isEmpty(sessionId)) {
             return false;
         }
@@ -26,7 +38,7 @@ public abstract class IdentifyUtils {
         }
         AccountDAO accountDAO = new AccountDAO();
         Account account = accountDAO.loadById(sessionId);
-        if (account != null && account.state == AccountState.ENABLE) {
+        if (account != null && account.state.value() >= state.value()) {
             return true;
         } else {
             return false;
@@ -61,11 +73,7 @@ public abstract class IdentifyUtils {
         if (account == null) {
             return null;
         }
-        UserDAO userDAO = new UserDAO();
-        User user = userDAO.loadById(account.userId);
-        if (user == null) {
-            return null;
-        }
-        return user.associationId;
+
+        return account.associationId;
     }
 }

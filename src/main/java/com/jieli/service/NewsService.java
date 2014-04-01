@@ -1,7 +1,6 @@
 package com.jieli.service;
 
 import com.jieli.common.entity.ResponseEntity;
-import com.jieli.mongo.GenericDAO;
 import com.jieli.news.Image;
 import com.jieli.news.News;
 import com.jieli.news.NewsDAO;
@@ -14,7 +13,6 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
