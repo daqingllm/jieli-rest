@@ -33,9 +33,6 @@ public class News extends Model {
     public List<Image> images;
     public int imagesCount;
 
-    public List<Comment> comments; // 评论
-    public int commentsCount;
-
     public List<User> appreciateMembers;  // 点赞者
     public int appreciateCount;
 
