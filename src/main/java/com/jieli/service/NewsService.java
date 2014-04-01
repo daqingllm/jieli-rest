@@ -4,7 +4,6 @@ import com.jieli.common.entity.ResponseEntity;
 import com.jieli.news.Image;
 import com.jieli.news.News;
 import com.jieli.news.NewsDAO;
-import com.jieli.user.dao.UserDAO;
 import com.jieli.util.CollectionUtils;
 import com.jieli.util.IdentifyUtils;
 import com.sun.jersey.spi.resource.Singleton;
