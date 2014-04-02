@@ -93,17 +93,16 @@ public class FeatureTest {
     public void addTop() throws IOException {
         String helpId = "5338115f30043866e28ac0b2";
         Integer index = 1;
-        Response response = Request.Post("http://localhost:8080/rest/feature/help/detail/comment/top" +
-                "?helpId=5338115f30043866e28ac0b2")
+        Response response = Request.Post("http://localhost:8080/rest/feature/help/detail/comment/top?helpId=5338115f30043866e28ac0b2")
                 .setHeader("Cookie", "u=5336bb6f3004cc09f49432e5")
-                .bodyString(helpId + index.toString(), ContentType.APPLICATION_JSON)
+                .bodyString(index.toString(), ContentType.APPLICATION_JSON)
                 .execute();
         System.out.println(response.returnContent().asString());
     }
 
     @Test
     public void getVoteList() throws IOException {
-        Response response = Request.Post("http://localhost:8080/rest/feature/vote")
+        Response response = Request.Get("http://localhost:8080/rest/feature/vote")
                 .setHeader("Cookie", "u=5336bb6f3004cc09f49432e5")
                 .execute();
         System.out.println(response.returnContent().asString());
@@ -111,7 +110,7 @@ public class FeatureTest {
 
     @Test
     public void getVoteInfo() throws IOException {
-        Response response = Request.Post("http://localhost:8080/rest/feature/vote/detail?voteId=533807ec300406d49b957887")
+        Response response = Request.Get("http://localhost:8080/rest/feature/vote/detail?voteId=533807ec300406d49b957887")
                 .setHeader("Cookie", "u=5336bb6f3004cc09f49432e5")
                 .execute();
         System.out.println(response.returnContent().asString());

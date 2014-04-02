@@ -329,7 +329,7 @@ public class FeatureService {
     @Path("/help/detail/comment/top")
      @POST
      @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-     public Response addTop(@CookieParam("u")String sessionId, String helpId, Integer commentIndex) {
+     public Response addTop(@CookieParam("u")String sessionId, @QueryParam("helpId")String helpId, Integer commentIndex) {
          if(!IdentifyUtils.isValidate(sessionId)) {
              return Response.status(403).build();
          }
