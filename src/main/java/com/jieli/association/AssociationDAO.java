@@ -14,4 +14,8 @@ public class AssociationDAO extends GenericDAO<Association> {
     public Association loadByName(String name) {
         return col.findOne("{name:#}", name).as(Association.class);
     }
+
+    public Iterable<Association> loadAll() {
+        return col.find().as(Association.class);
+    }
 }

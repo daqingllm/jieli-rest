@@ -2,8 +2,6 @@ package com.jieli.association;
 
 import com.jieli.mongo.Model;
 
-import java.util.List;
-
 /**
  * Created with IntelliJ IDEA.
  * User: liming_liu
@@ -14,15 +12,4 @@ import java.util.List;
 public class Association extends Model {
 
     public String name;
-
-    //协会内非普通的成员
-    List<Identity> headers;
-
-    //协会身份
-    public class Identity {
-
-        String userId;
-
-        String identity;
-    }
 }

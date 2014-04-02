@@ -65,4 +65,9 @@ public class ActivityDAOTest {
             System.out.println(activityInfo.activityId);
         }
     }
+
+    @Test
+    public void clear() {
+        activityDAO.clear();
+    }
 }

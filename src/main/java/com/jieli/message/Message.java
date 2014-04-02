@@ -17,11 +17,9 @@ public class Message extends Model {
 
     public MessageType messageType;
 
-    public String content;
+    public Object content;
 
-    public String objectId;
-
-    public Date date;
+    public Date addTime;
 
     public boolean read;
 

@@ -21,6 +21,12 @@ public abstract class GenericDAO<T extends Model> {
     }
 
     public T loadById(String id) {
+        ObjectId _id = null;
+        try {
+            new ObjectId(id);
+        } catch (Exception e) {
+            return null;
+        }
         return col.findOne(new ObjectId(id)).as(getType());
     }
 
