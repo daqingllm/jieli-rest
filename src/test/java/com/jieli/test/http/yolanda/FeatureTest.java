@@ -1,6 +1,5 @@
 package com.jieli.test.http.yolanda;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jieli.feature.help.entity.HelpComment;
 import com.jieli.feature.help.entity.HelpInfo;
@@ -11,6 +10,8 @@ import org.apache.http.entity.ContentType;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 
@@ -117,10 +118,11 @@ public class FeatureTest {
     }
 
     @Test
-    public void addVote() throws IOException {
+    public void addVote() throws IOException, ParseException {
         VoteInfo voteInfo = new VoteInfo();
         voteInfo.setAssociationId("5337af643004e0056052bd5a");
-        voteInfo.setDeadLine(new Date("2014-05-01"));
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        voteInfo.setDeadLine(format.parse("2014-05-01"));
         voteInfo.setMultiple(false);
         voteInfo.setTitle("喜欢的颜色");
         voteInfo.setOptions(Arrays.asList("红", "黄", "蓝", "绿"));
