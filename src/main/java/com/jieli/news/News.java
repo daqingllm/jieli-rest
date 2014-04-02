@@ -18,11 +18,8 @@ public class News extends Model {
 
     private static final long serialVersionUID = -2926128873069182721L;
 
-    public String type;
-    public static final String associationType = "association";  // 协会资讯
-    public static final String enterpriseType = "enterprise";  // 企业动态
-    public static final String newsType = "news";  // 新闻
-
+    public String associationId;
+    public String type;  // NewsType
 
     public String title;
 
@@ -33,22 +30,10 @@ public class News extends Model {
     public List<Image> images;
     public int imagesCount;
 
-    public List<Comment> comments; // 评论
-    public int commentsCount;
-
-    public List<User> appreciateMembers;  // 点赞者
+    public List<String> appreciateUserIds;  // 点赞者
     public int appreciateCount;
 
     public Date addTime;
-
-
-    public String associationId; // 只有[协会资讯]有
-
-    public String enterpriseName;// 只有[企业动态]有
-
-
-
-
 
 
 }

@@ -18,6 +18,7 @@ import com.jieli.user.entity.User;
 import com.jieli.util.IdentifyUtils;
 import com.jieli.util.MongoUtils;
 import org.apache.commons.lang.StringUtils;
+import org.bson.types.ObjectId;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -312,8 +313,8 @@ public class FeatureService {
         message.messageType = MessageType.HELP;
         message.importance = 0;
         message.content = "帖子已经被我回复啦";
-        message.objectId = result.get_id().toString();
-        message.date = new Date();
+        message.set_id(new ObjectId(result.get_id().toString()));
+        message.addTime = new Date();
         messageDAO.save(message);
         responseEntity.code = 200;
         responseEntity.body = result;
@@ -329,7 +330,7 @@ public class FeatureService {
     @Path("/help/detail/comment/top")
      @POST
      @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-     public Response addTop(@CookieParam("u")String sessionId, String helpId, Integer commentIndex) {
+     public Response addTop(@CookieParam("u")String sessionId, @QueryParam("helpId")String helpId, Integer commentIndex) {
          if(!IdentifyUtils.isValidate(sessionId)) {
              return Response.status(403).build();
          }
@@ -480,8 +481,8 @@ public class FeatureService {
         message.messageType = MessageType.VOTE;
         message.importance = 0;
         message.content = "我发起了一个投票";
-        message.objectId = result.get_id().toString();
-        message.date = new Date();
+        message.set_id(new ObjectId(result.get_id().toString()));
+        message.addTime = new Date();
         messageDAO.save(message);
         responseEntity.code = 200;
         responseEntity.body = result;
@@ -522,8 +523,8 @@ public class FeatureService {
         message.messageType = MessageType.VOTE;
         message.importance = 0;
         message.content = "我参与了一个投票";
-        message.objectId = result.get_id().toString();
-        message.date = new Date();
+        message.set_id(new ObjectId(result.get_id().toString()));
+        message.addTime = new Date();
         messageDAO.save(message);
         responseEntity.code = 200;
         responseEntity.body = result;
