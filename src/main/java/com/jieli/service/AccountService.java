@@ -31,6 +31,20 @@ public class AccountService {
     private AccountDAO accountDAO = new AccountDAO();
     private UserDAO userDAO = new UserDAO();
 
+    public AccountService() {
+        Account account = accountDAO.loadByUsername("super");
+        if (account == null) {
+            account = new Account();
+            User user = new User();
+            userDAO.save(user);
+            account.userId = user.get_id().toString();
+            account.username = "super";
+            account.password = "1b3231655cebb7a1f783eddf27d254ca";
+            account.state = AccountState.SUPPER;
+            accountDAO.save(account);
+        }
+    }
+
     @Path("/login")
     @POST
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")

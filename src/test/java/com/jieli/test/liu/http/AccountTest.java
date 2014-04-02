@@ -1,18 +1,11 @@
 package com.jieli.test.liu.http;
 
-import com.jieli.user.entity.User;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.client.fluent.Response;
 import org.apache.http.entity.ContentType;
-import org.codehaus.jackson.JsonEncoding;
-import org.codehaus.jackson.JsonGenerator;
-import org.codehaus.jackson.map.ObjectMapper;
 import org.testng.annotations.Test;
 
-import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.io.Writer;
 
 /**
  * Created with IntelliJ IDEA.
@@ -27,8 +20,7 @@ public class AccountTest {
     public void testLogin() throws IOException {
         Response response = Request.Post("http://localhost:8080/rest/account/login")
                 .setHeader("app", "test")
-                .bodyString("{\"username\":\"小明22\",\"password\":\"pnd96vhd\"}", ContentType.APPLICATION_JSON)
-       //         .bodyString("{\"username\":\"test\",\"password\":\"t9p160fo\"}", ContentType.APPLICATION_JSON)
+                .bodyString("{\"username\":\"super\",\"password\":\"super\"}", ContentType.APPLICATION_JSON)
                 .execute();
 
         System.out.println(response.returnContent().asString());
