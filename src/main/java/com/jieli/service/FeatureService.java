@@ -110,6 +110,9 @@ public class FeatureService {
         if(!IdentifyUtils.isValidate(sessionId)) {
             return Response.status(403).build();
         }
+        if(!IdentifyUtils.isAdmin(sessionId) || !IdentifyUtils.isSuper(sessionId)) {
+            return Response.status(403).build();
+        }
         ResponseEntity responseEntity = new ResponseEntity();
         if (help  == null) {
             responseEntity.code = 1101;
@@ -132,6 +135,45 @@ public class FeatureService {
         responseEntity.code = 200;
         responseEntity.body = result;
         return Response.status(200).entity(result.get_id()).build();
+    }
+
+    @Path("/help/delete")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+    public Response deleteHelpInfo(@CookieParam("u") String sessionId, @HeaderParam("helpId")String helpId) {
+        if(!IdentifyUtils.isValidate(sessionId)) {
+            return Response.status(403).build();
+        }
+        if(!IdentifyUtils.isAdmin(sessionId) || !IdentifyUtils.isSuper(sessionId)) {
+            return Response.status(403).build();
+        }
+        ResponseEntity responseEntity = new ResponseEntity();
+        if (helpId  == null) {
+            responseEntity.code = 1101;
+            responseEntity.msg = "缺少参数";
+            return Response.status(200).entity(responseEntity).build();
+        }
+        String userId = IdentifyUtils.getUserId(sessionId);
+        if(StringUtils.isEmpty(userId)) {
+            responseEntity.code = 1103;
+            responseEntity.msg = "账户出错";
+            return Response.status(200).entity(responseEntity).build();
+        }
+        User user = userDAO.loadById(userId);
+        if(user == null) {
+            responseEntity.code = 1104;
+            responseEntity.msg = "账户已被删除";
+            return  Response.status(200).entity(responseEntity).build();
+        }
+        HelpInfo help = helpDAO.loadById(helpId);
+        if(help == null) {
+            responseEntity.code = 1201;
+            responseEntity.msg = "互帮互助信息不存在";
+            return  Response.status(200).entity(responseEntity).build();
+        }
+        helpDAO.deleteById(helpId);
+        responseEntity.code = 200;
+        return Response.status(200).entity(responseEntity).build();
     }
 
     /**
@@ -489,7 +531,45 @@ public class FeatureService {
         return Response.status(200).entity(responseEntity).build();
     }
 
-    //TODO 关闭投票
+    //TODO 删除投票
+    @Path("/vote/deletevote")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+    public Response deleteVote(@CookieParam("u")String sessionId, @HeaderParam("voteId")String voteId) {
+        if(!IdentifyUtils.isValidate(sessionId)) {
+            return Response.status(403).build();
+        }
+        if(!IdentifyUtils.isAdmin(sessionId) || !IdentifyUtils.isSuper(sessionId)) {
+            return Response.status(403).build();
+        }
+        ResponseEntity responseEntity = new ResponseEntity();
+        if (voteId  == null) {
+            responseEntity.code = 1101;
+            responseEntity.msg = "缺少参数";
+            return Response.status(200).entity(responseEntity).build();
+        }
+        String userId = IdentifyUtils.getUserId(sessionId);
+        if(StringUtils.isEmpty(userId)) {
+            responseEntity.code = 1103;
+            responseEntity.msg = "账户出错";
+            return Response.status(200).entity(responseEntity).build();
+        }
+        User user = userDAO.loadById(userId);
+        if(user == null) {
+            responseEntity.code = 1104;
+            responseEntity.msg = "账户已被删除";
+            return  Response.status(200).entity(responseEntity).build();
+        }
+        VoteInfo voteInfo = voteDAO.loadById(voteId);
+        if(voteInfo == null) {
+            responseEntity.code = 1201;
+            responseEntity.msg = "投票信息不存在";
+            return  Response.status(200).entity(responseEntity).build();
+        }
+        voteDAO.deleteById(voteId);
+        responseEntity.code = 200;
+        return Response.status(200).entity(responseEntity).build();
+    }
 
     /**
      * 投票
@@ -506,6 +586,18 @@ public class FeatureService {
             return Response.status(403).build();
         }
         ResponseEntity responseEntity = new ResponseEntity();
+        String userId = IdentifyUtils.getUserId(sessionId);
+        if(userId == null || StringUtils.isEmpty(userId)) {
+            responseEntity.code = 1103;
+            responseEntity.msg = "账户出错";
+            return Response.status(200).entity(responseEntity).build();
+        }
+        User user = userDAO.loadById(userId);
+        if(user == null) {
+            responseEntity.code = 1104;
+            responseEntity.msg = "账户已被删除";
+            return  Response.status(200).entity(responseEntity).build();
+        }
         if(vote == null || voteId == null || StringUtils.isEmpty(voteId)) {
             responseEntity.code = 1101;
             responseEntity.msg = "缺少参数";
@@ -517,7 +609,22 @@ public class FeatureService {
             responseEntity.msg = "投票信息不存在";
             return  Response.status(200).entity(responseEntity).build();
         }
-        VoteInfo result = voteDAO.vote(vote, voteId);
+        List<Vote> voteList = voteInfo.getVoteList();
+        VoteInfo result;
+        if(voteList == null) {
+            result = voteDAO.vote(vote, voteId);
+        }
+        else {
+            for(Vote v : voteList) {
+                if(v.getUserId().equals(vote.getUserId())) {
+                    responseEntity.code = 1302;
+                    responseEntity.body = "不能重复投票";
+                    return Response.status(200).entity(responseEntity).build();
+                }
+            }
+            result = voteDAO.vote(vote, voteId);
+        }
+
         //触发参与投票动态
         Message message = new Message();
         message.messageType = MessageType.VOTE;

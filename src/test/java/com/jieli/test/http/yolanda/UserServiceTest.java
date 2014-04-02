@@ -41,9 +41,9 @@ public class UserServiceTest {
     public void updateSelf() throws IOException {
         User user = new User();
         user.associationId = "5337af643004e0056052bd5a";
-        user.name = "小明22";
+        user.name = "桃子";
         Response response = Request.Post("http://localhost:8080/rest/user/self")
-                .addHeader("Cookie", "u=5336bbe13004cc09f49432e7")
+                .addHeader("Cookie", "u=5336b7de3004f3462ed8868b")
                 .bodyString(new ObjectMapper().writeValueAsString(user), ContentType.APPLICATION_JSON)
                 .execute();
 

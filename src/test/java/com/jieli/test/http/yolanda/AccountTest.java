@@ -1,11 +1,14 @@
 package com.jieli.test.http.yolanda;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.client.fluent.Response;
 import org.apache.http.entity.ContentType;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.
@@ -29,8 +32,12 @@ public class AccountTest {
 
     @Test
     public void testRegister() throws IOException {
+        Map<String,String> registerInfo = new HashMap<String, String>();
+        registerInfo.put("userName", "Leo");
+        ObjectMapper mapper = new ObjectMapper();
         Response response = Request.Post("http://localhost:8080/rest/account/register")
-                .bodyString("{\"username\":\"小明22\"}", ContentType.APPLICATION_JSON)
+                .setHeader("Cookie", "u=5336b7de3004f3462ed8868b")
+                .bodyString(mapper.writeValueAsString(registerInfo), ContentType.APPLICATION_JSON)
                 .execute();
 
         /**小明22 password：pnd96vhd

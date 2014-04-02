@@ -1,8 +1,10 @@
 package com.jieli.test.http.yolanda;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jieli.feature.help.entity.HelpComment;
 import com.jieli.feature.help.entity.HelpInfo;
+import com.jieli.feature.vote.entity.Vote;
 import com.jieli.feature.vote.entity.VoteInfo;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.client.fluent.Response;
@@ -19,7 +21,7 @@ import java.util.Date;
  * Created by YolandaLeo on 14-3-29.
  */
 public class FeatureTest {
-    @Test
+    //@Test
     public void getHelpList() throws IOException {
         Response response = Request.Get("http://localhost:8080/rest/feature/help")
                 .setHeader("Cookie", "u=5336bbe13004cc09f49432e7")
@@ -27,7 +29,7 @@ public class FeatureTest {
         System.out.println(response.returnContent().asString());
     }
 
-    @Test
+    //@Test
     public void getDetailHelpInfo() throws IOException {
         String helpId = "5337bce53004ecd7e04edfcd";
         Response response = Request.Get("http://localhost:8080/rest/feature/help/detail?helpId=5337bce53004ecd7e04edfcd")
@@ -36,7 +38,7 @@ public class FeatureTest {
         System.out.println(response.returnContent().asString());
     }
 
-    @Test
+    //@Test
     public void addHelpInfo() throws IOException {
         HelpInfo helpInfo = new HelpInfo();
         helpInfo.setAssociationId("5337af643004e0056052bd5a");
@@ -51,7 +53,7 @@ public class FeatureTest {
         System.out.println(response.returnContent().asString());
     }
 
-    @Test
+    //@Test
     public void addHelpComment() throws IOException {
         HelpComment comment = new HelpComment();
         comment.setHelpId("5338115f30043866e28ac0b2");
@@ -66,7 +68,7 @@ public class FeatureTest {
         System.out.println(response.returnContent().asString());
     }
 
-    @Test
+    //@Test
     public void deleteComment() throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         Response response = Request.Post("http://localhost:8080/rest/feature/help/detail/comment/delete" +
@@ -77,7 +79,7 @@ public class FeatureTest {
         System.out.println(response.returnContent().asString());
     }
 
-    @Test
+    //@Test
     public void addFocus() throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         String helpId = "5338115f30043866e28ac0b2";
@@ -104,7 +106,7 @@ public class FeatureTest {
     @Test
     public void getVoteList() throws IOException {
         Response response = Request.Get("http://localhost:8080/rest/feature/vote")
-                .setHeader("Cookie", "u=5336bb6f3004cc09f49432e5")
+                .setHeader("Cookie", "u=5336bbe13004cc09f49432e7")
                 .execute();
         System.out.println(response.returnContent().asString());
     }
@@ -131,6 +133,21 @@ public class FeatureTest {
         Response response = Request.Post("http://localhost:8080/rest/feature/vote/addvote")
                 .setHeader("Cookie", "u=5336bb6f3004cc09f49432e5")
                 .bodyString(mapper.writeValueAsString(voteInfo), ContentType.APPLICATION_JSON)
+                .execute();
+        System.out.println(response.returnContent().asString());
+    }
+
+    @Test
+    public void vote() throws IOException {
+        Vote vote = new Vote();
+        vote.setVoteIndex(Arrays.asList(1));
+        vote.setUserId("5336bb6f3004cc09f49432e4");
+        vote.setAddTime(new Date());
+        String voteId = "533800e530044c7fc286a6c4";
+        ObjectMapper mapper = new ObjectMapper();
+        Response response = Request.Post("http://localhost:8080/rest/feature/vote/addvote?voteId=" + voteId)
+                .setHeader("Cookie", "u=5336bb6f3004cc09f49432e5")
+                .bodyString(mapper.writeValueAsString(vote), ContentType.APPLICATION_JSON)
                 .execute();
         System.out.println(response.returnContent().asString());
     }
