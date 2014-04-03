@@ -20,7 +20,7 @@ public class AccountTest {
     public void testLogin() throws IOException {
         Response response = Request.Post("http://localhost:8080/rest/account/login")
                 .setHeader("app", "test")
-                .bodyString("{\"username\":\"super\",\"password\":\"super\"}", ContentType.APPLICATION_JSON)
+                .bodyString("{\"username\":\"super\",\"password\":\"jver15i4\"}", ContentType.APPLICATION_JSON)
                 .execute();
 
         System.out.println(response.returnContent().asString());
@@ -42,6 +42,17 @@ public class AccountTest {
         String query = mapper.writeValueAsString(user);
         Response response = Request.Post("http://localhost:8080/rest/account/register")
                 .bodyString(query, ContentType.APPLICATION_JSON).execute();*/
+        System.out.println(response.returnContent().asString());
+    }
+
+    @Test
+    public void testAuth() throws IOException {
+        Response response = Request.Post("http://localhost:8080/rest/account/auth")
+                .addHeader("Cookie", "u=533c0010ef86c7014c36fa2f")
+                .setHeader("app", "test")
+                .bodyString("{\"username\":\"admin\",\"associationId\":\"533c0568e4b05bd824aeda54\"}", ContentType.APPLICATION_JSON)
+                .execute();
+
         System.out.println(response.returnContent().asString());
     }
 }

@@ -1,6 +1,5 @@
 package com.jieli.test.http.yolanda;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jieli.feature.help.entity.HelpComment;
 import com.jieli.feature.help.entity.HelpInfo;
@@ -145,8 +144,9 @@ public class FeatureTest {
         vote.setAddTime(new Date());
         String voteId = "533800e530044c7fc286a6c4";
         ObjectMapper mapper = new ObjectMapper();
-        Response response = Request.Post("http://localhost:8080/rest/feature/vote/addvote?voteId=" + voteId)
-                .setHeader("Cookie", "u=5336bb6f3004cc09f49432e5")
+        Response response = Request.Post("http://localhost:8080/rest/feature/vote/commitvote?voteId=" + voteId)
+                .addHeader("Cookie", "u=5336bb6f3004cc09f49432e5")
+                .addHeader("voteId", "abc")
                 .bodyString(mapper.writeValueAsString(vote), ContentType.APPLICATION_JSON)
                 .execute();
         System.out.println(response.returnContent().asString());
