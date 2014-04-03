@@ -23,6 +23,26 @@ public class AccountTest {
     @Test
     public void testLogin() throws IOException {
         testSuper();
+        testAdmin();
+        testUser();
+    }
+
+    private void testUser() throws IOException {
+        Response response = Request.Post("http://162.243.151.219:8080/jieli-1.0-SNAPSHOT/rest/account/login")
+                .setHeader("app", "test")
+                .bodyString("{\"username\":\"user\",\"password\":\"ln0j5t3y\"}", ContentType.APPLICATION_JSON)
+                .execute();
+
+        System.out.println(response.returnContent().asString());
+    }
+
+    private void testAdmin() throws IOException {
+        Response response = Request.Post("http://162.243.151.219:8080/jieli-1.0-SNAPSHOT/rest/account/login")
+                .setHeader("app", "test")
+                .bodyString("{\"username\":\"admin\",\"password\":\"tf6wv7ye\"}", ContentType.APPLICATION_JSON)
+                .execute();
+
+        System.out.println(response.returnContent().asString());
     }
 
     private void testSuper() throws IOException {
@@ -35,18 +55,23 @@ public class AccountTest {
     }
 
     @Test
-    public void testRegister() throws IOException {
-        testRegisterUser();
+    public void testAuth() throws IOException {
+        Response response = Request.Post("http://162.243.151.219:8080/jieli-1.0-SNAPSHOT/rest/account/auth")
+                .addHeader("Cookie", "u=533bfca63a6e26a4f86e916d")
+                .setHeader("app", "test")
+                .bodyString("{\"username\":\"admin\",\"associationId\":\"533c0568e4b05bd824aeda54\"}", ContentType.APPLICATION_JSON)
+                .execute();
+
+        System.out.println(response.returnContent().asString());
     }
 
-    private void testRegisterUser() throws IOException {
-        Map<String,String> registerInfo = new HashMap<String, String>();
-        registerInfo.put("userName", "Papu");
-        ObjectMapper mapper = new ObjectMapper();
+    @Test
+    public void testRegister() throws IOException {
         Response response = Request.Post("http://162.243.151.219:8080/jieli-1.0-SNAPSHOT/rest/account/register")
-                .setHeader("Cookie", "u=533bfca63a6e26a4f86e916d")
-                .bodyString(mapper.writeValueAsString(registerInfo), ContentType.APPLICATION_JSON)
+                .addHeader("Cookie", "u=533c061de4b05bd824aeda56")
+                .bodyString("{\"username\":\"user\"}", ContentType.APPLICATION_JSON)
                 .execute();
+
         System.out.println(response.returnContent().asString());
     }
 }

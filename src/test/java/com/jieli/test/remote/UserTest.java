@@ -12,8 +12,8 @@ import java.io.IOException;
 public class UserTest {
     @Test
     public void testLoadUser() throws IOException {
-        Response response = Request.Get("http://localhost:8080/rest/user?userId=5336bbe13004cc09f49432e6")
-                .addHeader("Cookie", "u=5336bbe13004cc09f49432e7")
+        Response response = Request.Get("http://162.243.151.219:8080/jieli-1.0-SNAPSHOT/rest/user?userId=533c09e5e4b05bd824aeda58")
+                .addHeader("Cookie", "u=533bfca63a6e26a4f86e916d")
                 .execute();
 
         System.out.println(response.returnContent().asString());
