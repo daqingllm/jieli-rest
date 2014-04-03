@@ -98,7 +98,7 @@ public class HelpDaoTest {
     public void addFocus() {
         String helpId = "5337bce53004ecd7e04edfcd";
         User user = userDao.loadById("5336bb6f3004cc09f49432e4");
-        HelpInfo result = helpDao.addFocus(helpId, user);
+        HelpInfo result = helpDao.addFocus(helpId, user.get_id().toString());
         System.out.println(result.getFocusList().size());
     }
 

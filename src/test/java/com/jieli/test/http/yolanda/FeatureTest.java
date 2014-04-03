@@ -1,9 +1,11 @@
 package com.jieli.test.http.yolanda;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jieli.feature.help.entity.HelpComment;
 import com.jieli.feature.help.entity.HelpInfo;
 import com.jieli.feature.vote.entity.Vote;
+import com.jieli.feature.vote.entity.VoteComment;
 import com.jieli.feature.vote.entity.VoteInfo;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.client.fluent.Response;
@@ -90,7 +92,6 @@ public class FeatureTest {
         System.out.println(response.returnContent().asString());
     }
 
-    //分割线
     @Test
     public void addTop() throws IOException {
         String helpId = "5338115f30043866e28ac0b2";
@@ -105,15 +106,15 @@ public class FeatureTest {
     @Test
     public void getVoteList() throws IOException {
         Response response = Request.Get("http://localhost:8080/rest/feature/vote")
-                .setHeader("Cookie", "u=5336bbe13004cc09f49432e7")
+                .setHeader("Cookie", "u=533be303300460878a64a158")
                 .execute();
         System.out.println(response.returnContent().asString());
     }
 
     @Test
     public void getVoteInfo() throws IOException {
-        Response response = Request.Get("http://localhost:8080/rest/feature/vote/detail?voteId=533807ec300406d49b957887")
-                .setHeader("Cookie", "u=5336bb6f3004cc09f49432e5")
+        Response response = Request.Get("http://localhost:8080/rest/feature/vote/detail?voteId=533bfacf300460878a64a159")
+                .setHeader("Cookie", "u=533be303300460878a64a158")
                 .execute();
         System.out.println(response.returnContent().asString());
     }
@@ -130,7 +131,7 @@ public class FeatureTest {
         voteInfo.setDescription("喜欢什么颜色？");
         ObjectMapper mapper = new ObjectMapper();
         Response response = Request.Post("http://localhost:8080/rest/feature/vote/addvote")
-                .setHeader("Cookie", "u=5336bb6f3004cc09f49432e5")
+                .setHeader("Cookie", "u=5336b7de3004f3462ed8868b")
                 .bodyString(mapper.writeValueAsString(voteInfo), ContentType.APPLICATION_JSON)
                 .execute();
         System.out.println(response.returnContent().asString());
@@ -140,14 +141,28 @@ public class FeatureTest {
     public void vote() throws IOException {
         Vote vote = new Vote();
         vote.setVoteIndex(Arrays.asList(1));
-        vote.setUserId("5336bb6f3004cc09f49432e4");
+        vote.setUserId("533be303300460878a64a158");
         vote.setAddTime(new Date());
         String voteId = "533800e530044c7fc286a6c4";
         ObjectMapper mapper = new ObjectMapper();
-        Response response = Request.Post("http://localhost:8080/rest/feature/vote/commitvote?voteId=" + voteId)
-                .addHeader("Cookie", "u=5336bb6f3004cc09f49432e5")
-                .addHeader("voteId", "abc")
+        Response response = Request.Post("http://localhost:8080/rest/feature/vote/commitvote?voteId=533bfacf300460878a64a159")
+                .addHeader("Cookie", "u=533be303300460878a64a158")
                 .bodyString(mapper.writeValueAsString(vote), ContentType.APPLICATION_JSON)
+                .execute();
+        System.out.println(response.returnContent().asString());
+    }
+
+    @Test
+    public void addVoteComment() throws IOException {
+        VoteComment comment = new VoteComment();
+        comment.setVoteId("533bfacf300460878a64a159");
+        comment.setCommentUserId("533be301300460878a64a157");
+        comment.setComment("多点颜色选择更好");
+        ObjectMapper mapper = new ObjectMapper();
+        Response response = Request.Post("http://localhost:8080/rest/feature/vote/comment?voteId=533bfacf300460878a64a159")
+                .addHeader("Cookie", "u=533be303300460878a64a158")
+                .addHeader("voteId", "533bfacf300460878a64a159")
+                .bodyString(mapper.writeValueAsString(comment), ContentType.APPLICATION_JSON)
                 .execute();
         System.out.println(response.returnContent().asString());
     }
