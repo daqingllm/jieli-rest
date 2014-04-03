@@ -35,13 +35,13 @@ public class HelpInfo extends Model{
     /**
      * 置顶评论id
      */
-    public Integer topCommentId;
+    //public Integer topCommentId;
     /**
      * 评论列表
      */
     public List<HelpComment> commentList;
 
-    public List<User> focusList;
+    public List<String> focusList;
 
     public String getUserId() {
         return userId;
@@ -91,14 +91,6 @@ public class HelpInfo extends Model{
         this.addTime = addTime;
     }
 
-    public Integer getTopCommentId() {
-        return topCommentId;
-    }
-
-    public void setTopCommentId(Integer topCommentId) {
-        this.topCommentId = topCommentId;
-    }
-
     public List<HelpComment> getCommentList() {
         return commentList;
     }
@@ -107,7 +99,7 @@ public class HelpInfo extends Model{
         this.commentList = commentList;
     }
 
-    public List<User> getFocusList() { return focusList; }
+    public List<String> getFocusList() { return focusList; }
 
-    public void setFocusList(List<User> focusList) { this.focusList = focusList; }
+    public void setFocusList(List<String> focusList) { this.focusList = focusList; }
 }

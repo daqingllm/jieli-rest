@@ -111,16 +111,16 @@ public class HelpDAO extends GenericDAO<HelpInfo> {
      * @param helpId
      * @return
      */
-    public HelpInfo addFocus(String helpId, User user) {
+    public HelpInfo addFocus(String helpId, String userId) {
         HelpInfo help = loadById(helpId);
         Integer attention = help.getAttentionNum();
         attention++;
         help.setAttentionNum(attention);
-        List<User> focusList = help.getFocusList();
+        List<String> focusList = help.getFocusList();
         if(focusList == null) {
-            focusList = new ArrayList<User>();
+            focusList = new ArrayList<String>();
         }
-        focusList.add(user);
+        focusList.add(userId);
         help.setFocusList(focusList);
         return save(help);
     }

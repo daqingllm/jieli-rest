@@ -110,9 +110,6 @@ public class FeatureService {
         if(!IdentifyUtils.isValidate(sessionId)) {
             return Response.status(403).build();
         }
-        if(!IdentifyUtils.isAdmin(sessionId) || !IdentifyUtils.isSuper(sessionId)) {
-            return Response.status(403).build();
-        }
         ResponseEntity responseEntity = new ResponseEntity();
         if (help  == null) {
             responseEntity.code = 1101;
@@ -138,13 +135,13 @@ public class FeatureService {
     }
 
     @Path("/help/delete")
-    @POST
+    @GET
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-    public Response deleteHelpInfo(@CookieParam("u") String sessionId, @HeaderParam("helpId")String helpId) {
+    public Response deleteHelpInfo(@CookieParam("u") String sessionId, @QueryParam("helpId")String helpId) {
         if(!IdentifyUtils.isValidate(sessionId)) {
             return Response.status(403).build();
         }
-        if(!IdentifyUtils.isAdmin(sessionId) || !IdentifyUtils.isSuper(sessionId)) {
+        if(!IdentifyUtils.isAdmin(sessionId)) {
             return Response.status(403).build();
         }
         ResponseEntity responseEntity = new ResponseEntity();
@@ -232,6 +229,11 @@ public class FeatureService {
             responseEntity.msg = "缺少参数";
             return Response.status(200).entity(responseEntity).build();
         }
+        if (!MongoUtils.isValidObjectId(helpId)) {
+            responseEntity.code = 1105;
+            responseEntity.msg = "参数Id无效";
+            return Response.status(200).entity(responseEntity).build();
+        }
         HelpInfo helpInfo = helpDAO.loadById(helpId);
         if(helpInfo.getUserId() == userId) {
             responseEntity.code = 1200;
@@ -245,15 +247,15 @@ public class FeatureService {
         comment.setTop(false);
         comment.setAddTime(new Date());
         HelpInfo addResult = helpDAO.addComment(comment);
-        //TODO check whether comment is added
+        //check whether comment is added
         if(addResult == null) {
             responseEntity.code = 1222;
             responseEntity.msg = "评论添加失败";
             return Response.status(200).entity(responseEntity).build();
         }
         responseEntity.code = 200;
-        responseEntity.body = addResult;
-        return Response.status(200).entity(addResult).build();
+        responseEntity.body = helpInfo.get_id();
+        return Response.status(200).entity(responseEntity).build();
     }
 
     /**
@@ -262,12 +264,13 @@ public class FeatureService {
      * @return
      */
     @Path("/help/detail/comment/delete")
-    @POST
+    @GET
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-    public Response deleteComment(@CookieParam("u")String sessionId, @QueryParam("helpId")String helpId, Integer commentIndex){
+    public Response deleteComment(@CookieParam("u")String sessionId, @QueryParam("helpId")String helpId, @QueryParam("commentIndex")Integer commentIndex){
         if(!IdentifyUtils.isValidate(sessionId)) {
             return Response.status(403).build();
         }
+        //TODO 网络延迟、多线程问题 index
         String userId = IdentifyUtils.getUserId(sessionId);
         ResponseEntity responseEntity = new ResponseEntity();
         if (StringUtils.isEmpty(userId)) {
@@ -291,9 +294,9 @@ public class FeatureService {
             responseEntity.msg = "参数错误";
             return Response.status(200).entity(responseEntity).build();
         }
-        if(!help.getUserId().equals(userId)) {
-            responseEntity.code = 1200;
-            responseEntity.msg = "只有发帖人可删除评论";
+        if(!help.getUserId().equals(userId) || !IdentifyUtils.isAdmin(sessionId)) {
+            responseEntity.code = 1403;
+            responseEntity.msg = "权限不足";
             return Response.status(403).entity(responseEntity).build();
         }
         helpDAO.deleteComment(helpId, commentIndex);
@@ -309,7 +312,7 @@ public class FeatureService {
     @Path("/help/detail/comment/focus")
     @POST
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-    public Response addFocus(@CookieParam("u")String sessionId, String helpId){
+    public Response addFocus(@CookieParam("u")String sessionId, @QueryParam("helpId")String helpId){
         if(!IdentifyUtils.isValidate(sessionId)) {
             return Response.status(403).build();
         }
@@ -326,6 +329,11 @@ public class FeatureService {
             responseEntity.msg = "缺少参数";
             return Response.status(200).entity(responseEntity).build();
         }
+        if (!MongoUtils.isValidObjectId(helpId)) {
+            responseEntity.code = 1105;
+            responseEntity.msg = "参数Id无效";
+            return Response.status(200).entity(responseEntity).build();
+        }
         HelpInfo helpInfo = helpDAO.loadById(helpId);
         if(helpInfo == null) {
             responseEntity.code = 1205;
@@ -334,8 +342,8 @@ public class FeatureService {
         }
         //已关注过不能再次关注
         if(helpInfo.getFocusList() != null) {
-            for(User u : helpInfo.getFocusList()) {
-                if(u.get_id().equals(userId)) {
+            for(String str : helpInfo.getFocusList()) {
+                if(str.equals(userId)) {
                     responseEntity.code = 1209;
                     responseEntity.msg = "已关注过";
                     return Response.status(200).entity(responseEntity).build();
@@ -346,10 +354,10 @@ public class FeatureService {
         if(helpInfo.getUserId().equals(userId)) {
             responseEntity.code = 1200;
             responseEntity.msg = "不能关注自己";
-            return Response.status(403).entity(responseEntity).build();
+            return Response.status(200).entity(responseEntity).build();
         }
 
-        HelpInfo result = helpDAO.addFocus(helpId, user);
+        HelpInfo result = helpDAO.addFocus(helpId, userId);
         // 互帮互助动态
         Message message = new Message();
         message.messageType = MessageType.HELP;
@@ -359,7 +367,7 @@ public class FeatureService {
         message.addTime = new Date();
         messageDAO.save(message);
         responseEntity.code = 200;
-        responseEntity.body = result;
+        responseEntity.body = result.get_id();
         return Response.status(200).entity(responseEntity).build();
     }
 
@@ -372,10 +380,11 @@ public class FeatureService {
     @Path("/help/detail/comment/top")
      @POST
      @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-     public Response addTop(@CookieParam("u")String sessionId, @QueryParam("helpId")String helpId, Integer commentIndex) {
+     public Response addTop(@CookieParam("u")String sessionId, @QueryParam("helpId")String helpId, @QueryParam("commentIndex")Integer commentIndex) {
          if(!IdentifyUtils.isValidate(sessionId)) {
              return Response.status(403).build();
          }
+        //TODO index 优化
          String userId = IdentifyUtils.getUserId(sessionId);
          ResponseEntity responseEntity = new ResponseEntity();
          if (StringUtils.isEmpty(userId)) {
@@ -394,13 +403,11 @@ public class FeatureService {
              responseEntity.msg = "参数错误";
              return Response.status(200).entity(responseEntity).build();
          }
-         if(help.getUserId() != userId) {
-             responseEntity.code = 1200;
-             responseEntity.msg = "不是发帖人";
+         if(help.getUserId() != userId || !IdentifyUtils.isAdmin(sessionId)) {
+             responseEntity.code = 1403;
+             responseEntity.msg = "权限不足";
              return Response.status(403).entity(responseEntity).build();
          }
-         List<HelpComment> comments = help.getCommentList();
-
          HelpInfo result = helpDAO.topComment(helpId, commentIndex);
          if(result == null) {
              responseEntity.code = 1206;
@@ -408,7 +415,7 @@ public class FeatureService {
              return Response.status(200).entity(responseEntity).build();
          }
          responseEntity.code = 200;
-         responseEntity.body = result;
+         responseEntity.body = result.get_id();
          return Response.status(200).entity(responseEntity).build();
 
      }
@@ -459,7 +466,7 @@ public class FeatureService {
     @Path("/vote/detail")
     @GET
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-    public Response getVoteInfo(@CookieParam("u")String sessionId, @HeaderParam("voteId")String voteId) {
+    public Response getVoteInfo(@CookieParam("u")String sessionId, @QueryParam("voteId")String voteId) {
         if(!IdentifyUtils.isValidate(sessionId)) {
             return Response.status(403).build();
         }
@@ -494,6 +501,11 @@ public class FeatureService {
             return Response.status(403).build();
         }
         ResponseEntity responseEntity = new ResponseEntity();
+        if(!IdentifyUtils.isAdmin(sessionId)) {
+            responseEntity.code = 1403;
+            responseEntity.msg = "权限不足";
+            return Response.status(200).entity(responseEntity).build();
+        }
         if(voteInfo == null) {
             responseEntity.code = 1101;
             responseEntity.msg = "缺少参数";
@@ -531,11 +543,10 @@ public class FeatureService {
         return Response.status(200).entity(responseEntity).build();
     }
 
-    //TODO 删除投票
     @Path("/vote/deletevote")
-    @POST
+    @GET
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-    public Response deleteVote(@CookieParam("u")String sessionId, @HeaderParam("voteId")String voteId) {
+    public Response deleteVote(@CookieParam("u")String sessionId, @QueryParam("voteId")String voteId) {
         if(!IdentifyUtils.isValidate(sessionId)) {
             return Response.status(403).build();
         }
@@ -546,6 +557,11 @@ public class FeatureService {
         if (voteId  == null) {
             responseEntity.code = 1101;
             responseEntity.msg = "缺少参数";
+            return Response.status(200).entity(responseEntity).build();
+        }
+        if (!MongoUtils.isValidObjectId(voteId)) {
+            responseEntity.code = 1105;
+            responseEntity.msg = "参数Id无效";
             return Response.status(200).entity(responseEntity).build();
         }
         String userId = IdentifyUtils.getUserId(sessionId);
@@ -560,6 +576,7 @@ public class FeatureService {
             responseEntity.msg = "账户已被删除";
             return  Response.status(200).entity(responseEntity).build();
         }
+
         VoteInfo voteInfo = voteDAO.loadById(voteId);
         if(voteInfo == null) {
             responseEntity.code = 1201;
@@ -572,8 +589,7 @@ public class FeatureService {
     }
 
     /**
-     * 投票
-     * 传入参数options，以选项index和分号拼装，eg. 1;3;
+     * 参与投票
      * @param sessionId
      * @param vote
      * @return
@@ -581,11 +597,21 @@ public class FeatureService {
     @Path("/vote/commitvote")
     @POST
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-    public Response vote(@CookieParam("u")String sessionId, Vote vote, @HeaderParam("voteId")String voteId) {
+    public Response vote(@CookieParam("u")String sessionId, Vote vote, @QueryParam("voteId")String voteId) {
         if(!IdentifyUtils.isValidate(sessionId)) {
             return Response.status(403).build();
         }
         ResponseEntity responseEntity = new ResponseEntity();
+        if(vote == null || voteId == null || StringUtils.isEmpty(voteId)) {
+            responseEntity.code = 1101;
+            responseEntity.msg = "缺少参数";
+            return Response.status(200).entity(responseEntity).build();
+        }
+        if (!MongoUtils.isValidObjectId(voteId)) {
+            responseEntity.code = 1105;
+            responseEntity.msg = "参数Id无效";
+            return Response.status(200).entity(responseEntity).build();
+        }
         String userId = IdentifyUtils.getUserId(sessionId);
         if(userId == null || StringUtils.isEmpty(userId)) {
             responseEntity.code = 1103;
@@ -598,13 +624,9 @@ public class FeatureService {
             responseEntity.msg = "账户已被删除";
             return  Response.status(200).entity(responseEntity).build();
         }
-        if(vote == null || voteId == null || StringUtils.isEmpty(voteId)) {
-            responseEntity.code = 1101;
-            responseEntity.msg = "缺少参数";
-            return Response.status(200).entity(responseEntity).build();
-        }
+
         VoteInfo voteInfo = voteDAO.loadById(voteId);
-        if(voteId == null) {
+        if(voteInfo == null) {
             responseEntity.code = 1301;
             responseEntity.msg = "投票信息不存在";
             return  Response.status(200).entity(responseEntity).build();
@@ -634,7 +656,7 @@ public class FeatureService {
         message.addTime = new Date();
         messageDAO.save(message);
         responseEntity.code = 200;
-        responseEntity.body = result;
+        responseEntity.body = result.get_id();
         return Response.status(200).entity(responseEntity).build();
     }
 
@@ -648,7 +670,7 @@ public class FeatureService {
     @Path("/vote/comment")
     @POST
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-    public Response addVoteComment(@CookieParam("u")String sessionId, VoteComment comment, @HeaderParam("voteId")String voteId) {
+    public Response addVoteComment(@CookieParam("u")String sessionId, VoteComment comment, @QueryParam("voteId")String voteId) {
         if(!IdentifyUtils.isValidate(sessionId)) {
             return Response.status(403).build();
         }
@@ -658,11 +680,51 @@ public class FeatureService {
             responseEntity.msg = "缺少参数";
             return Response.status(200).entity(responseEntity).build();
         }
+        if(!comment.getVoteId().equals(voteId)) {
+            responseEntity.code = 1310;
+            responseEntity.msg = "评论的非本投票";
+            return Response.status(200).entity(responseEntity).build();
+        }
         VoteInfo result = voteDAO.addComment(comment, voteId);
         responseEntity.code = 200;
         responseEntity.body = result;
         return Response.status(200).entity(result).build();
     }
+
+    @Path("/vote/comment")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+    public Response deleteVoteComment(@CookieParam("u")String sessionId, @QueryParam("voteId")String voteId, @QueryParam("commentIndex")String commentIndex) {
+        if(!IdentifyUtils.isValidate(sessionId)) {
+            return Response.status(403).build();
+        }
+        //TODO 优化 commentIndex
+        ResponseEntity responseEntity = new ResponseEntity();
+        if(!IdentifyUtils.isAdmin(sessionId)) {
+            responseEntity.code = 1403;
+            responseEntity.msg = "权限不足";
+            return Response.status(200).entity(responseEntity).build();
+        }
+        if(StringUtils.isEmpty(voteId) || StringUtils.isEmpty(commentIndex)) {
+            responseEntity.code = 1101;
+            responseEntity.msg = "缺少参数";
+            return Response.status(200).entity(responseEntity).build();
+        }
+        VoteInfo voteInfo = voteDAO.loadById(voteId);
+        if(voteInfo == null) {
+            responseEntity.code = 1301;
+            responseEntity.msg = "投票信息不存在";
+            return  Response.status(200).entity(responseEntity).build();
+        }
+        List<VoteComment> commentList = voteInfo.getCommentList();
+        commentList.remove(commentIndex);
+        voteInfo.setCommentList(commentList);
+        VoteInfo result = voteDAO.save(voteInfo);
+        responseEntity.code = 200;
+        responseEntity.body = result.get_id();
+        return Response.status(200).entity(responseEntity).build();
+    }
+
 
     /**
      * 定向匹配
