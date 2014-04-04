@@ -66,6 +66,13 @@
             <version>6.1.0</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.freemarker</groupId>
+            <artifactId>freemarker</artifactId>
+            <version>2.3.14</version>
+        </dependency>
+
+
     </dependencies>
     
 </project>
