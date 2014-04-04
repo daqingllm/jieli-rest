@@ -6,7 +6,6 @@ import freemarker.template.TemplateException;
 import org.springframework.core.io.ClassPathResource;
 
 import java.io.*;
-import java.net.URL;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -23,7 +22,7 @@ public abstract class FTLrender {
 
     /**
      * render ftl toString
-     * @param ftlName under the path of "src/main/webapp/WEB-INF/pages/"
+     * @param ftlName must be under the path of "resources/pages/"
      * @param params key-value
      * @return
      */
