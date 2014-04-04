@@ -1,5 +1,7 @@
 package com.jieli.service;
 
+import com.jieli.common.dao.AccountDAO;
+import com.jieli.common.entity.Account;
 import com.jieli.common.entity.ResponseEntity;
 import com.jieli.user.dao.DirectoryDAO;
 import com.jieli.user.dao.UserDAO;
@@ -31,6 +33,7 @@ import java.util.List;
 @Path("/user")
 public class UserService {
 
+    private AccountDAO accountDAO = new AccountDAO();
     private UserDAO userDAO = new UserDAO();
     private DirectoryDAO directoryDAO = new DirectoryDAO();
 
@@ -61,6 +64,29 @@ public class UserService {
 
         responseEntity.code = 200;
         responseEntity.body = user;
+        return Response.status(200).entity(responseEntity).build();
+    }
+
+    @POST
+    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+    public Response editUser(@CookieParam("u")String sessionId, @QueryParam("userId")String userId, User user) {
+        if (!IdentifyUtils.isAdmin(sessionId)) {
+            return Response.status(403).build();
+        }
+        Account account = accountDAO.getCollection().findOne("{username:#}",userId).as(Account.class);
+        ResponseEntity responseEntity = new ResponseEntity();
+        if (account == null) {
+            responseEntity.code = 1103;
+            responseEntity.msg = "账户出错";
+            return Response.status(200).entity(responseEntity).build();
+        }
+        if (account.state.value() >= IdentifyUtils.getState(sessionId).value()) {
+            return Response.status(403).build();
+        }
+
+        user.set_id(new ObjectId(userId));
+        userDAO.save(user);
+        responseEntity.code = 200;
         return Response.status(200).entity(responseEntity).build();
     }
 
@@ -159,6 +185,11 @@ public class UserService {
 
         ResponseEntity responseEntity = new ResponseEntity();
         String userId = IdentifyUtils.getUserId(sessionId);
+        if (friend.userId.equals(userId)) {
+            responseEntity.code = 1107;
+            responseEntity.msg = "不能添加自己";
+            return Response.status(200).entity(responseEntity).build();
+        }
         directoryDAO.upsertFriend(userId, friend);
         responseEntity.code = 200;
         return Response.status(200).entity(responseEntity).build();

@@ -30,14 +30,7 @@ public abstract class IdentifyUtils {
     }
 
     private static boolean checkValue(String sessionId, AccountState state) {
-        if (StringUtils.isEmpty(sessionId)) {
-            return false;
-        }
-        if (!MongoUtils.isValidObjectId(sessionId)) {
-            return false;
-        }
-        AccountDAO accountDAO = new AccountDAO();
-        Account account = accountDAO.loadById(sessionId);
+        Account account = getAccount(sessionId);
         if (account != null && account.state.value() >= state.value()) {
             return true;
         } else {
@@ -46,14 +39,7 @@ public abstract class IdentifyUtils {
     }
 
     public static String getUserId(String sessionId) {
-        if (StringUtils.isEmpty(sessionId)) {
-            return null;
-        }
-        if (!MongoUtils.isValidObjectId(sessionId)) {
-            return null;
-        }
-        AccountDAO accountDAO = new AccountDAO();
-        Account account = accountDAO.loadById(sessionId);
+        Account account = getAccount(sessionId);
         if (account != null) {
             return account.userId;
         } else {
@@ -62,6 +48,24 @@ public abstract class IdentifyUtils {
     }
 
     public static String getAssociationId(String sessionId) {
+        Account account = getAccount(sessionId);
+        if (account == null) {
+            return null;
+        }
+
+        return account.associationId;
+    }
+
+    public static AccountState getState(String sessionId) {
+        Account account = getAccount(sessionId);
+        if (account == null) {
+            return null;
+        }
+
+        return account.state;
+    }
+
+    private static Account getAccount(String sessionId) {
         if (StringUtils.isEmpty(sessionId)) {
             return null;
         }
@@ -70,10 +74,7 @@ public abstract class IdentifyUtils {
         }
         AccountDAO accountDAO = new AccountDAO();
         Account account = accountDAO.loadById(sessionId);
-        if (account == null) {
-            return null;
-        }
 
-        return account.associationId;
+        return account;
     }
 }

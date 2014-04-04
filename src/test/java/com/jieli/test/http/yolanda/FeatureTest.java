@@ -1,6 +1,5 @@
 package com.jieli.test.http.yolanda;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jieli.feature.help.entity.HelpComment;
 import com.jieli.feature.help.entity.HelpInfo;

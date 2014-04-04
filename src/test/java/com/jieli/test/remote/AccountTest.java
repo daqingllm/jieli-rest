@@ -65,7 +65,7 @@ public class AccountTest {
     public void testRegister() throws IOException {
         Response response = Request.Post("http://162.243.151.219:8080/jieli-1.0-SNAPSHOT/rest/account/register")
                 .addHeader("Cookie", "u=533c061de4b05bd824aeda56")
-                .bodyString("{\"username\":\"user\"}", ContentType.APPLICATION_JSON)
+                .bodyString("{\"username\":\"Harden\"}", ContentType.APPLICATION_JSON)
                 .execute();
 
         System.out.println(response.returnContent().asString());

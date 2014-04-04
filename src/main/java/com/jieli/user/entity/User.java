@@ -19,7 +19,7 @@ public class User extends Model {
 
     public String name;
 
-    //0：女，1：男
+    //0：男，1：女
     public int sex;
 
     public String birthday;
