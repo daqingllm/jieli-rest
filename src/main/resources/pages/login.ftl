@@ -23,7 +23,6 @@
 
     <!-- fonts -->
 
-    <!-- <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:400,300" /> -->
     <link rel="stylesheet" href="/assets/css/font-google.css" />
 
     <!-- ace styles -->
@@ -269,12 +268,12 @@
 
 <!--[if !IE]> -->
 
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+<script src="/assets/js/jquery-2.0.3.min.js"></script>
 
 <!-- <![endif]-->
 
 <!--[if IE]>
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script src="/assets/js/jquery-1.10.2.min.js"></script>
 <![endif]-->
 
 <!--[if !IE]> -->

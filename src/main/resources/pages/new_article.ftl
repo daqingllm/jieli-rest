@@ -2,9 +2,8 @@
 <html lang="zh">
 	<head>
 		<meta charset="utf-8" />
-		<title>æ¥åŠ› æ–‡ç« ç®¡ç†</title>
-        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<meta name="description" content="æ¥åŠ›" />
+		<title>½ÓÁ¦ ÎÄÕÂ¹ÜÀí</title>
+		<meta name="description" content="½ÓÁ¦" />
 		<!-- basic styles -->
 
 		<link href="/assets/css/bootstrap.min.css" rel="stylesheet" />
@@ -17,10 +16,10 @@
 		<!-- page specific plugin styles -->
 
 		<link rel="stylesheet" href="/assets/css/jquery-ui-1.10.3.full.min.css" />
+		<link rel="stylesheet" href="/assets/css/colorbox.css" />
 
 		<!-- fonts -->
 
-		<!--<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:400,300" />-->
 		<link rel="stylesheet" href="/assets/css/font-google.css" />
 		
 		<!-- ace styles -->
@@ -55,10 +54,10 @@
 
 			<div class="navbar-container" id="navbar-container">
 				<div class="navbar-header pull-left">
-					<a href="#" class="navbar-brand">
+					<a href="index.html" class="navbar-brand">
 						<small>
 							<i class="icon-leaf"></i>
-							æ¥åŠ› åå°ç®¡ç†ç³»ç»Ÿ
+							½ÓÁ¦ ºóÌ¨¹ÜÀíÏµÍ³
 						</small>
 					</a><!-- /.brand -->
 				</div><!-- /.navbar-header -->
@@ -69,34 +68,34 @@
 							<a data-toggle="dropdown" href="#" class="dropdown-toggle">
 								<img class="nav-user-photo" src="/assets/avatars/user.jpg" alt="Jason's Photo" />
 								<span class="user-info">
-									<small>æ¬¢è¿å…‰ä¸´,</small>
-									é˜¿æ˜Ÿ
+									<small>»¶Ó­¹âÁÙ,</small>
+									${user.username}
 								</span>
 
 								<i class="icon-caret-down"></i>
 							</a>
 
 							<ul class="user-menu pull-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
-								<li>
+								<!--<li>
 									<a href="#">
 										<i class="icon-cog"></i>
-										è®¾ç½®
+										ÉèÖÃ
 									</a>
 								</li>
 
 								<li>
 									<a href="#">
 										<i class="icon-user"></i>
-										ä¸ªäººèµ„æ–™
+										¸öÈË×ÊÁÏ
 									</a>
 								</li>
 
-								<li class="divider"></li>
+								<li class="divider"></li>-->
 
 								<li>
 									<a href="#">
 										<i class="icon-off"></i>
-										é€€å‡º
+										ÍË³ö
 									</a>
 								</li>
 							</ul>
@@ -118,133 +117,8 @@
 					<span class="menu-text"></span>
 				</a>
 
-				<div class="sidebar" id="sidebar">
-					<script type="text/javascript">
-						try{ace.settings.check('sidebar' , 'fixed')}catch(e){}
-					</script>
-
-					<div class="sidebar-shortcuts" id="sidebar-shortcuts">
-						<div class="sidebar-shortcuts-large" id="sidebar-shortcuts-large">
-							<button class="btn btn-success">
-								<i class="icon-signal" style="display: none"></i>
-							</button>
-
-							<button class="btn btn-info">
-								<i class="icon-pencil" style="display: none"></i>
-							</button>
-
-							<button class="btn btn-warning">
-								<i class="icon-group" style="display: none"></i>
-							</button>
-
-							<button class="btn btn-danger">
-								<i class="icon-cogs" style="display: none"></i>
-							</button>
-						</div>
-						
-						<div class="sidebar-shortcuts-mini" id="sidebar-shortcuts-mini">
-							<span class="btn btn-success"></span>
-
-							<span class="btn btn-info"></span>
-
-							<span class="btn btn-warning"></span>
-
-							<span class="btn btn-danger"></span>
-						</div>
-					</div><!-- #sidebar-shortcuts -->
-
-					<ul class="nav nav-list">
-						<li class="active">
-							<a href="index.html">
-								<i class="icon-dashboard"></i>
-								<span class="menu-text"> æ§åˆ¶å° </span>
-							</a>
-						</li>
-
-						<li class="active open">
-							<a href="#" class="dropdown-toggle">
-								<i class="icon-globe"></i>
-								<span class="menu-text"> æ–‡ç« ç®¡ç† </span>
-								
-								<b class="arrow icon-angle-down"></b>
-							</a>
-							
-							<ul class="submenu">
-								<li class="active">
-									<a href="new_article.html">
-										<i class="icon-double-angle-right"></i>
-										å‘å¸ƒæ–‡ç« 
-									</a>
-								</li>
-								<li>
-									<a href="article_list.html">
-										<i class="icon-double-angle-right"></i>
-										æ–‡ç« åˆ—è¡¨
-									</a>
-								</li>
-							</ul>
-						</li>
-						
-						<li>
-							<a href="#" class="dropdown-toggle">
-								<i class="icon-bullhorn"></i>
-								<span class="menu-text"> æ´»åŠ¨ç®¡ç† </span>
-								
-								<b class="arrow icon-angle-down"></b>
-							</a>
-							
-							<ul class="submenu">
-								<li>
-									<a href="">
-										<i class="icon-double-angle-right"></i>
-										åˆ›å»ºæ´»åŠ¨
-									</a>
-								</li>
-							</ul>
-						</li>
-						
-						<li>
-							<a href="" class="dropdown-toggle">
-								<i class="icon-thumbs-up"></i>
-								<span class="menu-text"> æŠ•ç¥¨ç®¡ç† </span>
-								
-								<b class="arrow icon-angle-down"></b>
-							</a>
-							
-							<ul class="submenu">
-								<li>
-									<a href="">
-										<i class="icon-double-angle-right"></i>
-										å‘èµ·æŠ•ç¥¨
-									</a>
-								</li>
-							</ul>
-						</li>
-						
-						<li>
-							<a href="" class="dropdown-toggle">
-								<i class="icon-group"></i>
-								<span class="menu-text"> äº’å¸®äº’åŠ© </span>
-								
-								<b class="arrow icon-angle-down"></b>
-							</a>
-							
-							<ul class="submenu">
-								<li>
-									<a href="">
-										<i class="icon-double-angle-right"></i>
-										æŸ¥çœ‹
-									</a>
-								</li>
-							</ul>
-						</li>
-					</ul>
-					
-					<div class="sidebar-collapse" id="sidebar-collapse">
-						<i class="icon-double-angle-left" data-icon1="icon-double-angle-left" data-icon2="icon-double-angle-right"></i>
-					</div>
-
-				</div>
+				<div class="sidebar" id="sidebar"></div>
+				<script>$("#sidebar").load("sidebar.html");$("#nav_list_2_2").addClass("active open");$("#nav_list_2").addClass("active");</script>
 				
 				<div class="main-content">
 					<div class="breadcrumbs" id="breadcrumbs">
@@ -255,20 +129,20 @@
 						<ul class="breadcrumb">
 							<li>
 								<i class="icon-home home-icon"></i>
-								<a href="index.html">é¦–é¡µ</a>
+								<a href="index.html">Ê×Ò³</a>
 							</li>
 
 							<li>
-								<a href="#"> æ–‡ç« ç®¡ç† </a>
+								<a href="#"> ÎÄÕÂ¹ÜÀí </a>
 							</li>
 							
-							<li class="active"> å‘å¸ƒæ–‡ç«  </li>
+							<li class="active"> ·¢²¼ÎÄÕÂ </li>
 						</ul><!-- .breadcrumb -->
 
 						<div class="nav-search" id="nav-search">
 							<form class="form-search">
 								<span class="input-icon">
-									<input type="text" placeholder="æœç´¢ ..." class="nav-search-input" id="nav-search-input" autocomplete="off" />
+									<input type="text" placeholder="ËÑË÷ ..." class="nav-search-input" id="nav-search-input" autocomplete="off" />
 									<i class="icon-search nav-search-icon"></i>
 								</span>
 							</form>
@@ -278,11 +152,11 @@
 					<div class="page-content">
 						<div class="page-header">
 							<h1>
-								åœ¨è¿™é‡Œå‘å¸ƒä¸€ç¯‡æ–°é—»ã€èµ„è®¯æˆ–è€…ä¼ä¸šåŠ¨æ€
-								<!--<small>
+								ÔÚÕâÀï·¢²¼Ò»ÆªĞÂÎÅ¡¢×ÊÑ¶»òÕßÆóÒµ¶¯Ì¬
+								<small>
 									<i class="icon-double-angle-right"></i>
-									Restyling jQuery UI Widgets and Elements
-								</small>-->
+									ÉÏ´«Í¼Æ¬ºóÎÄ±¾¿òÄÚ»á²úÉú<img-placeholder src='...'></img-placeholder>±êÇ©£¬Äú¿ÉÒÔÍ¨¹ıÒÆ¶¯¸Ã±êÇ©µ÷ÕûÍ¼Æ¬Î»ÖÃ
+								</small>
 							</h1>
 						</div><!-- /.page-header -->
 
@@ -293,23 +167,23 @@
 								<form class="form-horizontal" role="form">
 									
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="form-field-1"> æ–‡ç« æ ‡é¢˜ </label>
+										<label class="col-sm-3 control-label no-padding-right" for="form-field-1"> ÎÄÕÂ±êÌâ </label>
 
 										<div class="col-sm-9">
-											<input type="text" id="form-field-1" placeholder="æ ‡é¢˜" class="col-xs-10 col-sm-5" style="padding-left: 7px;" />
+											<input type="text" id="form-field-1" placeholder="±êÌâ" class="col-xs-10 col-sm-7" style="padding-left: 7px;" />
 										</div>
 									</div>
 
 									<div class="space-4"></div>
 
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="form-field-select-1"> æ–‡ç« ç±»å‹ </label>
+										<label class="col-sm-3 control-label no-padding-right" for="form-field-select-1"> ÎÄÕÂÀàĞÍ </label>
 
 										<div class="col-sm-9">
-											<select class="col-xs-10 col-sm-5" id="form-field-select-1" style="padding: 5px 4px;font-size: 14px;">
-												<option value="N" selected="selected">æ–°é—»</option>
-												<option value="Z">èµ„è®¯</option>
-												<option value="Q">ä¼ä¸šåŠ¨æ€</option>
+											<select class="col-xs-10 col-sm-7" id="form-field-select-1" style="padding: 5px 4px;font-size: 14px;">
+												<option value="N" selected="selected">ĞÂÎÅ</option>
+												<option value="Z">×ÊÑ¶</option>
+												<option value="Q">ÆóÒµ¶¯Ì¬</option>
 											</select>
 										</div>
 									</div>
@@ -317,10 +191,10 @@
 									<div class="space-4"></div>
 
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="form-field-1"> æ–‡ç« æ­£æ–‡ </label>
+										<label class="col-sm-3 control-label no-padding-right" for="form-field-textarea"> ÎÄÕÂÕıÎÄ </label>
 
 										<div class="col-sm-9">
-											<textarea id="form-field-11" class="autosize-transition col-xs-10 col-sm-5" style="min-height: 140px;"></textarea>
+											<textarea id="form-field-textarea" class="autosize-transition col-xs-10 col-sm-7" style="min-height: 140px;"></textarea>
 										</div>
 										
 									</div>
@@ -328,14 +202,26 @@
 									<div class="space-4"></div>
 
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="form-input-readonly"> æ–‡ç« å›¾ç‰‡ </label>
+										<label class="col-sm-3 control-label no-padding-right" for="form-input-readonly"> ÎÄÕÂÍ¼Æ¬ </label>
 
 										<div class="col-sm-9">
-											<button class="btn btn-info"> ä¸Šä¼ æ ‡é¢˜å›¾ </button>
+											<!--<button class="btn btn-info"> ÉÏ´«±êÌâÍ¼ </button>-->
 											
 											<br />
 											
-											<img src="/assets/images/gallery/image-4.jpg" style="max-width: 400px;"/> 
+											<!--<img src="/assets/images/gallery/image-4.jpg" style="max-width: 400px;"/> -->
+											<div class="row-fluid">
+												<ul class="ace-thumbnails">
+													<li>
+														<a href="/assets/images/gallery/image-2.jpg" data-rel="colorbox">
+															<img alt="150x150" src="/assets/images/gallery/thumb-2.jpg" />
+															<div class="text">
+																<div class="inner">²é¿´Ô­Í¼</div>
+															</div>
+														</a>
+													</li>
+												</ul>
+											</div>
 										</div>
 									</div>
 
@@ -343,22 +229,27 @@
 
 									<div class="clearfix form-actions">
 										<div class="col-md-offset-3 col-md-9">
-											
-											<button class="btn btn-success" type="button">
-												<i class="icon-question bigger-110"></i>
-												é¢„è§ˆ
+											<button class="btn btn-success btn-purple" id="bootbox-upload-image"  style="font-weight:bold">
+												<i class="icon-cloud-upload bigger-110"></i>
+												ÉÏ´«Í¼Æ¬
 											</button>
 											
 											&nbsp; &nbsp; &nbsp;
-											<button class="btn btn-info" type="button">
+											<button class="btn btn-success" type="button" style="font-weight:bold">
+												<i class="icon-question bigger-110"></i>
+												Ô¤ÀÀ
+											</button>
+											
+											&nbsp; &nbsp; &nbsp;
+											<button class="btn btn-info" type="button" style="font-weight:bold">
 												<i class="icon-ok bigger-110"></i>
-												å®Œæˆ
+												Íê³É
 											</button>
 
 											&nbsp; &nbsp; &nbsp;
-											<button class="btn" type="reset">
+											<button class="btn" type="reset" style="font-weight:bold">
 												<i class="icon-undo bigger-110"></i>
-												æ¸…ç©ºæ–‡å­—
+												Çå¿ÕÎÄ×Ö
 											</button>
 										</div>
 									</div>
@@ -426,13 +317,13 @@
 
 		<!--[if !IE]> -->
 
-		<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+		<script src="/assets/js/jquery-2.0.3.min.js"></script>
 
 		<!-- <![endif]-->
 
 		<!--[if IE]>
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-<![endif]-->
+			<script src="/assets/js/jquery-1.10.2.min.js"></script>
+		<![endif]-->
 
 		<!--[if !IE]> -->
 
@@ -455,6 +346,7 @@
 		<script src="/assets/js/typeahead-bs2.min.js"></script>
 
 		<!-- page specific plugin scripts -->
+		<script src="/assets/js/jquery.colorbox-min.js"></script>
 
 		<!--[if lte IE 8]>
 		  <script src="/assets/js/excanvas.min.js"></script>
@@ -475,14 +367,103 @@
 		<script src="/assets/js/jquery.maskedinput.min.js"></script>
 		<script src="/assets/js/bootstrap-tag.min.js"></script>
 
+		<script src="/assets/js/bootbox.min.js"></script>
+		
 		<!-- ace scripts -->
 
 		<script src="/assets/js/ace-elements.min.js"></script>
 		<script src="/assets/js/ace.min.js"></script>
 
 		<!-- inline scripts related to this page -->
-
+		<script>
+			function getTextAreaCursorPosition(){
+				return $("#form-field-textarea").getCursorPosition();
+			}
+		
+			(function($, undefined) {
+				$.fn.getCursorPosition = function() {
+					var el = $(this).get(0);
+					var pos = 0;
+					if ('selectionStart' in el) {
+						pos = el.selectionStart;
+					} else if ('selection' in document) {
+						el.focus();
+						var Sel = document.selection.createRange();
+						var SelLength = document.selection.createRange().text.length;
+						Sel.moveStart('character', -el.value.length);
+						pos = Sel.text.length - SelLength;
+					}
+					return pos;
+				}
+			})(jQuery);
+		</script>
+		
 		<script type="text/javascript">
+			jQuery(function($) {
+			
+				$("#bootbox-upload-image").on("click", function() {
+					bootbox.dialog({
+						message: "<input type='file' id='upload-image-files' name='upload-image-files' >",
+						buttons: 			
+						{
+							"upload" :
+							 {
+								"label" : "<i class='icon-ok'></i> ÉÏ´« ",
+								"className" : "btn-sm btn-success",
+								"callback": function() {
+									//Example.show("great success");
+									$.ajax({
+									;
+									})
+								}
+							},
+							"cancel" :
+							{
+								"label" : "<i class='icon-remove'></i> È¡Ïû",
+								"className" : "btn-sm",
+								"callback": function() {
+									//Example.show("uh oh, look out!");
+								}
+							}
+						}
+					});
+				});
+				
+				
+				$("#sidebar").load("sidebar.html");$("#nav_list_2_2").addClass("active open");$("#nav_list_2").addClass("active");
+				
+				var colorbox_params = {
+					reposition:true,
+					scalePhotos:true,
+					scrolling:false,
+					previous:'<i class="icon-arrow-left"></i>',
+					next:'<i class="icon-arrow-right"></i>',
+					close:'&times;',
+					current:'{current} of {total}',
+					maxWidth:'100%',
+					maxHeight:'100%',
+					onOpen:function(){
+						document.body.style.overflow = 'hidden';
+					},
+					onClosed:function(){
+						document.body.style.overflow = 'auto';
+					},
+					onComplete:function(){
+						$.colorbox.resize();
+					}
+				};
+
+				$('.ace-thumbnails [data-rel="colorbox"]').colorbox(colorbox_params);
+				$("#cboxLoadingGraphic").append("<i class='icon-spinner orange'></i>");//let's add a custom loading icon
+
+				/**$(window).on('resize.colorbox', function() {
+					try {
+						//this function has been changed in recent versions of colorbox, so it won't work
+						$.fn.colorbox.load();//to redraw the current frame
+					} catch(e){}
+				});*/
+			});	
+				
 			jQuery(function($) {
 				$('#id-disable-check').on('click', function() {
 					var inp = $('#form-input-readonly').get(0);
