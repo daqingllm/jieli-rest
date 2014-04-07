@@ -49,4 +49,78 @@ public class Activity extends Model {
 
     public String sponsorUserId;
 
+    // 活动图片地址
+    public String url;
+
+    public AcivityTag getTag() {
+        return tag;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public Date getBeginDate() {
+        return beginDate;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public int getFee() {
+        return fee;
+    }
+
+    public int getMaxMembers() {
+        return maxMembers;
+    }
+
+    public String getArrangement() {
+        return arrangement;
+    }
+
+    public String getServiceInfo() {
+        return serviceInfo;
+    }
+
+    public String getSponsorInfo() {
+        return sponsorInfo;
+    }
+
+    public List<String> getFollowMembers() {
+        return followMembers;
+    }
+
+    public List<Arrangement> getDetails() {
+        return details;
+    }
+
+    public Map<String, String> getJoinMembers() {
+        return joinMembers;
+    }
+
+    public List<String> getInvitees() {
+        return invitees;
+    }
+
+    public String getAssociationId() {
+        return associationId;
+    }
+
+    public String getSponsorUserId() {
+        return sponsorUserId;
+    }
+
+    public String getUrl() {
+        return url;
+    }
 }
