@@ -54,7 +54,7 @@ public abstract class FTLrender {
             outputStream.close();
             inputStream.close();
 
-            template = cfg.getTemplate(ftlName);
+            template = cfg.getTemplate(ftlName,"GBK");
             templateRepo.put(ftlName, template);
 
             File file = new File(ftlName);
