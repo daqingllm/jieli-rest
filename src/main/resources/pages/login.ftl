@@ -49,21 +49,12 @@
     <![endif]-->
 
     <script>
-        function showMsg(msg) {
-            if (msg == '登陆成功') {
-                msg = "正在跳转，请稍后";
-                $.gritter.add({
-                    title : '登陆成功',
-                    text : "&nbsp;&nbsp;" + msg,
-                    class_name : 'gritter-info gritter-center '
-                });
-            } else {
-                $.gritter.add({
-                    title : '登陆失败',
-                    text : "&nbsp;&nbsp;" + msg,
-                    class_name : 'gritter-info '
-                });
-            }
+        function showMsg(title,msg) {
+            $.gritter.add({
+                title : title,
+                text : "&nbsp;&nbsp;" + msg,
+                class_name : 'gritter-info gritter-center '
+            });
         }
 
         function login() {
@@ -87,13 +78,26 @@
                     if (jsn.code == 200) {
                         document.cookie="sessionId="+jsn.sessionId;
                         //$.cookie('sessionId', jsn.sessionId);
+                        showMsg("登陆成功",jsn.msg);
                     }
-                    showMsg(jsn.msg);
+                    else showMsg("登陆失败",jsn.msg);
                 },
                 error : function() {
-                    showMsg("连接失败，请重试");
+                    showMsg("登陆失败","连接失败，请重试");
                 }
             });
+        }
+
+        function register(){
+            var psw = $("#register-password").val();
+            var rpt_psw = $("#repeat-password").val();
+
+            if (psw != rpt_psw)
+                showMsg("注册失败","密码不一致");
+
+            $.ajax({
+                ;
+            })
         }
     </script>
 </head>
@@ -149,7 +153,7 @@
                                 </div><!-- /widget-main -->
 
                                 <div class="toolbar clearfix">
-                                    <div>
+                                    <!--<div>
                                         <a href="#" onclick="show_box('forgot-box'); return false;" class="forgot-password-link">
                                             <i class="icon-arrow-left"></i>
                                             忘记密码
@@ -161,7 +165,7 @@
                                             注册账号
                                             <i class="icon-arrow-right"></i>
                                         </a>
-                                    </div>
+                                    </div>-->
                                 </div>
                             </div><!-- /widget-body -->
                         </div><!-- /login-box -->
@@ -213,20 +217,20 @@
 
                                     <form>
                                         <fieldset>
-                                            <label class="block clearfix"> <span class="block input-icon input-icon-right">
+                                            <!--<label class="block clearfix"> <span class="block input-icon input-icon-right">
 															<input type="email" class="form-control" placeholder="Email" />
-															<i class="icon-envelope"></i> </span> </label>
+															<i class="icon-envelope"></i> </span> </label>-->
 
                                             <label class="block clearfix"> <span class="block input-icon input-icon-right">
-															<input type="text" class="form-control" placeholder="用户名" />
+															<input type="text" class="form-control" placeholder="用户名" id="register-username" />
 															<i class="icon-user"></i> </span> </label>
 
                                             <label class="block clearfix"> <span class="block input-icon input-icon-right">
-															<input type="password" class="form-control" placeholder="密码" />
+															<input type="password" class="form-control" placeholder="密码" id="register-password" />
 															<i class="icon-lock"></i> </span> </label>
 
                                             <label class="block clearfix"> <span class="block input-icon input-icon-right">
-															<input type="password" class="form-control" placeholder="确认密码" />
+															<input type="password" class="form-control" placeholder="确认密码" id="repeat-password" />
 															<i class="icon-retweet"></i> </span> </label>
 
                                             <div class="space-24"></div>
