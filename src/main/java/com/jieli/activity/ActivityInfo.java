@@ -13,4 +13,23 @@ public class ActivityInfo {
 
     public RelatedType type;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ActivityInfo)) return false;
+
+        ActivityInfo info = (ActivityInfo) o;
+
+        if (activityId != null ? !activityId.equals(info.activityId) : info.activityId != null) return false;
+        if (type != info.type) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = activityId != null ? activityId.hashCode() : 0;
+        result = 31 * result + (type != null ? type.hashCode() : 0);
+        return result;
+    }
 }

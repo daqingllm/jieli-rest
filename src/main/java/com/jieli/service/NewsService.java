@@ -1,17 +1,27 @@
 package com.jieli.service;
 
+import com.jieli.comment.Comment;
+import com.jieli.comment.TopicType;
 import com.jieli.common.entity.ResponseEntity;
+import com.jieli.message.CommentMessageUtil;
+import com.jieli.message.MessageType;
+import com.jieli.mongo.BaseDAO;
 import com.jieli.news.Image;
 import com.jieli.news.News;
 import com.jieli.news.NewsDAO;
 import com.jieli.util.CollectionUtils;
 import com.jieli.util.IdentifyUtils;
+import com.jieli.util.MongoUtils;
 import com.sun.jersey.spi.resource.Singleton;
+import org.apache.commons.lang.StringUtils;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.
@@ -27,6 +37,8 @@ public class NewsService {
 
 
     private final NewsDAO newsDAO = new NewsDAO();
+
+    BaseDAO<Comment> commentDAO = new BaseDAO<Comment>(com.jieli.mongo.Collections.Comment, Comment.class);
 
     /**
      * 分页获取资讯
@@ -147,15 +159,48 @@ public class NewsService {
         return  Response.status(200).entity(responseEntity).build();
     }
 
+    @POST
+    @Path("/comment")
+    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+    public Response comment(@CookieParam("u")String sessionId, Map<String, String> commentInfo) {
+        //commentInfo内字段：content topicId commentedUserId(回复评论)
 
+        if (!IdentifyUtils.isValidate(sessionId)) {
+            return Response.status(403).build();
+        }
+        String content = commentInfo.get("content");
+        ResponseEntity responseEntity = new ResponseEntity();
+        if (StringUtils.isEmpty(content)) {
+            responseEntity.code = 4104;
+            responseEntity.msg = "回复内容不能为空";
+            return Response.status(200).entity(responseEntity).build();
+        }
+        String activityId = commentInfo.get("topicId");
+        if (StringUtils.isEmpty(activityId) || !MongoUtils.isValidObjectId(activityId)) {
+            responseEntity.code = 4102;
+            responseEntity.msg = "参数id无效";
+            return Response.status(200).entity(responseEntity).build();
+        }
+        News news = newsDAO.loadById(activityId);
+        if (news == null) {
+            responseEntity.code = 4103;
+            responseEntity.msg = "资讯不存在";
+            return Response.status(200).entity(responseEntity).build();
+        }
 
+        Comment comment = new Comment();
+        comment.topicId = activityId;
+        comment.topicType = TopicType.News;
+        comment.commentUserId = IdentifyUtils.getUserId(sessionId);
+        comment.commentedUserId = commentInfo.get("commentedUserId");
+        comment.content = content;
+        comment.addTime = new Date();
+        commentDAO.save(comment);
+        //message
+        CommentMessageUtil.addCommentMessage(comment, MessageType.NEWS);
 
-
-
-
-
-
-
-
-
+        responseEntity.code = 200;
+        responseEntity.msg = "评论成功";
+        return Response.status(200).entity(responseEntity).build();
+    }
 }

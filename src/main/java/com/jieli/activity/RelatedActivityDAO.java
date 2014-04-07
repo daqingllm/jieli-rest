@@ -21,6 +21,11 @@ public class RelatedActivityDAO extends GenericDAO<RelatedActivity> {
         return relatedActivity.infos;
     }
 
+    public RelatedActivity findByUserId(String userId) {
+        RelatedActivity relatedActivity = col.findOne("{userId:#}", userId).as(RelatedActivity.class);
+        return relatedActivity;
+    }
+
     public class InfoComparator implements Comparator<ActivityInfo> {
 
         @Override

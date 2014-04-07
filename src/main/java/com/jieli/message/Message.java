@@ -17,6 +17,8 @@ public class Message extends Model {
 
     public MessageType messageType;
 
+    public boolean isComment = false;
+
     public Object content;
 
     public Date addTime;

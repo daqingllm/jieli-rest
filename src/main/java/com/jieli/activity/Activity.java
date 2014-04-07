@@ -45,8 +45,6 @@ public class Activity extends Model {
     //串局邀请
     public List<String> invitees = new ArrayList<String>();
 
-    public List<Comment> comments = new ArrayList<Comment>();
-
     public String associationId;
 
     public String sponsorUserId;

@@ -10,6 +10,8 @@ import org.testng.annotations.Test;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.
@@ -40,7 +42,7 @@ public class ActivityTest {
     @Test
     public void testLoad() throws IOException {
         Response response = Request.Get("http://localhost:8080/rest/activity?activityId=5337cf1cef868c3955e498c7")
-                .addHeader("Cookie", "u=533799caef869f8e93d30d9d")
+                .addHeader("Cookie", "u=533c0010ef86c7014c36fa2f")
                 .execute();
 
         System.out.println(response.returnContent().asString());
@@ -75,9 +77,14 @@ public class ActivityTest {
 
     @Test
     public void testComment() throws IOException {
-        Response response = Request.Post("http://localhost:8080/rest/activity/comment?activityId=5337cf1cef868c3955e498c7")
-                .addHeader("Cookie", "u=533799caef869f8e93d30d9d")
-                .bodyString("我是评论", ContentType.APPLICATION_JSON)
+        Map<String, String> infos = new HashMap<String, String>();
+        infos.put("content", "我是回复字数你妹");
+        infos.put("topicId", "5337cf1cef868c3955e498c7");
+        infos.put("commentedUserId", "533c0010ef86c7014c36fa2e");
+
+        Response response = Request.Post("http://localhost:8080/rest/activity/comment")
+                .addHeader("Cookie", "u=533c0010ef86c7014c36fa2f")
+                .bodyString(new ObjectMapper().writeValueAsString(infos), ContentType.APPLICATION_JSON)
                 .execute();
 
         System.out.println(response.returnContent().asString());

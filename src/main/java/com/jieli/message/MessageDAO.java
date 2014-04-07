@@ -13,6 +13,6 @@ public class MessageDAO extends GenericDAO<Message> {
 
     //目前是有多少未读就返回多少
     public Iterable<Message> getMessagesByUserId(String userId) {
-        return getCollection().find("{userId:#,read:#}", userId, "false").as(Message.class);
+        return getCollection().find("{userId:#,read:#}", userId, false).as(Message.class);
     }
 }

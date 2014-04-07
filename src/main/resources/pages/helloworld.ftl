@@ -4,6 +4,7 @@
         <script src="/js/jquery.js"></script>
     </head>
     <body>
+        <input />
         <#if isOk >
             <div>${message}</div>
         </#if>
