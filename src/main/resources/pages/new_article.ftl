@@ -194,7 +194,8 @@
 										<label class="col-sm-3 control-label no-padding-right" for="form-field-textarea"> 文章正文 </label>
 
 										<div class="col-sm-9">
-											<textarea id="form-field-textarea" class="autosize-transition col-xs-10 col-sm-7" style="min-height: 140px;"></textarea>
+											<textarea id="form-field-textarea" class="autosize-transition col-xs-10 col-sm-7" style="min-height: 140px;">
+											</textarea>
 										</div>
 										
 									</div>
@@ -403,7 +404,8 @@
 			
 				$("#bootbox-upload-image").on("click", function() {
 					bootbox.dialog({
-						message: "<input type='file' id='upload-image-files' name='upload-image-files' >",
+						//message: "<input type='file' id='upload-image-files' name='upload-image-files' >",
+						message: "<form id='rest-upload-form' action='/upload' method='post' enctype='multipart/form-data' acceptcharset='UTF-8'>\n<input id='rest-upload-file' type='file' name='file' size='50' /></form>",
 						buttons: 			
 						{
 							"upload" :
@@ -412,8 +414,38 @@
 								"className" : "btn-sm btn-success",
 								"callback": function() {
 									//Example.show("great success");
+									// upload Image !
+									var d = new FormData(document.getElementById('rest-upload-form'));
 									$.ajax({
-									;
+										url: '/upload',
+										type: 'POST',
+										contentType: false,
+										data: d,
+										cache: false,
+										processData: false,
+										success: function(jsn){
+											alert(jsn);
+											// untested , but it should be like : code:200,body:filepath,msg...
+											
+											if (jsn.code == 200){
+												var uploadImgSrc = jsn.body + "";
+												
+												uploadImgSrc = "<img-sRc-pLAcehOLDer- src='"+uploadImgSrc +"' >"
+												var otextarea = $("#form-field-textarea").val();
+												var otextarea_head = "";
+												var otextarea_tail = "";
+												var pos = getCursorPosition();
+												if (pos > 1)
+													origin_textarea.substring(0,getCursorPosition()-1);
+												otextarea_tail = otextarea.substring(getCursorPosition());
+												
+												alert(otextarea_head + "[+]" + otextarea_tail);
+												
+												$("#form-field-textarea").val(otextarea_head + uploadImgSrc + otextarea_tail);
+											}else{
+												alert("上传失败！");
+											}
+										}
 									})
 								}
 							},
@@ -423,6 +455,8 @@
 								"className" : "btn-sm",
 								"callback": function() {
 									//Example.show("uh oh, look out!");
+									var objFile=document.getElementById('rest-upload-file');
+									objFile.outerHTML=objFile.outerHTML.replace(/(value=\").+\"/i,"$1\"");
 								}
 							}
 						}
