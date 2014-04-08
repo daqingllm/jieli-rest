@@ -1,5 +1,7 @@
 package com.jieli.service;
 
+import com.jieli.comment.Comment;
+import com.jieli.comment.TopicType;
 import com.jieli.common.entity.ResponseEntity;
 import com.jieli.feature.help.dao.HelpDAO;
 import com.jieli.feature.help.entity.HelpComment;
@@ -10,9 +12,11 @@ import com.jieli.feature.vote.entity.SimpleVoteInfo;
 import com.jieli.feature.vote.entity.Vote;
 import com.jieli.feature.vote.entity.VoteComment;
 import com.jieli.feature.vote.entity.VoteInfo;
+import com.jieli.message.CommentMessageUtil;
 import com.jieli.message.Message;
 import com.jieli.message.MessageDAO;
 import com.jieli.message.MessageType;
+import com.jieli.mongo.BaseDAO;
 import com.jieli.user.dao.UserDAO;
 import com.jieli.user.entity.User;
 import com.jieli.util.IdentifyUtils;
@@ -35,6 +39,7 @@ public class FeatureService {
     private HelpDAO helpDAO = new HelpDAO();
     private UserDAO userDAO = new UserDAO();
     private VoteDAO voteDAO = new VoteDAO();
+    BaseDAO<Comment> commentDAO = new BaseDAO<Comment>(com.jieli.mongo.Collections.Comment, Comment.class);
     private MessageDAO messageDAO = new MessageDAO();
     /**
      * 获取互帮互助列表
@@ -122,7 +127,6 @@ public class FeatureService {
         help.setAddTime(new Date());
         help.setAttentionNum(0);
         help.setUserId(userId);
-        help.setCommentList(new ArrayList<HelpComment>());
         HelpInfo result = helpDAO.addHelp(help);
         if(result == null) {
             responseEntity.code = 1210;
@@ -205,14 +209,13 @@ public class FeatureService {
     /**
      * 增加评论
      * @param sessionId
-     * @param context
-     * @param helpId
      * @return
      */
     @Path("/help/detail/comment/add")
     @POST
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-    public Response addHelpComment(@CookieParam("u")String sessionId, @QueryParam("helpId")String helpId, String context) {
+    public Response addHelpComment(@CookieParam("u")String sessionId, Map<String, String> commentInfo) {
+        //commentInfo内字段：content topicId commentedUserId(回复评论)
         if(!IdentifyUtils.isValidate(sessionId)) {
             return Response.status(403).build();
         }
@@ -224,12 +227,14 @@ public class FeatureService {
             responseEntity.msg = "账户出错";
             return Response.status(200).entity(responseEntity).build();
         }
-        if (StringUtils.isEmpty(helpId) || StringUtils.isEmpty(context)) {
-            responseEntity.code = 1101;
-            responseEntity.msg = "缺少参数";
+        String content = commentInfo.get("content");
+        if (StringUtils.isEmpty(content)) {
+            responseEntity.code = 3104;
+            responseEntity.msg = "回复内容不能为空";
             return Response.status(200).entity(responseEntity).build();
         }
-        if (!MongoUtils.isValidObjectId(helpId)) {
+        String helpId = commentInfo.get("topicId");
+        if (StringUtils.isEmpty(helpId) || !MongoUtils.isValidObjectId(helpId)) {
             responseEntity.code = 1105;
             responseEntity.msg = "参数Id无效";
             return Response.status(200).entity(responseEntity).build();
@@ -240,21 +245,17 @@ public class FeatureService {
             responseEntity.msg = "不能评论自己";
             return Response.status(403).entity(responseEntity).build();
         }
-        HelpComment comment = new HelpComment();
-        comment.setComment(context);
-        comment.setCommentUserId(userId);
-        comment.setHelpId(helpId);
-        comment.setTop(false);
-        comment.setAddTime(new Date());
-        HelpInfo addResult = helpDAO.addComment(comment);
-        //check whether comment is added
-        if(addResult == null) {
-            responseEntity.code = 1222;
-            responseEntity.msg = "评论添加失败";
-            return Response.status(200).entity(responseEntity).build();
-        }
+        Comment comment = new Comment();
+        comment.commentUserId = userId;
+        comment.commentedUserId = commentInfo.get("commentedUserId");
+        comment.content = content;
+        comment.topicType = TopicType.Help;
+        comment.addTime = new Date();
+        comment.topicId = helpId;
+        commentDAO.save(comment);
+        CommentMessageUtil.addCommentMessage(comment, MessageType.ACTIVITY);
         responseEntity.code = 200;
-        responseEntity.body = helpInfo.get_id();
+        responseEntity.msg = "评论成功";
         return Response.status(200).entity(responseEntity).build();
     }
 
@@ -263,14 +264,14 @@ public class FeatureService {
      * @param helpId
      * @return
      */
-    @Path("/help/detail/comment/delete")
+    /*@Path("/help/detail/comment/delete")
     @GET
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     public Response deleteComment(@CookieParam("u")String sessionId, @QueryParam("helpId")String helpId, @QueryParam("commentIndex")Integer commentIndex){
         if(!IdentifyUtils.isValidate(sessionId)) {
             return Response.status(403).build();
         }
-        //TODO 网络延迟、多线程问题 index
+        // 网络延迟、多线程问题 index
         String userId = IdentifyUtils.getUserId(sessionId);
         ResponseEntity responseEntity = new ResponseEntity();
         if (StringUtils.isEmpty(userId)) {
@@ -302,7 +303,7 @@ public class FeatureService {
         helpDAO.deleteComment(helpId, commentIndex);
         responseEntity.code = 200;
         return Response.status(200).entity(responseEntity).build();
-    }
+    }*/
 
     /**
      * 加关注
@@ -358,7 +359,7 @@ public class FeatureService {
         }
 
         HelpInfo result = helpDAO.addFocus(helpId, userId);
-        // 互帮互助动态
+        //TODO 互帮互助关注动态
         Message message = new Message();
         message.messageType = MessageType.HELP;
         message.importance = 0;
@@ -527,23 +528,14 @@ public class FeatureService {
         voteInfo.setUserId(userId);
         voteInfo.setAssociationId(associationId);
         voteInfo.setAddTime(new Date());
-        voteInfo.setCommentList(new ArrayList<VoteComment>());
-
         VoteInfo result = voteDAO.addVote(voteInfo);
-        //发起投票动态
-        Message message = new Message();
-        message.messageType = MessageType.VOTE;
-        message.importance = 0;
-        message.content = "我发起了一个投票";
-        message.set_id(new ObjectId(result.get_id().toString()));
-        message.addTime = new Date();
-        messageDAO.save(message);
+        //TODO 发起投票动态
         responseEntity.code = 200;
         responseEntity.body = result;
         return Response.status(200).entity(responseEntity).build();
     }
 
-    @Path("/vote/deletevote")
+    /*@Path("/vote/deletevote")
     @GET
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     public Response deleteVote(@CookieParam("u")String sessionId, @QueryParam("voteId")String voteId) {
@@ -586,7 +578,7 @@ public class FeatureService {
         voteDAO.deleteById(voteId);
         responseEntity.code = 200;
         return Response.status(200).entity(responseEntity).build();
-    }
+    }*/
 
     /**
      * 参与投票
@@ -663,42 +655,50 @@ public class FeatureService {
     /**
      * 添加投票评论
      * @param sessionId
-     * @param comment
-     * @param voteId
      * @return
      */
     @Path("/vote/comment")
     @POST
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-    public Response addVoteComment(@CookieParam("u")String sessionId, VoteComment comment, @QueryParam("voteId")String voteId) {
+    public Response addVoteComment(@CookieParam("u")String sessionId, Map<String, String> commentInfo) {
         if(!IdentifyUtils.isValidate(sessionId)) {
             return Response.status(403).build();
         }
         ResponseEntity responseEntity = new ResponseEntity();
-        if(comment == null || voteId == null || StringUtils.isEmpty(voteId)) {
-            responseEntity.code = 1101;
-            responseEntity.msg = "缺少参数";
+        String userId = IdentifyUtils.getUserId(sessionId);
+        String content  = commentInfo.get("content");
+        if(content == null) {
+            responseEntity.code = 3104;
+            responseEntity.msg = "回复内容不能为空";
             return Response.status(200).entity(responseEntity).build();
         }
-        if(!comment.getVoteId().equals(voteId)) {
-            responseEntity.code = 1310;
-            responseEntity.msg = "评论的非本投票";
+        String voteId = commentInfo.get("topicId");
+        if(voteId == null || MongoUtils.isValidObjectId(voteId)) {
+            responseEntity.code = 1105;
+            responseEntity.msg = "参数Id无效";
             return Response.status(200).entity(responseEntity).build();
         }
-        VoteInfo result = voteDAO.addComment(comment, voteId);
+        Comment comment = new Comment();
+        comment.topicId = voteId;
+        comment.topicType = TopicType.Vote;
+        comment.content = content;
+        comment.commentUserId = userId;
+        comment.commentedUserId = commentInfo.get("commentedUserId");
+        comment.addTime = new Date();
+        commentDAO.save(comment);
+        CommentMessageUtil.addCommentMessage(comment, MessageType.VOTE);
         responseEntity.code = 200;
-        responseEntity.body = result;
-        return Response.status(200).entity(result).build();
+        responseEntity.msg = "评论成功";
+        return Response.status(200).entity(responseEntity).build();
     }
 
-    @Path("/vote/comment")
+    /*@Path("/vote/comment")
     @GET
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     public Response deleteVoteComment(@CookieParam("u")String sessionId, @QueryParam("voteId")String voteId, @QueryParam("commentIndex")String commentIndex) {
         if(!IdentifyUtils.isValidate(sessionId)) {
             return Response.status(403).build();
         }
-        //TODO 优化 commentIndex
         ResponseEntity responseEntity = new ResponseEntity();
         if(!IdentifyUtils.isAdmin(sessionId)) {
             responseEntity.code = 1403;
@@ -723,7 +723,7 @@ public class FeatureService {
         responseEntity.code = 200;
         responseEntity.body = result.get_id();
         return Response.status(200).entity(responseEntity).build();
-    }
+    }*/
 
 
     /**

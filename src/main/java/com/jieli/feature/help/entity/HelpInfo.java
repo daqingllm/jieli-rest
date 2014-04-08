@@ -36,11 +36,6 @@ public class HelpInfo extends Model{
      * 置顶评论id
      */
     //public Integer topCommentId;
-    /**
-     * 评论列表
-     */
-    public List<HelpComment> commentList;
-
     public List<String> focusList;
 
     public String getUserId() {
@@ -89,14 +84,6 @@ public class HelpInfo extends Model{
 
     public void setAddTime(Date addTime) {
         this.addTime = addTime;
-    }
-
-    public List<HelpComment> getCommentList() {
-        return commentList;
-    }
-
-    public void setCommentList(List<HelpComment> commentList) {
-        this.commentList = commentList;
     }
 
     public List<String> getFocusList() { return focusList; }
