@@ -291,6 +291,10 @@ public class ActivityService {
 
     private void insertRelated(String userId, String activityId, RelatedType relatedType) {
         RelatedActivity relatedActivity = relatedDAO.findByUserId(userId);
+        if (relatedActivity == null) {
+            relatedActivity = new RelatedActivity();
+            relatedActivity.userId = userId;
+        }
         ActivityInfo info = new ActivityInfo();
         info.activityId = activityId;
         info.type = relatedType;

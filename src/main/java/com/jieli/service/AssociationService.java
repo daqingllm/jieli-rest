@@ -103,7 +103,7 @@ public class AssociationService {
             associationId = IdentifyUtils.getAssociationId(sessionId);
         }
 
-        Association association = associationDAO.loadById(id);
+        Association association = associationDAO.loadById(associationId);
         if (association == null) {
             responseEntity.code = 2102;
             responseEntity.msg = "协会不存在";
