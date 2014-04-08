@@ -13,8 +13,10 @@ import com.jieli.user.dao.UserDAO;
 import com.jieli.user.entity.User;
 import com.jieli.util.CollectionUtils;
 import com.jieli.util.IdentifyUtils;
+import com.jieli.util.MongoUtils;
 import com.sun.jersey.spi.resource.Singleton;
 import org.apache.commons.lang.StringUtils;
+import org.bson.types.ObjectId;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -30,7 +32,7 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 @Singleton
-@Path("/comment")
+@Path("/rest/comment")
 public class CommentService {
 
     BaseDAO<Comment> commentDAO = new BaseDAO<Comment>(Collections.Comment, Comment.class);
@@ -92,8 +94,8 @@ public class CommentService {
     @GET
     @Path("/load")
     @Produces(MediaType.APPLICATION_JSON+ ";charset=utf-8")
-    public Response load(@QueryParam("topicId")String topicId, @QueryParam("topicType")String topicType){
-        List<Comment> comments = commentDAO.find("{topicId:#, topicType:#}", topicId, topicType);
+    public Response load(@QueryParam("topicId")String topicId, @QueryParam("topicType")String topicType, @QueryParam("page")int page, @QueryParam("count")int count){
+        List<Comment> comments = commentDAO.find("{topicId:#, topicType:#, isDeleted:#}", topicId, topicType, false);
 
         if( !CollectionUtils.isEmpty(comments) ){
             for(Comment comment : comments){
@@ -114,5 +116,21 @@ public class CommentService {
         return  Response.status(200).entity(responseEntity).build();
     }
 
+    @GET
+    @Path("/delete")
+    @Produces(MediaType.APPLICATION_JSON+ ";charset=utf-8")
+    public Response delete(@QueryParam("commentId")String commentId) {
+        ResponseEntity responseEntity = new ResponseEntity();
+        if (!MongoUtils.isValidObjectId(commentId)) {
+            responseEntity.code = 7001;
+            responseEntity.msg = "参数错误";
+            return  Response.status(200).entity(responseEntity).build();
+        }
+        Comment comment = commentDAO.findOne("{_id:#}", new ObjectId(commentId));
+        comment.isDeleted = true;
+        commentDAO.save(comment);
+        responseEntity.code = 200;
+        return  Response.status(200).entity(responseEntity).build();
+    }
 
 }

@@ -23,4 +23,13 @@ public class CommentTest {
 
         System.out.println(response.returnContent().asString());
     }
+
+    @Test
+    public void deleteComment() throws IOException {
+        Response response = Request.Get("http://localhost:8080/rest/comment/delete?commentId=5341075cef86bf409a51125d")
+                .addHeader("Cookie", "u=533c0010ef86c7014c36fa2f")
+                .execute();
+
+        System.out.println(response.returnContent().asString());
+    }
 }

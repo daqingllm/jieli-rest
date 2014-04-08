@@ -32,7 +32,7 @@ import java.util.Map;
  */
 
 @Singleton
-@Path("/news")
+@Path("/rest/news")
 public class NewsService {
 
 
@@ -104,8 +104,6 @@ public class NewsService {
         }
 
         if(news!=null){
-            String associationId = IdentifyUtils.getAssociationId(sessionId);
-            news.associationId = associationId;
             if( !CollectionUtils.isEmpty(news.images) ){
                 news.imagesCount = news.images.size();
             }
@@ -116,7 +114,7 @@ public class NewsService {
 
         ResponseEntity responseEntity = new ResponseEntity();
         responseEntity.code = 200;
-        responseEntity.body = "ok";
+        responseEntity.body = "{\"_id\":\"" + news.get_id().toString() + "\"}";;
         return  Response.status(200).entity(responseEntity).build();
 
     }

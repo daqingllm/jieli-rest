@@ -30,7 +30,7 @@ import java.util.*;
  * 包括互帮互助、默契匹配、投票列表
  * Created by YolandaLeo on 14-3-19.
  */
-@Path("/feature")
+@Path("/rest/feature")
 public class FeatureService {
     private HelpDAO helpDAO = new HelpDAO();
     private UserDAO userDAO = new UserDAO();

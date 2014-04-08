@@ -15,7 +15,7 @@ import java.io.InputStream;
  * Created by xianxing on 2014/3/22.
  * 上传图像
  */
-@Path("/")
+@Path("/rest")
 public class UploadService {
     @POST
     @Path("/upload")

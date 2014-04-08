@@ -1,8 +1,6 @@
 package com.jieli.news;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.jieli.mongo.Model;
-import com.jieli.user.entity.User;
 
 import java.util.Date;
 import java.util.List;

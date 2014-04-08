@@ -12,7 +12,7 @@ import javax.ws.rs.core.MediaType;
  * Time: 下午11:02
  * To change this template use File | Settings | File Templates.
  */
-@Path("/hello")
+@Path("/rest/hello")
 public class HelloService {
     // This method is called if TEXT_PLAIN is request
     @GET

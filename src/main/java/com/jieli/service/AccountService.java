@@ -26,7 +26,7 @@ import java.util.Map;
  * To change this template use File | Settings | File Templates.
  */
 @Singleton
-@Path("/account")
+@Path("/rest/account")
 public class AccountService {
 
     private AccountDAO accountDAO = new AccountDAO();
@@ -135,6 +135,12 @@ public class AccountService {
         ResponseEntity responseEntity = new ResponseEntity();
         String username = registerInfo.get("username");
         String associationId = registerInfo.get("associationId");
+        if (StringUtils.isEmpty(associationId)) {
+            responseEntity.code = 1016;
+            responseEntity.msg = "超级账户注册用户需提供associationId";
+            return Response.status(200).entity(responseEntity).build();
+        }
+
         Account account = accountDAO.loadByUsername(username);
         if (account != null) {
             responseEntity.code = 1011;
@@ -166,7 +172,13 @@ public class AccountService {
     @POST
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     public Response changeAccount(@CookieParam("u")String sessionId, Account account) {
+        ResponseEntity responseEntity = new ResponseEntity();
         Account current = accountDAO.loadByUsername(account.username);
+        if (current == null) {
+            responseEntity.code = 1001;
+            responseEntity.msg = "用户名不存在";
+            return Response.status(200).entity(responseEntity).build();
+        }
         if (current.state.value() <= AccountState.ADMIN.value() && !IdentifyUtils.isSuper(sessionId)) {
             if (!IdentifyUtils.isAdmin(sessionId) || account.state.equals(AccountState.SUPPER)
                     || !account.associationId.equals(current.associationId)
@@ -174,13 +186,14 @@ public class AccountService {
                 return Response.status(403).build();
             }
             current.password = PasswordGenerator.md5Encode(account.password);
+            current.state = account.state;
             accountDAO.save(current);
         } else if (IdentifyUtils.isSuper(sessionId)){
             account.set_id(current.get_id());
+            account.password = PasswordGenerator.md5Encode(account.password);
             accountDAO.save(account);
         }
 
-        ResponseEntity responseEntity = new ResponseEntity();
         responseEntity.code = 200;
         return Response.status(200).entity(responseEntity).build();
     }
