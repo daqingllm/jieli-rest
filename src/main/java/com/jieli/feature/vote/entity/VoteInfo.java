@@ -22,7 +22,6 @@ public class VoteInfo extends Model {
     private Map<Integer, String> optionPicsMap; //投票选项，对应图片
     private Map<Integer, Integer> optionVotes; //投票选项，投票人数
     boolean multiple; //是否多选
-    private List<VoteComment> commentList;
     private List<Vote> voteList; //投票记录
     private Integer totalVote; //每个选项投票数总和
 
@@ -112,14 +111,6 @@ public class VoteInfo extends Model {
 
     public void setMultiple(boolean multiple) {
         this.multiple = multiple;
-    }
-
-    public List<VoteComment> getCommentList() {
-        return commentList;
-    }
-
-    public void setCommentList(List<VoteComment> commentList) {
-        this.commentList = commentList;
     }
 
     public List<Vote> getVoteList() { return voteList; }
