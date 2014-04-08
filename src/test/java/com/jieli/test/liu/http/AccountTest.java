@@ -1,5 +1,8 @@
 package com.jieli.test.liu.http;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jieli.common.entity.Account;
+import com.jieli.common.entity.AccountState;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.client.fluent.Response;
 import org.apache.http.entity.ContentType;
@@ -29,19 +32,10 @@ public class AccountTest {
     @Test
     public void testRegister() throws IOException {
         Response response = Request.Post("http://localhost:8080/rest/account/register")
-                .bodyString("{\"username\":\"小明22\"}", ContentType.APPLICATION_JSON)
+                .addHeader("Cookie", "u=533c07a1ef86c7014c36fa31")
+                .bodyString("{\"username\":\"Harden\"}", ContentType.APPLICATION_JSON)
                 .execute();
 
-        /**小明22 password：pnd96vhd
-        /*User user = new User();
-        user.associationId = "100";
-        user.birthday = "1998-11-13";
-        user.name = "小明2";
-        user.phone = "13012345678";
-        ObjectMapper mapper = new ObjectMapper();
-        String query = mapper.writeValueAsString(user);
-        Response response = Request.Post("http://localhost:8080/rest/account/register")
-                .bodyString(query, ContentType.APPLICATION_JSON).execute();*/
         System.out.println(response.returnContent().asString());
     }
 
@@ -51,6 +45,24 @@ public class AccountTest {
                 .addHeader("Cookie", "u=533c0010ef86c7014c36fa2f")
                 .setHeader("app", "test")
                 .bodyString("{\"username\":\"admin\",\"associationId\":\"533c0568e4b05bd824aeda54\"}", ContentType.APPLICATION_JSON)
+                .execute();
+
+        System.out.println(response.returnContent().asString());
+    }
+
+    @Test
+    public void testChange() throws IOException {
+        Account account = new Account();
+        account.username = "admin";
+        account.password = "admin";
+        account.associationId = "5337a309ef869d4225397d48";
+        account.userId = "533c07a1ef86c7014c36fa30";
+        account.state = AccountState.ADMIN;
+
+        Response response = Request.Post("http://localhost:8080/rest/account")
+                .addHeader("Cookie", "u=533c0010ef86c7014c36fa2f")
+                .setHeader("app", "test")
+                .bodyString(new ObjectMapper().writeValueAsString(account), ContentType.APPLICATION_JSON)
                 .execute();
 
         System.out.println(response.returnContent().asString());

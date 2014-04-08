@@ -22,7 +22,7 @@ import java.util.*;
  */
 
 @Singleton
-@Path("/activity")
+@Path("/rest/activity")
 public class ActivityService {
 
     private final ActivityDAO activityDAO = new ActivityDAO();
@@ -291,6 +291,10 @@ public class ActivityService {
 
     private void insertRelated(String userId, String activityId, RelatedType relatedType) {
         RelatedActivity relatedActivity = relatedDAO.findByUserId(userId);
+        if (relatedActivity == null) {
+            relatedActivity = new RelatedActivity();
+            relatedActivity.userId = userId;
+        }
         ActivityInfo info = new ActivityInfo();
         info.activityId = activityId;
         info.type = relatedType;
@@ -338,6 +342,14 @@ public class ActivityService {
             responseEntity.code = 3103;
             responseEntity.msg = "活动不存在";
             return Response.status(200).entity(responseEntity).build();
+        }
+        if (activity.tag == AcivityTag.PRIVATE) {
+            Message message = new Message();
+            message.messageType = MessageType.ACTIVITY;
+            message.userId = activity.sponsorUserId;
+            message.content = "你发起的串局被评论";
+            message.addTime = new Date();
+            messageDAO.save(message);
         }
 
         Comment comment = new Comment();

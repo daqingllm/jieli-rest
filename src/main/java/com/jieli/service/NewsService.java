@@ -32,7 +32,7 @@ import java.util.Map;
  */
 
 @Singleton
-@Path("/news")
+@Path("/rest/news")
 public class NewsService {
 
 
@@ -51,7 +51,7 @@ public class NewsService {
     @GET
     @Path("/paginate")
     @Produces(MediaType.APPLICATION_JSON+ ";charset=utf-8")
-    public Response findNews(@CookieParam("u")String sessionId, @QueryParam("type") String type, @QueryParam("page") int page, @QueryParam("pagesize") int pagesize){
+    public Response findNews(@CookieParam("u")String sessionId, @QueryParam("type") String type, @QueryParam("page") int page, @QueryParam("count") int pagesize){
 
         if (!IdentifyUtils.isValidate(sessionId)) {
             return Response.status(403).build();
@@ -104,8 +104,6 @@ public class NewsService {
         }
 
         if(news!=null){
-            String associationId = IdentifyUtils.getAssociationId(sessionId);
-            news.associationId = associationId;
             if( !CollectionUtils.isEmpty(news.images) ){
                 news.imagesCount = news.images.size();
             }
@@ -116,11 +114,44 @@ public class NewsService {
 
         ResponseEntity responseEntity = new ResponseEntity();
         responseEntity.code = 200;
-        responseEntity.body = "ok";
+        responseEntity.body = "{\"_id\":\"" + news.get_id().toString() + "\"}";;
         return  Response.status(200).entity(responseEntity).build();
 
     }
 
+    @GET
+    @Path("/appreciate")
+    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+    public Response appreciate(@CookieParam("u")String sessionId, @QueryParam("news_id")String _id) {
+        if (!IdentifyUtils.isValidate(sessionId)) {
+            return Response.status(403).build();
+        }
+
+        ResponseEntity responseEntity = new ResponseEntity();
+        String userId = IdentifyUtils.getUserId(sessionId);
+        if (StringUtils.isEmpty(_id) || !MongoUtils.isValidObjectId(_id)) {
+            responseEntity.code = 4002;
+            responseEntity.msg = "参数id无效";
+            return Response.status(200).entity(responseEntity).build();
+        }
+        News news = newsDAO.loadById(_id);
+        if (news == null) {
+            responseEntity.code = 4001;
+            responseEntity.msg = "资讯不存在";
+            return Response.status(200).entity(responseEntity).build();
+        }
+        if (news.appreciateUserIds.contains(userId)) {
+            responseEntity.code = 4003;
+            responseEntity.msg = "已经点赞";
+            return Response.status(200).entity(responseEntity).build();
+        }
+        news.appreciateUserIds.add(userId);
+        news.appreciateCount = news.appreciateUserIds.size();
+        newsDAO.save(news);
+
+        responseEntity.code = 200;
+        return Response.status(200).entity(responseEntity).build();
+    }
 
     /**
      * 获取资讯轮播图
@@ -171,25 +202,25 @@ public class NewsService {
         String content = commentInfo.get("content");
         ResponseEntity responseEntity = new ResponseEntity();
         if (StringUtils.isEmpty(content)) {
-            responseEntity.code = 4104;
+            responseEntity.code = 4004;
             responseEntity.msg = "回复内容不能为空";
             return Response.status(200).entity(responseEntity).build();
         }
-        String activityId = commentInfo.get("topicId");
-        if (StringUtils.isEmpty(activityId) || !MongoUtils.isValidObjectId(activityId)) {
-            responseEntity.code = 4102;
+        String newsId = commentInfo.get("topicId");
+        if (StringUtils.isEmpty(newsId) || !MongoUtils.isValidObjectId(newsId)) {
+            responseEntity.code = 4002;
             responseEntity.msg = "参数id无效";
             return Response.status(200).entity(responseEntity).build();
         }
-        News news = newsDAO.loadById(activityId);
+        News news = newsDAO.loadById(newsId);
         if (news == null) {
-            responseEntity.code = 4103;
+            responseEntity.code = 4001;
             responseEntity.msg = "资讯不存在";
             return Response.status(200).entity(responseEntity).build();
         }
 
         Comment comment = new Comment();
-        comment.topicId = activityId;
+        comment.topicId = newsId;
         comment.topicType = TopicType.News;
         comment.commentUserId = IdentifyUtils.getUserId(sessionId);
         comment.commentedUserId = commentInfo.get("commentedUserId");

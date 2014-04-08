@@ -27,5 +27,6 @@ public class Comment extends Model {
 
     public CommentUserInfo commentUserInfo; // 评论者详细信息，用于展示
 
+    public boolean isDeleted = false;  //是否已被删除
 
 }

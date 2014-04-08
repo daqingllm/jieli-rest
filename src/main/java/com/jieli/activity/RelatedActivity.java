@@ -2,6 +2,7 @@ package com.jieli.activity;
 
 import com.jieli.mongo.Model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -15,6 +16,6 @@ public class RelatedActivity extends Model {
 
     public String userId;
 
-    public List<ActivityInfo> infos;
+    public List<ActivityInfo> infos = new ArrayList<ActivityInfo>();
 
 }

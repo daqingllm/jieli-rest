@@ -24,7 +24,7 @@ import javax.ws.rs.core.Response;
  * To change this template use File | Settings | File Templates.
  */
 @Singleton
-@Path("/association")
+@Path("/rest/association")
 public class AssociationService {
 
     private AssociationDAO associationDAO = new AssociationDAO();
@@ -87,16 +87,23 @@ public class AssociationService {
     @Path("/user")
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     public Response loadUsers(@CookieParam("u")String sessionId,@QueryParam("id")String id ,@QueryParam("state")int state) {
-        if (!IdentifyUtils.isSuper(sessionId)) {
+        if (!IdentifyUtils.isAdmin(sessionId)) {
             return Response.status(403).build();
         }
         ResponseEntity responseEntity = new ResponseEntity();
-        if (StringUtils.isEmpty(id)) {
-            responseEntity.code = 2101;
-            responseEntity.msg = "缺少参数";
-            return Response.status(200).entity(responseEntity).build();
+        String associationId = null;
+        if (IdentifyUtils.getState(sessionId) == AccountState.SUPPER) {
+            if (StringUtils.isEmpty(id)) {
+                responseEntity.code = 2101;
+                responseEntity.msg = "缺少参数";
+                return Response.status(200).entity(responseEntity).build();
+            }
+            associationId = id;
+        } else {
+            associationId = IdentifyUtils.getAssociationId(sessionId);
         }
-        Association association = associationDAO.loadById(id);
+
+        Association association = associationDAO.loadById(associationId);
         if (association == null) {
             responseEntity.code = 2102;
             responseEntity.msg = "协会不存在";
@@ -104,11 +111,11 @@ public class AssociationService {
         }
         Iterable<Account> accounts = null;
         if (state == 0){
-            accounts = accountDAO.loadByAssociationId(id, AccountState.DISABLE);
+            accounts = accountDAO.loadByAssociationId(associationId, AccountState.DISABLE);
         } else if (state == 1) {
-            accounts = accountDAO.loadByAssociationId(id, AccountState.ENABLE);
+            accounts = accountDAO.loadByAssociationId(associationId, AccountState.ENABLE);
         } else if (state == 2) {
-            accounts = accountDAO.loadByAssociationId(id, AccountState.ADMIN);
+            accounts = accountDAO.loadByAssociationId(associationId, AccountState.ADMIN);
         } else {
             responseEntity.code = 2103;
             responseEntity.msg = "参数无效";

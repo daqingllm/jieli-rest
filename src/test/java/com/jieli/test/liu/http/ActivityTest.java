@@ -32,7 +32,7 @@ public class ActivityTest {
         activity.title = "R1";
 
         Response response = Request.Post("http://localhost:8080/rest/activity")
-                .addHeader("Cookie", "u=533799caef869f8e93d30d9d")
+                .addHeader("Cookie", "u=533c07a1ef86c7014c36fa31")
                 .bodyString(new ObjectMapper().writeValueAsString(activity), ContentType.APPLICATION_JSON)
                 .execute();
 
@@ -51,7 +51,7 @@ public class ActivityTest {
     @Test
     public void testOngoing() throws IOException {
         Response response = Request.Get("http://localhost:8080/rest/activity/ongoing")
-                .addHeader("Cookie", "u=533799caef869f8e93d30d9d")
+                .addHeader("Cookie", "u=533c07a1ef86c7014c36fa31")
                 .execute();
 
         System.out.println(response.returnContent().asString());
