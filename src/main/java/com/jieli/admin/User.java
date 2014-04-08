@@ -23,10 +23,10 @@ public class User {
     @GET
     @Path("/login")
     @Produces(MediaType.TEXT_HTML)
-    public String CreateNews(){
+    public String UserLogin(){
+
         Map<String, Object> params = new HashMap<String, Object>();
         return FTLrender.getResult("login.ftl", params);
     }
-
 
 }
