@@ -192,6 +192,9 @@ public class AccountService {
             account.set_id(current.get_id());
             account.password = PasswordGenerator.md5Encode(account.password);
             accountDAO.save(account);
+            User user = userDAO.loadById(account.userId);
+            user.associationId = account.associationId;
+            userDAO.save(user);
         }
 
         responseEntity.code = 200;
