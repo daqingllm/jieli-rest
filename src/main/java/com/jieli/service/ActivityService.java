@@ -343,6 +343,14 @@ public class ActivityService {
             responseEntity.msg = "活动不存在";
             return Response.status(200).entity(responseEntity).build();
         }
+        if (activity.tag == AcivityTag.PRIVATE) {
+            Message message = new Message();
+            message.messageType = MessageType.ACTIVITY;
+            message.userId = activity.sponsorUserId;
+            message.content = "你发起的串局被评论";
+            message.addTime = new Date();
+            messageDAO.save(message);
+        }
 
         Comment comment = new Comment();
         comment.topicId = activityId;
