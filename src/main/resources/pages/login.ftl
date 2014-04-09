@@ -42,63 +42,12 @@
 
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
 
+
     <!--[if lt IE 9]>
     <script src="/assets/js/html5shiv.js"></script>
     <script src="/assets/js/respond.min.js"></script>
     <![endif]-->
 
-    <script>
-        function showMsg(title,msg) {
-            $.gritter.add({
-                title : title,
-                text : "&nbsp;&nbsp;" + msg,
-                class_name : 'gritter-info gritter-center '
-            });
-        }
-
-        function login() {
-            //showMsg("µÇÂ½³É¹¦");
-            //showMsg("ÃÜÂë´íÎó");
-
-            var char34 = "\"";
-            var _sd = "{\"username\":\"" + $("#login-username").val() + "\",\"password\":\"" + $("#login-password").val() + "\"}";
-            var _d = $.parseJSON(_sd);
-            //alert(_d);
-
-            $.ajax({
-                type : "POST",
-                url : "/rest/account/login",
-                async : false,
-                data : _sd,
-                contentType : "application/json; charset=utf-8",
-                dataType : 'json',
-                success : function(jsn) {
-                    //alert(jsn);
-                    if (jsn.code == 200) {
-                        document.cookie="sessionId="+jsn.sessionId;
-                        //$.cookie('sessionId', jsn.sessionId);
-                        showMsg("µÇÂ½³É¹¦",jsn.msg);
-                    }
-                    else showMsg("µÇÂ½Ê§°Ü",jsn.msg);
-                },
-                error : function() {
-                    showMsg("µÇÂ½Ê§°Ü","Á¬½ÓÊ§°Ü£¬ÇëÖØÊÔ");
-                }
-            });
-        }
-
-        function register(){
-            var psw = $("#register-password").val();
-            var rpt_psw = $("#repeat-password").val();
-
-            if (psw != rpt_psw)
-                showMsg("×¢²áÊ§°Ü","ÃÜÂë²»Ò»ÖÂ");
-
-            $.ajax({
-                ;
-            })
-        }
-    </script>
 </head>
 
 <body class="login-layout">
@@ -284,6 +233,7 @@
 
 <!-- <![endif]-->
 
+
 <script src="/assets/js/jquery-ui-1.10.3.custom.min.js"></script>
 <script src="/assets/js/jquery.ui.touch-punch.min.js"></script>
 <script src="/assets/js/bootbox.min.js"></script>
@@ -315,5 +265,60 @@
         jQuery('#' + id).addClass('visible');
     }
 </script>
+
+<script>
+    function showMsg(title,msg) {
+        var pos = (title == 'µÇÂ½³É¹¦' ? 'gritter-center' : '');
+        $.gritter.add({
+            title : title,
+            text : "&nbsp;&nbsp;" + msg,
+            class_name : 'gritter-info ' + pos
+        });
+    }
+
+    function login() {
+        //showMsg("µÇÂ½³É¹¦");
+        //showMsg("ÃÜÂë´íÎó");
+
+        var char34 = "\"";
+        var _sd = "{\"username\":\"" + $("#login-username").val() + "\",\"password\":\"" + $("#login-password").val() + "\"}";
+        var _d = $.parseJSON(_sd);
+        //alert(_d);
+
+        $.ajax({
+            type : "POST",
+            url : "/rest/account/login",
+            async : false,
+            data : _sd,
+            contentType : "application/json; charset=utf-8",
+            dataType : 'json',
+            success : function(jsn) {
+                var jsn_body="";
+                //alert(jsn);
+                if (jsn.code == 200) {
+                    eval("jsn_body="+jsn.body);
+                    document.cookie="u="+jsn_body.sessionId+"; path=/";
+                    //$.cookie('sessionId', jsn_body.sessionId);
+                    showMsg("µÇÂ½³É¹¦",jsn.msg);
+                }
+                else showMsg("µÇÂ½Ê§°Ü",jsn.msg);
+            },
+            error : function() {
+                showMsg("µÇÂ½Ê§°Ü","Á¬½ÓÊ§°Ü£¬ÇëÖØÊÔ");
+            }
+        });
+    }
+
+    function register(){
+        var psw = $("#register-password").val();
+        var rpt_psw = $("#repeat-password").val();
+
+        if (psw != rpt_psw)
+            showMsg("×¢²áÊ§°Ü","ÃÜÂë²»Ò»ÖÂ");
+
+        //$.ajax({})
+    }
+</script>
+
 </body>
 </html>

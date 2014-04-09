@@ -2,9 +2,9 @@
 <html lang="en">
 	<head>
 		<meta charset="utf-8" />
-		<title>Ф▌╔Е┼⌡ Ф√┤Г╚═Г╝║Г░├</title>
-		<meta name="keywords" content="Ф▌╔Е┼⌡" />
-		<meta name="description" content="Ф▌╔Е┼⌡" />
+		<title>╫са╕ ндуб╧эюМ</title>
+		<meta name="keywords" content="╫са╕" />
+		<meta name="description" content="╫са╕" />
 		<!-- basic styles -->
 
 		<link href="assets/css/bootstrap.min.css" rel="stylesheet" />
@@ -58,7 +58,7 @@
 					<a href="#" class="navbar-brand">
 						<small>
 							<i class="icon-leaf"></i>
-							Ф▌╔Е┼⌡ Е░▌Е▐╟Г╝║Г░├ГЁ╩Г╩÷
+							╫са╕ ╨Сл╗╧эюМо╣мЁ
 						</small>
 					</a><!-- /.brand -->
 				</div><!-- /.navbar-header -->
@@ -69,8 +69,8 @@
 							<a data-toggle="dropdown" href="#" class="dropdown-toggle">
 								<img class="nav-user-photo" src="assets/avatars/user.jpg" alt="Jason's Photo" />
 								<span class="user-info">
-									<small>Ф╛╒Х©▌Е┘┴Д╦╢,</small>
-									И≤©Ф≤÷
+									<small>╩╤с╜╧Баы,</small>
+									╟╒пг
 								</span>
 
 								<i class="icon-caret-down"></i>
@@ -80,14 +80,14 @@
 								<li>
 									<a href="#">
 										<i class="icon-cog"></i>
-										Х╝╬Г╫╝
+										иХжц
 									</a>
 								</li>
 
 								<li>
 									<a href="#">
 										<i class="icon-user"></i>
-										Д╦╙Д╨╨Х╣└Ф√≥
+										╦Жхквйао
 									</a>
 								</li>
 
@@ -96,7 +96,7 @@
 								<li>
 									<a href="#">
 										<i class="icon-off"></i>
-										И──Е┤╨
+										мкЁЖ
 									</a>
 								</li>
 							</ul>
@@ -157,14 +157,14 @@
 						<li class="active">
 							<a href="index.html">
 								<i class="icon-dashboard"></i>
-								<span class="menu-text"> Ф▌╖Е┬╤Е▐╟ </span>
+								<span class="menu-text"> ©ьжфл╗ </span>
 							</a>
 						</li>
 
 						<li class="active open">
 							<a href="#" class="dropdown-toggle">
 								<i class="icon-globe"></i>
-								<span class="menu-text"> Ф√┤Г╚═Г╝║Г░├ </span>
+								<span class="menu-text"> ндуб╧эюМ </span>
 								
 								<b class="arrow icon-angle-down"></b>
 							</a>
@@ -173,13 +173,13 @@
 								<li class="active">
 									<a href="new_article.html">
 										<i class="icon-double-angle-right"></i>
-										Е▐▒Е╦┐Ф√┤Г╚═
+										╥╒╡╪ндуб
 									</a>
 								</li>
 								<li>
 									<a href="article_list.html">
 										<i class="icon-double-angle-right"></i>
-										Ф√┤Г╚═Е┬≈Х║╗
+										ндубап╠М
 									</a>
 								</li>
 							</ul>
@@ -188,7 +188,7 @@
 						<li>
 							<a href="#" class="dropdown-toggle">
 								<i class="icon-bullhorn"></i>
-								<span class="menu-text"> Ф╢╩Е┼╗Г╝║Г░├ </span>
+								<span class="menu-text"> ╩Н╤╞╧эюМ </span>
 								
 								<b class="arrow icon-angle-down"></b>
 							</a>
@@ -197,7 +197,7 @@
 								<li>
 									<a href="">
 										<i class="icon-double-angle-right"></i>
-										Е┬⌡Е╩╨Ф╢╩Е┼╗
+										╢╢╫╗╩Н╤╞
 									</a>
 								</li>
 							</ul>
@@ -206,7 +206,7 @@
 						<li>
 							<a href="" class="dropdown-toggle">
 								<i class="icon-thumbs-up"></i>
-								<span class="menu-text"> Ф┼∙Г╔╗Г╝║Г░├ </span>
+								<span class="menu-text"> м╤ф╠╧эюМ </span>
 								
 								<b class="arrow icon-angle-down"></b>
 							</a>
@@ -215,7 +215,7 @@
 								<li>
 									<a href="">
 										<i class="icon-double-angle-right"></i>
-										Е▐▒Х╣╥Ф┼∙Г╔╗
+										╥╒фПм╤ф╠
 									</a>
 								</li>
 							</ul>
@@ -224,7 +224,7 @@
 						<li>
 							<a href="" class="dropdown-toggle">
 								<i class="icon-group"></i>
-								<span class="menu-text"> Д╨▓Е╦╝Д╨▓Е┼╘ </span>
+								<span class="menu-text"> ╩╔╟О╩╔жЗ </span>
 								
 								<b class="arrow icon-angle-down"></b>
 							</a>
@@ -233,7 +233,7 @@
 								<li>
 									<a href="">
 										<i class="icon-double-angle-right"></i>
-										Ф÷╔Г°▀
+										╡И©╢
 									</a>
 								</li>
 							</ul>
@@ -255,20 +255,20 @@
 						<ul class="breadcrumb">
 							<li>
 								<i class="icon-home home-icon"></i>
-								<a href="index.html">И╕√И║╣</a>
+								<a href="index.html">йврЁ</a>
 							</li>
 
 							<li>
-								<a href="#"> Ф√┤Г╚═Г╝║Г░├ </a>
+								<a href="#"> ндуб╧эюМ </a>
 							</li>
 							
-							<li class="active"> Е▐▒Е╦┐Ф√┤Г╚═ </li>
+							<li class="active"> ╥╒╡╪ндуб </li>
 						</ul><!-- .breadcrumb -->
 
 						<div class="nav-search" id="nav-search">
 							<form class="form-search">
 								<span class="input-icon">
-									<input type="text" placeholder="Ф░°Г╢╒ ..." class="nav-search-input" id="nav-search-input" autocomplete="off" />
+									<input type="text" placeholder="кякВ ..." class="nav-search-input" id="nav-search-input" autocomplete="off" />
 									<i class="icon-search nav-search-icon"></i>
 								</span>
 							</form>
@@ -278,7 +278,7 @@
 					<div class="page-content">
 						<div class="page-header">
 							<h1>
-								Г╪√Х╬▒Ф√╟И≈╩Ц─│Х╣└Х╝╞Ф┬√Х─┘Д╪│Д╦ Е┼╗Ф─│
+								╠Ю╪╜пбне║╒вйя╤╩РуъфСр╣╤╞л╛
 								<!--<small>
 									<i class="icon-double-angle-right"></i>
 									Restyling jQuery UI Widgets and Elements
@@ -293,7 +293,7 @@
 								<form class="form-horizontal" role="form">
 									
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="form-field-1"> Ф√┤Г╚═Ф═┤И╒≤ </label>
+										<label class="col-sm-3 control-label no-padding-right" for="form-field-1"> ндуб╠ЙлБ </label>
 
 										<div class="col-sm-9">
 											<input type="text" id="form-field-1" value="${title}" class="col-xs-10 col-sm-5" style="padding-left: 7px;" />
@@ -303,13 +303,13 @@
 									<div class="space-4"></div>
 
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="form-field-select-1"> Ф√┤Г╚═Г╠╩Е·▀ </label>
+										<label class="col-sm-3 control-label no-padding-right" for="form-field-select-1"> ндубюЮпм </label>
 
 										<div class="col-sm-9">
 											<select class="col-xs-10 col-sm-5" id="form-field-select-1" style="padding: 5px 4px;font-size: 14px;" value="${type}">
-												<option value="N" selected="selected">Ф√╟И≈╩</option>
-												<option value="Z">Х╣└Х╝╞</option>
-												<option value="Q">Д╪│Д╦ Е┼╗Ф─│</option>
+												<option value="N" selected="selected">пбне</option>
+												<option value="Z">вйя╤</option>
+												<option value="Q">фСр╣╤╞л╛</option>
 											</select>
 										</div>
 									</div>
@@ -317,7 +317,7 @@
 									<div class="space-4"></div>
 
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="form-field-1"> Ф√┤Г╚═Ф╜ёФ√┤ </label>
+										<label class="col-sm-3 control-label no-padding-right" for="form-field-1"> ндубуЩнд </label>
 
 										<div class="col-sm-9">
 											<textarea id="form-field-11" class="autosize-transition col-xs-10 col-sm-5" value="${content}" style="min-height: 140px;"></textarea>
@@ -328,10 +328,10 @@
 									<div class="space-4"></div>
 
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="form-input-readonly"> Ф√┤Г╚═Е⌡╬Г┴┤ </label>
+										<label class="col-sm-3 control-label no-padding-right" for="form-input-readonly"> ндубм╪ф╛ </label>
 
 										<div class="col-sm-9">
-											<button class="btn btn-info"> Д╦┼Д╪═Ф═┤И╒≤Е⌡╬ </button>
+											<button class="btn btn-info"> ио╢╚╠ЙлБм╪ </button>
 											
 											<br />
 											
@@ -346,19 +346,19 @@
 											<!--
 											<button class="btn btn-success" type="button">
 												<i class="icon-question bigger-110"></i>
-												И╒└Х╖┬
+												т╓юю
 											</button>-->
 											
 											&nbsp; &nbsp; &nbsp;
 											<button class="btn btn-info" type="button">
 												<i class="icon-ok bigger-110"></i>
-												Е╝▄Ф┬░
+												мЙЁи
 											</button>
 
 											&nbsp; &nbsp; &nbsp;
 											<button class="btn" type="reset">
 												<i class="icon-undo bigger-110"></i>
-												Ф╦┘Г╘╨Ф√┤Е╜≈
+												гЕ©ундвж
 											</button>
 										</div>
 									</div>
@@ -717,7 +717,7 @@
 					  {
 						placeholder:tag_input.attr('placeholder'),
 						//enable typeahead by specifying the source array
-						source: ace.variable_US_STATES,//defined in ace.js >> ace.enable_search_ahead
+						source: ace.variable_US_STATES//defined in ace.js >> ace.enable_search_ahead
 					  }
 					);
 				}
