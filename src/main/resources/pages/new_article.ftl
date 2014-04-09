@@ -403,34 +403,35 @@
 
                     <div class="space-4"></div>
 
-                    <div class="clearfix form-actions">
-                        <div class="col-md-offset-3 col-md-9">
-                            <button class="btn btn-success btn-purple" id="bootbox-upload-image"
-                                    style="font-weight:bold">
-                                <i class="icon-cloud-upload bigger-110"></i>
-                                上传图片
-                            </button>
-
-                            &nbsp; &nbsp; &nbsp;
-                            <button class="btn btn-success" type="button" style="font-weight:bold">
-                                <i class="icon-question bigger-110"></i>
-                                预览
-                            </button>
-
-                            &nbsp; &nbsp; &nbsp;
-                            <button class="btn btn-info" type="button" style="font-weight:bold">
-                                <i class="icon-ok bigger-110"></i>
-                                完成
-                            </button>
-
-                            &nbsp; &nbsp; &nbsp;
-                            <button class="btn" type="reset" style="font-weight:bold">
-                                <i class="icon-undo bigger-110"></i>
-                                清空文字
-                            </button>
-                        </div>
-                    </div>
                 </form>
+				
+				<div class="clearfix form-actions">
+					<div class="col-md-offset-3 col-md-9">
+						<button class="btn btn-success btn-purple" id="bootbox-upload-image"
+								style="font-weight:bold">
+							<i class="icon-cloud-upload bigger-110"></i>
+							上传图片
+						</button>
+
+						&nbsp; &nbsp; &nbsp;
+						<button class="btn btn-success" type="button" style="font-weight:bold">
+							<i class="icon-question bigger-110"></i>
+							预览
+						</button>
+
+						&nbsp; &nbsp; &nbsp;
+						<button class="btn btn-info" type="button" style="font-weight:bold">
+							<i class="icon-ok bigger-110"></i>
+							完成
+						</button>
+
+						&nbsp; &nbsp; &nbsp;
+						<button class="btn" type="reset" style="font-weight:bold">
+							<i class="icon-undo bigger-110"></i>
+							清空文字
+						</button>
+					</div>
+				</div>
             </div>
             <!-- /.col -->
         </div>
