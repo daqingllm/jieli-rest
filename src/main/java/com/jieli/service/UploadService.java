@@ -28,6 +28,7 @@ public class UploadService {
         ResponseEntity responseEntity = new ResponseEntity();
         String FileName =fileDetail.getFileName();
 		String FileDirectory = "F:\\";
+
         try {
             FileName = new String(FileName.getBytes(System.getProperty("file.encoding")), "UTF-8");
         }catch (Exception e){}
@@ -49,6 +50,7 @@ public class UploadService {
         }
 
 		String RetFileName = "http://"+UploaderUtils.GetBucketName()+".qiniudn.com/"+UploaderUtils.Upload7Niu(FileDirectory,FilePath);
+        if (responseEntity.code == 200) responseEntity.body = RetFileName;
 
         return Response.status(200).entity(responseEntity).header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON+";charset=UTF-8").build();
     }
