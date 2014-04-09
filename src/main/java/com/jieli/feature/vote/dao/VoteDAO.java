@@ -71,7 +71,7 @@ public class VoteDAO extends GenericDAO<VoteInfo> {
      * @param voteId
      * @return
      */
-    public VoteInfo addComment(VoteComment comment, String voteId) {
+    /*public VoteInfo addComment(VoteComment comment, String voteId) {
         VoteInfo voteInfo = loadById(voteId);
         List<VoteComment> commentList = voteInfo.getCommentList();
         if(commentList == null) {
@@ -80,5 +80,5 @@ public class VoteDAO extends GenericDAO<VoteInfo> {
         commentList.add(comment);
         voteInfo.setCommentList(commentList);
         return save(voteInfo);
-    }
+    }*/
 }

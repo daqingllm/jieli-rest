@@ -74,7 +74,7 @@ public class HelpDAO extends GenericDAO<HelpInfo> {
      * @param comment
      * @return
      */
-    public HelpInfo addComment(HelpComment comment) {
+    /*public HelpInfo addComment(HelpComment comment) {
         String helpId = comment.getHelpId();
         HelpInfo help = loadById(helpId);
         if(help == null) {
@@ -86,13 +86,13 @@ public class HelpDAO extends GenericDAO<HelpInfo> {
         commentList.add(comment);
         help.setCommentList(commentList);
         return save(help);
-    }
+    }*/
 
     /**
      * 删除评论
      * @param commentIndex
      */
-    public HelpInfo deleteComment(String helpId, Integer commentIndex) {
+    /*public HelpInfo deleteComment(String helpId, Integer commentIndex) {
         HelpInfo help = loadById(helpId);
         if(help == null) {
             return null;
@@ -104,7 +104,7 @@ public class HelpDAO extends GenericDAO<HelpInfo> {
         commentList.remove(commentIndex.intValue());
         help.setCommentList(commentList);
         return save(help);
-    }
+    }*/
 
     /**
      * 增加关注
@@ -128,16 +128,14 @@ public class HelpDAO extends GenericDAO<HelpInfo> {
     /**
      * 评论置顶
      * @param helpId
-     * @param commentIndex
+     * @param commentId
      * @return
      */
-    public HelpInfo topComment(String helpId, Integer commentIndex) {
+    public HelpInfo topComment(String helpId, String commentId) {
         HelpInfo help = loadById(helpId);
-        List<HelpComment> commentList = help.getCommentList();
-        HelpComment comment = commentList.get(commentIndex);
-        comment.setTop(true);
-        commentList.set(commentIndex, comment);
-        help.setCommentList(commentList);
+        List<String> topCommentList = help.getTopCommentList();
+        topCommentList.add(commentId);
+        help.setTopCommentList(topCommentList);
         return save(help);
     }
 

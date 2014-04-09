@@ -11,32 +11,35 @@ import java.util.List;
  * Created by YolandaLeo on 14-3-19.
  */
 public class HelpInfo extends Model{
-    public String userId;
+    private String userId;
     /**
      * 协会Id
      */
-    public String associationId;
+    private String associationId;
     /**
      * 互帮互助标题
      */
-    public String title;
+    private String title;
     /**
      * 互帮互助内容
      */
-    public String content;
+    private String content;
     /**
      * 关注人数
      */
-    public Integer attentionNum;
+    private Integer attentionNum;
     /**
      * 发帖时间
      */
-    public Date addTime;
+    private Date addTime;
     /**
      * 置顶评论id
      */
-    //public Integer topCommentId;
-    public List<String> focusList;
+    private List<String> topCommentList;
+    /**
+     * 关注列表
+     */
+    private List<String> focusList;
 
     public String getUserId() {
         return userId;
@@ -89,4 +92,12 @@ public class HelpInfo extends Model{
     public List<String> getFocusList() { return focusList; }
 
     public void setFocusList(List<String> focusList) { this.focusList = focusList; }
+
+    public List<String> getTopCommentList() {
+        return topCommentList;
+    }
+
+    public void setTopCommentList(List<String> topCommentList) {
+        this.topCommentList = topCommentList;
+    }
 }

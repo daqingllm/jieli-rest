@@ -85,7 +85,7 @@ public class VoteDAOTest {
         }
     }
 
-    @Test
+    /*@Test
     public void addComment() {
         VoteComment comment = new VoteComment();
         String voteId = "533807ec300406d49b957887";
@@ -95,5 +95,5 @@ public class VoteDAOTest {
         comment.setVoteId(voteId);
         VoteInfo result = voteDAO.addComment(comment, voteId);
         System.out.println(result.getCommentList().size());
-    }
+    }*/
 }

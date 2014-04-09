@@ -63,7 +63,7 @@ public class HelpDaoTest {
         System.out.println(result.toString());
     }
 
-    @Test
+    /*@Test
     public void addComment() {
         String helpId = "5337bce53004ecd7e04edfcd";
         HelpComment comment = new HelpComment();
@@ -74,15 +74,15 @@ public class HelpDaoTest {
         comment.setTop(false);
         HelpInfo result = helpDao.addComment(comment);
         //System.out.println(result.toString());
-    }
+    }*/
 
-    @Test
+    /*@Test
     public void deleteComment() {
         String helpId = "5337bce53004ecd7e04edfcd";
         Integer index = 1;
         HelpInfo result = helpDao.deleteComment(helpId, index);
         System.out.println(result.commentList.size());
-    }
+    }*/
 
     /*
     @Test
@@ -105,7 +105,7 @@ public class HelpDaoTest {
     @Test
     public void topComment() {
         String helpId = "5337bce53004ecd7e04edfcd";
-        Integer commentIndex = 2;
-        helpDao.topComment(helpId, commentIndex);
+        String commentId = "";
+        helpDao.topComment(helpId, commentId);
     }
 }

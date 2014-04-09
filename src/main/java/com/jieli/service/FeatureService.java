@@ -381,7 +381,7 @@ public class FeatureService {
     @Path("/help/detail/comment/top")
      @POST
      @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-     public Response addTop(@CookieParam("u")String sessionId, @QueryParam("helpId")String helpId, @QueryParam("commentIndex")Integer commentIndex) {
+     public Response addTop(@CookieParam("u")String sessionId, @QueryParam("helpId")String helpId, @QueryParam("commentId")String commentId) {
          if(!IdentifyUtils.isValidate(sessionId)) {
              return Response.status(403).build();
          }
@@ -393,7 +393,7 @@ public class FeatureService {
              responseEntity.msg = "账户出错";
              return Response.status(200).entity(responseEntity).build();
          }
-         if (StringUtils.isEmpty(helpId) || commentIndex == null) {
+         if (StringUtils.isEmpty(helpId) || commentId == null) {
              responseEntity.code = 1101;
              responseEntity.msg = "缺少参数";
              return Response.status(200).entity(responseEntity).build();
@@ -409,7 +409,7 @@ public class FeatureService {
              responseEntity.msg = "权限不足";
              return Response.status(403).entity(responseEntity).build();
          }
-         HelpInfo result = helpDAO.topComment(helpId, commentIndex);
+         HelpInfo result = helpDAO.topComment(helpId, commentId);
          if(result == null) {
              responseEntity.code = 1206;
              responseEntity.body = "置顶评论失败";
