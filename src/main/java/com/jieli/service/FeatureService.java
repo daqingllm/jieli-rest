@@ -375,7 +375,7 @@ public class FeatureService {
     /**
      * 评论置顶
      * @param helpId
-     * @param commentIndex
+     * @param commentId
      * @return
      */
     @Path("/help/detail/comment/top")
@@ -385,7 +385,6 @@ public class FeatureService {
          if(!IdentifyUtils.isValidate(sessionId)) {
              return Response.status(403).build();
          }
-        //TODO index 优化
          String userId = IdentifyUtils.getUserId(sessionId);
          ResponseEntity responseEntity = new ResponseEntity();
          if (StringUtils.isEmpty(userId)) {
