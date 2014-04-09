@@ -76,6 +76,13 @@ public class UploaderUtils {
         String key = fp.substring(dir.length());
         PutRet ret = IoApi.putFile(tocken, key, localFile, extra);
         //System.out.println(ret.getHash() + ret.getKey());
+
+        // whatever delete fp
+        File file = new File(fp);
+        if (file.exists()) {
+            if (!(file.delete())) file.deleteOnExit();
+        }
+
         if (ret.ok())
             return key;
         else
