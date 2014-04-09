@@ -17,7 +17,7 @@ import java.util.List;
  * Time: 下午8:21
  * To change this template use File | Settings | File Templates.
  */
-@Path("/rest/message")
+@Path("/message")
 public class MessageService {
 
     private MessageDAO messageDAO = new MessageDAO();

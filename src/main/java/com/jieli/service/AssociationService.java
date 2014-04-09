@@ -24,7 +24,7 @@ import javax.ws.rs.core.Response;
  * To change this template use File | Settings | File Templates.
  */
 @Singleton
-@Path("/rest/association")
+@Path("/association")
 public class AssociationService {
 
     private AssociationDAO associationDAO = new AssociationDAO();

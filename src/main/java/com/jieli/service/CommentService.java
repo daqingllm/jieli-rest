@@ -32,7 +32,7 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 @Singleton
-@Path("/rest/comment")
+@Path("/comment")
 public class CommentService {
 
     BaseDAO<Comment> commentDAO = new BaseDAO<Comment>(Collections.Comment, Comment.class);
