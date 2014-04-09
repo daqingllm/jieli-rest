@@ -30,7 +30,7 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 @Singleton
-@Path("/rest/user")
+@Path("/user")
 public class UserService {
 
     private AccountDAO accountDAO = new AccountDAO();

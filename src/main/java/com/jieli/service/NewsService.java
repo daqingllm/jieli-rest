@@ -32,7 +32,7 @@ import java.util.Map;
  */
 
 @Singleton
-@Path("/rest/news")
+@Path("/news")
 public class NewsService {
 
 

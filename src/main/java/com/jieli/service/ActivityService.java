@@ -22,7 +22,7 @@ import java.util.*;
  */
 
 @Singleton
-@Path("/rest/activity")
+@Path("/activity")
 public class ActivityService {
 
     private final ActivityDAO activityDAO = new ActivityDAO();
