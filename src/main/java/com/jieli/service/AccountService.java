@@ -68,6 +68,8 @@ public class AccountService {
             responseEntity.msg = "登陆成功";
             JSONObject json = new JSONObject();
             json.put("sessionId", account.get_id());
+            json.put("associationId", account.associationId);
+            json.put("role",account.state);
             responseEntity.body = json.toString();
             return Response.status(200).entity(responseEntity).build();
         }

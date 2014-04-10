@@ -287,7 +287,7 @@
 
         $.ajax({
             type : "POST",
-            url : "/rest/account/login",
+            url : "/rest/baccount/login",
             async : false,
             data : _sd,
             contentType : "application/json; charset=utf-8",
@@ -298,6 +298,8 @@
                 if (jsn.code == 200) {
                     eval("jsn_body="+jsn.body);
                     document.cookie="u="+jsn_body.sessionId+"; path=/";
+                    document.cookie="a="+jsn_body.associationId+"; path=/";
+                    document.cookie="r="+jsn_body.role+"; path=/";
                     //$.cookie('sessionId', jsn_body.sessionId);
                     showMsg("µÇÂ½³É¹¦",jsn.msg);
                 }

@@ -20,6 +20,8 @@
 
     <link rel="stylesheet" href="/assets/css/jquery.gritter.css" />
 
+    <link rel="stylesheet" href="/assets/css/bootstrap-multiselect.css" type="text/css"/>
+
     <!-- fonts -->
 
     <link rel="stylesheet" href="/assets/css/font-google.css"/>
@@ -249,9 +251,9 @@
                         <div class="col-sm-9">
                             <select class="col-xs-10 col-sm-7" id="form-field-select-type"
                                     style="padding: 5px 4px;font-size: 14px;">
-                                <option value="N" selected="selected">新闻</option>
-                                <option value="Z">资讯</option>
-                                <option value="Q">企业动态</option>
+                                <option value="news" selected="selected">新闻</option>
+                                <option value="association">资讯</option>
+                                <option value="enterprise">企业动态</option>
                             </select>
                         </div>
                     </div>
@@ -289,35 +291,45 @@
 
                     <div class="space-4"></div>
 
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right" for="form-input-readonly"> 选择协会 </label>
+
+                        <div class="col-sm-9">
+                            <select id="selectAssociationIds" multiple="multiple" class="multiselect">${assIdOptionList}</select>
+                        </div>
+                    </div>
+
+                    <div class="space-4"></div>
+
                 </form>
-				
-				<div class="clearfix form-actions">
-					<div class="col-md-offset-3 col-md-9">
-						<button class="btn btn-success btn-purple" id="bootbox-upload-image"
-								style="font-weight:bold">
-							<i class="icon-cloud-upload bigger-110"></i>
-							上传图片
-						</button>
 
-						&nbsp; &nbsp; &nbsp;
-						<button class="btn btn-success" type="button" style="font-weight:bold">
-							<i class="icon-question bigger-110"></i>
-							预览
-						</button>
+                <div class="clearfix form-actions">
+                    <div class="col-md-offset-3 col-md-9">
+                        <button class="btn btn-success btn-purple" id="bootbox-upload-image"
+                                style="font-weight:bold">
+                            <i class="icon-cloud-upload bigger-110"></i>
+                            上传图片
+                        </button>
 
-						&nbsp; &nbsp; &nbsp;
-						<button class="btn btn-info" type="button" style="font-weight:bold">
-							<i class="icon-ok bigger-110"></i>
-							完成
-						</button>
+                        &nbsp; &nbsp; &nbsp;
+                        <button class="btn btn-success" type="button" style="font-weight:bold">
+                            <i class="icon-question bigger-110"></i>
+                            预览
+                        </button>
 
-						&nbsp; &nbsp; &nbsp;
-						<button class="btn" type="reset" style="font-weight:bold" onclick="clearImgList();return true;">
-							<i class="icon-undo bigger-110"></i>
-							清空
-						</button>
-					</div>
-				</div>
+                        &nbsp; &nbsp; &nbsp;
+                        <button class="btn btn-info" type="button" style="font-weight:bold" onclick="postThisArticle()">
+                            <i class="icon-ok bigger-110"></i>
+                            完成
+                        </button>
+
+                        &nbsp; &nbsp; &nbsp;
+                        <button class="btn" type="reset" style="font-weight:bold" onclick="clearImgList();return true;">
+                            <i class="icon-undo bigger-110"></i>
+                            清空
+                        </button>
+                    </div>
+                </div>
             </div>
             <!-- /.col -->
         </div>
@@ -418,6 +430,7 @@
 
 <!-- page specific plugin scripts -->
 <script src="/assets/js/jquery.colorbox-min.js"></script>
+<script src="/assets/js/bootstrap-multiselect.js"></script>
 
 <!--[if lte IE 8]>
 <script src="/assets/js/excanvas.min.js"></script>
@@ -447,14 +460,89 @@
 
 <!-- inline scripts related to this page -->
 <script>
+    function test2227(str){
+        if (str.indexOf("'")>-1 || str.indexOf("\"")>-1) {
+            alert(str + "中含有英文的单引号或双引号，请改正为中文引号。");
+            return false;
+        }
+        return true;
+    }
+
+    // 点击完成按钮
+    function postThisArticle(){
+        var jsn = "{\"_id\":null,";
+
+        var p_assid,p_title,p_type,p_overview,p_content,p_images;
+        // 协会id怎么获取?
+        p_assid = $("#selectAssociationIds").val();
+        if (p_assid == null) {alert("请选择协会！");return;}
+        if (!test2227(p_assid)) return;
+        jsn += "\"associationId\":\""+p_assid+"\",";
+
+        p_title = $("#form-field-title").val();
+        if (!test2227(p_title)) return;
+        jsn += "\"title\":\""+p_title+"\",";
+
+        p_type  = $("#form-field-select-type").val();
+        jsn += "\"type\":\""+p_type+"\",";
+
+        // content 是img placeholder的版本，overview是html的版本
+        p_content = $("#form-field-textarea").val();
+        var escape_content = p_content;
+        while(escape_content.indexOf("'")>=0)
+            escape_content = escape_content.replace("'","\\\\u0027");
+        while(escape_content.indexOf("\"")>=0)
+            escape_content = escape_content.replace("\"","\\\\u0022");
+
+        jsn += "\"content\":\""+escape_content+"\",";
+
+        jsn += "\"images\":[";
+
+        // generate overview
+        p_overview = p_content;
+        //<img-pLAcehOLDer>
+        var phph = "<img-pLAcehOLDer";
+        var idxs = p_overview.indexOf(phph);
+        var idxe;
+        while(idxs >= 0){
+            idxe = p_overview.indexOf(">",idxs);
+            var st = idxs+phph.length;
+            if (idxe-st < idxs) continue;
+
+            var _url = p_overview.substr(st,idxe-st);
+
+            var head = p_overview.substr(0,idxs) || "";
+            var tail =  p_overview.substr(idxe+1) || "";
+            p_overview = head + "<center><img src='"+_url+"'></center>";
+
+            idxs = p_overview.indexOf(phph,idxs);
+
+            jsn += "{\"placeholder\":\""+phph+_url+">\",\"url\":\""+_url+"\",\"description\":\" \"},";
+        }
+        jsn += "],\"overview\":\"\",\"imagesCount\":0,\"appreciateUserIds\":[],\"appreciateCount\":0,\"addTime\":null}";
+
+        $.ajax({
+            type:"POST",
+            url:"/rest/bnews/add",
+            data:jsn,
+            contentType : "application/json; charset=utf-8",
+            dataType : 'json',
+            success:function(ret){
+                alert(ret);
+            }
+        });
+    }
+
+    // 清空图片列表
     function clearImgList(){
-		$("#form-field-title").val("");
-		$("#form-field-select-type").get(0).selectedIndex = 0;
+        $("#form-field-title").val("");
+        $("#form-field-select-type").get(0).selectedIndex = 0;
         $("#form-field-textarea").val("");
         $("#img-list-invisible").nextAll().remove();
         $("#img-list-invisible").attr("style","border-width:0;display:block");
     }
 
+    // 删除一个图片
     function deletePic(ph){
         var _src=ph.replace("<img-pLAcehOLDer","");
         _src = _src.substr(0,_src.length-1);
@@ -471,6 +559,7 @@
             $("#img-list-invisible").attr("style","border-width:0;display:block");
     }
 
+    // 获取文本框中光标位置
     function getTextAreaCursorPosition() {
         return $("#form-field-textarea").getCursorPosition();
     }
@@ -498,6 +587,17 @@ jQuery(function ($) {
     $("#sidebar-shortcuts-navlist").load("/sidebar.html",function(){$("#nav_list_2_2").addClass("active open");$("#nav_list_2").addClass("active");});
 
     /*$("#sidebar").load("/sidebar.html");$("#nav_list_2_2").addClass("active open");$("#nav_list_2").addClass("active");*/
+
+    $('#selectAssociationIds').multiselect({
+        numberDisplayed:10,
+        buttonClass: 'btn-link btn ',
+        selectAllText: '全选',
+        selectAllValue: '全部',
+        nonSelectedText: '请选择',
+        nSelectedText: ' 被选中了',
+        maxHeight:400
+    });
+
 
     $("#bootbox-upload-image").on("click", function () {
         var spin_img = "<div id='upload-loading-img' style='margin-left:30px;margin-top:10px;display: none;'><i class='icon-spinner icon-spin orange bigger-125'></i></div>";
@@ -885,6 +985,7 @@ jQuery(function ($) {
      */
 
 });
+
 </script>
 </body>
 </html>
