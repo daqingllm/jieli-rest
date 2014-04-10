@@ -1,151 +1,108 @@
-<script type="text/javascript">
-	try {
-		ace.settings.check('sidebar', 'fixed')
-	} catch(e) {
-	}
-</script>
+<li id="nav_list_1">
+    <a href="index.html">
+        <i class="icon-dashboard"></i>
+        <span class="menu-text"> 控制台 </span>
+    </a>
+</li>
 
-<div class="sidebar-shortcuts" id="sidebar-shortcuts">
-	<div class="sidebar-shortcuts-large" id="sidebar-shortcuts-large">
-		<button class="btn btn-success">
-			<i class="icon-signal" style="display: none"></i>
-		</button>
+<li id="nav_list_2">
+    <a href="#" class="dropdown-toggle">
+        <i class="icon-globe"></i>
+        <span class="menu-text"> 资讯管理 </span>
 
-		<button class="btn btn-info">
-			<i class="icon-pencil" style="display: none"></i>
-		</button>
+        <b class="arrow icon-angle-down"></b>
+    </a>
 
-		<button class="btn btn-warning">
-			<i class="icon-group" style="display: none"></i>
-		</button>
+    <ul class="submenu">
+        <li id="nav_list_2_1">
+            <a href="article_list.html">
+                <i class="icon-double-angle-right"></i>
+                资讯列表
+            </a>
+        </li>
+        <li id="nav_list_2_2">
+            <a href="new_article.html">
+                <i class="icon-double-angle-right"></i>
+                发布资讯
+            </a>
+        </li>
+        <li id="nav_list_2_3">
+            <a href="edit_article.html">
+                <i class="icon-double-angle-right"></i>
+                编辑资讯
+            </a>
+        </li>
+    </ul>
+</li>
 
-		<button class="btn btn-danger">
-			<i class="icon-cogs" style="display: none"></i>
-		</button>
-	</div>
+<li id="nav_list_3">
+    <a href="#" class="dropdown-toggle">
+        <i class="icon-bullhorn"></i>
+        <span class="menu-text"> 活动管理 </span>
 
-	<div class="sidebar-shortcuts-mini" id="sidebar-shortcuts-mini">
-		<span class="btn btn-success"></span>
+        <b class="arrow icon-angle-down"></b>
+    </a>
 
-		<span class="btn btn-info"></span>
+    <ul class="submenu">
+        <li id="nav_list_3_1">
+            <a href="activity_list.html">
+                <i class="icon-double-angle-right"></i>
+                活动列表
+            </a>
+        </li>
+        <li id="nav_list_3_2">
+            <a href="new_activity.html">
+                <i class="icon-double-angle-right"></i>
+                创建活动
+            </a>
+        </li>
+        <li id="nav_list_3_3">
+            <a href="edit_article.html">
+                <i class="icon-double-angle-right"></i>
+                编辑活动
+            </a>
+        </li>
+    </ul>
+</li>
 
-		<span class="btn btn-warning"></span>
+<li id="nav_list_4">
+    <a href="#" class="dropdown-toggle">
+        <i class="icon-thumbs-up"></i>
+        <span class="menu-text"> 投票管理 </span>
 
-		<span class="btn btn-danger"></span>
-	</div>
-</div><!-- #sidebar-shortcuts -->
+        <b class="arrow icon-angle-down"></b>
+    </a>
 
-<ul class="nav nav-list">
-	<li id="nav_list_1">
-		<a href="index.html">
-			<i class="icon-dashboard"></i>
-			<span class="menu-text"> 控制台 </span>
-		</a>
-	</li>
+    <ul class="submenu">
+        <li id="nav_list_4_1">
+            <a href="new_vote.html">
+                <i class="icon-double-angle-right"></i>
+                发起投票
+            </a>
+        </li>
+    </ul>
+</li>
 
-	<li id="nav_list_2">
-		<a href="#" class="dropdown-toggle">
-			<i class="icon-globe"></i>
-			<span class="menu-text"> 文章管理 </span>
+<li id="nav_list_5">
+    <a href="#" class="dropdown-toggle">
+        <i class="icon-group"></i>
+        <span class="menu-text"> 账户管理 </span>
 
-			<b class="arrow icon-angle-down"></b>
-		</a>
+        <b class="arrow icon-angle-down"></b>
+    </a>
 
-		<ul class="submenu">
-			<li id="nav_list_2_1">
-				<a href="article_list.html">
-					<i class="icon-double-angle-right"></i>
-					文章列表
-				</a>
-			</li>
-			<li id="nav_list_2_2">
-				<a href="new_article.html">
-					<i class="icon-double-angle-right"></i>
-					发布文章
-				</a>
-			</li>
-			<li id="nav_list_2_3">
-				<a href="edit_article.html">
-					<i class="icon-double-angle-right"></i>
-					编辑文章
-				</a>
-			</li>
-		</ul>
-	</li>
-
-	<li id="nav_list_3">
-		<a href="#" class="dropdown-toggle">
-			<i class="icon-bullhorn"></i>
-			<span class="menu-text"> 活动管理 </span>
-
-			<b class="arrow icon-angle-down"></b>
-		</a>
-
-		<ul class="submenu">
-			<li id="nav_list_3_1">
-				<a href="activity_list.html">
-					<i class="icon-double-angle-right"></i>
-					活动列表
-				</a>
-			</li>
-			<li id="nav_list_3_2">
-				<a href="new_activity.html">
-					<i class="icon-double-angle-right"></i>
-					创建活动
-				</a>
-			</li>
-			<li id="nav_list_3_3">
-				<a href="edit_article.html">
-					<i class="icon-double-angle-right"></i>
-					编辑活动
-				</a>
-			</li>
-		</ul>
-	</li>
-
-	<li id="nav_list_4">
-		<a href="#" class="dropdown-toggle">
-			<i class="icon-thumbs-up"></i>
-			<span class="menu-text"> 投票管理 </span>
-
-			<b class="arrow icon-angle-down"></b>
-		</a>
-
-		<ul class="submenu">
-			<li id="nav_list_4_1">
-				<a href="new_vote.html">
-					<i class="icon-double-angle-right"></i>
-					发起投票
-				</a>
-			</li>
-		</ul>
-	</li>
-
-	<li id="nav_list_5">
-		<a href="#" class="dropdown-toggle">
-			<i class="icon-group"></i>
-			<span class="menu-text"> 账户管理 </span>
-
-			<b class="arrow icon-angle-down"></b>
-		</a>
-
-		<ul class="submenu">
-			<li id="nav_list_5_1">
-				<a href="account_list.html">
-					<i class="icon-double-angle-right"></i>
-					账户列表
-				</a>
-			</li>
-			<li id="nav_list_5_2">
-				<a href="new_account.html">
-					<i class="icon-double-angle-right"></i>
-					注册账户
-				</a>
-			</li>
-		</ul>
-	</li>
-</ul>
-
-<div class="sidebar-collapse" id="sidebar-collapse">
-	<i class="icon-double-angle-left" data-icon1="icon-double-angle-left" data-icon2="icon-double-angle-right"></i>
-</div>
+    <ul class="submenu">
+        <li id="nav_list_5_1">
+            <a href="account_list.html">
+                <i class="icon-double-angle-right"></i>
+                账户列表
+            </a>
+        </li>
+        <li id="nav_list_5_2">
+            <a href="new_account.html">
+                <i class="icon-double-angle-right"></i>
+                注册账户
+            </a>
+        </li>
+    </ul>
+</li>

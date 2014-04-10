@@ -2,7 +2,7 @@
 <html lang="zh">
 <head>
     <meta charset="utf-8"/>
-    <title>接力 文章管理</title>
+    <title>接力 资讯管理</title>
     <meta name="description" content="接力"/>
     <!-- basic styles -->
 
@@ -17,6 +17,8 @@
 
     <link rel="stylesheet" href="/assets/css/jquery-ui-1.10.3.full.min.css"/>
     <link rel="stylesheet" href="/assets/css/colorbox.css"/>
+
+    <link rel="stylesheet" href="/assets/css/jquery.gritter.css" />
 
     <!-- fonts -->
 
@@ -135,7 +137,7 @@
         }
     </script>
 
-    <div class="sidebar-shortcuts" id="sidebar-shortcuts">
+    <div class="sidebar-shortcuts">
         <div class="sidebar-shortcuts-large" id="sidebar-shortcuts-large">
             <button class="btn btn-success">
                 <i class="icon-signal" style="display: none"></i>
@@ -166,115 +168,8 @@
     </div>
     <!-- #sidebar-shortcuts -->
 
-    <ul class="nav nav-list">
-        <li id="nav_list_1">
-            <a href="index.html">
-                <i class="icon-dashboard"></i>
-                <span class="menu-text"> 控制台 </span>
-            </a>
-        </li>
+    <ul class="nav nav-list"  id="sidebar-shortcuts-navlist">
 
-        <li id="nav_list_2">
-            <a href="#" class="dropdown-toggle">
-                <i class="icon-globe"></i>
-                <span class="menu-text"> 文章管理 </span>
-
-                <b class="arrow icon-angle-down"></b>
-            </a>
-
-            <ul class="submenu">
-                <li id="nav_list_2_1">
-                    <a href="article_list.html">
-                        <i class="icon-double-angle-right"></i>
-                        文章列表
-                    </a>
-                </li>
-                <li id="nav_list_2_2">
-                    <a href="new_article.html">
-                        <i class="icon-double-angle-right"></i>
-                        发布文章
-                    </a>
-                </li>
-                <li id="nav_list_2_3">
-                    <a href="edit_article.html">
-                        <i class="icon-double-angle-right"></i>
-                        编辑文章
-                    </a>
-                </li>
-            </ul>
-        </li>
-
-        <li id="nav_list_3">
-            <a href="#" class="dropdown-toggle">
-                <i class="icon-bullhorn"></i>
-                <span class="menu-text"> 活动管理 </span>
-
-                <b class="arrow icon-angle-down"></b>
-            </a>
-
-            <ul class="submenu">
-                <li id="nav_list_3_1">
-                    <a href="activity_list.html">
-                        <i class="icon-double-angle-right"></i>
-                        活动列表
-                    </a>
-                </li>
-                <li id="nav_list_3_2">
-                    <a href="new_activity.html">
-                        <i class="icon-double-angle-right"></i>
-                        创建活动
-                    </a>
-                </li>
-                <li id="nav_list_3_3">
-                    <a href="edit_article.html">
-                        <i class="icon-double-angle-right"></i>
-                        编辑活动
-                    </a>
-                </li>
-            </ul>
-        </li>
-
-        <li id="nav_list_4">
-            <a href="#" class="dropdown-toggle">
-                <i class="icon-thumbs-up"></i>
-                <span class="menu-text"> 投票管理 </span>
-
-                <b class="arrow icon-angle-down"></b>
-            </a>
-
-            <ul class="submenu">
-                <li id="nav_list_4_1">
-                    <a href="new_vote.html">
-                        <i class="icon-double-angle-right"></i>
-                        发起投票
-                    </a>
-                </li>
-            </ul>
-        </li>
-
-        <li id="nav_list_5">
-            <a href="#" class="dropdown-toggle">
-                <i class="icon-group"></i>
-                <span class="menu-text"> 账户管理 </span>
-
-                <b class="arrow icon-angle-down"></b>
-            </a>
-
-            <ul class="submenu">
-                <li id="nav_list_5_1">
-                    <a href="account_list.html">
-                        <i class="icon-double-angle-right"></i>
-                        账户列表
-                    </a>
-                </li>
-                <li id="nav_list_5_2">
-                    <a href="new_account.html">
-                        <i class="icon-double-angle-right"></i>
-                        注册账户
-                    </a>
-                </li>
-            </ul>
-        </li>
     </ul>
 
     <div class="sidebar-collapse" id="sidebar-collapse">
@@ -298,10 +193,10 @@
             </li>
 
             <li>
-                <a href="#"> 文章管理 </a>
+                <a href="#"> 资讯管理 </a>
             </li>
 
-            <li class="active"> 发布文章</li>
+            <li class="active"> 发布资讯</li>
         </ul>
         <!-- .breadcrumb -->
 
@@ -338,10 +233,10 @@
                 <form class="form-horizontal" role="form">
 
                     <div class="form-group">
-                        <label class="col-sm-3 control-label no-padding-right" for="form-field-1"> 文章标题 </label>
+                        <label class="col-sm-3 control-label no-padding-right" for="form-field-title"> 资讯标题 </label>
 
                         <div class="col-sm-9">
-                            <input type="text" id="form-field-1" placeholder="标题" class="col-xs-10 col-sm-7"
+                            <input type="text" id="form-field-title" placeholder="标题" class="col-xs-10 col-sm-7"
                                    style="padding-left: 7px;"/>
                         </div>
                     </div>
@@ -349,10 +244,10 @@
                     <div class="space-4"></div>
 
                     <div class="form-group">
-                        <label class="col-sm-3 control-label no-padding-right" for="form-field-select-1"> 文章类型 </label>
+                        <label class="col-sm-3 control-label no-padding-right" for="form-field-select-type"> 资讯类型 </label>
 
                         <div class="col-sm-9">
-                            <select class="col-xs-10 col-sm-7" id="form-field-select-1"
+                            <select class="col-xs-10 col-sm-7" id="form-field-select-type"
                                     style="padding: 5px 4px;font-size: 14px;">
                                 <option value="N" selected="selected">新闻</option>
                                 <option value="Z">资讯</option>
@@ -364,12 +259,11 @@
                     <div class="space-4"></div>
 
                     <div class="form-group">
-                        <label class="col-sm-3 control-label no-padding-right" for="form-field-textarea"> 文章正文 </label>
+                        <label class="col-sm-3 control-label no-padding-right" for="form-field-textarea"> 资讯正文 </label>
 
                         <div class="col-sm-9">
                             <textarea id="form-field-textarea" class="autosize-transition col-xs-10 col-sm-7"
-                                      style="min-height: 140px;">
-                            </textarea>
+                                      style="min-height: 140px;"></textarea>
                         </div>
 
                     </div>
@@ -377,25 +271,17 @@
                     <div class="space-4"></div>
 
                     <div class="form-group">
-                        <label class="col-sm-3 control-label no-padding-right" for="form-input-readonly"> 文章图片 </label>
+                        <label class="col-sm-3 control-label no-padding-right" for="form-input-readonly"> 资讯图片 </label>
 
                         <div class="col-sm-9">
                             <!--<button class="btn btn-info"> 上传标题图 </button>-->
 
-                            <br/>
+                            <!--<br/>-->
 
                             <!--<img src="/assets/images/gallery/image-4.jpg" style="max-width: 400px;"/> -->
                             <div class="row-fluid">
-                                <ul class="ace-thumbnails">
-                                    <li>
-                                        <a href="/assets/images/gallery/image-2.jpg" data-rel="colorbox">
-                                            <img alt="150x150" src="/assets/images/gallery/thumb-2.jpg"/>
-
-                                            <div class="text">
-                                                <div class="inner">查看原图</div>
-                                            </div>
-                                        </a>
-                                    </li>
+                                <ul class="ace-thumbnails" id="upload-img-list">
+                                    <li id="img-list-invisible" style="border-width:0;display: block">暂无图片</li>
                                 </ul>
                             </div>
                         </div>
@@ -403,34 +289,35 @@
 
                     <div class="space-4"></div>
 
-                    <div class="clearfix form-actions">
-                        <div class="col-md-offset-3 col-md-9">
-                            <button class="btn btn-success btn-purple" id="bootbox-upload-image"
-                                    style="font-weight:bold">
-                                <i class="icon-cloud-upload bigger-110"></i>
-                                上传图片
-                            </button>
-
-                            &nbsp; &nbsp; &nbsp;
-                            <button class="btn btn-success" type="button" style="font-weight:bold">
-                                <i class="icon-question bigger-110"></i>
-                                预览
-                            </button>
-
-                            &nbsp; &nbsp; &nbsp;
-                            <button class="btn btn-info" type="button" style="font-weight:bold">
-                                <i class="icon-ok bigger-110"></i>
-                                完成
-                            </button>
-
-                            &nbsp; &nbsp; &nbsp;
-                            <button class="btn" type="reset" style="font-weight:bold">
-                                <i class="icon-undo bigger-110"></i>
-                                清空文字
-                            </button>
-                        </div>
-                    </div>
                 </form>
+				
+				<div class="clearfix form-actions">
+					<div class="col-md-offset-3 col-md-9">
+						<button class="btn btn-success btn-purple" id="bootbox-upload-image"
+								style="font-weight:bold">
+							<i class="icon-cloud-upload bigger-110"></i>
+							上传图片
+						</button>
+
+						&nbsp; &nbsp; &nbsp;
+						<button class="btn btn-success" type="button" style="font-weight:bold">
+							<i class="icon-question bigger-110"></i>
+							预览
+						</button>
+
+						&nbsp; &nbsp; &nbsp;
+						<button class="btn btn-info" type="button" style="font-weight:bold">
+							<i class="icon-ok bigger-110"></i>
+							完成
+						</button>
+
+						&nbsp; &nbsp; &nbsp;
+						<button class="btn" type="reset" style="font-weight:bold" onclick="clearImgList();return true;">
+							<i class="icon-undo bigger-110"></i>
+							清空
+						</button>
+					</div>
+				</div>
             </div>
             <!-- /.col -->
         </div>
@@ -550,7 +437,7 @@
 <script src="/assets/js/jquery.inputlimiter.1.3.1.min.js"></script>
 <script src="/assets/js/jquery.maskedinput.min.js"></script>
 <script src="/assets/js/bootstrap-tag.min.js"></script>
-
+<script src="/assets/js/jquery.gritter.min.js"></script>
 <script src="/assets/js/bootbox.min.js"></script>
 
 <!-- ace scripts -->
@@ -560,6 +447,30 @@
 
 <!-- inline scripts related to this page -->
 <script>
+    function clearImgList(){
+		$("#form-field-title").val("");
+		$("#form-field-select-type").get(0).selectedIndex = 0;
+        $("#form-field-textarea").val("");
+        $("#img-list-invisible").nextAll().remove();
+        $("#img-list-invisible").attr("style","border-width:0;display:block");
+    }
+
+    function deletePic(ph){
+        var _src=ph.replace("<img-pLAcehOLDer","");
+        _src = _src.substr(0,_src.length-1);
+
+        // clear textarea
+        var otextarea = $("#form-field-textarea").val().trim();
+        otextarea = otextarea.replace(ph,"");
+        $("#form-field-textarea").val(otextarea);
+
+        // delete pic
+        $("a[href=\'"+_src+"\']").parent().remove();
+
+        if ($("#img-list-invisible").parent().children().length == 1)
+            $("#img-list-invisible").attr("style","border-width:0;display:block");
+    }
+
     function getTextAreaCursorPosition() {
         return $("#form-field-textarea").getCursorPosition();
     }
@@ -584,51 +495,79 @@
 
 <script type="text/javascript">
 jQuery(function ($) {
+    $("#sidebar-shortcuts-navlist").load("/sidebar.html",function(){$("#nav_list_2_2").addClass("active open");$("#nav_list_2").addClass("active");});
+
     /*$("#sidebar").load("/sidebar.html");$("#nav_list_2_2").addClass("active open");$("#nav_list_2").addClass("active");*/
 
     $("#bootbox-upload-image").on("click", function () {
+        var spin_img = "<div id='upload-loading-img' style='margin-left:30px;margin-top:10px;display: none;'><i class='icon-spinner icon-spin orange bigger-125'></i></div>";
+        spin_img = "";
         bootbox.dialog({
             //message: "<input type='file' id='upload-image-files' name='upload-image-files' >",
-            message: "<form id='rest-upload-form' action='/upload' method='post' enctype='multipart/form-data' acceptcharset='UTF-8'>\n<input id='rest-upload-file' type='file' name='file' size='50' /></form>",
+            message: "<form id='rest-upload-form' action='/upload' method='post' enctype='multipart/form-data' acceptcharset='UTF-8'>\n<input id='rest-upload-file' type='file' name='file' size='50' />"+spin_img+"</form>",
             buttons: {
                 "upload": {
                     "label": "<i class='icon-ok'></i> 上传 ",
                     "className": "btn-sm btn-success",
                     "callback": function () {
+                        // show loading image first
+                        //$("#upload-loading-img").attr("style","display:block");
+
                         //Example.show("great success");
                         // upload Image !
                         var d = new FormData(document.getElementById('rest-upload-form'));
                         $.ajax({
-                            url: '/upload',
+                            url: '/rest/upload',
                             type: 'POST',
                             contentType: false,
                             data: d,
                             cache: false,
                             processData: false,
+                            async: false,
                             success: function (jsn) {
-                                alert(jsn);
+                                //alert(jsn);
                                 // untested , but it should be like : code:200,body:filepath,msg...
 
                                 if (jsn.code == 200) {
                                     var uploadImgSrc = jsn.body + "";
 
-                                    uploadImgSrc = "<img-sRc-pLAcehOLDer- src='" + uploadImgSrc + "' >"
-                                    var otextarea = $("#form-field-textarea").val();
+                                    uploadImgSrc = "<img-pLAcehOLDer" + uploadImgSrc + ">";
+                                    var otextarea = $("#form-field-textarea").val().trim();
                                     var otextarea_head = "";
-                                    var otextarea_tail = "";
-                                    var pos = getCursorPosition();
+                                    var otextarea_tail;
+                                    var pos = getTextAreaCursorPosition() || 0;
                                     if (pos > 1)
-                                        origin_textarea.substring(0, getCursorPosition() - 1);
-                                    otextarea_tail = otextarea.substring(getCursorPosition());
+                                        otextarea_head = otextarea.substring(0, pos);
+                                    otextarea_tail = otextarea.substring(pos);
 
-                                    alert(otextarea_head + "[+]" + otextarea_tail);
+                                    //alert(otextarea_head + "[+]" + otextarea_tail);
 
                                     $("#form-field-textarea").val(otextarea_head + uploadImgSrc + otextarea_tail);
+
+                                    // 更新图片集
+                                    var imgsrc=uploadImgSrc;
+                                    var newImgHtml = "<li>";
+                                    newImgHtml += "<a href='"+jsn.body+"' data-rel='colorbox'>";
+                                    newImgHtml += "<img alt='150x150' width='150' height='150' src='"+jsn.body+"' />";
+                                    newImgHtml += "</a>";
+                                    newImgHtml += "<div class='tools tools-right' style='height:30px;'>";
+                                    // must be " , ' no use
+                                    newImgHtml += "<a href='#' onclick='deletePic(\""+uploadImgSrc+"\")'><i class='icon-remove red'></i></a></div></li>";
+
+                                    $("#upload-img-list > li").eq(0).after(newImgHtml);
+
+                                    $("#img-list-invisible").attr("style","border-width:0;display:none");
+
+                                    $('.ace-thumbnails [data-rel="colorbox"]').colorbox(colorbox_params);
+                                    $("#cboxLoadingGraphic").append("<i class='icon-spinner orange'></i>");//let's add a custom loading icon
+
                                 } else {
                                     alert("上传失败！");
                                 }
                             }
-                        })
+                        });
+
+                        //$("#upload-loading-img").attr("style","display: none");
                     }
                 },
                 "cancel": {
