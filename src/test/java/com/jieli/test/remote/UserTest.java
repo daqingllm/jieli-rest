@@ -21,7 +21,7 @@ public class UserTest {
 
     @Test
     public void testLoad() throws IOException {
-        Response response = Request.Get("http://162.243.151.219:8080/jieli-1.0-SNAPSHOT/rest/user?userId=533c09e5e4b05bd824aeda57")
+        Response response = Request.Get("http://162.243.151.219:8080/jieli-1.0-SNAPSHOT/rest/user?userId=533d22a4e4b05bd824aeda59")
                 .addHeader("Cookie", "u=533c09e5e4b05bd824aeda58")
                 .execute();
 
@@ -60,7 +60,7 @@ public class UserTest {
     @Test
     public void loadSelf() throws IOException {
         Response response = Request.Get("http://162.243.151.219:8080/jieli-1.0-SNAPSHOT/rest/user/self")
-                .addHeader("Cookie", "u=533c09e5e4b05bd824aeda58")
+                .addHeader("Cookie", "u=533c061de4b05bd824aeda56")
                 .execute();
 
         System.out.println(response.returnContent().asString());
@@ -94,7 +94,7 @@ public class UserTest {
 
         Response response = Request.Post("http://162.243.151.219:8080/jieli-1.0-SNAPSHOT/rest/user/directory")
                 .addHeader("Cookie", "u=533c09e5e4b05bd824aeda58")
-                .bodyString(new ObjectMapper().writeValueAsString(friend2), ContentType.APPLICATION_JSON)
+                .bodyString(new ObjectMapper().writeValueAsString(friend1), ContentType.APPLICATION_JSON)
                 .execute();
 
         System.out.println(response.returnContent().asString());

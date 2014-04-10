@@ -25,8 +25,8 @@ public class ActivityTest {
     @Test
     public void testCreate() throws IOException {
         Activity activity = new Activity();
-        activity.associationId = "5337a309ef869d4225397d48";
-        activity.beginDate = new Date(new Date().getTime() + 1000000);
+//        activity.associationId = "5337a309ef869d4225397d48";
+        activity.beginDate = new Date(new Date().getTime());
         activity.tag = AcivityTag.OFFICIAL;
 //        activity.sponsorUserId = "533799caef869f8e93d30d9c";
         activity.title = "R1";
@@ -41,7 +41,7 @@ public class ActivityTest {
 
     @Test
     public void testLoad() throws IOException {
-        Response response = Request.Get("http://localhost:8080/rest/activity?activityId=5337cf1cef868c3955e498c7")
+        Response response = Request.Get("http://localhost:8080/rest/activity?activityId=5346b723ef8683b864e34aa4")
                 .addHeader("Cookie", "u=533c0010ef86c7014c36fa2f")
                 .execute();
 
@@ -51,6 +51,15 @@ public class ActivityTest {
     @Test
     public void testOngoing() throws IOException {
         Response response = Request.Get("http://localhost:8080/rest/activity/ongoing")
+                .addHeader("Cookie", "u=533c07a1ef86c7014c36fa31")
+                .execute();
+
+        System.out.println(response.returnContent().asString());
+    }
+
+    @Test
+    public void testHistory() throws IOException {
+        Response response = Request.Get("http://localhost:8080/rest/activity/history?tag=OFFICIAL")
                 .addHeader("Cookie", "u=533c07a1ef86c7014c36fa31")
                 .execute();
 
