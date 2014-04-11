@@ -461,18 +461,14 @@
 <!-- inline scripts related to this page -->
 <script>
     function loadThisArticle(){
-        var artid = request.getParameter("artid");
-        if (artid == null || artid.length < 1) return;
+        <#if got?length==0>
 
-        $.ajax({
-            type:"GET",
-            url:"/rest/news/load?new_id="+artid,
-            async:true,
-            success:function(data){
-                alert(data);
-            }
-        });
-        ;
+            var data = ${art_data};
+        <#else>
+
+            if(confirm("${got}"));
+            window.location.href = "/rest/bnews/list";
+        </#if>
     }
 
     function test2227(str){
@@ -613,6 +609,7 @@
             maxHeight:400
         });
 
+        loadThisArticle();
 
         $("#bootbox-upload-image").on("click", function () {
             var spin_img = "<div id='upload-loading-img' style='margin-left:30px;margin-top:10px;display: none;'><i class='icon-spinner icon-spin orange bigger-125'></i></div>";

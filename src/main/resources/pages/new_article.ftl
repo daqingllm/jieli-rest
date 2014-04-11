@@ -719,8 +719,8 @@ jQuery(function ($) {
     $('[data-rel=tooltip]').tooltip({container: 'body'});
     $('[data-rel=popover]').popover({container: 'body'});
 
-    $('textarea[class*=autosize]').autosize({append: "\n"});
-    $.mask.definitions['~'] = '[+-]';
+    //$('textarea[class*=autosize]').autosize({append: "\n"});
+    //$.mask.definitions['~'] = '[+-]';
 
     $('.date-picker').datepicker({autoclose: true}).next().on(ace.click_event, function () {
         $(this).prev().focus();
