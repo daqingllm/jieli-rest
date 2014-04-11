@@ -1,5 +1,6 @@
 package com.jieli.test.liu.http;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jieli.activity.AcivityTag;
 import com.jieli.activity.Activity;
@@ -97,6 +98,15 @@ public class ActivityTest {
                 .execute();
 
         System.out.println(response.returnContent().asString());
+    }
+
+    @Test
+    public void testFastTime() throws JsonProcessingException {
+        Activity activity = new Activity();
+        activity.beginDate = new Date();
+        System.out.println(new ObjectMapper().writeValueAsString(activity));
+        Date date = new Date(1397154458887L);
+        System.out.println(date.toString());
     }
 
 }

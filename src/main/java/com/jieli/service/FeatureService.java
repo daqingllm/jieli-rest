@@ -76,7 +76,7 @@ public class FeatureService {
 
         responseEntity.code = 200;
         responseEntity.body = simpleHelpInfoList;
-        return Response.status(200).entity(simpleHelpInfoList).build();
+        return Response.status(200).entity(responseEntity).build();
     }
 
     /**
@@ -105,7 +105,7 @@ public class FeatureService {
         }
         responseEntity.code = 200;
         responseEntity.body = helpInfo;
-        return Response.status(200).entity(helpInfo).build();
+        return Response.status(200).entity(responseEntity).build();
     }
 
     @Path("/help/add")
@@ -134,8 +134,8 @@ public class FeatureService {
             return Response.status(200).entity(responseEntity).build();
         }
         responseEntity.code = 200;
-        responseEntity.body = result;
-        return Response.status(200).entity(result.get_id()).build();
+        responseEntity.body = "{\"_id\":\"" + result.get_id() + "\"}";;
+        return Response.status(200).entity(responseEntity).build();
     }
 
     @Path("/help/delete")
