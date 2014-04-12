@@ -5,7 +5,7 @@ import com.jieli.feature.help.entity.HelpInfo;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.client.fluent.Response;
 import org.apache.http.entity.ContentType;
-import org.junit.Test;
+import org.testng.annotations.Test;
 
 import java.io.IOException;
 import java.util.Date;
@@ -32,4 +32,10 @@ public class HelpTest {
                 .execute();
         System.out.println(response.returnContent().asString());
     }
+
+    @Test
+    public void test() {
+        System.out.println(System.getProperty("user.dir"));
+    }
+
 }

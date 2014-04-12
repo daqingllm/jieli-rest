@@ -271,10 +271,12 @@ public class ActivityService {
         if (activity.followMembers.contains(userId)) {
             activity.followMembers.remove(userId);
             responseEntity.msg = "已取消";
+            responseEntity.body = "{\"count\":"+activity.followMembers.size()+",\"concern\":"+0+"}";
             removeRelated(userId, activityId, RelatedType.FOLLOW);
         } else {
             activity.followMembers.add(userId);
             responseEntity.msg = "已关注";
+            responseEntity.body = "{\"count\":"+activity.followMembers.size()+",\"concern\":"+1+"}";
             insertRelated(userId, activityId, RelatedType.FOLLOW);
         }
         activityDAO.save(activity);
@@ -315,10 +317,12 @@ public class ActivityService {
         if (activity.joinMembers.get(userId) == null) {
             activity.joinMembers.put(userId, part);
             responseEntity.msg = "已参加";
+            responseEntity.body = "{\"count\":"+activity.joinMembers.size()+",\"join\":"+0+"}";
             insertRelated(userId, activityId, RelatedType.JOIN);
         } else {
             activity.joinMembers.remove(userId);
             responseEntity.msg = "已取消";
+            responseEntity.body = "{\"count\":"+activity.joinMembers.size()+",\"join\":"+0+"}";
             removeRelated(userId, activityId, RelatedType.JOIN);
         }
         activityDAO.save(activity);

@@ -69,8 +69,8 @@ public class ActivityTest {
 
     @Test
     public void testFollow() throws IOException {
-        Response response = Request.Get("http://localhost:8080/rest/activity/concern?activityId=5337cf1cef868c3955e498c7")
-                .addHeader("Cookie", "u=533799caef869f8e93d30d9d")
+        Response response = Request.Get("http://localhost:8080/rest/activity/concern?activityId=5348ddc5ef86675f431c426b")
+                .addHeader("Cookie", "u=533c07a1ef86c7014c36fa31")
                 .execute();
 
         System.out.println(response.returnContent().asString());

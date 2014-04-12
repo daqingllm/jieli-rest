@@ -21,7 +21,7 @@ public class UserServiceTest {
     @Test
     public void testLoadUser() throws IOException {
         Response response = Request.Get("http://localhost:8080/rest/user?userId=533799caef869f8e93d30d9c")
-                .addHeader("Cookie", "u=533799caef869f8e93d30d9d")
+                .addHeader("Cookie", "u=533c07a1ef86c7014c36fa31")
                 .execute();
 
         System.out.println(response.returnContent().asString());
@@ -30,7 +30,7 @@ public class UserServiceTest {
     @Test
     public void testLoadSelf() throws IOException {
         Response response = Request.Get("http://localhost:8080/rest/user/self")
-                .addHeader("Cookie", "u=533799caef869f8e93d30d9d")
+                .addHeader("Cookie", "u=533c07a1ef86c7014c36fa31")
                 .execute();
 
         System.out.println(response.returnContent().asString());
@@ -42,8 +42,17 @@ public class UserServiceTest {
         user.associationId = "5337a309ef869d4225397d48";
         user.name = "xy_user";
         Response response = Request.Post("http://localhost:8080/rest/user/self")
-                .addHeader("Cookie", "u=533799caef869f8e93d30d9d")
+                .addHeader("Cookie", "u=533c07a1ef86c7014c36fa31")
                 .bodyString(new ObjectMapper().writeValueAsString(user), ContentType.APPLICATION_JSON)
+                .execute();
+
+        System.out.println(response.returnContent().asString());
+    }
+
+    @Test
+    public void loadDirectory() throws IOException {
+        Response response = Request.Get("http://localhost:8080/rest/user/directory")
+                .addHeader("Cookie", "u=533c07a1ef86c7014c36fa31")
                 .execute();
 
         System.out.println(response.returnContent().asString());
