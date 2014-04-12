@@ -10,7 +10,10 @@ import org.apache.http.entity.ContentType;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.
@@ -24,12 +27,12 @@ public class ActivityTest {
     @Test
     public void testCreate() throws IOException {
         Activity activity = new Activity();
-        activity.associationId = "533c0568e4b05bd824aeda54";
-//        activity.beginDate = new Date(new Date().getTime() + 1000000000);
-        activity.beginDate = new Date();
-        activity.tag = AcivityTag.RECOMMEND;
+        activity.associationId = "5348205ce4b00b2ae52d3f5a";
+        activity.beginDate = new Date(new Date().getTime() + 1000000000);
+//        activity.beginDate = new Date();
+        activity.tag = AcivityTag.PRIVATE;
 //        activity.sponsorUserId = "533799caef869f8e93d30d9c";
-        activity.title = "新的推荐活动";
+        activity.title = "新的串局";
         activity.location = "天安门广场";
         activity.description = "官方有奖竞猜";
         activity.fee = 100;
@@ -37,7 +40,7 @@ public class ActivityTest {
         activity.arrangement = "4、5两天";
         activity.serviceInfo = "服务信息";
         activity.sponsorInfo = "赞助信息";
-//        activity.invitees = Arrays.asList("user1", "user2", "user3");
+        activity.invitees = Arrays.asList("user1", "user2", "user3");
         Arrangement a1 = new Arrangement();
         a1.title = "4号";
         a1.content = "abcd";
@@ -47,7 +50,7 @@ public class ActivityTest {
         activity.details.add(a1); activity.details.add(a2);
 
         Response response = Request.Post("http://162.243.151.219:8080/jieli-1.0-SNAPSHOT/rest/activity")
-                .addHeader("Cookie", "u=533bfca63a6e26a4f86e916d")
+                .addHeader("Cookie", "u=53481be2e4b00b2ae52d3f58")
                 .bodyString(new ObjectMapper().writeValueAsString(activity), ContentType.APPLICATION_JSON)
                 .execute();
 
@@ -56,8 +59,8 @@ public class ActivityTest {
 
     @Test
     public void testLoad() throws IOException {
-        Response response = Request.Get("http://162.243.151.219:8080/jieli-1.0-SNAPSHOT/rest/activity?activityId=53481507e4b0b0138cc6abcf")
-                .addHeader("Cookie", "u=533bfca63a6e26a4f86e916d")
+        Response response = Request.Get("http://162.243.151.219:8080/jieli-1.0-SNAPSHOT/rest/activity?activityId=534821b9e4b00b2ae52d3f5d")
+                .addHeader("Cookie", "u=5348210be4b00b2ae52d3f5c")
                 .execute();
 
         System.out.println(response.returnContent().asString());
@@ -66,7 +69,7 @@ public class ActivityTest {
     @Test
     public void testOngoing() throws IOException {
         Response response = Request.Get("http://162.243.151.219:8080/jieli-1.0-SNAPSHOT/rest/activity/ongoing")
-                .addHeader("Cookie", "u=533c061de4b05bd824aeda56")
+                .addHeader("Cookie", "u=5348210be4b00b2ae52d3f5c")
                 .execute();
 
         System.out.println(response.returnContent().asString());
@@ -75,7 +78,21 @@ public class ActivityTest {
     @Test
     public void testHistory() throws IOException {
         Response response = Request.Get("http://162.243.151.219:8080/jieli-1.0-SNAPSHOT/rest/activity/history?tag=OFFICIAL")
-                .addHeader("Cookie", "u=533c061de4b05bd824aeda56")
+                .addHeader("Cookie", "u=5348210be4b00b2ae52d3f5c")
+                .execute();
+
+        System.out.println(response.returnContent().asString());
+    }
+
+    @Test
+    public void testComment() throws IOException {
+        Map<String, String> infos = new HashMap<String, String>();
+        infos.put("content", "是地方但是");
+        infos.put("topicId", "534821b9e4b00b2ae52d3f5d");
+
+        Response response = Request.Post("http://162.243.151.219:8080/jieli-1.0-SNAPSHOT/rest/activity/comment")
+                .addHeader("Cookie", "u=5348210be4b00b2ae52d3f5c")
+                .bodyString(new ObjectMapper().writeValueAsString(infos), ContentType.APPLICATION_JSON)
                 .execute();
 
         System.out.println(response.returnContent().asString());

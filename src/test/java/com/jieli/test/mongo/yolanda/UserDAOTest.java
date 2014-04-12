@@ -46,7 +46,7 @@ public class UserDAOTest {
         System.out.println(account.password);
     }
 
-    @Test
+//    @Test
     public void clearAll() {
         accountDAO.clear();
         userDAO.clear();

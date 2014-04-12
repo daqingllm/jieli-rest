@@ -29,7 +29,7 @@ public class AssociationDAOTest {
         System.out.println(association.name);
     }
 
-    @Test
+//    @Test
     public void clearAll() {
         associationDAO.clear();
     }

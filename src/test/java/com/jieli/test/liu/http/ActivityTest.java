@@ -27,8 +27,8 @@ public class ActivityTest {
     public void testCreate() throws IOException {
         Activity activity = new Activity();
 //        activity.associationId = "5337a309ef869d4225397d48";
-        activity.beginDate = new Date(new Date().getTime());
-        activity.tag = AcivityTag.OFFICIAL;
+        activity.beginDate = new Date(new Date().getTime()+10000000);
+        activity.tag = AcivityTag.PRIVATE;
 //        activity.sponsorUserId = "533799caef869f8e93d30d9c";
         activity.title = "R1";
 
@@ -89,7 +89,7 @@ public class ActivityTest {
     public void testComment() throws IOException {
         Map<String, String> infos = new HashMap<String, String>();
         infos.put("content", "我是回复字数你妹");
-        infos.put("topicId", "5337cf1cef868c3955e498c7");
+        infos.put("topicId", "53482b95ef862ffc551c0d00");
         infos.put("commentedUserId", "533c0010ef86c7014c36fa2e");
 
         Response response = Request.Post("http://localhost:8080/rest/activity/comment")

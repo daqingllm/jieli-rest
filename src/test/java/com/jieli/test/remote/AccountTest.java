@@ -56,9 +56,9 @@ public class AccountTest {
     @Test
     public void testAuth() throws IOException {
         Response response = Request.Post("http://162.243.151.219:8080/jieli-1.0-SNAPSHOT/rest/account/auth")
-                .addHeader("Cookie", "u=533bfca63a6e26a4f86e916d")
+                .addHeader("Cookie", "u=53481be2e4b00b2ae52d3f58")
                 .setHeader("app", "test")
-                .bodyString("{\"username\":\"admin\",\"associationId\":\"533c0568e4b05bd824aeda54\"}", ContentType.APPLICATION_JSON)
+                .bodyString("{\"username\":\"admin\",\"associationId\":\"5348205ce4b00b2ae52d3f5a\"}", ContentType.APPLICATION_JSON)
                 .execute();
 
         System.out.println(response.returnContent().asString());
@@ -79,12 +79,12 @@ public class AccountTest {
         Account account = new Account();
         account.username = "admin";
         account.password = "admin";
-        account.associationId = "533c0568e4b05bd824aeda54";
-        account.userId = "533c061de4b05bd824aeda55";
+        account.associationId = "5348205ce4b00b2ae52d3f5a";
+        account.userId = "5348210be4b00b2ae52d3f5b";
         account.state = AccountState.ADMIN;
 
         Response response = Request.Post("http://162.243.151.219:8080/jieli-1.0-SNAPSHOT/rest/account")
-                .addHeader("Cookie", "u=533bfca63a6e26a4f86e916d")
+                .addHeader("Cookie", "u=53481be2e4b00b2ae52d3f58")
                 .setHeader("app", "test")
                 .bodyString(new ObjectMapper().writeValueAsString(account), ContentType.APPLICATION_JSON)
                 .execute();

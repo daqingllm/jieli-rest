@@ -21,13 +21,12 @@ public class FeatureTest {
     @Test
     public void addHelpInfo() throws IOException {
         HelpInfo helpInfo = new HelpInfo();
-        helpInfo.setAssociationId("533c0568e4b05bd824aeda54");
         helpInfo.setTitle("求帮忙搬家");
         helpInfo.setContent("求大神帮忙搬行李！！！无报酬，请吃饭。。");
         helpInfo.setAddTime(new Date());
         ObjectMapper mapper = new ObjectMapper();
         Response response = Request.Post("http://162.243.151.219:8080/jieli-1.0-SNAPSHOT/rest/feature/help/add")
-                .setHeader("Cookie", "u=533bfca63a6e26a4f86e916d")
+                .setHeader("Cookie", "u=53481be2e4b00b2ae52d3f58")
                 .bodyString(mapper.writeValueAsString(helpInfo), ContentType.APPLICATION_JSON)
                 .execute();
         System.out.println(response.returnContent().asString());

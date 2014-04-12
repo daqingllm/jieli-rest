@@ -68,7 +68,7 @@ public class ActivityDAOTest {
         }
     }
 
-    @Test
+//    @Test
     public void clear() {
         activityDAO.clear();
     }
