@@ -568,13 +568,13 @@ jQuery(function($) {
             { 	//navbar options
                 add: true,
                 addicon : 'icon-plus-sign purple',
-                addfunc : (function(){alert("添加操作!");return false;}),
+                addfunc : (function(){window.location.href="/rest/bnews/new";/*alert("添加操作!");*/return false;}),
 
                 edit: true,
                 editicon : 'icon-pencil blue',
                 editfunc : (function(){var id = $("#grid-table").getGridParam("selrow");id=$("#grid-table > tbody > tr").eq(id).find("td").eq(1).attr("title");window.location.href = '/rest/bnews/edit?artid='+id;/*alert('cao!');*/alert("跳至编辑页!");}),
 
-                del: true,
+                del: false,
                 delicon : 'icon-trash red',
                 delfunc : (function(){alert("删除操作!");return false;}),
 

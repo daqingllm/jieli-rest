@@ -392,7 +392,8 @@ public class News {
 
             //assIdOptionList = "";
         }else {
-            if (n.type.compareTo(NewsType.newsType) == 0) got = "您无权查看新闻类型的资讯";
+            if (n.type.compareTo(NewsType.newsType) == 0) got = "您无权修改新闻类型的资讯";
+            if (n.associationId != account.associationId) got = "您无权修改其他协会的资讯";
 
             Association association = associationDAO.loadById(associationId);
             assIdOptionList += "<option value='"+associationId+"' selected>"+association.name+"</option>";

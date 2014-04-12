@@ -458,121 +458,48 @@
 <script src="/assets/js/ace-elements.min.js"></script>
 <script src="/assets/js/ace.min.js"></script>
 
+<script src="/common-jieli.js"></script>
+
 <!-- inline scripts related to this page -->
 <script>
     function loadThisArticle(){
-        <#if got?length==0>
+    <#if got?length==0>
 
-            var data = ${art_data};
-        <#else>
+        var data = ${art_data};
+        //$("#seletAssociationIds").multiselect('select',data["associationId"]);
+        $("option[value="+data["associationId"]+"]").attr("selected","selected");
+        $("#form-field-title").val(data["title"]);
+        $("#form-field-select-type").val(data["type"]);
+        $("#form-field-textarea").val(data["content"]);
 
-            if(confirm("${got}"));
-            window.location.href = "/rest/bnews/list";
-        </#if>
-    }
+        var cont = data["content"];
+        var idx=cont.indexOf("<center><img src='");
+        while(idx > -1){
+            var ed = cont.indexOf("'></center",idx);
+            if(ed == -1) continue;
 
-    function test2227(str){
-        if (str.indexOf("'")>-1 || str.indexOf("\"")>-1) {
-            alert(str + "中含有英文的单引号或双引号，请改正为中文引号。");
-            return false;
+            // 更新图片集
+            var uploadImgSrc = cont.substr(idx + "<center><img src='".length , ed - idx - "<center><img src='".length);
+            var newImgHtml = "<li>";
+            newImgHtml += "<a href='"+jsn.body+"' data-rel='colorbox'>";
+            newImgHtml += "<img alt='150x150' width='150' height='150' src='"+jsn.body+"' />";
+            newImgHtml += "</a>";
+            newImgHtml += "<div class='tools tools-right' style='height:30px;'>";
+            // must be " , ' no use
+            var re = new RegExp("\'","g");
+            newImgHtml += "<a href='#' onclick='deletePic(\""+uploadImgSrc.replace(re,"")+"\")'><i class='icon-remove red'></i></a></div></li>";
+
+            /*$("#upload-img-list > li").eq(0).after(newImgHtml);*/
+            $("#upload-img-list > li").last().before(newImgHtml);
+
+            $("#img-list-invisible").attr("style","border-width:0;display:none");
+
         }
-        return true;
-    }
+    <#else>
 
-    // 点击完成按钮
-    function postThisArticle(){
-        var jsn = "{\"_id\":null,";
-
-        var p_assid,p_title,p_type,p_overview,p_content,p_images;
-        // 协会id怎么获取?
-        p_assid = $("#selectAssociationIds").val();
-        if (p_assid == null) {alert("请选择协会！");return;}
-        if (!test2227(p_assid)) return;
-        jsn += "\"associationId\":\""+p_assid+"\",";
-
-        p_title = $("#form-field-title").val();
-        if (!test2227(p_title)) return;
-        jsn += "\"title\":\""+p_title+"\",";
-
-        p_type  = $("#form-field-select-type").val();
-        jsn += "\"type\":\""+p_type+"\",";
-
-        // content 是img placeholder的版本，overview是html的版本
-        p_content = $("#form-field-textarea").val();
-        var escape_content = p_content;
-        while(escape_content.indexOf("'")>=0)
-            escape_content = escape_content.replace("'","\\\\u0027");
-        while(escape_content.indexOf("\"")>=0)
-            escape_content = escape_content.replace("\"","\\\\u0022");
-
-        jsn += "\"content\":\""+escape_content+"\",";
-
-        jsn += "\"images\":[";
-
-        // generate overview
-        p_overview = p_content;
-        //<img-pLAcehOLDer>
-        var phph = "<img-pLAcehOLDer";
-        var idxs = p_overview.indexOf(phph);
-        var idxe;
-        while(idxs >= 0){
-            idxe = p_overview.indexOf(">",idxs);
-            var st = idxs+phph.length;
-            if (idxe-st < idxs) continue;
-
-            var _url = p_overview.substr(st,idxe-st);
-
-            var head = p_overview.substr(0,idxs) || "";
-            var tail =  p_overview.substr(idxe+1) || "";
-            p_overview = head + "<center><img src='"+_url+"'></center>";
-
-            idxs = p_overview.indexOf(phph,idxs);
-
-            jsn += "{\"placeholder\":\""+phph+_url+">\",\"url\":\""+_url+"\",\"description\":\" \"},";
-        }
-        jsn += "],\"overview\":\"\",\"imagesCount\":0,\"appreciateUserIds\":[],\"appreciateCount\":0,\"addTime\":null}";
-
-        $.ajax({
-            type:"POST",
-            url:"/rest/bnews/add",
-            data:jsn,
-            contentType : "application/json; charset=utf-8",
-            dataType : 'json',
-            success:function(ret){
-                alert(ret);
-            }
-        });
-    }
-
-    // 清空图片列表
-    function clearImgList(){
-        $("#form-field-title").val("");
-        $("#form-field-select-type").get(0).selectedIndex = 0;
-        $("#form-field-textarea").val("");
-        $("#img-list-invisible").nextAll().remove();
-        $("#img-list-invisible").attr("style","border-width:0;display:block");
-    }
-
-    // 删除一个图片
-    function deletePic(ph){
-        var _src=ph.replace("<img-pLAcehOLDer","");
-        _src = _src.substr(0,_src.length-1);
-
-        // clear textarea
-        var otextarea = $("#form-field-textarea").val().trim();
-        otextarea = otextarea.replace(ph,"");
-        $("#form-field-textarea").val(otextarea);
-
-        // delete pic
-        $("a[href=\'"+_src+"\']").parent().remove();
-
-        if ($("#img-list-invisible").parent().children().length == 1)
-            $("#img-list-invisible").attr("style","border-width:0;display:block");
-    }
-
-    // 获取文本框中光标位置
-    function getTextAreaCursorPosition() {
-        return $("#form-field-textarea").getCursorPosition();
+        if(confirm("${got}"));
+        window.location.href = "/rest/bnews/list";
+    </#if>
     }
 
     (function ($, undefined) {
@@ -609,8 +536,6 @@
             maxHeight:400
         });
 
-        loadThisArticle();
-
         $("#bootbox-upload-image").on("click", function () {
             var spin_img = "<div id='upload-loading-img' style='margin-left:30px;margin-top:10px;display: none;'><i class='icon-spinner icon-spin orange bigger-125'></i></div>";
             spin_img = "";
@@ -643,7 +568,7 @@
                                     if (jsn.code == 200) {
                                         var uploadImgSrc = jsn.body + "";
 
-                                        uploadImgSrc = "<img-pLAcehOLDer" + uploadImgSrc + ">";
+                                        uploadImgSrc = "<center><img src='" + uploadImgSrc + "'></center>";
                                         var otextarea = $("#form-field-textarea").val().trim();
                                         var otextarea_head = "";
                                         var otextarea_tail;
@@ -664,7 +589,8 @@
                                         newImgHtml += "</a>";
                                         newImgHtml += "<div class='tools tools-right' style='height:30px;'>";
                                         // must be " , ' no use
-                                        newImgHtml += "<a href='#' onclick='deletePic(\""+uploadImgSrc+"\")'><i class='icon-remove red'></i></a></div></li>";
+                                        var re = new RegExp("\'","g");
+                                        newImgHtml += "<a href='#' onclick='deletePic(\""+uploadImgSrc.replace(re,"")+"\")'><i class='icon-remove red'></i></a></div></li>";
 
                                         $("#upload-img-list > li").eq(0).after(newImgHtml);
 
@@ -760,6 +686,8 @@
          */
 
     });
+
+    setTimeout(loadThisArticle(),500);
 
 </script>
 </body>

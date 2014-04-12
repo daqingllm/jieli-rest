@@ -28,6 +28,7 @@ public class UploadService {
         ResponseEntity responseEntity = new ResponseEntity();
         String FileName =fileDetail.getFileName();
 		String FileDirectory = "F:\\";
+        FileDirectory = System.getProperty("user.dir")+"\\";
 
         try {
             FileName = new String(FileName.getBytes(System.getProperty("file.encoding")), "UTF-8");
