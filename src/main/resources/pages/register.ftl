@@ -262,19 +262,19 @@
 <script>
     function showMsg(title, msg) {
         if (title == '×¢²á³É¹¦') {
+            $.gritter.removeAll();
             $.gritter.add({
                 title: title,
                 sticky:true,
                 time:'',
                 text: "&nbsp;&nbsp;" + msg,
-                class_name: 'gritter-info gritter-center'
+                class_name: 'gritter-info gritter-light gritter-center'
             });
         } else {
-        }
             $.gritter.add({
                 title: title,
                 text: "&nbsp;&nbsp;" + msg,
-                class_name: 'gritter-info '
+                class_name: 'gritter-info gritter-light '
             });
         }
     }

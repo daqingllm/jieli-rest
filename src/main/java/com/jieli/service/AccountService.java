@@ -205,10 +205,12 @@ public class AccountService {
             }
             if (StringUtils.isNotEmpty(account.associationId)) {
                 current.associationId = account.associationId;
+                if (user!=null)
                 user.associationId = account.associationId;
             }
             current.state = account.state;
             accountDAO.save(current);
+            if (user!=null)
             userDAO.save(user);
         }
 

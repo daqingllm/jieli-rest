@@ -18,7 +18,7 @@ public class AccountDAO extends GenericDAO<Account> {
     }
 
     public Iterable<Account> loadByAssociationId(String associationId, AccountState state) {
-        return col.find("{associationId:#, state:#}", associationId, state).as(Account.class);
+        return col.find("{associationId:#, state:#}", associationId, state).sort("{_id:-1}").as(Account.class);
     }
 
 }
