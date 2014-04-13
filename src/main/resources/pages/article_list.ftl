@@ -98,7 +98,7 @@
                         <li class="divider"></li>-->
 
                         <li>
-                            <a href="#">
+                            <a href="#" onclick="document.cookie='u=;path=/';window.location.href='/rest/baccount/login'">
                                 <i class="icon-off"></i>
                                 ÍË³ö
                             </a>
@@ -381,7 +381,7 @@
 
 <script type="text/javascript">
 jQuery(function ($) {
-    $("#sidebar-shortcuts-navlist").load("/sidebar.html",function(){$("#nav_list_2_3").addClass("active open");$("#nav_list_2").addClass("active");});
+    $("#sidebar-shortcuts-navlist").load("/sidebar.html",function(){$("#nav_list_2_1").addClass("active open");$("#nav_list_2").addClass("active");});
 
     var colorbox_params = {
         reposition: true,

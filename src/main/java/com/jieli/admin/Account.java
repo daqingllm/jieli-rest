@@ -1,9 +1,12 @@
 package com.jieli.admin;
 
+import com.jieli.association.Association;
+import com.jieli.association.AssociationDAO;
 import com.jieli.common.dao.AccountDAO;
 import com.jieli.common.entity.AccountState;
 import com.jieli.common.entity.ResponseEntity;
 import com.jieli.util.FTLrender;
+import com.jieli.util.IdentifyUtils;
 import com.jieli.util.PasswordGenerator;
 import com.sun.jersey.spi.resource.Singleton;
 import org.codehaus.jettison.json.JSONException;
@@ -12,8 +15,7 @@ import org.codehaus.jettison.json.JSONObject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -26,6 +28,7 @@ import java.util.Map;
 @Path("/baccount")
 public class Account {
     private AccountDAO accountDAO = new AccountDAO();
+    private AssociationDAO associationDAO = new AssociationDAO();
 
     @GET
     @Path("/login")
@@ -37,6 +40,35 @@ public class Account {
         return FTLrender.getResult("login.ftl", params);
     }
 
+    @GET
+    @Path("/register")
+    @Produces(MediaType.TEXT_HTML)
+    public String editNews(@CookieParam("u")String sessionId,@CookieParam("a")String associationId,@CookieParam("r")String role){
+        if (!IdentifyUtils.isValidate(sessionId)) {
+            return News.errorReturn;
+        }
+
+        com.jieli.common.entity.Account account = accountDAO.loadById(sessionId);
+
+        if (account == null || account.username == null || account.username == "" || account.state == AccountState.ENABLE || account.state == AccountState.DISABLE){
+            return News.errorReturn;
+        }
+
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("username",account.username);
+        boolean isSuper = IdentifyUtils.isSuper(sessionId);
+        params.put("isSuper",isSuper);
+        String associationOps = "";
+        List<Association> associationList = new ArrayList<Association>();
+        if (isSuper) {
+            Iterable<Association> iterable = associationDAO.loadAll();
+            for(Association association : iterable)
+                associationOps += "<option value='"+association.get_id() + "'>"+association.name +"</option>";
+        }
+        params.put("associationOps",associationOps);
+
+        return FTLrender.getResult("register.ftl", params);
+    }
 
     @Path("/login")
     @POST

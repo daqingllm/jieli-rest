@@ -31,48 +31,50 @@ import java.util.*;
 @Singleton
 @Path("/bnews")
 public class News {
+    public static final
+    String errorReturn = "<!DOCTYPE html>\n" +
+            "<html>\n" +
+            "    <head>\n" +
+            "        <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">\n" +
+            "        <title>请先登录</title>\n" +
+            "    </head>\n" +
+            "    <body>\n" +
+            "\n" +
+            "\t<span>您尚未登录，</span>\n" +
+            "\t<span id=\"totalSecond\">5</span>秒后跳转到登陆页..</span>\n" +
+            "\n" +
+            "\t<script language=\"javascript\" type=\"text/javascript\">\n" +
+            "\t/*alert(document.cookie);*/\n" +
+            "\t\tvar second = document.getElementById('totalSecond').textContent;\n" +
+            "\n" +
+            "\t\tif (navigator.appName.indexOf(\"Explorer\") > -1)\n" +
+            "\t\t\tsecond = document.getElementById('totalSecond').innerText;\n" +
+            "\t\telse\n" +
+            "\t\t\tsecond = document.getElementById('totalSecond').textContent;\n" +
+            "\n" +
+            "\t\tsetInterval(\"redirect()\", 1000);\n" +
+            "\t\t\n" +
+            "\t\tfunction redirect()\n" +
+            "\t\t{\n" +
+            "\t\t\tif (second < 0)\n" +
+            "\t\t\t\tlocation.href = '/rest/baccount/login';\n" +
+            "\t\t\telse {\n" +
+            "\t\t\t\tif (navigator.appName.indexOf(\"Explorer\") > -1)\n" +
+            "\t\t\t\t\tdocument.getElementById('totalSecond').innerText = second--;\n" +
+            "\t\t\t\telse\n" +
+            "\t\t\t\t\tdocument.getElementById('totalSecond').textContent = second--;\n" +
+            "\t\t\t}\n" +
+            "\t\t}\n" +
+            "\t</script>\n" +
+            "    </body>\n" +
+            "</html>";
+
+
     @GET
     @Path("/list")
     @Produces(MediaType.TEXT_HTML)
     public String NewsList(@CookieParam("u")String sessionId,@CookieParam("a")String associationId,@CookieParam("r")String role,@QueryParam("pl") String preload){
         if (preload != "y") preload = "n";
-
-        String errorReturn = "<!DOCTYPE html>\n" +
-                "<html>\n" +
-                "    <head>\n" +
-                "        <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">\n" +
-                "        <title>请先登录</title>\n" +
-                "    </head>\n" +
-                "    <body>\n" +
-                "\n" +
-                "\t<span>您尚未登录，</span>\n" +
-                "\t<span id=\"totalSecond\">5</span>秒后跳转到登陆页..</span>\n" +
-                "\n" +
-                "\t<script language=\"javascript\" type=\"text/javascript\">\n" +
-                "\t/*alert(document.cookie);*/\n" +
-                "\t\tvar second = document.getElementById('totalSecond').textContent;\n" +
-                "\n" +
-                "\t\tif (navigator.appName.indexOf(\"Explorer\") > -1)\n" +
-                "\t\t\tsecond = document.getElementById('totalSecond').innerText;\n" +
-                "\t\telse\n" +
-                "\t\t\tsecond = document.getElementById('totalSecond').textContent;\n" +
-                "\n" +
-                "\t\tsetInterval(\"redirect()\", 1000);\n" +
-                "\t\t\n" +
-                "\t\tfunction redirect()\n" +
-                "\t\t{\n" +
-                "\t\t\tif (second < 0)\n" +
-                "\t\t\t\tlocation.href = '/rest/baccount/login';\n" +
-                "\t\t\telse {\n" +
-                "\t\t\t\tif (navigator.appName.indexOf(\"Explorer\") > -1)\n" +
-                "\t\t\t\t\tdocument.getElementById('totalSecond').innerText = second--;\n" +
-                "\t\t\t\telse\n" +
-                "\t\t\t\t\tdocument.getElementById('totalSecond').textContent = second--;\n" +
-                "\t\t\t}\n" +
-                "\t\t}\n" +
-                "\t</script>\n" +
-                "    </body>\n" +
-                "</html>";
 
         // 判断用户是否已经登录
         if (!IdentifyUtils.isValidate(sessionId)) {
@@ -155,43 +157,6 @@ public class News {
     @Path("/new")
     @Produces(MediaType.TEXT_HTML)
     public String CreateNews(@CookieParam("u")String sessionId,@CookieParam("a")String associationId,@CookieParam("r")String role) {
-
-        String errorReturn = "<!DOCTYPE html>\n" +
-                "<html>\n" +
-                "    <head>\n" +
-                "        <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">\n" +
-                "        <title>请先登录</title>\n" +
-                "    </head>\n" +
-                "    <body>\n" +
-                "\n" +
-                "\t<span>您尚未登录，</span>\n" +
-                "\t<span id=\"totalSecond\">5</span>秒后跳转到登陆页..</span>\n" +
-                "\n" +
-                "\t<script language=\"javascript\" type=\"text/javascript\">\n" +
-                "\t/*alert(document.cookie);*/\n" +
-                "\t\tvar second = document.getElementById('totalSecond').textContent;\n" +
-                "\n" +
-                "\t\tif (navigator.appName.indexOf(\"Explorer\") > -1)\n" +
-                "\t\t\tsecond = document.getElementById('totalSecond').innerText;\n" +
-                "\t\telse\n" +
-                "\t\t\tsecond = document.getElementById('totalSecond').textContent;\n" +
-                "\n" +
-                "\t\tsetInterval(\"redirect()\", 1000);\n" +
-                "\t\t\n" +
-                "\t\tfunction redirect()\n" +
-                "\t\t{\n" +
-                "\t\t\tif (second < 0)\n" +
-                "\t\t\t\tlocation.href = '/rest/baccount/login';\n" +
-                "\t\t\telse {\n" +
-                "\t\t\t\tif (navigator.appName.indexOf(\"Explorer\") > -1)\n" +
-                "\t\t\t\t\tdocument.getElementById('totalSecond').innerText = second--;\n" +
-                "\t\t\t\telse\n" +
-                "\t\t\t\t\tdocument.getElementById('totalSecond').textContent = second--;\n" +
-                "\t\t\t}\n" +
-                "\t\t}\n" +
-                "\t</script>\n" +
-                "    </body>\n" +
-                "</html>";
 
         // 判断用户是否已经登录
         if (!IdentifyUtils.isValidate(sessionId)) {
@@ -302,43 +267,6 @@ public class News {
     @Produces(MediaType.TEXT_HTML)
     public String editNews(@CookieParam("u")String sessionId,@CookieParam("a")String associationId,@CookieParam("r")String role,@QueryParam("artid") String artid) {
 
-        String errorReturn = "<!DOCTYPE html>\n" +
-                "<html>\n" +
-                "    <head>\n" +
-                "        <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">\n" +
-                "        <title>请先登录</title>\n" +
-                "    </head>\n" +
-                "    <body>\n" +
-                "\n" +
-                "\t<span>您尚未登录，</span>\n" +
-                "\t<span id=\"totalSecond\">5</span>秒后跳转到登陆页..</span>\n" +
-                "\n" +
-                "\t<script language=\"javascript\" type=\"text/javascript\">\n" +
-                "\t/*alert(document.cookie);*/\n" +
-                "\t\tvar second = document.getElementById('totalSecond').textContent;\n" +
-                "\n" +
-                "\t\tif (navigator.appName.indexOf(\"Explorer\") > -1)\n" +
-                "\t\t\tsecond = document.getElementById('totalSecond').innerText;\n" +
-                "\t\telse\n" +
-                "\t\t\tsecond = document.getElementById('totalSecond').textContent;\n" +
-                "\n" +
-                "\t\tsetInterval(\"redirect()\", 1000);\n" +
-                "\t\t\n" +
-                "\t\tfunction redirect()\n" +
-                "\t\t{\n" +
-                "\t\t\tif (second < 0)\n" +
-                "\t\t\t\tlocation.href = '/rest/baccount/login';\n" +
-                "\t\t\telse {\n" +
-                "\t\t\t\tif (navigator.appName.indexOf(\"Explorer\") > -1)\n" +
-                "\t\t\t\t\tdocument.getElementById('totalSecond').innerText = second--;\n" +
-                "\t\t\t\telse\n" +
-                "\t\t\t\t\tdocument.getElementById('totalSecond').textContent = second--;\n" +
-                "\t\t\t}\n" +
-                "\t\t}\n" +
-                "\t</script>\n" +
-                "    </body>\n" +
-                "</html>";
-
         // 判断用户是否已经登录
         if (!IdentifyUtils.isValidate(sessionId)) {
             return errorReturn;
@@ -393,7 +321,7 @@ public class News {
             //assIdOptionList = "";
         }else {
             if (n.type.compareTo(NewsType.newsType) == 0) got = "您无权修改新闻类型的资讯";
-            if (n.associationId != account.associationId) got = "您无权修改其他协会的资讯";
+            if (!(n.associationId .equals( account.associationId))) got = "您无权修改其他协会的资讯";
 
             Association association = associationDAO.loadById(associationId);
             assIdOptionList += "<option value='"+associationId+"' selected>"+association.name+"</option>";
