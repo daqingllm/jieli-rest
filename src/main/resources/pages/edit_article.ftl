@@ -486,8 +486,8 @@
             // ¸üÐÂÍ¼Æ¬¼¯
             var uploadImgSrc = cont.substr(idx + "<center><img src='".length , ed - idx - "<center><img src='".length);
             var newImgHtml = "<li>";
-            newImgHtml += "<a href='"+jsn.body+"' data-rel='colorbox'>";
-            newImgHtml += "<img alt='150x150' width='150' height='150' src='"+jsn.body+"' />";
+            newImgHtml += "<a href='"+uploadImgSrc+"' data-rel='colorbox'>";
+            newImgHtml += "<img alt='150x150' width='150' height='150' src='"+uploadImgSrc+"' />";
             newImgHtml += "</a>";
             newImgHtml += "<div class='tools tools-right' style='height:30px;'>";
             // must be " , ' no use
@@ -499,6 +499,7 @@
 
             $("#img-list-invisible").attr("style","border-width:0;display:none");
 
+            idx = cont.indexOf("<center><img src='",ed);
         }
     <#else>
 

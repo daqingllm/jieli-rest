@@ -442,12 +442,14 @@ function parseArtData(data){
         var nowStr = now.Format("yyyy-MM-dd");
 
         data[i].addTime = nowStr;
-        data[i].content = data[i].content.substr(0,30);
 
-        var re = new  RegExp("\\u0022","g");
-        data[i].content = data[i].content.replace(re,"\"");
-        re = new RegExp("\\u0027","g");
-        data[i].content = data[i].content.replace(re,"'");
+        data[i].content = data[i].overview;
+        //data[i].content = data[i].content.substr(0,30);
+
+        //var re = new  RegExp("\\u0022","g");
+        //data[i].content = data[i].content.replace(re,"\"");
+        //re = new RegExp("\\u0027","g");
+        //data[i].content = data[i].content.replace(re,"'");
     }
     return data;
 }
