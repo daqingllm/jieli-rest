@@ -2,7 +2,7 @@
 <html lang="zh">
 <head>
     <meta charset="utf-8"/>
-    <title>接力 资讯管理</title>
+    <title>接力 账号管理</title>
     <meta name="description" content="接力"/>
     <!-- basic styles -->
 
@@ -192,10 +192,10 @@
                     </li>
 
                     <li>
-                        <a href="#"> 资讯管理 </a>
+                        <a href="#"> 账号管理 </a>
                     </li>
 
-                    <li class="active"> 资讯列表 </li>
+                    <li class="active"> 账号列表 </li>
                 </ul>
                 <!-- .breadcrumb -->
 
@@ -214,10 +214,10 @@
             <div class="page-content">
                 <div class="page-header">
                     <h1>
-                        资讯列表
+                        账号列表
                         <small>
                             <i class="icon-double-angle-right"></i>
-                            请先选中目标资讯再点击编辑或者删除按钮
+                            选中目标账号后才会显示密码
                         </small>
                     </h1>
                 </div>
@@ -330,7 +330,7 @@
 <script src="/assets/js/jquery.colorbox-min.js"></script>
 <script src="/assets/js/date-time/bootstrap-datepicker.min.js"></script>
 <script src="/assets/js/jqGrid/jquery.jqGrid.min.js"></script>
-<script src="/assets/js/jqGrid/i18n/grid.locale-en.js"></script>
+<script src="/assets/js/jqGrid/i18n/grid.locale-zh-acc.js"></script>
 
 
 <!--[if lte IE 8]>
@@ -356,6 +356,8 @@
 <script src="/assets/js/bootbox.min.js"></script>
 -->
 
+<script src="/assets/js/bootbox.min.js"></script>
+
 <!-- ace scripts -->
 
 <script src="/assets/js/ace-elements.min.js"></script>
@@ -376,6 +378,19 @@
             }
         });
         ;
+    }
+
+    function loadAllUsers(sid,state){
+        var d = {"id":sid,"state":state};
+        $.ajax({
+            type:"GET",
+            url:"/rest/association/user",
+            async:ture,
+            data:d,
+            success:function(jsn){
+                var ulist;
+            }
+        });
     }
 </script>
 
@@ -432,24 +447,9 @@ Date.prototype.Format = function (fmt) { //author: meizz
 }
 
 function parseArtData(data){
-    var types = {"news":"新闻","association":"协会资讯","enterprise":"企业动态"};
+    var states = {"DISABLE":"禁用","ENABLE":"普通用户","ADMIN":"协会管理员","SUPPER":"超级管理员"};
     for (var i = 0 ; i < data.length; i++){
-        data[i].type = types[data[i].type];
-        var adt = data[i].addTime;
-        // ..
-        //adt = adt.substr(0,12);
-        var now = new Date();now.setTime(adt);
-        var nowStr = now.Format("yyyy-MM-dd");
-
-        data[i].addTime = nowStr;
-
-        data[i].content = data[i].overview;
-        //data[i].content = data[i].content.substr(0,30);
-
-        //var re = new  RegExp("\\u0022","g");
-        //data[i].content = data[i].content.replace(re,"\"");
-        //re = new RegExp("\\u0027","g");
-        //data[i].content = data[i].content.replace(re,"'");
+        data[i].state = states[data[i].state];
     }
     return data;
 }
@@ -520,9 +520,10 @@ jQuery(function($) {
     ];
 
     //raw_data.empty();
-    raw_data = ${jsonArtList};
+    raw_data = ${jsonAccList};
 
     var grid_data = parseArtData(raw_data);
+    //var grid_data = raw_data;
 
     var grid_selector = "#grid-table";
     var pager_selector = "#grid-pager";
@@ -531,16 +532,13 @@ jQuery(function($) {
         data: grid_data,
         datatype: "local",
         height: 330,
-        colNames:['_id','协会','资讯标题','资讯类型', '资讯内容', '添加日期', '图片数量', '点赞数量'],
+        colNames:['_id','协会','用户名','状态','加密密码'],
         colModel:[
             {name:"_id",index:"_id",width:10,editable:false,hidden:true},
-            {name:"associationId",index:"associationId",width:40,editable:false<#if notSupper>,hidden:true</#if>},
-            {name:"title",index:"title",width:"100",editable:false},
-            {name:"type",index:"type",width:"45",editable:false},
-            {name:"content",index:"content",width:"330",editable:false},
-            {name:"addTime",index:"addTime",width:"120",editable:false,sorttype:"date"},
-            {name:"imagesCount",index:"imagesCount",width:"40",editable:false},
-            {name:"appreciateCount",index:"appreciateCount",width:"40",editable:false}
+            {name:"associationId",index:"associationId",width:40,editable:false,hidden:true},
+            {name:"username",index:"username",width:"100",editable:false},
+            {name:"state",index:"state",width:"60",editable:false},
+            {name:"password",index:"password",width:"75",editable:false,hidden:true}
         ],
         viewrecords : true,
         rowNum:10,
@@ -561,34 +559,90 @@ jQuery(function($) {
             }, 0);
         },
 
-        caption: "在这里编辑或删除文章",
+        caption: "请双击账户以修改密码",
         autowidth: true
     });
 
+    function makeAccount(){
+        var id = $("#grid-table").getGridParam("selrow");
+        if (id == null) return;
+
+        var states={"禁用":"DISABLE","普通用户":"ENABLE","协会管理员":"ADMIN","超级管理员":"SUPPER"};
+        var acc = {};
+        acc.associationId=$("#grid-table > tbody > tr").eq(id).find("td").eq(2).attr("title");
+        acc.username=$("#grid-table > tbody > tr").eq(id).find("td").eq(3).attr("title");
+        acc.state=$("#grid-table > tbody > tr").eq(id).find("td").eq(4).attr("title");
+        acc.state=states[acc.state];
+        acc.password="";
+        return acc;
+    }
 
     jQuery(grid_selector).jqGrid('navGrid',pager_selector,
             { 	//navbar options
                 add: true,
-                addicon : 'icon-plus-sign purple',
-                addfunc : (function(){window.location.href="/rest/bnews/new";/*alert("添加操作!");*/return false;}),
+                addicon : 'icon-pencil purple',
+                addfunc : (function(){
+                    var uname = "";
+                    var assid = "";
+                    var acc = makeAccount();
+                    bootbox.prompt("请输入用户 ‘"+acc.username+"’的新密码：", function(result) {
+                        // 这里不改状态
+                        if (result !== null) {
+                            if (result.length <= 5){
+                                alert("密码长度必须大于5");
+                            }else{
+                                acc.password=result;
+                                $.ajax({
+                                    type:"POST",
+                                    url:"/rest/account/",
+                                    async:false,
+                                    data:JSON.stringify(acc),
+                                    contentType:"application/json; charset=utf-8",
+                                    success:function(jsn){
+                                        if (jsn.code==200) alert("密码已经修改成"+result);
+                                        else alert("密码修改失败，因为"+jsn.msg);
+                                    }
+                                });
+                            }
+                        }
+                    });
+                }),
 
+            <#if isSuper>
                 edit: true,
-                editicon : 'icon-pencil blue',
-                editfunc : (function(){var id = $("#grid-table").getGridParam("selrow");id=$("#grid-table > tbody > tr").eq(id).find("td").eq(1).attr("title");window.location.href = '/rest/bnews/edit?artid='+id;/*alert('cao!');*/alert("跳至编辑页!");}),
+                editicon : 'icon-arrow-up blue',
+                editfunc : (function(){
+                    var acc=makeAccount();
+                    if (acc.state == 2) return;
+                    acc.state=2;
+                    acc.password="";//donot change password
+                    acc.associationId="";//donot change association
+                    if(confirm("确认升级账户"+acc.username+"为管理员？")){
+                        $.ajax({
+                            type:"POST",
+                            url:"/rest/account/",
+                            async:true,
+                            data:JSON.stringify(acc),
+                            contentType:"application/json; charset=utf-8",
+                            success:function(jsn){
+                                if(jsn.code==200) alert("用户"+acc.username+"已经升级为管理员");
+                                else alert("操作失败，"+jsn.msg);
+                            }
+                        });
+                    }
+                }),
+            <#else>
+                edit: false,
+            </#if>
 
-                del: false,
+                del: true,
                 delicon : 'icon-trash red',
-                delfunc : (function(){alert("删除操作!");return false;}),
+                delfunc : (function(){var acc=makeAccount();acc.state=0;if(confirm("确认删除账号"+acc.username+"？")){;return false;}}),
 
                 search: false,
-                searchicon : 'icon-search orange',
-                searchfunc: (function(){alert("s");return false;}),
-
                 refresh: false,
 
-                view: true,
-                viewicon : 'icon-zoom-in grey',
-                viewfunc: (function(){alert("预览操作!");;return false;})
+                view: false
             }
     );
 
@@ -606,9 +660,7 @@ jQuery(function ($) {
     $('.date-picker').datepicker({autoclose: true}).next().on(ace.click_event, function () {
         $(this).prev().focus();
     });
-    $('input[name=date-range-picker]').daterangepicker().prev().on(ace.click_event, function () {
-        $(this).next().focus();
-    });
+
 
     //chosen plugin inside a modal will have a zero width because the select element is originally hidden
     //and its width cannot be determined.

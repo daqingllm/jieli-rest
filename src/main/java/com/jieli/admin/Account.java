@@ -1,5 +1,7 @@
 package com.jieli.admin;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jieli.association.Association;
 import com.jieli.association.AssociationDAO;
 import com.jieli.common.dao.AccountDAO;
@@ -9,6 +11,7 @@ import com.jieli.util.FTLrender;
 import com.jieli.util.IdentifyUtils;
 import com.jieli.util.PasswordGenerator;
 import com.sun.jersey.spi.resource.Singleton;
+import org.apache.commons.lang.StringUtils;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
@@ -104,5 +107,67 @@ public class Account {
                 return Response.status(200).entity(responseEntity).build();
             }
         }
+    }
+
+
+    @GET
+    @Path("/list")
+    @Produces(MediaType.TEXT_HTML)
+    public String loadUsers(@CookieParam("u")String sessionId,@QueryParam("id")String id /*,@QueryParam("state")int state*/) throws JsonProcessingException {
+        if (!IdentifyUtils.isAdmin(sessionId)) {
+            return News.errorReturn;
+        }
+        ResponseEntity responseEntity = new ResponseEntity();
+        ObjectMapper om = new ObjectMapper();
+        String associationId = null;
+        //List<com.jieli.common.entity.Account> accounts = new ArrayList<com.jieli.common.entity.Account>();
+        String accountList = "[";
+        if (IdentifyUtils.getState(sessionId) == AccountState.SUPPER) {
+            Iterable<Association> associations = associationDAO.loadAll();
+            for (Association association : associations) {
+                Iterable<com.jieli.common.entity.Account> accountAdmin = accountDAO.loadByAssociationId(association.get_id().toString(), AccountState.ADMIN);
+                for (com.jieli.common.entity.Account account : accountAdmin) {
+                    String tmp = om.writeValueAsString(account);
+                    if (tmp.indexOf("{\"time\":") > -1) {
+                        tmp = tmp.substring(0, 7) + "\"" + account.get_id().toString() + "\"" + tmp.substring(tmp.indexOf("},", 7) + 1);
+                    }
+                    accountList += tmp + ",";
+                }
+
+                Iterable<com.jieli.common.entity.Account> accountEnable = accountDAO.loadByAssociationId(association.get_id().toString(), AccountState.ENABLE);
+                for (com.jieli.common.entity.Account account : accountEnable) {
+                    String tmp = om.writeValueAsString(account);
+                    if (tmp.indexOf("{\"time\":") > -1) {
+                        tmp = tmp.substring(0, 7) + "\"" + account.get_id().toString() + "\"" + tmp.substring(tmp.indexOf("},", 7) + 1);
+                    }
+                    accountList += tmp + ",";
+                }
+            }
+        } else {
+            associationId = IdentifyUtils.getAssociationId(sessionId);
+            Association association = associationDAO.loadById(associationId);
+            if (association == null) {
+                responseEntity.code = 2102;
+                responseEntity.msg = "协会不存在";
+                return News.errorReturn;
+            }
+            Iterable<com.jieli.common.entity.Account> accountAdmin = accountDAO.loadByAssociationId(associationId.toString(),AccountState.ADMIN);
+            for (com.jieli.common.entity.Account account : accountAdmin)
+                accountList += om.writeValueAsString(account)+",";
+
+            Iterable<com.jieli.common.entity.Account> accountEnable = accountDAO.loadByAssociationId(associationId.toString(),AccountState.ENABLE);
+            for (com.jieli.common.entity.Account account : accountEnable)
+                accountList += om.writeValueAsString(account)+",";
+        }
+
+        if (accountList.endsWith(",")) accountList = accountList.substring(0,accountList.length()-1)+"";
+        accountList += "]";
+
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("isSuper",IdentifyUtils.getState(sessionId) == AccountState.SUPPER);
+        params.put("jsonAccList",accountList);
+        params.put("username",accountDAO.loadById(sessionId).username);
+
+        return FTLrender.getResult("change_account.ftl", params);
     }
 }

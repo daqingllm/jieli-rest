@@ -39,26 +39,27 @@ function postThisArticle(){
     p_content = $("#form-field-textarea").val();
     json["content"] = p_content;
 
-    p_overview = p_content.replace(new RegExp("/<center>(.*)<\/center>/i","g"),"").substr(0,30);
+    p_overview = p_content.replace(new RegExp("<(.*?)>","g"),"").substr(0,30);
     json["overview"] = p_overview;
 
     var phph1 = "<center><img src='";
     var phph2 = "'></center>";
 
-    var idxs = p_overview.indexOf(phph1);
+    var idxs = p_content.indexOf(phph1);
     var idxe;
+    json["images"] = [];
     while(idxs >= 0){
-        idxe = p_overview.indexOf(phph2,idxs);
-        var st = idxs+phph.length;
-        if (idxe-st < idxs) continue;
+        idxe = p_content.indexOf(phph2,idxs);
+        var st = idxs+phph1.length;
+        if (idxe-st < idxs) break;
 
-        var _url = p_overview.substr(st,idxe-st);
+        var _url = p_content.substr(st,idxe-st);
 
         //var head = p_overview.substr(0,idxs) || "";
         //var tail =  p_overview.substr(idxe+1) || "";
         //p_overview = head + "<center><img src='"+_url+"'></center>";
 
-        idxs = p_overview.indexOf(phph,idxs);
+        idxs = p_content.indexOf(phph1,idxe);
 
         //jsn += "{\"placeholder\":\""+phph+_url+">\",\"url\":\""+_url+"\",\"description\":\" \"},";
         var jsn_img = {"placeholder":"","url":_url,"description":""};
