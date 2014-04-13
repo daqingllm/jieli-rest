@@ -2,7 +2,7 @@
 <html lang="zh">
 <head>
     <meta charset="utf-8"/>
-    <title>接力 资讯管理</title>
+    <title>接力 协会管理</title>
     <meta name="description" content="接力"/>
     <!-- basic styles -->
 
@@ -17,7 +17,6 @@
 
     <link rel="stylesheet" href="/assets/css/jquery-ui-1.10.3.full.min.css"/>
     <link rel="stylesheet" href="/assets/css/datepicker.css" />
-    <link rel="stylesheet" href="/assets/css/ui.jqgrid.css" />
 
     <!-- fonts -->
 
@@ -188,14 +187,9 @@
                 <ul class="breadcrumb">
                     <li>
                         <i class="icon-home home-icon"></i>
-                        <a href="index.html">首页</a>
+                        <a href="#">首页</a>
                     </li>
-
-                    <li>
-                        <a href="#"> 资讯管理 </a>
-                    </li>
-
-                    <li class="active"> 资讯列表 </li>
+                    <li class="active"> 协会列表 </li>
                 </ul>
                 <!-- .breadcrumb -->
 
@@ -214,20 +208,27 @@
             <div class="page-content">
                 <div class="page-header">
                     <h1>
-                        资讯列表
-                        <small>
-                            <i class="icon-double-angle-right"></i>
-                            请先选中目标资讯再点击编辑或者删除按钮
-                        </small>
+                        控制台
                     </h1>
                 </div>
                 <!-- /.page-header -->
 
                 <div class="row">
                     <div class="col-xs-12">
-                        <!-- PAGE CONTENT BEGINS -->
-                        <table id="grid-table"></table>
-                        <div id="grid-pager"></div>
+                       
+						<div class="alert alert-block alert-success">
+							<button type="button" class="close" data-dismiss="alert">
+								<i class="icon-remove"></i>
+							</button>
+
+							<i class="icon-ok green"></i>
+
+							欢迎使用
+							<strong class="green">
+								接力后台管理系统
+								<small>(v1.2)</small>
+							</strong>
+						</div>
                     </div>
                     <!-- /.col -->
                 </div>
@@ -329,8 +330,6 @@
 <!-- page specific plugin scripts -->
 <script src="/assets/js/jquery.colorbox-min.js"></script>
 <script src="/assets/js/date-time/bootstrap-datepicker.min.js"></script>
-<script src="/assets/js/jqGrid/jquery.jqGrid.min.js"></script>
-<script src="/assets/js/jqGrid/i18n/grid.locale-en.js"></script>
 
 
 <!--[if lte IE 8]>
@@ -356,36 +355,23 @@
 <script src="/assets/js/bootbox.min.js"></script>
 -->
 
+<script src="/assets/js/bootbox.min.js"></script>
+
 <!-- ace scripts -->
 
 <script src="/assets/js/ace-elements.min.js"></script>
 <script src="/assets/js/ace.min.js"></script>
 
 <!-- inline scripts related to this page -->
-<script>
-    function loadThisArticle(){
-        var artid = request.getParameter("artid");
-        if (artid == null || artid.length < 1) return;
-
-        $.ajax({
-            type:"GET",
-            url:"/rest/news/load?new_id="+artid,
-            async:true,
-            success:function(data){
-                alert(data);
-            }
-        });
-        ;
-    }
-</script>
 
 <script type="text/javascript">
 jQuery(function ($) {
     <#if isSuper>
-        $("#sidebar-shortcuts-navlist").load("/sidebar_super.html",function(){$("#nav_list_2_1").addClass("active open");$("#nav_list_2").addClass("active");});
+        $("#sidebar-shortcuts-navlist").load("/sidebar_super.html",function(){$("#nav_list_1").addClass("active");});
     <#else>
-        $("#sidebar-shortcuts-navlist").load("/sidebar_admin.html",function(){$("#nav_list_2_1").addClass("active open");$("#nav_list_2").addClass("active");});
+        $("#sidebar-shortcuts-navlist").load("/sidebar_admin.html",function(){$("#nav_list_1").addClass("active");});
     </#if>
+
     var colorbox_params = {
         reposition: true,
         scalePhotos: true,
@@ -417,46 +403,6 @@ jQuery(function ($) {
 					} catch(e){}
 				});*/
 });
-
-Date.prototype.Format = function (fmt) { //author: meizz
-    var o = {
-        "M+": this.getMonth() + 1, //月份
-        "d+": this.getDate(), //日
-        "h+": this.getHours(), //小时
-        "m+": this.getMinutes(), //分
-        "s+": this.getSeconds(), //秒
-        "q+": Math.floor((this.getMonth() + 3) / 3), //季度
-        "S": this.getMilliseconds() //毫秒
-    };
-    if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
-    for (var k in o)
-        if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
-    return fmt;
-}
-
-function parseArtData(data){
-    var types = {"news":"新闻","association":"协会资讯","enterprise":"企业动态"};
-    for (var i = 0 ; i < data.length; i++){
-        data[i].type = types[data[i].type];
-        var adt = data[i].addTime;
-        // ..
-        //adt = adt.substr(0,12);
-        var now = new Date();now.setTime(adt);
-        var nowStr = now.Format("yyyy-MM-dd");
-
-        data[i].addTime = nowStr;
-
-        data[i].content = data[i].overview;
-        //data[i].content = data[i].content.substr(0,30);
-
-        //var re = new  RegExp("\\u0022","g");
-        //data[i].content = data[i].content.replace(re,"\"");
-        //re = new RegExp("\\u0027","g");
-        //data[i].content = data[i].content.replace(re,"'");
-    }
-    return data;
-}
-
 
 //it causes some flicker when reloading or navigating grid
 //it may be possible to have some custom formatter to do this as the grid is being created to prevent this
@@ -516,88 +462,6 @@ function enableTooltips(table) {
     $(table).find('.ui-pg-div').tooltip({container:'body'});
 }
 
-jQuery(function($) {
-    var raw_data = [
-        {_id:1,associationId:"1",title:"测试1",type:"news",overview:"",content:"测试内容",images:[],imagesCount:2,appreciateUserIds:[],appreciateCount:12,addTime:"20140203T12:13:14.443GMT0+800"},
-        {_id:2,associationId:"2",title:"测试2",type:"news",overview:"",content:"测试内容",images:[],imagesCount:2,appreciateUserIds:[],appreciateCount:12,addTime:"20140203T12:13:14.443GMT0+800"}
-    ];
-
-    //raw_data.empty();
-    raw_data = ${jsonArtList};
-
-    var grid_data = parseArtData(raw_data);
-
-    var grid_selector = "#grid-table";
-    var pager_selector = "#grid-pager";
-
-    jQuery(grid_selector).jqGrid({
-        data: grid_data,
-        datatype: "local",
-        height: 330,
-        colNames:['_id','协会','资讯标题','资讯类型', '资讯内容', '添加日期', '图片数量', '点赞数量'],
-        colModel:[
-            {name:"_id",index:"_id",width:10,editable:false,hidden:true},
-            {name:"associationId",index:"associationId",width:40,editable:false<#if isSuper><#else>,hidden:true</#if>},
-            {name:"title",index:"title",width:"100",editable:false},
-            {name:"type",index:"type",width:"45",editable:false},
-            {name:"content",index:"content",width:"330",editable:false},
-            {name:"addTime",index:"addTime",width:"120",editable:false,sorttype:"date"},
-            {name:"imagesCount",index:"imagesCount",width:"40",editable:false},
-            {name:"appreciateCount",index:"appreciateCount",width:"40",editable:false}
-        ],
-        viewrecords : true,
-        rowNum:10,
-        rowList:[10,20,30],
-        pager : pager_selector,
-        altRows: true,
-        multiselect: true,
-        multiboxonly: true,
-
-        loadComplete : function() {
-            var table = this;
-            setTimeout(function(){
-                styleCheckbox(table);
-
-                updateActionIcons(table);
-                updatePagerIcons(table);
-                enableTooltips(table);
-            }, 0);
-        },
-
-        caption: "在这里编辑或删除文章",
-        autowidth: true
-    });
-
-
-    jQuery(grid_selector).jqGrid('navGrid',pager_selector,
-            { 	//navbar options
-                add: true,
-                addicon : 'icon-plus-sign purple',
-                addfunc : (function(){window.location.href="/rest/bnews/new";/*alert("添加操作!");*/return false;}),
-
-                edit: true,
-                editicon : 'icon-pencil blue',
-                editfunc : (function(){var id = $("#grid-table").getGridParam("selrow");id=$("#grid-table > tbody > tr").eq(id).find("td").eq(1).attr("title");window.location.href = '/rest/bnews/edit?artid='+id;}),
-
-                del: false,
-                delicon : 'icon-trash red',
-                delfunc : (function(){alert("删除操作!");return false;}),
-
-                search: false,
-                searchicon : 'icon-search orange',
-                searchfunc: (function(){alert("s");return false;}),
-
-                refresh: false,
-
-                view: true,
-                viewicon : 'icon-zoom-in grey',
-                viewfunc: (function(){alert("预览操作!");return false;})
-            }
-    );
-
-
-    $(".ui-jqgrid-htable").css("font-family","微软雅黑");
-});
 
 jQuery(function ($) {
     $('[data-rel=tooltip]').tooltip({container: 'body'});
@@ -609,9 +473,7 @@ jQuery(function ($) {
     $('.date-picker').datepicker({autoclose: true}).next().on(ace.click_event, function () {
         $(this).prev().focus();
     });
-    $('input[name=date-range-picker]').daterangepicker().prev().on(ace.click_event, function () {
-        $(this).next().focus();
-    });
+
 
     //chosen plugin inside a modal will have a zero width because the select element is originally hidden
     //and its width cannot be determined.

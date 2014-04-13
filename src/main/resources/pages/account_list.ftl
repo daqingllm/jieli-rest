@@ -396,7 +396,12 @@
 
 <script type="text/javascript">
 jQuery(function ($) {
-    $("#sidebar-shortcuts-navlist").load("/sidebar.html",function(){$("#nav_list_2_1").addClass("active open");$("#nav_list_2").addClass("active");});
+
+    <#if isSuper>
+        $("#sidebar-shortcuts-navlist").load("/sidebar_super.html",function(){$("#nav_list_5_1").addClass("active open");$("#nav_list_5").addClass("active");});
+    <#else>
+        $("#sidebar-shortcuts-navlist").load("/sidebar_admin.html",function(){$("#nav_list_5_1").addClass("active open");$("#nav_list_5").addClass("active");});
+    </#if>
 
     var colorbox_params = {
         reposition: true,
@@ -637,7 +642,26 @@ jQuery(function($) {
 
                 del: true,
                 delicon : 'icon-trash red',
-                delfunc : (function(){var acc=makeAccount();acc.state=0;if(confirm("确认删除账号"+acc.username+"？")){;return false;}}),
+                delfunc : (function(){
+                    var acc=makeAccount();
+                    if (acc.state != 0) return;
+                    acc.password="";//donot change password
+                    acc.associationId="";//donot change association
+                    acc.state=0;
+                    if(confirm("确认删除账号"+acc.username+"？")){
+                        $.ajax({
+                            type:"POST",
+                            url:"/rest/account/",
+                            async:true,
+                            data:JSON.stringify(acc),
+                            contentType:"application/json; charset=utf-8",
+                            success:function(jsn){
+                                if(jsn.code==200) alert("用户"+acc.username+"已被删除");
+                                else alert("操作失败，"+jsn.msg);
+                            }
+                        });
+                    }
+                }),
 
                 search: false,
                 refresh: false,

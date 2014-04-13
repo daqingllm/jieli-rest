@@ -168,6 +168,6 @@ public class Account {
         params.put("jsonAccList",accountList);
         params.put("username",accountDAO.loadById(sessionId).username);
 
-        return FTLrender.getResult("change_account.ftl", params);
+        return FTLrender.getResult("account_list.ftl", params);
     }
 }

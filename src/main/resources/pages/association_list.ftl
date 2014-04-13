@@ -2,7 +2,7 @@
 <html lang="zh">
 <head>
     <meta charset="utf-8"/>
-    <title>接力 资讯管理</title>
+    <title>接力 协会管理</title>
     <meta name="description" content="接力"/>
     <!-- basic styles -->
 
@@ -192,10 +192,10 @@
                     </li>
 
                     <li>
-                        <a href="#"> 资讯管理 </a>
+                        <a href="#"> 协会管理 </a>
                     </li>
 
-                    <li class="active"> 资讯列表 </li>
+                    <li class="active"> 协会列表 </li>
                 </ul>
                 <!-- .breadcrumb -->
 
@@ -214,11 +214,7 @@
             <div class="page-content">
                 <div class="page-header">
                     <h1>
-                        资讯列表
-                        <small>
-                            <i class="icon-double-angle-right"></i>
-                            请先选中目标资讯再点击编辑或者删除按钮
-                        </small>
+                        协会列表
                     </h1>
                 </div>
                 <!-- /.page-header -->
@@ -330,7 +326,7 @@
 <script src="/assets/js/jquery.colorbox-min.js"></script>
 <script src="/assets/js/date-time/bootstrap-datepicker.min.js"></script>
 <script src="/assets/js/jqGrid/jquery.jqGrid.min.js"></script>
-<script src="/assets/js/jqGrid/i18n/grid.locale-en.js"></script>
+<script src="/assets/js/jqGrid/i18n/grid.locale-zh-acc.js"></script>
 
 
 <!--[if lte IE 8]>
@@ -356,6 +352,8 @@
 <script src="/assets/js/bootbox.min.js"></script>
 -->
 
+<script src="/assets/js/bootbox.min.js"></script>
+
 <!-- ace scripts -->
 
 <script src="/assets/js/ace-elements.min.js"></script>
@@ -363,29 +361,28 @@
 
 <!-- inline scripts related to this page -->
 <script>
-    function loadThisArticle(){
-        var artid = request.getParameter("artid");
-        if (artid == null || artid.length < 1) return;
-
+    function loadAllUsers(sid,state){
+        var d = {"id":sid,"state":state};
         $.ajax({
             type:"GET",
-            url:"/rest/news/load?new_id="+artid,
-            async:true,
-            success:function(data){
-                alert(data);
+            url:"/rest/association/user",
+            async:ture,
+            data:d,
+            success:function(jsn){
+                var ulist;
             }
         });
-        ;
     }
 </script>
 
 <script type="text/javascript">
 jQuery(function ($) {
     <#if isSuper>
-        $("#sidebar-shortcuts-navlist").load("/sidebar_super.html",function(){$("#nav_list_2_1").addClass("active open");$("#nav_list_2").addClass("active");});
+        $("#sidebar-shortcuts-navlist").load("/sidebar_super.html",function(){$("#nav_list_6_1").addClass("active open");$("#nav_list_6").addClass("active");});
     <#else>
-        $("#sidebar-shortcuts-navlist").load("/sidebar_admin.html",function(){$("#nav_list_2_1").addClass("active open");$("#nav_list_2").addClass("active");});
+        $("#sidebar-shortcuts-navlist").load("/sidebar_admin.html",function(){$("#nav_list_6_1").addClass("active open");$("#nav_list_6").addClass("active");});
     </#if>
+
     var colorbox_params = {
         reposition: true,
         scalePhotos: true,
@@ -435,24 +432,10 @@ Date.prototype.Format = function (fmt) { //author: meizz
 }
 
 function parseArtData(data){
-    var types = {"news":"新闻","association":"协会资讯","enterprise":"企业动态"};
+    return data;
     for (var i = 0 ; i < data.length; i++){
-        data[i].type = types[data[i].type];
-        var adt = data[i].addTime;
-        // ..
-        //adt = adt.substr(0,12);
-        var now = new Date();now.setTime(adt);
-        var nowStr = now.Format("yyyy-MM-dd");
-
-        data[i].addTime = nowStr;
-
-        data[i].content = data[i].overview;
-        //data[i].content = data[i].content.substr(0,30);
-
-        //var re = new  RegExp("\\u0022","g");
-        //data[i].content = data[i].content.replace(re,"\"");
-        //re = new RegExp("\\u0027","g");
-        //data[i].content = data[i].content.replace(re,"'");
+        data[i].online="";
+		data[i].userNumber="";
     }
     return data;
 }
@@ -523,9 +506,10 @@ jQuery(function($) {
     ];
 
     //raw_data.empty();
-    raw_data = ${jsonArtList};
+    raw_data = ${jsonAssociList};
 
     var grid_data = parseArtData(raw_data);
+    //var grid_data = raw_data;
 
     var grid_selector = "#grid-table";
     var pager_selector = "#grid-pager";
@@ -534,16 +518,12 @@ jQuery(function($) {
         data: grid_data,
         datatype: "local",
         height: 330,
-        colNames:['_id','协会','资讯标题','资讯类型', '资讯内容', '添加日期', '图片数量', '点赞数量'],
+        colNames:['_id','协会名称','在线用户数','协会用户数'],
         colModel:[
-            {name:"_id",index:"_id",width:10,editable:false,hidden:true},
-            {name:"associationId",index:"associationId",width:40,editable:false<#if isSuper><#else>,hidden:true</#if>},
-            {name:"title",index:"title",width:"100",editable:false},
-            {name:"type",index:"type",width:"45",editable:false},
-            {name:"content",index:"content",width:"330",editable:false},
-            {name:"addTime",index:"addTime",width:"120",editable:false,sorttype:"date"},
-            {name:"imagesCount",index:"imagesCount",width:"40",editable:false},
-            {name:"appreciateCount",index:"appreciateCount",width:"40",editable:false}
+            {name:"_id",index:"_id",width:40,editable:false,hidden:true},
+            {name:"name",index:"name",width:"100",editable:false},
+            {name:"online",index:"online",width:"80",editable:false,hidden:true},
+            {name:"userNumber",index:"userNumber",width:"80",editable:false}
         ],
         viewrecords : true,
         rowNum:10,
@@ -564,34 +544,18 @@ jQuery(function($) {
             }, 0);
         },
 
-        caption: "在这里编辑或删除文章",
+        caption: "想要创建新的协会，请点击左侧协会管理->创建协会",
         autowidth: true
     });
-
-
+	
     jQuery(grid_selector).jqGrid('navGrid',pager_selector,
             { 	//navbar options
-                add: true,
-                addicon : 'icon-plus-sign purple',
-                addfunc : (function(){window.location.href="/rest/bnews/new";/*alert("添加操作!");*/return false;}),
-
-                edit: true,
-                editicon : 'icon-pencil blue',
-                editfunc : (function(){var id = $("#grid-table").getGridParam("selrow");id=$("#grid-table > tbody > tr").eq(id).find("td").eq(1).attr("title");window.location.href = '/rest/bnews/edit?artid='+id;}),
-
+                add: false,
+                edit: false,
                 del: false,
-                delicon : 'icon-trash red',
-                delfunc : (function(){alert("删除操作!");return false;}),
-
                 search: false,
-                searchicon : 'icon-search orange',
-                searchfunc: (function(){alert("s");return false;}),
-
                 refresh: false,
-
-                view: true,
-                viewicon : 'icon-zoom-in grey',
-                viewfunc: (function(){alert("预览操作!");return false;})
+                view: false
             }
     );
 
@@ -609,9 +573,7 @@ jQuery(function ($) {
     $('.date-picker').datepicker({autoclose: true}).next().on(ace.click_event, function () {
         $(this).prev().focus();
     });
-    $('input[name=date-range-picker]').daterangepicker().prev().on(ace.click_event, function () {
-        $(this).next().focus();
-    });
+
 
     //chosen plugin inside a modal will have a zero width because the select element is originally hidden
     //and its width cannot be determined.

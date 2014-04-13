@@ -269,12 +269,25 @@
 <script>
     function showMsg(title,msg) {
         var pos = (title == '登陆成功' ? 'gritter-center' : '');
-        if (title == '登陆成功') $.gritter.removeAll();
-        $.gritter.add({
-            title : title,
-            text : "&nbsp;&nbsp;" + msg,
-            class_name : 'gritter-info gritter-light ' + pos
-        });
+        if (title == '登陆成功') {
+            $.gritter.removeAll();
+            $.gritter.add({
+                title: title,
+                text: "&nbsp;&nbsp;" + msg,
+                sticky:false,
+                time:500,
+                class_name: 'gritter-info gritter-light ' + pos,
+                after_close:function(){
+                    window.location.href="/rest/bindex";
+                }
+            });
+        }else{
+            $.gritter.add({
+                title: title,
+                text: "&nbsp;&nbsp;" + msg,
+                class_name: 'gritter-info gritter-light ' + pos
+            });
+        }
     }
 
     function login() {

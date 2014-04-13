@@ -40,7 +40,7 @@ public class News {
             "    </head>\n" +
             "    <body>\n" +
             "\n" +
-            "\t<span>您尚未登录，</span>\n" +
+            "\t<span>您尚未登录或无权限操作，</span>\n" +
             "\t<span id=\"totalSecond\">5</span>秒后跳转到登陆页..</span>\n" +
             "\n" +
             "\t<script language=\"javascript\" type=\"text/javascript\">\n" +
@@ -115,11 +115,11 @@ public class News {
         List<com.jieli.news.News> newsList = new LinkedList<com.jieli.news.News>();
 
         if (b1 && b2) {
-            params.put("notSupper",false);
-            newsList = newsDAO.paginateInOrder(0,1000000,"{addTime:-1}","{type: {$in: [\""+ NewsType.newsType+"\",\""+NewsType.associationType+"\",\""+NewsType.enterpriseType+"\"]}}");
+            params.put("isSuper",true);
+            newsList = newsDAO.paginateInOrder(0,100,"{addTime:-1}","{type: {$in: [\""+ NewsType.newsType+"\",\""+NewsType.associationType+"\",\""+NewsType.enterpriseType+"\"]}}");
         }else {
-            params.put("notSupper",true);
-            newsList = newsDAO.paginateInOrder(0,1000000,"{addTime:-1}","{type: {$in: [\""+NewsType.associationType+"\",\""+NewsType.enterpriseType+"\"]}}");
+            params.put("isSuper",false);
+            newsList = newsDAO.paginateInOrder(0,100,"{addTime:-1}","{type: {$in: [\""+NewsType.associationType+"\",\""+NewsType.enterpriseType+"\"]}}");
         }
 
         int i;
