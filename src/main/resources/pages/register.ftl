@@ -2,7 +2,7 @@
 <html lang="zh">
 <head>
     <meta charset="utf-8" />
-    <title>接力 登录</title>
+    <title>接力 注册</title>
     <meta name="keywords" content="接力" />
     <meta name="description" content="接力" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -42,7 +42,6 @@
 
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
 
-
     <!--[if lt IE 9]>
     <script src="/assets/js/html5shiv.js"></script>
     <script src="/assets/js/respond.min.js"></script>
@@ -64,10 +63,10 @@
                     <div class="space-6"></div>
 
                     <div class="position-relative" style="font-family: '微软雅黑'">
-                        <div id="login-box" class="login-box visible widget-box no-border">
+                        <div id="login-box" class="login-box widget-box no-border">
                             <div class="widget-body">
                                 <div class="widget-main">
-                                    <h4 class="header blue lighter bigger"><i class="icon-coffee green"></i> 用户登录 </h4>
+                                    <h4 class="header blue lighter bigger"><i class="icon-coffee green"></i><!-- Please Enter Your Information --></h4>
 
                                     <div class="space-6"></div>
 
@@ -102,17 +101,17 @@
 
                                 <div class="toolbar clearfix">
                                     <!--<div>
-                                        <a href="#" onclick="show_box('forgot-box'); return false;" class="forgot-password-link">
-                                            <i class="icon-arrow-left"></i>
-                                            忘记密码
-                                        </a>
+                                    <a href="#" onclick="show_box('forgot-box'); return false;" class="forgot-password-link">
+                                    <i class="icon-arrow-left"></i>
+                                    忘记密码
+                                    </a>
                                     </div>
 
                                     <div>
-                                        <a href="#" onclick="show_box('signup-box'); return false;" class="user-signup-link">
-                                            注册账号
-                                            <i class="icon-arrow-right"></i>
-                                        </a>
+                                    <a href="#" onclick="show_box('signup-box'); return false;" class="user-signup-link">
+                                    注册账号
+                                    <i class="icon-arrow-right"></i>
+                                    </a>
                                     </div>-->
                                 </div>
                             </div><!-- /widget-body -->
@@ -153,57 +152,52 @@
                             </div><!-- /widget-body -->
                         </div><!-- /forgot-box -->
 
-                        <div id="signup-box" class="signup-box widget-box no-border">
+                        <div id="signup-box" class="signup-box visible widget-box no-border">
                             <div class="widget-body">
                                 <div class="widget-main">
                                     <h4 class="header green lighter bigger"><i class="icon-group blue"></i> 新用户注册 </h4>
 
                                     <div class="space-6"></div>
-                                    <p>
-                                        请输入以下信息:
-                                    </p>
 
                                     <form>
                                         <fieldset>
                                             <!--<label class="block clearfix"> <span class="block input-icon input-icon-right">
-															<input type="email" class="form-control" placeholder="Email" />
-															<i class="icon-envelope"></i> </span> </label>-->
+                                            <input type="email" class="form-control" placeholder="Email" />
+                                            <i class="icon-envelope"></i> </span> </label>-->
 
                                             <label class="block clearfix"> <span class="block input-icon input-icon-right">
 															<input type="text" class="form-control" placeholder="用户名" id="register-username" />
 															<i class="icon-user"></i> </span> </label>
 
+                                        <#if isSuper>
                                             <label class="block clearfix"> <span class="block input-icon input-icon-right">
-															<input type="password" class="form-control" placeholder="密码" id="register-password" />
-															<i class="icon-lock"></i> </span> </label>
-
-                                            <label class="block clearfix"> <span class="block input-icon input-icon-right">
-															<input type="password" class="form-control" placeholder="确认密码" id="repeat-password" />
-															<i class="icon-retweet"></i> </span> </label>
-
-                                            <div class="space-24"></div>
+														
+							                            <select class="form-control" id="register-assoc">
+                                                        ${associationOps}
+                                                        </select>
+						                            </span>
+                                            </label>
+                                        </#if>
 
                                             <div class="clearfix">
-                                                <button type="reset" class="width-30 pull-left btn btn-sm" style="">
-                                                    <i class="icon-refresh"></i>
-                                                    重填
-                                                </button>
-
-                                                <button type="button" class="width-65 pull-right btn btn-sm btn-success">
+                                                <button type="button" class="width-65 pull-right btn btn-sm btn-success" onclick="register();">
                                                     注册
                                                     <i class="icon-arrow-right icon-on-right"></i>
                                                 </button>
                                             </div>
+
                                         </fieldset>
                                     </form>
-                                </div>
 
-                                <div class="toolbar center">
-                                    <a href="#" onclick="show_box('login-box'); return false;" class="back-to-login-link">
-                                        <i class="icon-arrow-left"></i>
-                                        回去登录
-                                    </a>
                                 </div>
+                                <!--
+                                <div class="toolbar center">
+                                <a href="#" onclick="show_box('login-box'); return false;" class="back-to-login-link">
+                                <i class="icon-arrow-left"></i>
+                                回去登录
+                                </a>
+                                </div>
+                                -->
                             </div><!-- /widget-body -->
                         </div><!-- /signup-box -->
                     </div><!-- /position-relative -->
@@ -232,7 +226,6 @@
 </script>
 
 <!-- <![endif]-->
-
 
 <script src="/assets/js/jquery-ui-1.10.3.custom.min.js"></script>
 <script src="/assets/js/jquery.ui.touch-punch.min.js"></script>
@@ -267,61 +260,55 @@
 </script>
 
 <script>
-    function showMsg(title,msg) {
-        var pos = (title == '登陆成功' ? 'gritter-center' : '');
-        $.gritter.add({
-            title : title,
-            text : "&nbsp;&nbsp;" + msg,
-            class_name : 'gritter-info ' + pos
-        });
+    function showMsg(title, msg) {
+        if (title == '注册成功') {
+            $.gritter.add({
+                title: title,
+                sticky:true,
+                time:'',
+                text: "&nbsp;&nbsp;" + msg,
+                class_name: 'gritter-info gritter-center'
+            });
+        } else {
+        }
+            $.gritter.add({
+                title: title,
+                text: "&nbsp;&nbsp;" + msg,
+                class_name: 'gritter-info '
+            });
+        }
     }
 
-    function login() {
-        //showMsg("登陆成功");
-        //showMsg("密码错误");
-
-        var char34 = "\"";
-        //var _sd = "{\"username\":\"" + $("#login-username").val() + "\",\"password\":\"" + $("#login-password").val() + "\"}";
-        //var _d = $.parseJSON(_sd);
-        var _d = {"username":$("#login-username").val(),"password":$("#login-password").val()};
+    function register() {
+        //var _sd = "{\"username\":\""+$("#register-username").val() + "\"<#if isSuper>,\"associationId\":\""+$("#register-assoc").val()+"\"</#if>}";
+        var _d = {"username":$("#register-username").val()<#if isSuper>,"associationId":$("#register-assoc").val()</#if>};
         var _sd = JSON.stringify(_d);
-        //alert(_d);
 
         $.ajax({
-            type : "POST",
-            url : "/rest/baccount/login",
-            async : false,
-            data : _sd,
-            contentType : "application/json; charset=utf-8",
-            dataType : 'json',
-            success : function(jsn) {
-                var jsn_body="";
-                //alert(jsn);
-                if (jsn.code == 200) {
+            type:"POST",
+        <#if isSuper>
+            url:"/rest/account/auth",
+        <#else>
+            url:"/rest/account/register",
+        </#if>
+            async:false,
+            data:_sd,
+            contentType:"application/json; charset=utf-8",
+            dataType:'json',
+            success:function(jsn){
+                var jsn_body = "";
+                if (jsn.code == 200){
                     eval("jsn_body="+jsn.body);
-                    document.cookie="u="+jsn_body.sessionId+"; path=/";
-                    document.cookie="a="+jsn_body.associationId+"; path=/";
-                    document.cookie="r="+jsn_body.role+"; path=/";
-                    //$.cookie('sessionId', jsn_body.sessionId);
-                    showMsg("登陆成功",jsn.msg);
-                }
-                else showMsg("登陆失败",jsn.msg);
+                    showMsg("注册成功", "用户"+_d.username+"的密码是："+jsn_body.password);
+                } else
+                    showMsg("注册失败", jsn.msg);
             },
             error : function() {
-                showMsg("登陆失败","连接失败，请重试");
+                showMsg("注册失败", "连接失败，请重试");
             }
         });
     }
 
-    function register(){
-        var psw = $("#register-password").val();
-        var rpt_psw = $("#repeat-password").val();
-
-        if (psw != rpt_psw)
-            showMsg("注册失败","密码不一致");
-
-        //$.ajax({})
-    }
 </script>
 
 </body>

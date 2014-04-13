@@ -251,9 +251,14 @@
                         <div class="col-sm-9">
                             <select class="col-xs-10 col-sm-7" id="form-field-select-type"
                                     style="padding: 5px 4px;font-size: 14px;">
-                                <option value="news" selected="selected">新闻</option>
-                                <option value="association">资讯</option>
-                                <option value="enterprise">企业动态</option>
+                                <#if isSuper>
+                                    <option value="news" selected>新闻</option>
+                                    <option value="association">资讯</option>
+                                    <option value="enterprise">企业动态</option>
+                                <#else>
+                                    <option value="association" selected>资讯</option>
+                                    <option value="enterprise">企业动态</option>
+                                </#if>
                             </select>
                         </div>
                     </div>
@@ -291,7 +296,7 @@
 
                     <div class="space-4"></div>
 
-                    <div class="form-group">
+                    <div class="form-group <#if isSuper==false>hidden</#if>">
                         <label class="col-sm-3 control-label no-padding-right" for="form-input-readonly"> 选择协会 </label>
 
                         <div class="col-sm-9">
