@@ -142,6 +142,7 @@ public class ActivityService {
                 }
             }
         }
+        activity.sponsorUserId = IdentifyUtils.getUserId(sessionId);
         if (exist) {
             for (String userId : activity.joinMembers.keySet()) {
                 Message message = new Message();
