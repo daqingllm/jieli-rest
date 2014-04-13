@@ -128,6 +128,7 @@ public class ActivityService {
             }
             activity.associationId = associationId;
         }
+        activity.addTime = new Date();
 
         boolean exist = false;
         if (!StringUtils.isEmpty(activityId) && MongoUtils.isValidObjectId(activity.get_id().toString())) {

@@ -49,9 +49,10 @@ public class ActivityTest {
         a2.content = "abcd";
         activity.details.add(a1); activity.details.add(a2);
 
-        Response response = Request.Post("http://162.243.151.219:8080/jieli-1.0-SNAPSHOT/rest/activity")
-                .addHeader("Cookie", "u=53481be2e4b00b2ae52d3f58")
-                .bodyString(new ObjectMapper().writeValueAsString(activity), ContentType.APPLICATION_JSON)
+        Response response = Request.Post("http://162.243.151.219:8080/rest/activity")
+                .addHeader("Cookie", "u=5348210be4b00b2ae52d3f5c")
+//                .bodyString(new ObjectMapper().writeValueAsString(activity), ContentType.APPLICATION_JSON)
+                .bodyString("{\"beginDate\":\"\",\"details\":[],\"fee\":0,\"followMembers\":[],\"invitees\":[],\"joinMembers\":{},\"location\":\"\",\"maxMembers\":0,\"tag\":\"PRIVATE\",\"title\":\"是地方\",\"type\":\"null发起了读书会\"}", ContentType.APPLICATION_JSON)
                 .execute();
 
         System.out.println(response.returnContent().asString());

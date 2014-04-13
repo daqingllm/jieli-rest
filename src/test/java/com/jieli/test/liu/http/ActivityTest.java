@@ -7,6 +7,8 @@ import com.jieli.activity.Activity;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.client.fluent.Response;
 import org.apache.http.entity.ContentType;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
@@ -24,17 +26,20 @@ import java.util.Map;
 public class ActivityTest {
 
     @Test
-    public void testCreate() throws IOException {
+    public void testCreate() throws IOException, JSONException {
         Activity activity = new Activity();
 //        activity.associationId = "5337a309ef869d4225397d48";
-        activity.beginDate = new Date(new Date().getTime()+10000000);
-        activity.tag = AcivityTag.PRIVATE;
+//        activity.beginDate = new Date(new Date().getTime()+10000000);
+//        activity.tag = AcivityTag.PRIVATE;
 //        activity.sponsorUserId = "533799caef869f8e93d30d9c";
-        activity.title = "R1";
+        activity.title = "S1";
+        activity.tag = AcivityTag.PRIVATE;
+        JSONObject json = new JSONObject("{\"beginDate\":\"\",\"details\":[],\"fee\":0,\"followMembers\":[],\"invitees\":[],\"joinMembers\":{},\"location\":\"\",\"maxMembers\":0,\"tag\":\"PRIVATE\",\"title\":\"是地方\",\"type\":\"null发起了读书会\"}");
 
         Response response = Request.Post("http://localhost:8080/rest/activity")
                 .addHeader("Cookie", "u=533c07a1ef86c7014c36fa31")
-                .bodyString(new ObjectMapper().writeValueAsString(activity), ContentType.APPLICATION_JSON)
+//                .bodyString(new ObjectMapper().writeValueAsString(activity), ContentType.APPLICATION_JSON)
+                .bodyString(json.toString(), ContentType.APPLICATION_JSON)
                 .execute();
 
         System.out.println(response.returnContent().asString());

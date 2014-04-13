@@ -33,6 +33,8 @@ public class Activity extends Model {
 
     public String sponsorInfo;
 
+    public Date addTime;
+
     //关注的用户
     public List<String> followMembers = new ArrayList<String>();
 

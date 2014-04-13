@@ -70,6 +70,7 @@ public class AccountService {
             json.put("sessionId", account.get_id());
             json.put("associationId", account.associationId);
             json.put("role",account.state);
+            json.put("userId", account.userId);
             responseEntity.body = json.toString();
             return Response.status(200).entity(responseEntity).build();
         }

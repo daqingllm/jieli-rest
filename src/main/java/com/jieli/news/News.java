@@ -32,5 +32,6 @@ public class News extends Model {
 
     public Date addTime;
 
+    public int commentCount;
 
 }

@@ -218,6 +218,8 @@ public class NewsService {
             responseEntity.msg = "资讯不存在";
             return Response.status(200).entity(responseEntity).build();
         }
+        news.commentCount++;
+        newsDAO.save(news);
 
         Comment comment = new Comment();
         comment.topicId = newsId;
