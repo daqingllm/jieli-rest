@@ -271,7 +271,6 @@
                 after_close:function(){window.location.href="/rest/baccount/list";}
             });
         } else {
-        }
             $.gritter.add({
                 title: title,
                 text: "&nbsp;&nbsp;" + msg,
