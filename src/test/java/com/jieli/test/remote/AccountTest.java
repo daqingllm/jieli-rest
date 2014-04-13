@@ -21,15 +21,16 @@ public class AccountTest {
 
     @Test
     public void testLogin() throws IOException {
-        testSuper();
-        testAdmin();
-//        testUser();
+//        testSuper();
+//        testAdmin();
+        testUser();
     }
 
     private void testUser() throws IOException {
         Response response = Request.Post("http://162.243.151.219:8080/jieli-1.0-SNAPSHOT/rest/account/login")
                 .setHeader("app", "test")
-                .bodyString("{\"username\":\"user\",\"password\":\"ln0j5t3y\"}", ContentType.APPLICATION_JSON)
+//                .bodyString("{\"username\":\"Harden\",\"password\":\"nvb7pug2\"}", ContentType.APPLICATION_JSON)
+                .bodyString("{\"username\":\"Harden\",\"password\":\"nvb7pug2\"}", ContentType.APPLICATION_JSON)
                 .execute();
 
         System.out.println(response.returnContent().asString());
@@ -67,8 +68,8 @@ public class AccountTest {
     @Test
     public void testRegister() throws IOException {
         Response response = Request.Post("http://162.243.151.219:8080/jieli-1.0-SNAPSHOT/rest/account/register")
-                .addHeader("Cookie", "u=533c061de4b05bd824aeda56")
-                .bodyString("{\"username\":\"Harden\"}", ContentType.APPLICATION_JSON)
+                .addHeader("Cookie", "u=5348210be4b00b2ae52d3f5c")
+                .bodyString("{\"username\":\"James\"}", ContentType.APPLICATION_JSON)
                 .execute();
 
         System.out.println(response.returnContent().asString());
@@ -77,14 +78,12 @@ public class AccountTest {
     @Test
     public void testChange() throws IOException {
         Account account = new Account();
-        account.username = "admin";
-        account.password = "admin";
-        account.associationId = "5348205ce4b00b2ae52d3f5a";
-        account.userId = "5348210be4b00b2ae52d3f5b";
-        account.state = AccountState.ADMIN;
+        account.username = "James";
+        account.password = "James";
+        account.state = AccountState.ENABLE;
 
         Response response = Request.Post("http://162.243.151.219:8080/jieli-1.0-SNAPSHOT/rest/account")
-                .addHeader("Cookie", "u=53481be2e4b00b2ae52d3f58")
+                .addHeader("Cookie", "u=5348210be4b00b2ae52d3f5c")
                 .setHeader("app", "test")
                 .bodyString(new ObjectMapper().writeValueAsString(account), ContentType.APPLICATION_JSON)
                 .execute();

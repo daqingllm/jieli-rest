@@ -1,6 +1,7 @@
 package com.jieli.test.remote;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jieli.common.entity.InterestTag;
 import com.jieli.user.entity.Friend;
 import com.jieli.user.entity.User;
 import org.apache.http.client.fluent.Request;
@@ -9,6 +10,7 @@ import org.apache.http.entity.ContentType;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 /**
  * Created with IntelliJ IDEA.
@@ -22,7 +24,7 @@ public class UserTest {
     @Test
     public void testLoad() throws IOException {
         Response response = Request.Get("http://162.243.151.219:8080/jieli-1.0-SNAPSHOT/rest/user?userId=533d22a4e4b05bd824aeda59")
-                .addHeader("Cookie", "u=533c09e5e4b05bd824aeda58")
+                .addHeader("Cookie", "u=534950a2e4b0be347782c7cf")
                 .execute();
 
         System.out.println(response.returnContent().asString());
@@ -33,9 +35,22 @@ public class UserTest {
         User user = new User();
         user.name = "詹姆斯哈登";
         user.sex = 0;
+        user.profession = "金融";
+        user.birthday = "1988-1-1";
+        user.constellation = "天平座";
+        user.degree = "MBA";
+        user.enterpriseName = "阿里巴巴";
+        user.identity = "协会元老";
+        user.interestTags = Arrays.asList(InterestTag.FOOTBALL);
+        user.mail = "xxx@164.com";
+        user.phone = "13123456789";
+        user.school = "北京大学";
+        user.score = 100;
+        user.userFace = "http://xianxing-test.qiniudn.com/12834560259126414_bynam.jpg";
+        user.weixin = "hadeng";
 
         Response response = Request.Post("http://162.243.151.219:8080/jieli-1.0-SNAPSHOT/rest/user/self")
-                .addHeader("Cookie", "u=533c09e5e4b05bd824aeda58")
+                .addHeader("Cookie", "u=534950a2e4b0be347782c7cf")
                 .bodyString(new ObjectMapper().writeValueAsString(user), ContentType.APPLICATION_JSON)
                 .execute();
 

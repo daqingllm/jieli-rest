@@ -182,20 +182,33 @@ public class AccountService {
             return Response.status(200).entity(responseEntity).build();
         }
         if (current.state.value() <= AccountState.ADMIN.value() && !IdentifyUtils.isSuper(sessionId)) {
-            if (!IdentifyUtils.isAdmin(sessionId) || account.state.equals(AccountState.SUPPER)
-                    || !account.associationId.equals(current.associationId)
-                    || !account.userId.equals(account.userId)) {
+            //协会管理员
+//            if (!IdentifyUtils.isAdmin(sessionId) || account.state.equals(AccountState.SUPPER)
+//                    || !account.associationId.equals(current.associationId)
+//                    || !account.userId.equals(account.userId)) {
+//                return Response.status(403).build();
+//            }
+            if (!IdentifyUtils.isAdmin(sessionId) || account.state.equals(AccountState.SUPPER)) {
                 return Response.status(403).build();
             }
-            current.password = PasswordGenerator.md5Encode(account.password);
+            if (StringUtils.isNotEmpty(account.password)) {
+                current.password = PasswordGenerator.md5Encode(account.password);
+            }
             current.state = account.state;
             accountDAO.save(current);
         } else if (IdentifyUtils.isSuper(sessionId)){
-            account.set_id(current.get_id());
-            account.password = PasswordGenerator.md5Encode(account.password);
-            accountDAO.save(account);
+//            account.set_id(current.get_id());
+//            account.password = PasswordGenerator.md5Encode(account.password);
             User user = userDAO.loadById(account.userId);
-            user.associationId = account.associationId;
+            if (StringUtils.isNotEmpty(account.password)) {
+                current.password = PasswordGenerator.md5Encode(account.password);
+            }
+            if (StringUtils.isNotEmpty(account.associationId)) {
+                current.associationId = account.associationId;
+                user.associationId = account.associationId;
+            }
+            current.state = account.state;
+            accountDAO.save(current);
             userDAO.save(user);
         }
 
