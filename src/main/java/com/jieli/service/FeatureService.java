@@ -534,6 +534,54 @@ public class FeatureService {
         return Response.status(200).entity(responseEntity).build();
     }
 
+    /**
+     * 编辑投票，只给管理后台用
+     * @param sessionId
+     * @return
+     */
+    @Path("/vote/modify")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+    public Response modifyVote(@CookieParam("u")String sessionId, @QueryParam("voteId")String voteId, VoteInfo newVote) {
+        if(!IdentifyUtils.isValidate(sessionId)) {
+            return Response.status(403).build();
+        }
+        if(!IdentifyUtils.isAdmin(sessionId)) {
+            return Response.status(403).build();
+        }
+        ResponseEntity responseEntity = new ResponseEntity();
+        String userId = IdentifyUtils.getUserId(sessionId);
+        User user = userDAO.loadById(userId);
+        if(user == null) {
+            responseEntity.code = 1104;
+            responseEntity.msg = "账户已被删除";
+            return  Response.status(200).entity(responseEntity).build();
+        }
+        if(newVote == null || voteId == null || StringUtils.isEmpty(voteId)) {
+            responseEntity.code = 1101;
+            responseEntity.msg = "缺少参数";
+            return Response.status(200).entity(responseEntity).build();
+        }
+        if (!MongoUtils.isValidObjectId(voteId)) {
+            responseEntity.code = 1105;
+            responseEntity.msg = "参数Id无效";
+            return Response.status(200).entity(responseEntity).build();
+        }
+        VoteInfo oldVote = voteDAO.loadById(voteId);
+        if(newVote.getTitle() != null) {
+            oldVote.setTitle(newVote.getTitle());
+        }
+        if(newVote.getDeadLine() != null) {
+            oldVote.setDeadLine(newVote.getDeadLine());
+        }
+        if(newVote.getDescription() != null) {
+            oldVote.setDescription(newVote.getDescription());
+        }
+        voteDAO.save(oldVote);
+        responseEntity.code = 200;
+        return Response.status(200).entity(responseEntity).build();
+    }
+
     /*@Path("/vote/deletevote")
     @GET
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
