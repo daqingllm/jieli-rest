@@ -33,7 +33,11 @@ public class Activity extends Model {
 
     public String sponsorInfo;
 
+	@JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ", timezone="GMT+8")
     public Date addTime;
+	
+	@JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ", timezone="GMT+8")
+	public Date actDate;
 
     //关注的用户
     public List<String> followMembers = new ArrayList<String>();
@@ -66,6 +70,10 @@ public class Activity extends Model {
         return beginDate;
     }
 
+	public Date getActDate() {
+		return actDate;
+	}
+	
     public String getLocation() {
         return location;
     }
