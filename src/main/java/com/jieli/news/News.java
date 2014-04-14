@@ -2,6 +2,7 @@ package com.jieli.news;
 
 import com.jieli.mongo.Model;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -14,8 +15,6 @@ import java.util.List;
  */
 public class News extends Model {
 
-    private static final long serialVersionUID = -2926128873069182721L;
-
     public String associationId;
     public String type;  // NewsType
 
@@ -25,13 +24,14 @@ public class News extends Model {
 
     public String content; // 资讯实体内容
 
-    public List<Image> images;
+    public List<Image> images = new ArrayList<Image>();
     public int imagesCount;
 
-    public List<String> appreciateUserIds;  // 点赞者
+    public List<String> appreciateUserIds = new ArrayList<String>();  // 点赞者
     public int appreciateCount;
 
     public Date addTime;
 
+    public int commentCount;
 
 }

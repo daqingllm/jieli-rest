@@ -57,6 +57,34 @@ public class ActivityService {
     }
 
     @GET
+    @Path("/history")
+    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+    public Response findHistoryActivity(@CookieParam("u")String sessionId, @QueryParam("page")int page, @QueryParam("size")int count, @QueryParam("tag")String tag) {
+        if (!IdentifyUtils.isValidate(sessionId)) {
+            return Response.status(403).build();
+        }
+        ResponseEntity responseEntity = new ResponseEntity();
+        if (StringUtils.isEmpty(tag)) {
+            responseEntity.code = 3101;
+            responseEntity.msg = "缺少参数";
+            return Response.status(200).entity(responseEntity).build();
+        }
+        if (page <= 0) {
+            page = 1;
+        }
+        if (count <= 0) {
+            count = 15;
+        }
+
+        String associationId = IdentifyUtils.getAssociationId(sessionId);
+        Iterable<Activity> activities = activityDAO.findHistory(associationId, page-1, count, tag);
+        responseEntity.code = 200;
+        responseEntity.body = activities;
+
+        return  Response.status(200).entity(responseEntity).build();
+    }
+
+    @GET
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     public Response loadActivity(@CookieParam("u")String sessionId,@QueryParam("activityId") String activityId) {
         if (!IdentifyUtils.isValidate(sessionId)) {
@@ -90,6 +118,17 @@ public class ActivityService {
                 return Response.status(403).build();
             }
         }
+        ResponseEntity responseEntity = new ResponseEntity();
+        String associationId = IdentifyUtils.getAssociationId(sessionId);
+        if (StringUtils.isEmpty(activity.associationId)) {
+            if (StringUtils.isEmpty(associationId)) {
+                responseEntity.code = 3101;
+                responseEntity.msg = "缺少协会id信息";
+                return Response.status(200).entity(responseEntity).build();
+            }
+            activity.associationId = associationId;
+        }
+        activity.addTime = new Date();
 
         boolean exist = false;
         if (!StringUtils.isEmpty(activityId) && MongoUtils.isValidObjectId(activity.get_id().toString())) {
@@ -103,6 +142,7 @@ public class ActivityService {
                 }
             }
         }
+        activity.sponsorUserId = IdentifyUtils.getUserId(sessionId);
         if (exist) {
             for (String userId : activity.joinMembers.keySet()) {
                 Message message = new Message();
@@ -151,7 +191,6 @@ public class ActivityService {
         activityDAO.save(activity);
         insertRelated(IdentifyUtils.getUserId(sessionId), activity.get_id().toString(), RelatedType.SPONSER);
 
-        ResponseEntity responseEntity = new ResponseEntity();
         responseEntity.body = "{\"_id\":\"" + activity.get_id() + "\"}";
         responseEntity.code=200;
         return  Response.status(200).entity(responseEntity).build();
@@ -234,10 +273,12 @@ public class ActivityService {
         if (activity.followMembers.contains(userId)) {
             activity.followMembers.remove(userId);
             responseEntity.msg = "已取消";
+            responseEntity.body = "{\"count\":"+activity.followMembers.size()+",\"concern\":"+0+"}";
             removeRelated(userId, activityId, RelatedType.FOLLOW);
         } else {
             activity.followMembers.add(userId);
             responseEntity.msg = "已关注";
+            responseEntity.body = "{\"count\":"+activity.followMembers.size()+",\"concern\":"+1+"}";
             insertRelated(userId, activityId, RelatedType.FOLLOW);
         }
         activityDAO.save(activity);
@@ -278,10 +319,12 @@ public class ActivityService {
         if (activity.joinMembers.get(userId) == null) {
             activity.joinMembers.put(userId, part);
             responseEntity.msg = "已参加";
+            responseEntity.body = "{\"count\":"+activity.joinMembers.size()+",\"join\":"+0+"}";
             insertRelated(userId, activityId, RelatedType.JOIN);
         } else {
             activity.joinMembers.remove(userId);
             responseEntity.msg = "已取消";
+            responseEntity.body = "{\"count\":"+activity.joinMembers.size()+",\"join\":"+0+"}";
             removeRelated(userId, activityId, RelatedType.JOIN);
         }
         activityDAO.save(activity);

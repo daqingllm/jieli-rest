@@ -1,5 +1,7 @@
 package com.jieli.test.liu.mongo;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jieli.activity.*;
 import org.testng.annotations.Test;
 
@@ -66,8 +68,16 @@ public class ActivityDAOTest {
         }
     }
 
-    @Test
+//    @Test
     public void clear() {
         activityDAO.clear();
+    }
+
+    @Test
+    public void testCreate() throws JsonProcessingException {
+        Activity activity = new Activity();
+        activity.title = "abcAc";
+        activityDAO.save(activity);
+        System.out.println(new ObjectMapper().writeValueAsString(activity));
     }
 }

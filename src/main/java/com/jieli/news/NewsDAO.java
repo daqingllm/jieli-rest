@@ -23,6 +23,14 @@ public class NewsDAO extends GenericDAO<News> {
         return iterableToList(iterable);
     }
 
+    public List<News> paginateInOrder(int pageNo, int pageSize, String order, String query, Object... params){
+        if(!check(pageNo, pageSize))
+            return null;
+        pageNo = pageNo<=0?1:pageNo;
+        Iterable<News> iterable = col.find(query, params).sort(order).skip((pageNo-1)*pageSize).limit(pageSize).as(News.class);
+        return iterableToList(iterable);
+    }
+
     public List<News> findWithLimit(int limit, String query, Object... params){
         if(limit<=0)
             return null;

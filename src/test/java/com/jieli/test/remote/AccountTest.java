@@ -1,15 +1,14 @@
 package com.jieli.test.remote;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jieli.common.entity.Account;
+import com.jieli.common.entity.AccountState;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.client.fluent.Response;
 import org.apache.http.entity.ContentType;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.
@@ -22,15 +21,16 @@ public class AccountTest {
 
     @Test
     public void testLogin() throws IOException {
-        testSuper();
-        testAdmin();
+//        testSuper();
+//        testAdmin();
         testUser();
     }
 
     private void testUser() throws IOException {
-        Response response = Request.Post("http://162.243.151.219:8080/jieli-1.0-SNAPSHOT/rest/account/login")
+        Response response = Request.Post("http://162.243.151.219:8080/rest/account/login")
                 .setHeader("app", "test")
-                .bodyString("{\"username\":\"user\",\"password\":\"ln0j5t3y\"}", ContentType.APPLICATION_JSON)
+//                .bodyString("{\"username\":\"Harden\",\"password\":\"nvb7pug2\"}", ContentType.APPLICATION_JSON)
+                .bodyString("{\"username\":\"Carmelo\",\"password\":\"Carmelo\"}", ContentType.APPLICATION_JSON)
                 .execute();
 
         System.out.println(response.returnContent().asString());
@@ -39,7 +39,7 @@ public class AccountTest {
     private void testAdmin() throws IOException {
         Response response = Request.Post("http://162.243.151.219:8080/jieli-1.0-SNAPSHOT/rest/account/login")
                 .setHeader("app", "test")
-                .bodyString("{\"username\":\"admin\",\"password\":\"tf6wv7ye\"}", ContentType.APPLICATION_JSON)
+                .bodyString("{\"username\":\"admin\",\"password\":\"admin\"}", ContentType.APPLICATION_JSON)
                 .execute();
 
         System.out.println(response.returnContent().asString());
@@ -57,9 +57,9 @@ public class AccountTest {
     @Test
     public void testAuth() throws IOException {
         Response response = Request.Post("http://162.243.151.219:8080/jieli-1.0-SNAPSHOT/rest/account/auth")
-                .addHeader("Cookie", "u=533bfca63a6e26a4f86e916d")
+                .addHeader("Cookie", "u=53481be2e4b00b2ae52d3f58")
                 .setHeader("app", "test")
-                .bodyString("{\"username\":\"admin\",\"associationId\":\"533c0568e4b05bd824aeda54\"}", ContentType.APPLICATION_JSON)
+                .bodyString("{\"username\":\"admin\",\"associationId\":\"5348205ce4b00b2ae52d3f5a\"}", ContentType.APPLICATION_JSON)
                 .execute();
 
         System.out.println(response.returnContent().asString());
@@ -67,9 +67,25 @@ public class AccountTest {
 
     @Test
     public void testRegister() throws IOException {
-        Response response = Request.Post("http://162.243.151.219:8080/jieli-1.0-SNAPSHOT/rest/account/register")
-                .addHeader("Cookie", "u=533c061de4b05bd824aeda56")
-                .bodyString("{\"username\":\"Harden\"}", ContentType.APPLICATION_JSON)
+        Response response = Request.Post("http://162.243.151.219:8080/rest/account/register")
+                .addHeader("Cookie", "u=5348210be4b00b2ae52d3f5c")
+                .bodyString("{\"username\":\"Carmelo\"}", ContentType.APPLICATION_JSON)
+                .execute();
+
+        System.out.println(response.returnContent().asString());
+    }
+
+    @Test
+    public void testChange() throws IOException {
+        Account account = new Account();
+        account.username = "Carmelo";
+        account.password = "Carmelo";
+        account.state = AccountState.ENABLE;
+
+        Response response = Request.Post("http://162.243.151.219:8080/rest/account")
+                .addHeader("Cookie", "u=5348210be4b00b2ae52d3f5c")
+                .setHeader("app", "test")
+                .bodyString(new ObjectMapper().writeValueAsString(account), ContentType.APPLICATION_JSON)
                 .execute();
 
         System.out.println(response.returnContent().asString());

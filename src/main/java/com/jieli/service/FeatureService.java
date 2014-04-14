@@ -4,13 +4,11 @@ import com.jieli.comment.Comment;
 import com.jieli.comment.TopicType;
 import com.jieli.common.entity.ResponseEntity;
 import com.jieli.feature.help.dao.HelpDAO;
-import com.jieli.feature.help.entity.HelpComment;
 import com.jieli.feature.help.entity.HelpInfo;
 import com.jieli.feature.help.entity.SimpleHelpInfo;
 import com.jieli.feature.vote.dao.VoteDAO;
 import com.jieli.feature.vote.entity.SimpleVoteInfo;
 import com.jieli.feature.vote.entity.Vote;
-import com.jieli.feature.vote.entity.VoteComment;
 import com.jieli.feature.vote.entity.VoteInfo;
 import com.jieli.message.CommentMessageUtil;
 import com.jieli.message.Message;
@@ -27,7 +25,10 @@ import org.bson.types.ObjectId;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 功能列表页接口
@@ -76,7 +77,7 @@ public class FeatureService {
 
         responseEntity.code = 200;
         responseEntity.body = simpleHelpInfoList;
-        return Response.status(200).entity(simpleHelpInfoList).build();
+        return Response.status(200).entity(responseEntity).build();
     }
 
     /**
@@ -105,7 +106,7 @@ public class FeatureService {
         }
         responseEntity.code = 200;
         responseEntity.body = helpInfo;
-        return Response.status(200).entity(helpInfo).build();
+        return Response.status(200).entity(responseEntity).build();
     }
 
     @Path("/help/add")
@@ -134,8 +135,8 @@ public class FeatureService {
             return Response.status(200).entity(responseEntity).build();
         }
         responseEntity.code = 200;
-        responseEntity.body = result;
-        return Response.status(200).entity(result.get_id()).build();
+        responseEntity.body = "{\"_id\":\"" + result.get_id() + "\"}";;
+        return Response.status(200).entity(responseEntity).build();
     }
 
     @Path("/help/delete")
@@ -378,7 +379,7 @@ public class FeatureService {
      * @param commentId
      * @return
      */
-    @Path("/help/detail/comment/top")
+   @Path("/help/detail/comment/top")
      @POST
      @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
      public Response addTop(@CookieParam("u")String sessionId, @QueryParam("helpId")String helpId, @QueryParam("commentId")String commentId) {

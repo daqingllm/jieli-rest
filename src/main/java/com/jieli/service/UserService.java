@@ -145,23 +145,39 @@ public class UserService {
         ResponseEntity responseEntity = new ResponseEntity();
         String userId = IdentifyUtils.getUserId(sessionId);
         Directory directory = directoryDAO.loadByUserId(userId);
-        if (directory == null || CollectionUtils.isEmpty(directory.content)) {
-            responseEntity.code = 200;
-            responseEntity.msg = "无记录";
-            return Response.status(200).entity(responseEntity).build();
+        List<UserBasicInfo> baseUsers = new ArrayList<UserBasicInfo>();
+        List<String> friendIds = new ArrayList<String>();
+
+        if (directory != null && !CollectionUtils.isEmpty(directory.content)) {
+            for (Friend friend : directory.content) {
+                User user = userDAO.loadById(friend.userId);
+                if (user == null) {
+                    continue;
+                }
+                friendIds.add(user.get_id().toString());
+
+                UserBasicInfo baseUser = new UserBasicInfo();
+                baseUser.userId = friend.userId;
+                baseUser.group = friend.group;
+                baseUser.special = true;
+                baseUser.name = user.name;
+                baseUser.identity = user.identity;
+                baseUser.score = user.score;
+                baseUser.sex = user.sex;
+                baseUser.userFace = user.userFace;
+
+                baseUsers.add(baseUser);
+            }
         }
 
-        List<UserBasicInfo> baseUsers = new ArrayList<UserBasicInfo>();
-        for (Friend friend : directory.content) {
-            User user = userDAO.loadById(friend.userId);
-            if (user == null) {
+        Iterable<User> allUsers = userDAO.loadAll(IdentifyUtils.getAssociationId(sessionId));
+        for (User user : allUsers) {
+            if (friendIds.contains(user.get_id().toString())) {
                 continue;
             }
-
             UserBasicInfo baseUser = new UserBasicInfo();
-            baseUser.userId = friend.userId;
-            baseUser.group = friend.group;
-            baseUser.special = friend.special;
+            baseUser.userId = user.get_id().toString();
+            baseUser.special = false;
             baseUser.name = user.name;
             baseUser.identity = user.identity;
             baseUser.score = user.score;
@@ -170,6 +186,7 @@ public class UserService {
 
             baseUsers.add(baseUser);
         }
+
         responseEntity.code = 200;
         responseEntity.body = baseUsers;
         return Response.status(200).entity(responseEntity).build();

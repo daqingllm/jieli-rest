@@ -1,5 +1,5 @@
 <li id="nav_list_1">
-    <a href="index.html">
+    <a href="/rest/bindex">
         <i class="icon-dashboard"></i>
         <span class="menu-text"> 控制台 </span>
     </a>
@@ -15,19 +15,19 @@
 
     <ul class="submenu">
         <li id="nav_list_2_1">
-            <a href="article_list.html">
+            <a href="/rest/bnews/list">
                 <i class="icon-double-angle-right"></i>
                 资讯列表
             </a>
         </li>
         <li id="nav_list_2_2">
-            <a href="new_article.html">
+            <a href="/rest/bnews/new">
                 <i class="icon-double-angle-right"></i>
                 发布资讯
             </a>
         </li>
         <li id="nav_list_2_3">
-            <a href="edit_article.html">
+            <a href="#" onclick="alert('请从资讯列表页中选中资讯，再点击编辑按钮')">
                 <i class="icon-double-angle-right"></i>
                 编辑资讯
             </a>
@@ -93,15 +93,38 @@
 
     <ul class="submenu">
         <li id="nav_list_5_1">
-            <a href="account_list.html">
+            <a href="/rest/baccount/list">
                 <i class="icon-double-angle-right"></i>
                 账户列表
             </a>
         </li>
         <li id="nav_list_5_2">
-            <a href="new_account.html">
+            <a href="/rest/baccount/register">
                 <i class="icon-double-angle-right"></i>
                 注册账户
+            </a>
+        </li>
+    </ul>
+</li>
+<li id="nav_list_6">
+    <a href="#" class="dropdown-toggle">
+        <i class="icon-trophy"></i>
+        <span class="menu-text"> 协会管理 </span>
+
+        <b class="arrow icon-angle-down"></b>
+    </a>
+
+    <ul class="submenu">
+        <li id="nav_list_6_1">
+            <a href="/rest/bassociation/list">
+                <i class="icon-double-angle-right"></i>
+                协会列表
+            </a>
+        </li>
+        <li id="nav_list_6_2">
+            <a href="/rest/bassociation/new">
+                <i class="icon-double-angle-right"></i>
+                创建协会
             </a>
         </li>
     </ul>

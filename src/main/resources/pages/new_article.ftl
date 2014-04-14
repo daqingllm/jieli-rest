@@ -20,6 +20,8 @@
 
     <link rel="stylesheet" href="/assets/css/jquery.gritter.css" />
 
+    <link rel="stylesheet" href="/assets/css/bootstrap-multiselect.css" type="text/css"/>
+
     <!-- fonts -->
 
     <link rel="stylesheet" href="/assets/css/font-google.css"/>
@@ -249,9 +251,14 @@
                         <div class="col-sm-9">
                             <select class="col-xs-10 col-sm-7" id="form-field-select-type"
                                     style="padding: 5px 4px;font-size: 14px;">
-                                <option value="N" selected="selected">新闻</option>
-                                <option value="Z">资讯</option>
-                                <option value="Q">企业动态</option>
+                                <#if isSuper>
+                                    <option value="news" selected>新闻</option>
+                                    <option value="association">资讯</option>
+                                    <option value="enterprise">企业动态</option>
+                                <#else>
+                                    <option value="association" selected>资讯</option>
+                                    <option value="enterprise">企业动态</option>
+                                </#if>
                             </select>
                         </div>
                     </div>
@@ -289,35 +296,45 @@
 
                     <div class="space-4"></div>
 
+                    <div class="form-group <#if isSuper==false>hidden</#if>">
+                        <label class="col-sm-3 control-label no-padding-right" for="form-input-readonly"> 选择协会 </label>
+
+                        <div class="col-sm-9">
+                            <select id="selectAssociationIds" multiple="multiple" class="multiselect">${assIdOptionList}</select>
+                        </div>
+                    </div>
+
+                    <div class="space-4"></div>
+
                 </form>
-				
-				<div class="clearfix form-actions">
-					<div class="col-md-offset-3 col-md-9">
-						<button class="btn btn-success btn-purple" id="bootbox-upload-image"
-								style="font-weight:bold">
-							<i class="icon-cloud-upload bigger-110"></i>
-							上传图片
-						</button>
 
-						&nbsp; &nbsp; &nbsp;
-						<button class="btn btn-success" type="button" style="font-weight:bold">
-							<i class="icon-question bigger-110"></i>
-							预览
-						</button>
+                <div class="clearfix form-actions">
+                    <div class="col-md-offset-3 col-md-9">
+                        <button class="btn btn-success btn-purple" id="bootbox-upload-image"
+                                style="font-weight:bold">
+                            <i class="icon-cloud-upload bigger-110"></i>
+                            上传图片
+                        </button>
 
-						&nbsp; &nbsp; &nbsp;
-						<button class="btn btn-info" type="button" style="font-weight:bold">
-							<i class="icon-ok bigger-110"></i>
-							完成
-						</button>
+                        &nbsp; &nbsp; &nbsp;
+                        <button class="btn btn-success" type="button" style="font-weight:bold">
+                            <i class="icon-question bigger-110"></i>
+                            预览
+                        </button>
 
-						&nbsp; &nbsp; &nbsp;
-						<button class="btn" type="reset" style="font-weight:bold" onclick="clearImgList();return true;">
-							<i class="icon-undo bigger-110"></i>
-							清空
-						</button>
-					</div>
-				</div>
+                        &nbsp; &nbsp; &nbsp;
+                        <button class="btn btn-info" type="button" style="font-weight:bold" onclick="postThisArticle()">
+                            <i class="icon-ok bigger-110"></i>
+                            完成
+                        </button>
+
+                        &nbsp; &nbsp; &nbsp;
+                        <button class="btn" type="reset" style="font-weight:bold" onclick="clearImgList();return true;">
+                            <i class="icon-undo bigger-110"></i>
+                            清空
+                        </button>
+                    </div>
+                </div>
             </div>
             <!-- /.col -->
         </div>
@@ -418,6 +435,7 @@
 
 <!-- page specific plugin scripts -->
 <script src="/assets/js/jquery.colorbox-min.js"></script>
+<script src="/assets/js/bootstrap-multiselect.js"></script>
 
 <!--[if lte IE 8]>
 <script src="/assets/js/excanvas.min.js"></script>
@@ -445,35 +463,10 @@
 <script src="/assets/js/ace-elements.min.js"></script>
 <script src="/assets/js/ace.min.js"></script>
 
+<script src="/common-jieli.js"></script>
+
 <!-- inline scripts related to this page -->
 <script>
-    function clearImgList(){
-		$("#form-field-title").val("");
-		$("#form-field-select-type").get(0).selectedIndex = 0;
-        $("#form-field-textarea").val("");
-        $("#img-list-invisible").nextAll().remove();
-        $("#img-list-invisible").attr("style","border-width:0;display:block");
-    }
-
-    function deletePic(ph){
-        var _src=ph.replace("<img-pLAcehOLDer","");
-        _src = _src.substr(0,_src.length-1);
-
-        // clear textarea
-        var otextarea = $("#form-field-textarea").val().trim();
-        otextarea = otextarea.replace(ph,"");
-        $("#form-field-textarea").val(otextarea);
-
-        // delete pic
-        $("a[href=\'"+_src+"\']").parent().remove();
-
-        if ($("#img-list-invisible").parent().children().length == 1)
-            $("#img-list-invisible").attr("style","border-width:0;display:block");
-    }
-
-    function getTextAreaCursorPosition() {
-        return $("#form-field-textarea").getCursorPosition();
-    }
 
     (function ($, undefined) {
         $.fn.getCursorPosition = function () {
@@ -494,397 +487,177 @@
 </script>
 
 <script type="text/javascript">
-jQuery(function ($) {
-    $("#sidebar-shortcuts-navlist").load("/sidebar.html",function(){$("#nav_list_2_2").addClass("active open");$("#nav_list_2").addClass("active");});
+    jQuery(function ($) {
+        <#if isSuper>
+            $("#sidebar-shortcuts-navlist").load("/sidebar_super.html",function(){$("#nav_list_2_2").addClass("active open");$("#nav_list_2").addClass("active");});
+        <#else>
+            $("#sidebar-shortcuts-navlist").load("/sidebar_admin.html",function(){$("#nav_list_2_2").addClass("active open");$("#nav_list_2").addClass("active");});
+        </#if>
+        /*$("#sidebar").load("/sidebar_super.html");$("#nav_list_2_2").addClass("active open");$("#nav_list_2").addClass("active");*/
 
-    /*$("#sidebar").load("/sidebar.html");$("#nav_list_2_2").addClass("active open");$("#nav_list_2").addClass("active");*/
+        $('#selectAssociationIds').multiselect({
+            numberDisplayed:10,
+            buttonClass: 'btn-link btn ',
+            selectAllText: '全选',
+            selectAllValue: '全部',
+            nonSelectedText: '请选择',
+            nSelectedText: ' 被选中了',
+            maxHeight:400
+        });
 
-    $("#bootbox-upload-image").on("click", function () {
-        var spin_img = "<div id='upload-loading-img' style='margin-left:30px;margin-top:10px;display: none;'><i class='icon-spinner icon-spin orange bigger-125'></i></div>";
-        spin_img = "";
-        bootbox.dialog({
-            //message: "<input type='file' id='upload-image-files' name='upload-image-files' >",
-            message: "<form id='rest-upload-form' action='/upload' method='post' enctype='multipart/form-data' acceptcharset='UTF-8'>\n<input id='rest-upload-file' type='file' name='file' size='50' />"+spin_img+"</form>",
-            buttons: {
-                "upload": {
-                    "label": "<i class='icon-ok'></i> 上传 ",
-                    "className": "btn-sm btn-success",
-                    "callback": function () {
-                        // show loading image first
-                        //$("#upload-loading-img").attr("style","display:block");
 
-                        //Example.show("great success");
-                        // upload Image !
-                        var d = new FormData(document.getElementById('rest-upload-form'));
-                        $.ajax({
-                            url: '/rest/upload',
-                            type: 'POST',
-                            contentType: false,
-                            data: d,
-                            cache: false,
-                            processData: false,
-                            async: false,
-                            success: function (jsn) {
-                                //alert(jsn);
-                                // untested , but it should be like : code:200,body:filepath,msg...
+        $("#bootbox-upload-image").on("click", function () {
+            var spin_img = "<div id='upload-loading-img' style='margin-left:30px;margin-top:10px;display: none;'><i class='icon-spinner icon-spin orange bigger-125'></i></div>";
+            spin_img = "";
+            bootbox.dialog({
+                //message: "<input type='file' id='upload-image-files' name='upload-image-files' >",
+                message: "<form id='rest-upload-form' action='/upload' method='post' enctype='multipart/form-data' acceptcharset='UTF-8'>\n<input id='rest-upload-file' type='file' name='file' size='50' />"+spin_img+"</form>",
+                buttons: {
+                    "upload": {
+                        "label": "<i class='icon-ok'></i> 上传 ",
+                        "className": "btn-sm btn-success",
+                        "callback": function () {
+                            // show loading image first
+                            //$("#upload-loading-img").attr("style","display:block");
 
-                                if (jsn.code == 200) {
-                                    var uploadImgSrc = jsn.body + "";
+                            //Example.show("great success");
+                            // upload Image !
+                            var d = new FormData(document.getElementById('rest-upload-form'));
+                            $.ajax({
+                                url: '/rest/upload',
+                                type: 'POST',
+                                contentType: false,
+                                data: d,
+                                cache: false,
+                                processData: false,
+                                async: false,
+                                success: function (jsn) {
+                                    //alert(jsn);
+                                    // untested , but it should be like : code:200,body:filepath,msg...
 
-                                    uploadImgSrc = "<img-pLAcehOLDer" + uploadImgSrc + ">";
-                                    var otextarea = $("#form-field-textarea").val().trim();
-                                    var otextarea_head = "";
-                                    var otextarea_tail;
-                                    var pos = getTextAreaCursorPosition() || 0;
-                                    if (pos > 1)
-                                        otextarea_head = otextarea.substring(0, pos);
-                                    otextarea_tail = otextarea.substring(pos);
+                                    if (jsn.code == 200) {
+                                        var uploadImgSrc = jsn.body + "";
 
-                                    //alert(otextarea_head + "[+]" + otextarea_tail);
+                                        uploadImgSrc = "<center><img src='" + uploadImgSrc + "'></center>";
+                                        var otextarea = $("#form-field-textarea").val().trim();
+                                        var otextarea_head = "";
+                                        var otextarea_tail;
+                                        var pos = getTextAreaCursorPosition() || 0;
+                                        if (pos > 1)
+                                            otextarea_head = otextarea.substring(0, pos);
+                                        otextarea_tail = otextarea.substring(pos);
 
-                                    $("#form-field-textarea").val(otextarea_head + uploadImgSrc + otextarea_tail);
+                                        //alert(otextarea_head + "[+]" + otextarea_tail);
 
-                                    // 更新图片集
-                                    var imgsrc=uploadImgSrc;
-                                    var newImgHtml = "<li>";
-                                    newImgHtml += "<a href='"+jsn.body+"' data-rel='colorbox'>";
-                                    newImgHtml += "<img alt='150x150' width='150' height='150' src='"+jsn.body+"' />";
-                                    newImgHtml += "</a>";
-                                    newImgHtml += "<div class='tools tools-right' style='height:30px;'>";
-                                    // must be " , ' no use
-                                    newImgHtml += "<a href='#' onclick='deletePic(\""+uploadImgSrc+"\")'><i class='icon-remove red'></i></a></div></li>";
+                                        $("#form-field-textarea").val(otextarea_head + uploadImgSrc + otextarea_tail);
 
-                                    $("#upload-img-list > li").eq(0).after(newImgHtml);
+                                        // 更新图片集
+                                        var imgsrc=uploadImgSrc;
+                                        var newImgHtml = "<li>";
+                                        newImgHtml += "<a href='"+jsn.body+"' data-rel='colorbox'>";
+                                        newImgHtml += "<img alt='150x150' width='150' height='150' src='"+jsn.body+"' />";
+                                        newImgHtml += "</a>";
+                                        newImgHtml += "<div class='tools tools-right' style='height:30px;'>";
+                                        // must be " , ' no use
+                                        var re = new RegExp("\'","g");
+                                        newImgHtml += "<a href='#' onclick='deletePic(\""+uploadImgSrc.replace(re,"")+"\")'><i class='icon-remove red'></i></a></div></li>";
 
-                                    $("#img-list-invisible").attr("style","border-width:0;display:none");
+                                        /*$("#upload-img-list > li").eq(0).after(newImgHtml);*/
+                                        $("#upload-img-list > li").last().before(newImgHtml);
 
-                                    $('.ace-thumbnails [data-rel="colorbox"]').colorbox(colorbox_params);
-                                    $("#cboxLoadingGraphic").append("<i class='icon-spinner orange'></i>");//let's add a custom loading icon
+                                        $("#img-list-invisible").attr("style","border-width:0;display:none");
 
-                                } else {
-                                    alert("上传失败！");
+                                        $('.ace-thumbnails [data-rel="colorbox"]').colorbox(colorbox_params);
+                                        $("#cboxLoadingGraphic").append("<i class='icon-spinner orange'></i>");//let's add a custom loading icon
+
+                                    } else {
+                                        alert("上传失败！");
+                                    }
                                 }
-                            }
-                        });
+                            });
 
-                        //$("#upload-loading-img").attr("style","display: none");
-                    }
-                },
-                "cancel": {
-                    "label": "<i class='icon-remove'></i> 取消",
-                    "className": "btn-sm",
-                    "callback": function () {
-                        //Example.show("uh oh, look out!");
-                        var objFile = document.getElementById('rest-upload-file');
-                        objFile.outerHTML = objFile.outerHTML.replace(/(value=\").+\"/i, "$1\"");
+                            //$("#upload-loading-img").attr("style","display: none");
+                        }
+                    },
+                    "cancel": {
+                        "label": "<i class='icon-remove'></i> 取消",
+                        "className": "btn-sm",
+                        "callback": function () {
+                            //Example.show("uh oh, look out!");
+                            var objFile = document.getElementById('rest-upload-file');
+                            objFile.outerHTML = objFile.outerHTML.replace(/(value=\").+\"/i, "$1\"");
+                        }
                     }
                 }
-            }
+            });
         });
-    });
 
-    var colorbox_params = {
-        reposition: true,
-        scalePhotos: true,
-        scrolling: false,
-        previous: '<i class="icon-arrow-left"></i>',
-        next: '<i class="icon-arrow-right"></i>',
-        close: '&times;',
-        current: '{current} of {total}',
-        maxWidth: '100%',
-        maxHeight: '100%',
-        onOpen: function () {
-            document.body.style.overflow = 'hidden';
-        },
-        onClosed: function () {
-            document.body.style.overflow = 'auto';
-        },
-        onComplete: function () {
-            $.colorbox.resize();
-        }
-    };
+        var colorbox_params = {
+            reposition: true,
+            scalePhotos: true,
+            scrolling: false,
+            previous: '<i class="icon-arrow-left"></i>',
+            next: '<i class="icon-arrow-right"></i>',
+            close: '&times;',
+            current: '{current} of {total}',
+            maxWidth: '100%',
+            maxHeight: '100%',
+            onOpen: function () {
+                document.body.style.overflow = 'hidden';
+            },
+            onClosed: function () {
+                document.body.style.overflow = 'auto';
+            },
+            onComplete: function () {
+                $.colorbox.resize();
+            }
+        };
 
-    $('.ace-thumbnails [data-rel="colorbox"]').colorbox(colorbox_params);
-    $("#cboxLoadingGraphic").append("<i class='icon-spinner orange'></i>");//let's add a custom loading icon
+        $('.ace-thumbnails [data-rel="colorbox"]').colorbox(colorbox_params);
+        $("#cboxLoadingGraphic").append("<i class='icon-spinner orange'></i>");//let's add a custom loading icon
 
-    /**$(window).on('resize.colorbox', function() {
+        /**$(window).on('resize.colorbox', function() {
 					try {
 						//this function has been changed in recent versions of colorbox, so it won't work
 						$.fn.colorbox.load();//to redraw the current frame
 					} catch(e){}
 				});*/
-});
-
-jQuery(function ($) {
-    $('#id-disable-check').on('click', function () {
-        var inp = $('#form-input-readonly').get(0);
-        if (inp.hasAttribute('disabled')) {
-            inp.setAttribute('readonly', 'true');
-            inp.removeAttribute('disabled');
-            inp.value = "This text field is readonly!";
-        }
-        else {
-            inp.setAttribute('disabled', 'disabled');
-            inp.removeAttribute('readonly');
-            inp.value = "This text field is disabled!";
-        }
     });
 
+    jQuery(function ($) {
+        $('[data-rel=tooltip]').tooltip({container: 'body'});
+        $('[data-rel=popover]').popover({container: 'body'});
 
-    $(".chosen-select").chosen();
-    $('#chosen-multiple-style').on('click', function (e) {
-        var target = $(e.target).find('input[type=radio]');
-        var which = parseInt(target.val());
-        if (which == 2) $('#form-field-select-4').addClass('tag-input-style');
-        else $('#form-field-select-4').removeClass('tag-input-style');
-    });
+        //$('textarea[class*=autosize]').autosize({append: "\n"});
+        //$.mask.definitions['~'] = '[+-]';
 
-
-    $('[data-rel=tooltip]').tooltip({container: 'body'});
-    $('[data-rel=popover]').popover({container: 'body'});
-
-    $('textarea[class*=autosize]').autosize({append: "\n"});
-    $('textarea.limited').inputlimiter({
-        remText: '%n character%s remaining...',
-        limitText: 'max allowed : %n.'
-    });
-
-    $.mask.definitions['~'] = '[+-]';
-    $('.input-mask-date').mask('99/99/9999');
-    $('.input-mask-phone').mask('(999) 999-9999');
-    $('.input-mask-eyescript').mask('~9.99 ~9.99 999');
-    $(".input-mask-product").mask("a*-999-a999", {placeholder: " ", completed: function () {
-        alert("You typed the following: " + this.val());
-    }});
-
-
-    $("#input-size-slider").css('width', '200px').slider({
-        value: 1,
-        range: "min",
-        min: 1,
-        max: 8,
-        step: 1,
-        slide: function (event, ui) {
-            var sizing = ['', 'input-sm', 'input-lg', 'input-mini', 'input-small', 'input-medium', 'input-large', 'input-xlarge', 'input-xxlarge'];
-            var val = parseInt(ui.value);
-            $('#form-field-4').attr('class', sizing[val]).val('.' + sizing[val]);
-        }
-    });
-
-    $("#input-span-slider").slider({
-        value: 1,
-        range: "min",
-        min: 1,
-        max: 12,
-        step: 1,
-        slide: function (event, ui) {
-            var val = parseInt(ui.value);
-            $('#form-field-5').attr('class', 'col-xs-' + val).val('.col-xs-' + val);
-        }
-    });
-
-
-    $("#slider-range").css('height', '200px').slider({
-        orientation: "vertical",
-        range: true,
-        min: 0,
-        max: 100,
-        values: [ 17, 67 ],
-        slide: function (event, ui) {
-            var val = ui.values[$(ui.handle).index() - 1] + "";
-
-            if (!ui.handle.firstChild) {
-                $(ui.handle).append("<div class='tooltip right in' style='display:none;left:16px;top:-6px;'><div class='tooltip-arrow'></div><div class='tooltip-inner'></div></div>");
-            }
-            $(ui.handle.firstChild).show().children().eq(1).text(val);
-        }
-    }).find('a').on('blur', function () {
-        $(this.firstChild).hide();
-    });
-
-    $("#slider-range-max").slider({
-        range: "max",
-        min: 1,
-        max: 10,
-        value: 2
-    });
-
-    $("#eq > span").css({width: '90%', 'float': 'left', margin: '15px'}).each(function () {
-        // read initial values from markup and remove that
-        var value = parseInt($(this).text(), 10);
-        $(this).empty().slider({
-            value: value,
-            range: "min",
-            animate: true
-
+        $('.date-picker').datepicker({autoclose: true}).next().on(ace.click_event, function () {
+            $(this).prev().focus();
         });
-    });
+        $('input[name=date-range-picker]').daterangepicker().prev().on(ace.click_event, function () {
+            $(this).next().focus();
+        });
 
-
-    $('#id-input-file-1 , #id-input-file-2').ace_file_input({
-        no_file: 'No File ...',
-        btn_choose: 'Choose',
-        btn_change: 'Change',
-        droppable: false,
-        onchange: null,
-        thumbnail: false //| true | large
-        //whitelist:'gif|png|jpg|jpeg'
-        //blacklist:'exe|php'
-        //onchange:''
-        //
-    });
-
-    $('#id-input-file-3').ace_file_input({
-        style: 'well',
-        btn_choose: 'Drop files here or click to choose',
-        btn_change: null,
-        no_icon: 'icon-cloud-upload',
-        droppable: true,
-        thumbnail: 'small'//large | fit
-        //,icon_remove:null//set null, to hide remove/reset button
-        /**,before_change:function(files, dropped) {
-						//Check an example below
-						//or examples/file-upload.html
-						return true;
-					}*/
-        /**,before_remove : function() {
-						return true;
-					}*/,
-        preview_error: function (filename, error_code) {
-            //name of the file that failed
-            //error_code values
-            //1 = 'FILE_LOAD_FAILED',
-            //2 = 'IMAGE_LOAD_FAILED',
-            //3 = 'THUMBNAIL_FAILED'
-            //alert(error_code);
-        }
-
-    }).on('change', function () {
-        //console.log($(this).data('ace_input_files'));
-        //console.log($(this).data('ace_input_method'));
-    });
-
-
-    //dynamically change allowed formats by changing before_change callback function
-    $('#id-file-format').removeAttr('checked').on('change', function () {
-        var before_change
-        var btn_choose
-        var no_icon
-        if (this.checked) {
-            btn_choose = "Drop images here or click to choose";
-            no_icon = "icon-picture";
-            before_change = function (files, dropped) {
-                var allowed_files = [];
-                for (var i = 0; i < files.length; i++) {
-                    var file = files[i];
-                    if (typeof file === "string") {
-                        //IE8 and browsers that don't support File Object
-                        if (!(/\.(jpe?g|png|gif|bmp)$/i).test(file)) return false;
-                    }
-                    else {
-                        var type = $.trim(file.type);
-                        if (( type.length > 0 && !(/^image\/(jpe?g|png|gif|bmp)$/i).test(type) )
-                                || ( type.length == 0 && !(/\.(jpe?g|png|gif|bmp)$/i).test(file.name) )//for android's default browser which gives an empty string for file.type
-                                ) continue;//not an image so don't keep this file
-                    }
-
-                    allowed_files.push(file);
-                }
-                if (allowed_files.length == 0) return false;
-
-                return allowed_files;
-            }
-        }
-        else {
-            btn_choose = "Drop files here or click to choose";
-            no_icon = "icon-cloud-upload";
-            before_change = function (files, dropped) {
-                return files;
-            }
-        }
-        var file_input = $('#id-input-file-3');
-        file_input.ace_file_input('update_settings', {'before_change': before_change, 'btn_choose': btn_choose, 'no_icon': no_icon})
-        file_input.ace_file_input('reset_input');
-    });
-
-
-    $('#spinner1').ace_spinner({value: 0, min: 0, max: 200, step: 10, btn_up_class: 'btn-info', btn_down_class: 'btn-info'})
-            .on('change', function () {
-                //alert(this.value)
+        //chosen plugin inside a modal will have a zero width because the select element is originally hidden
+        //and its width cannot be determined.
+        //so we set the width after modal is show
+        $('#modal-form').on('shown.bs.modal', function () {
+            $(this).find('.chosen-container').each(function () {
+                $(this).find('a:first-child').css('width', '210px');
+                $(this).find('.chosen-drop').css('width', '210px');
+                $(this).find('.chosen-search input').css('width', '200px');
             });
-    $('#spinner2').ace_spinner({value: 0, min: 0, max: 10000, step: 100, touch_spinner: true, icon_up: 'icon-caret-up', icon_down: 'icon-caret-down'});
-    $('#spinner3').ace_spinner({value: 0, min: -100, max: 100, step: 10, on_sides: true, icon_up: 'icon-plus smaller-75', icon_down: 'icon-minus smaller-75', btn_up_class: 'btn-success', btn_down_class: 'btn-danger'});
-
-
-    $('.date-picker').datepicker({autoclose: true}).next().on(ace.click_event, function () {
-        $(this).prev().focus();
-    });
-    $('input[name=date-range-picker]').daterangepicker().prev().on(ace.click_event, function () {
-        $(this).next().focus();
-    });
-
-    $('#timepicker1').timepicker({
-        minuteStep: 1,
-        showSeconds: true,
-        showMeridian: false
-    }).next().on(ace.click_event, function () {
-        $(this).prev().focus();
-    });
-
-    $('#colorpicker1').colorpicker();
-    $('#simple-colorpicker-1').ace_colorpicker();
-
-
-    $(".knob").knob();
-
-
-    //we could just set the data-provide="tag" of the element inside HTML, but IE8 fails!
-    var tag_input = $('#form-field-tags');
-    if (!( /msie\s*(8|7|6)/.test(navigator.userAgent.toLowerCase()))) {
-        tag_input.tag(
-                {
-                    placeholder: tag_input.attr('placeholder'),
-                    //enable typeahead by specifying the source array
-                    source: ace.variable_US_STATES//defined in ace.js >> ace.enable_search_ahead
-                }
-        );
-    }
-    else {
-        //display a textarea for old IE, because it doesn't support this plugin or another one I tried!
-        tag_input.after('<textarea id="' + tag_input.attr('id') + '" name="' + tag_input.attr('name') + '" rows="3">' + tag_input.val() + '</textarea>').remove();
-        //$('#form-field-tags').autosize({append: "\n"});
-    }
-
-
-    /////////
-    $('#modal-form input[type=file]').ace_file_input({
-        style: 'well',
-        btn_choose: 'Drop files here or click to choose',
-        btn_change: null,
-        no_icon: 'icon-cloud-upload',
-        droppable: true,
-        thumbnail: 'large'
-    })
-
-    //chosen plugin inside a modal will have a zero width because the select element is originally hidden
-    //and its width cannot be determined.
-    //so we set the width after modal is show
-    $('#modal-form').on('shown.bs.modal', function () {
-        $(this).find('.chosen-container').each(function () {
-            $(this).find('a:first-child').css('width', '210px');
-            $(this).find('.chosen-drop').css('width', '210px');
-            $(this).find('.chosen-search input').css('width', '200px');
-        });
-    })
-    /**
-     //or you can activate the chosen plugin after modal is shown
-     //this way select element becomes visible with dimensions and chosen works as expected
-     $('#modal-form').on('shown', function () {
+        })
+        /**
+         //or you can activate the chosen plugin after modal is shown
+         //this way select element becomes visible with dimensions and chosen works as expected
+         $('#modal-form').on('shown', function () {
 					$(this).find('.modal-chosen').chosen();
 				})
-     */
+         */
 
-});
+    });
+
 </script>
 </body>
 </html>

@@ -29,7 +29,13 @@ public class ActivityDAO extends GenericDAO<Activity> {
 
     public Iterable<Activity> findOngoing(String associationId, int page, int count) {
         Date now = new Date();
-        return col.find("{tag:{$in:[#,#]}, associationId:#, beginDate:{$gt:#}}", "OFFICIAL", "RECOMMEND", associationId, now)
+        return col.find("{associationId:#, beginDate:{$gt:#}}", associationId, now)
+                .skip(page*count).limit(count).sort("{beginDate:-1}").as(Activity.class);
+    }
+
+    public Iterable<Activity> findHistory(String associationId, int page, int count, String tag) {
+        Date now = new Date();
+        return col.find("{tag:#, associationId:#, beginDate:{$lt:#}}", tag, associationId, now)
                 .skip(page*count).limit(count).sort("{beginDate:-1}").as(Activity.class);
     }
 

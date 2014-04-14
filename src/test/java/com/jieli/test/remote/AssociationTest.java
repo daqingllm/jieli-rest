@@ -24,7 +24,7 @@ public class AssociationTest {
         association.name = "北京土著";
 
         Response response = Request.Post("http://162.243.151.219:8080/jieli-1.0-SNAPSHOT/rest/association")
-                .addHeader("Cookie", "u=533bfca63a6e26a4f86e916d")
+                .addHeader("Cookie", "u=53481be2e4b00b2ae52d3f58")
                 .bodyString(new ObjectMapper().writeValueAsString(association), ContentType.APPLICATION_JSON)
                 .execute();
 
@@ -33,8 +33,8 @@ public class AssociationTest {
 
     @Test
     public void testGet() throws IOException {
-        Response response = Request.Get("http://162.243.151.219:8080/jieli-1.0-SNAPSHOT/rest/association?id=533c0568e4b05bd824aeda54")
-                .addHeader("Cookie", "u=533bfca63a6e26a4f86e916d")
+        Response response = Request.Get("http://162.243.151.219:8080/jieli-1.0-SNAPSHOT/rest/association?id=5348205ce4b00b2ae52d3f5a")
+                .addHeader("Cookie", "u=53481be2e4b00b2ae52d3f58")
                 .execute();
 
         System.out.println(response.returnContent().asString());
@@ -42,8 +42,8 @@ public class AssociationTest {
 
     @Test
     public void testUsers() throws IOException {
-        Response response = Request.Get("http://162.243.151.219:8080/jieli-1.0-SNAPSHOT/rest/association/user?id=533c0568e4b05bd824aeda54&state=1")
-                .addHeader("Cookie", "u=533bfca63a6e26a4f86e916d")
+        Response response = Request.Get("http://162.243.151.219:8080/jieli-1.0-SNAPSHOT/rest/association/user?id=5348205ce4b00b2ae52d3f5a&state=1")
+                .addHeader("Cookie", "u=53481be2e4b00b2ae52d3f58")
                 .execute();
 
         System.out.println(response.returnContent().asString());
