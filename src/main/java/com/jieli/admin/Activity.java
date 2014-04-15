@@ -27,6 +27,7 @@ public class Activity {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("isSuper",true);
         params.put("username","xianxing");
+        params.put("associationList",",<option value='123'>上海</option>");
 
         return FTLrender.getResult("new_activity.ftl", params);
     }

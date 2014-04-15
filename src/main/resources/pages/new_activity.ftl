@@ -2,7 +2,7 @@
 <html lang="zh">
 <head>
     <meta charset="utf-8"/>
-    <title>接力 投票管理</title>
+    <title>接力 活动管理</title>
     <meta name="description" content="接力"/>
     <!-- basic styles -->
 
@@ -20,6 +20,9 @@
     <link rel="stylesheet" href="/assets/css/colorbox.css"/>
 
     <link rel="stylesheet" href="/assets/css/jquery.gritter.css" />
+
+    <link rel="stylesheet" href="/assets/css/datepicker.css" />
+    <link rel="stylesheet" href="/assets/css/daterangepicker.css" />
 
     <!-- fonts -->
 
@@ -47,6 +50,24 @@
     <script src="/assets/js/html5shiv.js"></script>
     <script src="/assets/js/respond.min.js"></script>
     <![endif]-->
+
+    <style>
+        .arrangement-detail{
+            height: 31px;
+            margin-top: 2px;
+            margin-bottom: 2px;
+        }
+        .icon-remove{
+            margin: 7px 0px 0px 6px;
+            font-size: 20px;
+            cursor: pointer;
+        }
+        .icon-plus{
+            margin: 7px 0px 0px 6px;
+            font-size: 20px;
+            cursor: pointer;
+        }
+    </style>
 </head>
 
 <body>
@@ -179,207 +200,273 @@
 </div>
 
 <div class="main-content">
-    <div class="breadcrumbs" id="breadcrumbs">
-        <script type="text/javascript">
-            try {
-                ace.settings.check('breadcrumbs', 'fixed')
-            } catch (e) {
-            }
-        </script>
+<div class="breadcrumbs" id="breadcrumbs">
+    <script type="text/javascript">
+        try {
+            ace.settings.check('breadcrumbs', 'fixed')
+        } catch (e) {
+        }
+    </script>
 
-        <ul class="breadcrumb">
-            <li>
-                <i class="icon-home home-icon"></i>
-                <a href="index.html">首页</a>
-            </li>
+    <ul class="breadcrumb">
+        <li>
+            <i class="icon-home home-icon"></i>
+            <a href="index.html">首页</a>
+        </li>
 
-            <li>
-                <a href="#"> 投票管理 </a>
-            </li>
+        <li>
+            <a href="#"> 活动管理 </a>
+        </li>
 
-            <li class="active"> 发布投票</li>
-        </ul>
-        <!-- .breadcrumb -->
+        <li class="active"> 新建活动</li>
+    </ul>
+    <!-- .breadcrumb -->
 
-        <div class="nav-search" id="nav-search">
-            <form class="form-search">
+    <div class="nav-search" id="nav-search">
+        <form class="form-search">
 								<span class="input-icon">
 									<input type="text" placeholder="搜索 ..." class="nav-search-input"
                                            id="nav-search-input" autocomplete="off"/>
 									<i class="icon-search nav-search-icon"></i>
 								</span>
-            </form>
+        </form>
+    </div>
+    <!-- #nav-search -->
+</div>
+
+<div class="page-content">
+<div class="page-header">
+    <h1>
+        在这里新建一个<#if isSuper>推荐活动<#else>官方活动</#if>
+    </h1>
+</div>
+<!-- /.page-header -->
+
+<div class="row">
+<div class="col-xs-12">
+<!-- PAGE CONTENT BEGINS -->
+
+<form class="form-horizontal" role="form">
+
+    <!--标题-->
+    <div class="form-group">
+        <label class="col-sm-3 control-label no-padding-right" for="form-field-title"> 活动标题 </label>
+
+        <div class="col-sm-9">
+            <input type="text" id="form-field-title" placeholder="标题" class="col-xs-10 col-sm-7"
+                   style="padding-left: 7px;"/>
         </div>
-        <!-- #nav-search -->
+    </div>
+    <div class="space-4"></div>
+
+    <#if isSuper>
+        <!--协会-->
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right" for="form-field-associations"> 协会范围 </label>
+
+            <div class="col-sm-9">
+                <select class="col-xs-10 col-sm-7" id="form-field-associations" style="padding: 5px 4px;font-size: 14px;">
+                ${associationList}
+                </select>
+            </div>
+        </div>
+        <div class="space-4"></div>
+    </#if>
+
+    <!--时间-->
+    <!--<div class="form-group">
+        <label class="col-sm-3 control-label no-padding-right" for="form-field-actDate"> 活动时间 </label>
+        <div class="col-sm-3">
+            <div class="input-group input-group-sm">
+                <input type="text" id="form-field-actDate" class="form-control hasDatepicker"/>
+                <span class="input-group-addon">
+                    <i class="icon-calendar"></i>
+                </span>
+            </div>
+        </div>
+    </div>-->
+    <div class="form-group">
+        <label class="col-sm-3 control-label no-padding-right" for="form-field-actDate"> 活动时间 </label>
+        <div class="col-sm-3">
+            <div class="input-group">
+								<span class="input-group-addon">
+									<i class="icon-calendar bigger-110"></i>
+								</span>
+
+                <input class="form-control" type="text" name="date-range-picker" id="form-field-actDate" />
+            </div>
+        </div>
     </div>
 
-    <div class="page-content">
-        <div class="page-header">
-            <h1>
-                在这里发布一篇投票
-                <small>
-                    <i class="icon-double-angle-right"></i>
-                    上传图片后文本框内会产生
-                    <img-placeholder src='...'></img-placeholder>
-                    标签，您可以通过移动该标签调整图片位置
-                </small>
-            </h1>
+    <div class="space-4"></div>
+
+    <!--地点-->
+    <div class="form-group">
+        <label class="col-sm-3 control-label no-padding-right" for="form-field-location"> 活动地点 </label>
+
+        <div class="col-sm-9">
+            <input type="text" id="form-field-location" placeholder="地点" class="col-xs-10 col-sm-7"
+                   style="padding-left: 7px;"/>
         </div>
-        <!-- /.page-header -->
+    </div>
+    <div class="space-4"></div>
 
-        <div class="row">
-            <div class="col-xs-12">
-                <!-- PAGE CONTENT BEGINS -->
+    <!--类型-->
+    <div class="form-group">
+        <label class="col-sm-3 control-label no-padding-right" for="form-field-type"> 活动类型 </label>
 
-                <form class="form-horizontal" role="form">
+        <div class="col-sm-9">
+            <input type="text" id="form-field-type" placeholder="类型" class="col-xs-10 col-sm-7"
+                   style="padding-left: 7px;"/>
+        </div>
+    </div>
 
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label no-padding-right" for="form-field-title"> 投票标题 </label>
+    <div class="space-4"></div>
+    <div class="space-4"></div>
 
-                        <div class="col-sm-9">
-                            <input type="text" id="form-field-title" placeholder="标题" class="col-xs-10 col-sm-7"
-                                   style="padding-left: 7px;"/>
-                        </div>
-                    </div>
+    <!--简介-->
+    <div class="form-group">
+        <label class="col-sm-3 control-label no-padding-right" for="form-field-textarea-description"> 活动简介 </label>
 
-                    <div class="space-4"></div>
+        <div class="col-sm-9">
+            <textarea id="form-field-textarea-description" class="autosize-transition col-xs-10 col-sm-7"
+                      style="min-height: 140px;"></textarea>
+        </div>
+    </div>
+    <div class="space-4"></div>
 
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label no-padding-right" for="form-field-select-type"> 投票类型 </label>
+    <!--安排-->
+    <div class="form-group">
+        <label class="col-sm-3 control-label no-padding-right" for="form-field-textarea-arrangement"> 概要安排 </label>
 
-                        <div class="col-sm-9">
-                            <select class="col-xs-10 col-sm-7" id="form-field-select-type"
-                                    style="padding: 5px 4px;font-size: 14px;">
-                                <option value="S" selected="selected">单项选择</option>
-                                <option value="M">多项选择</option>
-                            </select>
-                        </div>
-                    </div>
+        <div class="col-sm-9">
+            <textarea id="form-field-textarea-arrangement" class="autosize-transition col-xs-10 col-sm-7"
+                      style="min-height: 140px;"></textarea>
+        </div>
+    </div>
+    <div class="space-4"></div>
 
-                    <div class="space-4"></div>
+    <!--详细安排-->
+    <div class="form-group">
+        <label class="col-sm-3 control-label no-padding-right" for="arrangement-details"> 日程安排 </label>
 
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label no-padding-right" for="form-field-textarea"> 截止时间 </label>
-                        <div class="col-sm-3">
+        <div id="arrangement-details" class="col-sm-9">
+            <div>
+                <div class="icon-plus"></div>
+            </div>
+        </div>
+    </div>
+    <div class="space-4"></div>
+    <div class="space-4"></div>
 
-                            <div class="input-group input-group-sm">
-                                <input type="text" id="form-field-date" class="form-control hasDatepicker"/>
-													<span class="input-group-addon">
-														<i class="icon-calendar"></i>
-													</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="space-4"></div>
+    <!--服务-->
+    <div class="form-group">
+        <label class="col-sm-3 control-label no-padding-right" for="form-field-textarea-service"> 服务信息 </label>
 
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label no-padding-right" for="form-field-textarea"> 投票正文 </label>
+        <div class="col-sm-9">
+            <textarea id="form-field-textarea-service" class="autosize-transition col-xs-10 col-sm-7"
+                      style="min-height: 140px;"></textarea>
+        </div>
+    </div>
+    <div class="space-4"></div>
 
-                        <div class="col-sm-9">
-                            <textarea id="form-field-textarea" class="autosize-transition col-xs-10 col-sm-7"
-                                      style="min-height: 140px;"></textarea>
-                        </div>
+    <!--赞助-->
+    <div class="form-group">
+        <label class="col-sm-3 control-label no-padding-right" for="form-field-textarea-sponsor"> 赞助信息 </label>
 
-                    </div>
+        <div class="col-sm-9">
+            <textarea id="form-field-textarea-sponsor" class="autosize-transition col-xs-10 col-sm-7"
+                      style="min-height: 140px;"></textarea>
+        </div>
+    </div>
+    <div class="space-4"></div>
+    <div class="space-4"></div>
 
-                    <div class="space-4"></div>
-
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label no-padding-right" for="form-input-readonly"> 正文图片(可选) </label>
-
-                        <div class="col-sm-9">
-                            <!--<button class="btn btn-info"> 上传标题图 </button>-->
-
-                            <!--<br/>-->
-
-                            <!--<img src="/assets/images/gallery/image-4.jpg" style="max-width: 400px;"/> -->
-                            <div class="row-fluid">
-                                <ul class="ace-thumbnails" id="upload-img-list">
-                                    <li id="img-list-invisible" style="border-width:0;display: block">暂无图片</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-
-
-
-
-                    <div class="space-4"></div>
-
-                    <!--时间-->
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label no-padding-right" for="form-field-actDate"> 活动时间 </label>
-                        <div class="col-sm-3">
-                            <div class="input-group input-group-sm">
-                                <input type="text" id="form-field-actDate" class="form-control hasDatepicker"/>
+    <!--截止-->
+    <div class="form-group">
+        <label class="col-sm-3 control-label no-padding-right" for="form-field-dlDate"> 报名截止时间 </label>
+        <div class="col-sm-3">
+            <div class="input-group input-group-sm">
+                <input type="text" id="form-field-dlDate" class="form-control hasDatepicker"/>
                         		<span class="input-group-addon">
                         			<i class="icon-calendar"></i>
                         		</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="space-4"></div>
-
-
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label no-padding-right" for="arrangement-details"> 日程安排 </label>
-
-                        <div id="arrangement-details" class="col-sm-9">
-                            <div>
-                                <div class="icon-plus1"></div>
-                            </div>
-                        </div>
-                    </div>
-
-
-
-                    <div class="space-4"></div>
-
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label no-padding-right" for="form-field-title"> 投票选项 </label>
-
-                        <div id="vote-choices" class="col-sm-9">
-                            <div>
-                                <div class="icon-plus"></div>
-                            </div>
-                        </div>
-                    </div>
-
-                </form>
-
-                <div class="clearfix form-actions">
-                    <div class="col-md-offset-3 col-md-9">
-                        <button class="btn btn-success btn-purple" id="bootbox-upload-image"
-                                style="font-weight:bold">
-                            <i class="icon-cloud-upload bigger-110"></i>
-                            上传图片
-                        </button>
-
-                        &nbsp; &nbsp; &nbsp;
-                        <button class="btn btn-success" type="button" style="font-weight:bold">
-                            <i class="icon-question bigger-110"></i>
-                            预览
-                        </button>
-
-                        &nbsp; &nbsp; &nbsp;
-                        <button class="btn btn-info" type="button" style="font-weight:bold" onclick="finish();">
-                            <i class="icon-ok bigger-110"></i>
-                            完成
-                        </button>
-
-                        &nbsp; &nbsp; &nbsp;
-                        <button class="btn" type="reset" style="font-weight:bold" onclick="clearImgList();return true;">
-                            <i class="icon-undo bigger-110"></i>
-                            清空
-                        </button>
-                    </div>
-                </div>
             </div>
-            <!-- /.col -->
         </div>
-        <!-- /.row -->
     </div>
-    <!-- /.page-content -->
+    <div class="space-4"></div>
+
+    <!--费用-->
+    <div class="form-group">
+        <label class="col-sm-3 control-label no-padding-right" for="form-field-fee"> 活动费用 </label>
+
+        <div class="col-sm-9">
+            <input type="text" id="form-field-fee" placeholder="费用" class="col-xs-10 col-sm-7"
+                   style="padding-left: 7px;"/>
+        </div>
+    </div>
+    <div class="space-4"></div>
+
+    <!--人数限制-->
+    <div class="form-group">
+        <label class="col-sm-3 control-label no-padding-right" for="form-field-max"> 人数限制 </label>
+
+        <div class="col-sm-9">
+            <input type="text" id="form-field-max" placeholder="最大人数" class="col-xs-10 col-sm-7"
+                   style="padding-left: 7px;"/>
+        </div>
+    </div>
+    <div class="space-4"></div>
+
+    <div class="space-4"></div>
+
+    <div class="form-group">
+        <label class="col-sm-3 control-label no-padding-right" for="form-field-imgurl"> 标题图 </label>
+
+        <div class="col-sm-9">
+            <div class="col-sm-9">
+                <img width="150" height="150" src="" id="form-field-imgurl" style="display: none;float:left">
+                <i id="delTitleImage" class="icon-remove" onclick="deleteTitleImage()" style="display: none"></i>
+            </div>
+        </div>
+    </div>
+
+
+</form>
+
+<div class="clearfix form-actions">
+    <div class="col-md-offset-3 col-md-9">
+        <button class="btn btn-success btn-purple" id="bootbox-upload-image"
+                style="font-weight:bold">
+            <i class="icon-cloud-upload bigger-110"></i>
+            上传标题图片
+        </button>
+
+        &nbsp; &nbsp; &nbsp;
+        <button class="btn btn-success" type="button" style="font-weight:bold">
+            <i class="icon-question bigger-110"></i>
+            预览
+        </button>
+
+        &nbsp; &nbsp; &nbsp;
+        <button class="btn btn-info" type="button" style="font-weight:bold" onclick="finish();">
+            <i class="icon-ok bigger-110"></i>
+            完成
+        </button>
+
+        &nbsp; &nbsp; &nbsp;
+        <button class="btn" type="reset" style="font-weight:bold" onclick="clearImgList();return true;">
+            <i class="icon-undo bigger-110"></i>
+            清空
+        </button>
+    </div>
+</div>
+</div>
+<!-- /.col -->
+</div>
+<!-- /.row -->
+</div>
+<!-- /.page-content -->
 </div>
 <!-- /.main-content -->
 
@@ -562,35 +649,8 @@
                                 if (jsn.code == 200) {
                                     var uploadImgSrc = jsn.body + "";
 
-                                    uploadImgSrc = "<img-pLAcehOLDer" + uploadImgSrc + ">";
-                                    var otextarea = $("#form-field-textarea").val().trim();
-                                    var otextarea_head = "";
-                                    var otextarea_tail;
-                                    var pos = getTextAreaCursorPosition() || 0;
-                                    if (pos > 1)
-                                        otextarea_head = otextarea.substring(0, pos);
-                                    otextarea_tail = otextarea.substring(pos);
-
-                                    //alert(otextarea_head + "[+]" + otextarea_tail);
-
-                                    $("#form-field-textarea").val(otextarea_head + uploadImgSrc + otextarea_tail);
-
-                                    // 更新图片集
-                                    var imgsrc=uploadImgSrc;
-                                    var newImgHtml = "<li>";
-                                    newImgHtml += "<a href='"+jsn.body+"' data-rel='colorbox'>";
-                                    newImgHtml += "<img alt='150x150' width='150' height='150' src='"+jsn.body+"' />";
-                                    newImgHtml += "</a>";
-                                    newImgHtml += "<div class='tools tools-right' style='height:30px;'>";
-                                    // must be " , ' no use
-                                    newImgHtml += "<a href='#' onclick='deletePic(\""+uploadImgSrc+"\")'><i class='icon-remove red'></i></a></div></li>";
-                                    clearImgList();
-                                    $("#upload-img-list > li").eq(0).after(newImgHtml);
-
-                                    $("#img-list-invisible").attr("style","border-width:0;display:none");
-
-                                    $('.ace-thumbnails [data-rel="colorbox"]').colorbox(colorbox_params);
-                                    $("#cboxLoadingGraphic").append("<i class='icon-spinner orange'></i>");//let's add a custom loading icon
+                                    $("#form-field-imgurl").attr("src",uploadImgSrc);
+                                    $("#form-field-imgurl").css("display","block");
 
                                 } else {
                                     alert("上传失败！");
@@ -633,10 +693,11 @@
 
 <script type="text/javascript">
 jQuery(function ($) {
-    $("#sidebar-shortcuts-navlist").load("/sidebar.html",function(){$("#nav_list_2_2").addClass("active open");$("#nav_list_2").addClass("active");});
-
-    /*$("#sidebar").load("/sidebar.html");$("#nav_list_2_2").addClass("active open");$("#nav_list_2").addClass("active");*/
-
+<#if isSuper>
+    $("#sidebar-shortcuts-navlist").load("/sidebar_super.html",function(){$("#nav_list_3_2").addClass("active open");$("#nav_list_3").addClass("active");});
+<#else>
+    $("#sidebar-shortcuts-navlist").load("/sidebar_admin.html",function(){$("#nav_list_3_2").addClass("active open");$("#nav_list_3").addClass("active");});
+</#if>
 
     $("#bootbox-upload-image").on("click", uploadImgBox);
 
@@ -876,9 +937,9 @@ jQuery(function ($) {
     $('.date-picker').datepicker({autoclose: true}).next().on(ace.click_event, function () {
         $(this).prev().focus();
     });
-    $('input[name=date-range-picker]').daterangepicker().prev().on(ace.click_event, function () {
+    /*$('input[name=date-range-picker]').daterangepicker().prev().on(ace.click_event, function () {
         $(this).next().focus();
-    });
+    });*/
 
     $('#timepicker1').timepicker({
         minuteStep: 1,
@@ -942,95 +1003,32 @@ jQuery(function ($) {
      */
 });
 </script>
-<script type="application/javascript">
+<script>
 
-    function voteOptionDeleteImg(ph){
-        var _src=ph.replace("<img-pLAcehOLDer","");
-        _src = _src.substr(0,_src.length-1);
-
-        // clear textarea
-        var otextarea = $("#form-field-textarea").val().trim();
-        otextarea = otextarea.replace(ph,"");
-        $("#form-field-textarea").val(otextarea);
-
-        // delete pic
-        $("a[href=\'"+_src+"\']").parent().remove();
-
-        if ($("#img-list-invisible").parent().children().length == 1)
-            $("#img-list-invisible").attr("style","border-width:0;display:block");
+    function deleteTitleImage(){
+        $("#delTitleImage").css("display","none");
+        $("#form-field-imgurl").attr("src","");
+        $("#form-field-imgurl").css("display","none");
     }
 
-    function voteOptionUploadImg(voteOption) {
-        var spin_img = "<div id='upload-loading-img' style='margin-left:30px;margin-top:10px;display: none;'><i class='icon-spinner icon-spin orange bigger-125'></i></div>";
-        spin_img = "";
-        bootbox.dialog({
-            //message: "<input type='file' id='upload-image-files' name='upload-image-files' >",
-            message: "<form id='rest-upload-form' action='/upload' method='post' enctype='multipart/form-data' acceptcharset='UTF-8'>\n<input id='rest-upload-file' type='file' name='file' size='50' />"+spin_img+"</form>",
-            buttons: {
-                "upload": {
-                    "label": "<i class='icon-ok'></i> 上传 ",
-                    "className": "btn-sm btn-success",
-                    "callback": function () {
-                        // show loading image first
-                        //$("#upload-loading-img").attr("style","display:block");
-
-                        //Example.show("great success");
-                        // upload Image !
-                        var d = new FormData(document.getElementById('rest-upload-form'));
-                        $.ajax({
-                            url: '/rest/upload',
-                            type: 'POST',
-                            contentType: false,
-                            data: d,
-                            cache: false,
-                            processData: false,
-                            async: false,
-                            success: function (jsn) {
-                                //alert(jsn);
-                                // untested , but it should be like : code:200,body:filepath,msg...
-
-                                if (jsn.code == 200) {
-
-                                    var newImgHtml = "";
-
-                                    newImgHtml += "<img class='vote-img' width='150' height='150' src='"+jsn.body+"' />";
-
-                                    //newImgHtml += "<div class='tools tools-right' style='height:30px;'>";
-                                    // must be " , ' no use
-                                    //newImgHtml += "<a href='#' onclick='deletePic(\""+"\")'><i class='icon-remove red'></i></a></div></div>";
-                                    $(newImgHtml).insertAfter(voteOption.children('.icon-remove'));
-                                    voteOption.children('.vote-choice-img').hide();
-                                    voteOption.css({height : '200px'});
-
-                                } else {
-                                    alert("上传失败！");
-                                }
-                            }
-                        });
-
-                        //$("#upload-loading-img").attr("style","display: none");
-                    }
-                },
-                "cancel": {
-                    "label": "<i class='icon-remove'></i> 取消",
-                    "className": "btn-sm",
-                    "callback": function () {
-                        //Example.show("uh oh, look out!");
-                        var objFile = document.getElementById('rest-upload-file');
-                        objFile.outerHTML = objFile.outerHTML.replace(/(value=\").+\"/i, "$1\"");
-                    }
-                }
-            }
-        });
-    }
-    function deleteVoteOption() {
+    /*function deleteVoteOption() {
         if ($('.vote-choice').length > 1) {
             $(this).parent().remove();
         }
         else
             alert('每个投票至少要有一个选项');
+    }*/
+    function deleteArrangementDetail() {
+        if ($(".arrangement-detail").length > 1) {
+            $(this).parent().remove();
+        }else if ($(".arrangement-detail").length == 1){
+            $(".arrangement-detail").children("input").eq(1).val("");
+            var bd = $("#form-field-actDate").val();
+            if (bd && bd.substr(0,10).length==10) $(".arrangement-detail").children("input").eq(0).val(bd.substr(0,10)+" 上午");
+            else $(".arrangement-detail").children("input").eq(0).val("");
+        }
     }
-    function addVoteOption() {
+    /*function addVoteOption() {
         var voteOption = $('<div class="vote-choice">' +
                 '<input type="text"  placeholder="选项内容，不填写为无效选项" class="col-xs-10 col-sm-7 vote-choice-text" style="padding-left: 7px;">' +
                 '<button type="button" class="btn btn-xs btn-info vote-choice-img">Pic</button>' +
@@ -1041,74 +1039,59 @@ jQuery(function ($) {
         voteOption.children('.vote-choice-img').click(function() {
             voteOptionUploadImg(voteOption);
         });
-    }
+    }*/
     function addArrangementDetail() {
         var beginDate =$("#form-field-actDate").val();
         if (!beginDate) {alert("请先输入活动时间！");return;}
 
-        var lastArrangementDetail = $('.icon-plus').prev().attr("_time");
-        if (lastArrangementDetail) lastArrangementDetail =  lastArrangementDetail.split(":");
-        else lastArrangementDetail = ['2014-01-02','1'];
+        var lastArrangementDetail = $('.icon-plus').parent().prev().children().eq(0).val();
+        if (lastArrangementDetail) lastArrangementDetail =  lastArrangementDetail.split(" ");
+        else lastArrangementDetail = [GetDate10(beginDate,-1),'下午'];
 
         var arrangementDetail = $('<div class="arrangement-detail">' +
-                '<input type="text"  placeholder="日程安排时间" class="col-xs-10 col-sm-3 arrangement-detail-time" style="padding-left: 7px;" _time="">' +
+                '<input type="text"  placeholder="日程安排时间" class="col-xs-10 col-sm-2 arrangement-detail-time" style="padding-left: 7px;" >' +
+                '<span style="padding:10px;float: left;"></span>' +
                 '<input type="text"  placeholder="日程安排，不填即为此时间段无活动内容" class="col-xs-10 col-sm-7 arrangement-detail-content" style="padding-left: 7px;">' +
                 '<div class="icon-remove"></div>' +
                 '</div>');
-        arrangementDetail.insertBefore($('.icon-plus1').parent());
-        arrangementDetail.children('.icon-remove').click(function(){});
-        if (lastArrangementDetail[1] == "1"){
-            arrangementDetail.children('.arrangement-detail-time').attr("_time",""+beginDate+":2");
-            arrangementDetail.children('.arrangement-detail-time').val(beginDate+" 下午");
+        arrangementDetail.insertBefore($('.icon-plus').parent());
+        arrangementDetail.children('.icon-remove').click(deleteArrangementDetail);
+        if (lastArrangementDetail[1] == "上午"){
+            arrangementDetail.children('.arrangement-detail-time').val(lastArrangementDetail[0]+" 下午");
         }else{
-            var a=new Date(arrangementDetail[0]);
-            Object.prototype.toString.call(a);
-            a.setTime(a.getTime()+86400000);
-            var year = datetime.getFullYear();
-            var month = datetime.getMonth() + 1 < 10 ? "0" + (datetime.getMonth() + 1) : datetime.getMonth() + 1;
-            var day = datetime.getDay() < 10 ? "0" + datetime.getDay() : datetime.getDay()();
-
-            var d = year + "-" + month + "-" + day+":1";
-            arrangementDetail.children('.arrangement-detail-time').attr("_time",""+d);
-            arrangementDetail.children('.arrangement-detail-time').val(d+" 下午");
+            var d = GetDate10(lastArrangementDetail[0],1)+" 上午";
+            arrangementDetail.children('.arrangement-detail-time').val(d);
         }
     }
-    jQuery(function($){
-        $('.icon-remove').click(deleteVoteOption);
-        $('.icon-plus').click(addVoteOption);
-        addVoteOption();
-        addVoteOption();
-        addVoteOption();
+    function GetDate10(dateStr,offsetDay) {
+        var datetime=new Date(dateStr);
+        datetime.setTime(datetime.getTime()+86400000*offsetDay);
 
-        $('.icon-plus1').click(addArrangementDetail);
+        var year = datetime.getFullYear();
+        var month = datetime.getMonth() + 1 < 10 ? "0" + (datetime.getMonth() + 1) : datetime.getMonth() + 1;
+        var day = datetime.getDate() < 10 ? "0" + datetime.getDate() : datetime.getDate();
+
+        return year+"-"+month+"-"+day;
+    }
+    jQuery(function($){
+
+        $('.icon-remove').click(deleteArrangementDetail);
+
+        $("#form-field-actDate").val(GetDate10(new Date(),0));
+        $('.icon-plus').click(addArrangementDetail);
         addArrangementDetail();
 
-        $( "#form-field-date" ).datepicker({
-            showOtherMonths: true,
-            selectOtherMonths: false,
-            //isRTL:true,
-            format: "yyyy-mm-dd",
-
-
-
-            changeMonth: true,
-            changeYear: true,
-
-            showButtonPanel: true,
-            beforeShow: function() {
-                //change button colors
-                var datepicker = $(this).datepicker( "widget" );
-                setTimeout(function(){
-                    var buttons = datepicker.find('.ui-datepicker-buttonpane')
-                            .find('button');
-                    buttons.eq(0).addClass('btn btn-xs');
-                    buttons.eq(1).addClass('btn btn-xs btn-success');
-                    buttons.wrapInner('<span class="bigger-110" />');
-                }, 0);
-            }
-
-        });
-
+        $('input[name=date-range-picker]').daterangepicker({
+                    format: 'YYYY-MM-DD'},
+                function(start, end, label) {
+                    //alert('A date range was chosen: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
+                    if (start.format('YYYY-MM-DD') == end.format('YYYY-MM-DD')){
+                        $('input[name=date-range-picker]').val(start.format('YYYY-MM-DD'));
+                    }else{
+                        $('input[name=date-range-picker]').val(start.format('YYYY-MM-DD') + ' 至 ' + end.format('YYYY-MM-DD'));
+                    }
+                });
+        $('#form-field-dlDate').datepicker({autoclose:true});
     });
 
     function check(request) {
