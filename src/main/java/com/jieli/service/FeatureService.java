@@ -20,7 +20,6 @@ import com.jieli.user.entity.User;
 import com.jieli.util.IdentifyUtils;
 import com.jieli.util.MongoUtils;
 import org.apache.commons.lang.StringUtils;
-import org.bson.types.ObjectId;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -134,8 +133,21 @@ public class FeatureService {
             responseEntity.msg = "互帮互助帖子添加失败";
             return Response.status(200).entity(responseEntity).build();
         }
+        List<String> concernedUserIds = IdentifyUtils.getConcerned(userId);
+        for (String concernedUserId : concernedUserIds) {
+            Message message = new Message();
+            message.messageType = MessageType.FRIEND;
+            message.userId = concernedUserId;
+            if (help.getType() == 0) {
+                message.content = "您关注的 " + IdentifyUtils.getUserName(userId) + " 发起了一条需求 " + help.getTitle();
+            } else {
+                message.content = "您关注的 " + IdentifyUtils.getUserName(userId) + " 参加了一条供给 " + help.getTitle();
+            }
+            message.addTime = new Date();
+            messageDAO.save(message);
+        }
         responseEntity.code = 200;
-        responseEntity.body = "{\"_id\":\"" + result.get_id() + "\"}";;
+        responseEntity.body = "{\"_id\":\"" + result.get_id() + "\"}";
         return Response.status(200).entity(responseEntity).build();
     }
 
@@ -241,11 +253,20 @@ public class FeatureService {
             return Response.status(200).entity(responseEntity).build();
         }
         HelpInfo helpInfo = helpDAO.loadById(helpId);
-        if(helpInfo.getUserId() == userId) {
-            responseEntity.code = 1200;
-            responseEntity.msg = "不能评论自己";
-            return Response.status(403).entity(responseEntity).build();
+//        if(helpInfo.getUserId() == userId) {
+//            responseEntity.code = 1200;
+//            responseEntity.msg = "不能评论自己";
+//            return Response.status(403).entity(responseEntity).build();
+//        }
+        if (!helpInfo.getUserId().equals(userId)) {
+            Message message = new Message();
+            message.messageType = MessageType.COMMENT;
+            message.userId = helpInfo.getUserId();
+            message.content = "你发起的帮忙贴 " + helpInfo.getTitle() + " 被 " + IdentifyUtils.getUserName(IdentifyUtils.getUserId(sessionId)) + " 评论";
+            message.addTime = new Date();
+            messageDAO.save(message);
         }
+
         Comment comment = new Comment();
         comment.commentUserId = userId;
         comment.commentedUserId = commentInfo.get("commentedUserId");
@@ -254,7 +275,8 @@ public class FeatureService {
         comment.addTime = new Date();
         comment.topicId = helpId;
         commentDAO.save(comment);
-        CommentMessageUtil.addCommentMessage(comment, MessageType.ACTIVITY);
+        CommentMessageUtil.addCommentMessage(comment);
+
         responseEntity.code = 200;
         responseEntity.msg = "评论成功";
         return Response.status(200).entity(responseEntity).build();
@@ -339,17 +361,15 @@ public class FeatureService {
         HelpInfo helpInfo = helpDAO.loadById(helpId);
         if(helpInfo == null) {
             responseEntity.code = 1205;
-            responseEntity.msg = "参数错误";
+            responseEntity.msg = "帖子不存在";
             return Response.status(200).entity(responseEntity).build();
         }
         //已关注过不能再次关注
         if(helpInfo.getFocusList() != null) {
-            for(String str : helpInfo.getFocusList()) {
-                if(str.equals(userId)) {
-                    responseEntity.code = 1209;
-                    responseEntity.msg = "已关注过";
-                    return Response.status(200).entity(responseEntity).build();
-                }
+            if (helpInfo.getFocusList().contains(userId)) {
+                responseEntity.code = 1209;
+                responseEntity.msg = "已关注过";
+                return Response.status(200).entity(responseEntity).build();
             }
         }
         //自己不能关注自己
@@ -360,16 +380,16 @@ public class FeatureService {
         }
 
         HelpInfo result = helpDAO.addFocus(helpId, userId);
-        //TODO 互帮互助关注动态
-        Message message = new Message();
-        message.messageType = MessageType.HELP;
-        message.importance = 0;
-        message.content = "帖子已经被我回复啦";
-        message.set_id(new ObjectId(result.get_id().toString()));
-        message.addTime = new Date();
-        messageDAO.save(message);
+
+//        Message message = new Message();
+//        message.messageType = MessageType.HELP;
+//        message.importance = 0;
+//        message.content = "帖子已经被我回复啦";
+//        message.set_id(new ObjectId(result.get_id().toString()));
+//        message.addTime = new Date();
+//        messageDAO.save(message);
         responseEntity.code = 200;
-        responseEntity.body = result.get_id();
+        responseEntity.body = "{\"_id\":\"" + result.get_id() + "\"}";
         return Response.status(200).entity(responseEntity).build();
     }
 
@@ -379,47 +399,47 @@ public class FeatureService {
      * @param commentId
      * @return
      */
-   @Path("/help/detail/comment/top")
-     @POST
-     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-     public Response addTop(@CookieParam("u")String sessionId, @QueryParam("helpId")String helpId, @QueryParam("commentId")String commentId) {
-         if(!IdentifyUtils.isValidate(sessionId)) {
-             return Response.status(403).build();
-         }
-         String userId = IdentifyUtils.getUserId(sessionId);
-         ResponseEntity responseEntity = new ResponseEntity();
-         if (StringUtils.isEmpty(userId)) {
-             responseEntity.code = 1103;
-             responseEntity.msg = "账户出错";
-             return Response.status(200).entity(responseEntity).build();
-         }
-         if (StringUtils.isEmpty(helpId) || commentId == null) {
-             responseEntity.code = 1101;
-             responseEntity.msg = "缺少参数";
-             return Response.status(200).entity(responseEntity).build();
-         }
-         HelpInfo help = helpDAO.loadById(helpId);
-         if(help == null) {
-             responseEntity.code = 1205;
-             responseEntity.msg = "参数错误";
-             return Response.status(200).entity(responseEntity).build();
-         }
-         if(help.getUserId() != userId || !IdentifyUtils.isAdmin(sessionId)) {
-             responseEntity.code = 1403;
-             responseEntity.msg = "权限不足";
-             return Response.status(403).entity(responseEntity).build();
-         }
-         HelpInfo result = helpDAO.topComment(helpId, commentId);
-         if(result == null) {
-             responseEntity.code = 1206;
-             responseEntity.body = "置顶评论失败";
-             return Response.status(200).entity(responseEntity).build();
-         }
-         responseEntity.code = 200;
-         responseEntity.body = result.get_id();
-         return Response.status(200).entity(responseEntity).build();
+    @Path("/help/detail/comment/top")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+    public Response addTop(@CookieParam("u")String sessionId, @QueryParam("helpId")String helpId, @QueryParam("commentId")String commentId) {
+        if(!IdentifyUtils.isValidate(sessionId)) {
+            return Response.status(403).build();
+        }
+        String userId = IdentifyUtils.getUserId(sessionId);
+        ResponseEntity responseEntity = new ResponseEntity();
+        if (StringUtils.isEmpty(userId)) {
+            responseEntity.code = 1103;
+            responseEntity.msg = "账户出错";
+            return Response.status(200).entity(responseEntity).build();
+        }
+        if (StringUtils.isEmpty(helpId) || commentId == null) {
+            responseEntity.code = 1101;
+            responseEntity.msg = "缺少参数";
+            return Response.status(200).entity(responseEntity).build();
+        }
+        HelpInfo help = helpDAO.loadById(helpId);
+        if(help == null) {
+            responseEntity.code = 1205;
+            responseEntity.msg = "参数错误";
+            return Response.status(200).entity(responseEntity).build();
+        }
+        if(!help.getUserId().equals(userId) || !IdentifyUtils.isAdmin(sessionId)) {
+            responseEntity.code = 1403;
+            responseEntity.msg = "权限不足";
+            return Response.status(403).entity(responseEntity).build();
+        }
+        HelpInfo result = helpDAO.topComment(helpId, commentId);
+        if(result == null) {
+            responseEntity.code = 1206;
+            responseEntity.body = "置顶评论失败";
+            return Response.status(200).entity(responseEntity).build();
+        }
+        responseEntity.code = 200;
+        responseEntity.body = "{\"_id\":\"" + result.get_id() + "\"}";;
+        return Response.status(200).entity(responseEntity).build();
 
-     }
+    }
 
     /**
      * 获取投票列表
@@ -688,15 +708,15 @@ public class FeatureService {
         }
 
         //触发参与投票动态
-        Message message = new Message();
-        message.messageType = MessageType.VOTE;
-        message.importance = 0;
-        message.content = "我参与了一个投票";
-        message.set_id(new ObjectId(result.get_id().toString()));
-        message.addTime = new Date();
-        messageDAO.save(message);
+//        Message message = new Message();
+//        message.messageType = MessageType.VOTE;
+//        message.importance = 0;
+//        message.content = "我参与了一个投票";
+//        message.set_id(new ObjectId(result.get_id().toString()));
+//        message.addTime = new Date();
+//        messageDAO.save(message);
         responseEntity.code = 200;
-        responseEntity.body = result.get_id();
+        responseEntity.body = "{\"_id\":\"" + result.get_id() + "\"}";;
         return Response.status(200).entity(responseEntity).build();
     }
 
@@ -734,7 +754,7 @@ public class FeatureService {
         comment.commentedUserId = commentInfo.get("commentedUserId");
         comment.addTime = new Date();
         commentDAO.save(comment);
-        CommentMessageUtil.addCommentMessage(comment, MessageType.VOTE);
+        CommentMessageUtil.addCommentMessage(comment);
         responseEntity.code = 200;
         responseEntity.msg = "评论成功";
         return Response.status(200).entity(responseEntity).build();

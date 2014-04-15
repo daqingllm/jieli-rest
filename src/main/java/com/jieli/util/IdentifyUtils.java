@@ -3,7 +3,14 @@ package com.jieli.util;
 import com.jieli.common.dao.AccountDAO;
 import com.jieli.common.entity.Account;
 import com.jieli.common.entity.AccountState;
+import com.jieli.user.dao.DirectoryDAO;
+import com.jieli.user.dao.UserDAO;
+import com.jieli.user.entity.Directory;
+import com.jieli.user.entity.User;
 import org.apache.commons.lang.StringUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -45,6 +52,21 @@ public abstract class IdentifyUtils {
         } else {
             return null;
         }
+    }
+
+    public static String getUserName(String userId) {
+        UserDAO userDAO = new UserDAO();
+        User user = userDAO.loadById(userId);
+        return user.name;
+    }
+
+    public static List<String> getConcerned(String userId) {
+        DirectoryDAO directoryDAO = new DirectoryDAO();
+        Directory directory = directoryDAO.loadByUserId(userId);
+        if (directory == null || directory.concerned == null) {
+            return new ArrayList<String>();
+        }
+        return directory.concerned;
     }
 
     public static String getAssociationId(String sessionId) {

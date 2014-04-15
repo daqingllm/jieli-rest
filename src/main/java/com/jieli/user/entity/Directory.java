@@ -2,6 +2,7 @@ package com.jieli.user.entity;
 
 import com.jieli.mongo.Model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -15,5 +16,7 @@ public class Directory extends Model {
 
     public String userId;
 
-    public List<Friend> content;
+    public List<Friend> content = new ArrayList<Friend>();
+
+    public List<String> concerned = new ArrayList<String>();
 }

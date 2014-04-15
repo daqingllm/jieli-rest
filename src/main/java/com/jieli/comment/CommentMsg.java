@@ -12,6 +12,7 @@ import java.util.Date;
  */
 public class CommentMsg {
 
+    public String commentId;
     public String topicBrief;
     public String commentContent;
     public CommentUserInfo commentUser;

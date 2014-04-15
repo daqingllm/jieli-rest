@@ -17,8 +17,6 @@ public class Message extends Model {
 
     public MessageType messageType;
 
-    public boolean isComment = false;
-
     public Object content;
 
     public Date addTime;
@@ -26,4 +24,6 @@ public class Message extends Model {
     public boolean read;
 
     public int importance;
+
+    public boolean force = false;
 }

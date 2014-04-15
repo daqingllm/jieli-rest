@@ -4,7 +4,6 @@ import com.jieli.comment.Comment;
 import com.jieli.comment.TopicType;
 import com.jieli.common.entity.ResponseEntity;
 import com.jieli.message.CommentMessageUtil;
-import com.jieli.message.MessageType;
 import com.jieli.mongo.BaseDAO;
 import com.jieli.news.Image;
 import com.jieli.news.News;
@@ -230,7 +229,7 @@ public class NewsService {
         comment.addTime = new Date();
         commentDAO.save(comment);
         //message
-        CommentMessageUtil.addCommentMessage(comment, MessageType.NEWS);
+        CommentMessageUtil.addCommentMessage(comment);
 
         responseEntity.code = 200;
         responseEntity.msg = "评论成功";

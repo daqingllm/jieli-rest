@@ -104,7 +104,7 @@ public class ActivityService {
 
     @POST
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-    public Response upsertActivity(@CookieParam("u")String sessionId, @QueryParam("activityId")String activityId, Activity activity) {
+    public Response upsertActivity(@CookieParam("u")String sessionId, @QueryParam("activityId")String activityId, @QueryParam("force")boolean force, Activity activity) {
         if (!IdentifyUtils.isValidate(sessionId)) {
             return Response.status(403).build();
         }
@@ -130,6 +130,7 @@ public class ActivityService {
         }
         activity.addTime = new Date();
 
+        List<String> oldActivityInvitees = new ArrayList<String>();
         boolean exist = false;
         if (!StringUtils.isEmpty(activityId) && MongoUtils.isValidObjectId(activity.get_id().toString())) {
             Activity oldActivity = activityDAO.loadById(activity.get_id().toString());
@@ -137,6 +138,7 @@ public class ActivityService {
                 if (oldActivity.sponsorUserId.equals(IdentifyUtils.getUserId(sessionId))) {
                     activity.set_id(new ObjectId(activityId));
                     exist = true;
+                    oldActivityInvitees = oldActivity.invitees;
                 }  else {
                     return Response.status(403).build();
                 }
@@ -148,46 +150,55 @@ public class ActivityService {
                 Message message = new Message();
                 message.userId = userId;
                 message.read = false;
-                message.messageType = MessageType.ACTIVITY;
+                message.messageType = MessageType.OTHER;
+                message.force = force;
                 message.addTime = new Date();
 
                 ActivityMsg activityMsg = new ActivityMsg();
                 activityMsg.activityId = activityId;
-                activityMsg.msg = "活动内容有改变";
+                activityMsg.msg = activity.title + " 活动内容有改变";
 
                 message.content = activityMsg;
                 messageDAO.save(message);
             }
         } else {
             if (activity.tag == AcivityTag.PRIVATE) {
-                for (String userId : activity.invitees) {
-                    Message message = new Message();
-                    message.userId = userId;
-                    message.read = false;
-                    message.messageType = MessageType.ACTIVITY;
-                    message.addTime = new Date();
 
-                    ActivityMsg activityMsg = new ActivityMsg();
-                    activityMsg.activityId = activityId;
-                    activityMsg.msg = "接收到串局邀请";
-
-                    message.content = activityMsg;
-                    messageDAO.save(message);
-                }
             } else {
                 ActivityMsg activityMsg = new ActivityMsg();
                 if (!StringUtils.isEmpty(activity.associationId)) {
                     if (activity.tag == AcivityTag.OFFICIAL) {
-                        activityMsg.msg = "新的官方活动发布";
+                        activityMsg.msg = activity.title + " 官方活动发布";
                     } else if (activity.tag == AcivityTag.RECOMMEND) {
-                        activityMsg.msg = "新的推荐活动发布";
+                        activityMsg.msg = activity.title + " 推荐活动发布";
                     }
                     activityMsg.activityId = activityId;
-                    Send2AllTask task = new Send2AllTask(activityMsg, activity.associationId, MessageType.ACTIVITY);
+                    Send2AllTask task = new Send2AllTask(activityMsg, activity.associationId, MessageType.OTHER);
                     task.start();
                 }
             }
         }
+
+        //邀请消息
+        for (String userId : activity.invitees) {
+            if (oldActivityInvitees.contains(userId)) {
+                continue;
+            }
+            Message message = new Message();
+            message.userId = userId;
+            message.read = false;
+            message.messageType = MessageType.INVITE;
+            message.force = force;
+            message.addTime = new Date();
+
+            ActivityMsg activityMsg = new ActivityMsg();
+            activityMsg.activityId = activityId;
+            activityMsg.msg = IdentifyUtils.getUserName(activity.sponsorUserId) + "邀请你参加" + activity.title;
+
+            message.content = activityMsg;
+            messageDAO.save(message);
+        }
+
         activityDAO.save(activity);
         insertRelated(IdentifyUtils.getUserId(sessionId), activity.get_id().toString(), RelatedType.SPONSER);
 
@@ -321,6 +332,15 @@ public class ActivityService {
             responseEntity.msg = "已参加";
             responseEntity.body = "{\"count\":"+activity.joinMembers.size()+",\"join\":"+0+"}";
             insertRelated(userId, activityId, RelatedType.JOIN);
+            List<String> concernedUserIds = IdentifyUtils.getConcerned(userId);
+            for (String concernedUserId : concernedUserIds) {
+                Message message = new Message();
+                message.messageType = MessageType.FRIEND;
+                message.userId = concernedUserId;
+                message.content = "您关注的 " + IdentifyUtils.getUserName(userId) + " 参加了活动 " + activity.title;
+                message.addTime = new Date();
+                messageDAO.save(message);
+            }
         } else {
             activity.joinMembers.remove(userId);
             responseEntity.msg = "已取消";
@@ -386,11 +406,11 @@ public class ActivityService {
             responseEntity.msg = "活动不存在";
             return Response.status(200).entity(responseEntity).build();
         }
-        if (activity.tag == AcivityTag.PRIVATE) {
+        if (activity.tag == AcivityTag.PRIVATE && !activity.sponsorUserId.equals(IdentifyUtils.getUserId(sessionId))) {
             Message message = new Message();
-            message.messageType = MessageType.ACTIVITY;
+            message.messageType = MessageType.COMMENT;
             message.userId = activity.sponsorUserId;
-            message.content = "你发起的串局被评论";
+            message.content = "你发起的串局 " + activity.title + " 被 " + IdentifyUtils.getUserName(IdentifyUtils.getUserId(sessionId)) + " 评论";
             message.addTime = new Date();
             messageDAO.save(message);
         }
@@ -404,7 +424,7 @@ public class ActivityService {
         comment.addTime = new Date();
         commentDAO.save(comment);
         //message
-        CommentMessageUtil.addCommentMessage(comment, MessageType.ACTIVITY);
+        CommentMessageUtil.addCommentMessage(comment);
 
         responseEntity.code = 200;
         responseEntity.msg = "评论成功";

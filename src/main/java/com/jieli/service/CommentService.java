@@ -2,26 +2,24 @@ package com.jieli.service;
 
 
 import com.jieli.comment.Comment;
-import com.jieli.comment.CommentMsg;
 import com.jieli.comment.CommentUserInfo;
 import com.jieli.common.entity.ResponseEntity;
 import com.jieli.message.Message;
-import com.jieli.message.MessageType;
 import com.jieli.mongo.BaseDAO;
 import com.jieli.mongo.Collections;
 import com.jieli.user.dao.UserDAO;
 import com.jieli.user.entity.User;
 import com.jieli.util.CollectionUtils;
-import com.jieli.util.IdentifyUtils;
 import com.jieli.util.MongoUtils;
 import com.sun.jersey.spi.resource.Singleton;
-import org.apache.commons.lang.StringUtils;
 import org.bson.types.ObjectId;
 
-import javax.ws.rs.*;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -39,57 +37,57 @@ public class CommentService {
     BaseDAO<Message> messageDAO = new BaseDAO<Message>(Collections.Message, Message.class);
     UserDAO userDAO = new UserDAO();
 
-    @POST
-    @Path("/add")
-    @Produces(MediaType.APPLICATION_JSON+ ";charset=utf-8")
-    public Response add(@CookieParam("u")String sessionId,
-                        @QueryParam("topicId")String topicId, @QueryParam("topicType")String topicType,
-                        @QueryParam("commentedUserId")String commentedUserId,
-                        @QueryParam("content")String content){
-
-        if (!IdentifyUtils.isValidate(sessionId)) {
-            return Response.status(403).build();
-        }
-        String userId = IdentifyUtils.getUserId(sessionId);
-
-        Comment comment = new Comment();
-        comment.topicId = topicId;
-        comment.topicType = topicType;
-        comment.commentUserId = userId;
-        comment.commentedUserId = commentedUserId;
-        comment.content = content;
-        comment.addTime = new Date();
-        commentDAO.save(comment);
-
-        // 给被评论者发消息
-        if(StringUtils.isNotEmpty(commentedUserId)){
-            Message message = new Message();
-            message.userId = commentedUserId; // 消息接受者即为被评论者
-            message.messageType = MessageType.NEWS;
-
-            CommentUserInfo commentUserInfo = new CommentUserInfo();
-            commentUserInfo.userId = userId;
-            User user = userDAO.loadById(userId);
-            commentUserInfo.name = user.name;
-            commentUserInfo.userFace = user.userFace;
-
-            CommentMsg commentMsg = new CommentMsg();
-            commentMsg.commentUser = commentUserInfo;
-            commentMsg.commentContent = content;
-            //commentMsg.topicBrief =  // 被评论内容概述
-
-            message.content = commentMsg;
-            message.read = false;
-            message.addTime = new Date();
-
-            messageDAO.save(message);
-        }
-
-        ResponseEntity responseEntity = new ResponseEntity();
-        responseEntity.code = 200;
-        responseEntity.body = "ok";
-        return  Response.status(200).entity(responseEntity).build();
-    }
+//    @POST
+//    @Path("/add")
+//    @Produces(MediaType.APPLICATION_JSON+ ";charset=utf-8")
+//    public Response add(@CookieParam("u")String sessionId,
+//                        @QueryParam("topicId")String topicId, @QueryParam("topicType")String topicType,
+//                        @QueryParam("commentedUserId")String commentedUserId,
+//                        @QueryParam("content")String content){
+//
+//        if (!IdentifyUtils.isValidate(sessionId)) {
+//            return Response.status(403).build();
+//        }
+//        String userId = IdentifyUtils.getUserId(sessionId);
+//
+//        Comment comment = new Comment();
+//        comment.topicId = topicId;
+//        comment.topicType = topicType;
+//        comment.commentUserId = userId;
+//        comment.commentedUserId = commentedUserId;
+//        comment.content = content;
+//        comment.addTime = new Date();
+//        commentDAO.save(comment);
+//
+//        // 给被评论者发消息
+//        if(StringUtils.isNotEmpty(commentedUserId)){
+//            Message message = new Message();
+//            message.userId = commentedUserId; // 消息接受者即为被评论者
+//            message.messageType = MessageType.NEWS;
+//
+//            CommentUserInfo commentUserInfo = new CommentUserInfo();
+//            commentUserInfo.userId = userId;
+//            User user = userDAO.loadById(userId);
+//            commentUserInfo.name = user.name;
+//            commentUserInfo.userFace = user.userFace;
+//
+//            CommentMsg commentMsg = new CommentMsg();
+//            commentMsg.commentUser = commentUserInfo;
+//            commentMsg.commentContent = content;
+//            //commentMsg.topicBrief =  // 被评论内容概述
+//
+//            message.content = commentMsg;
+//            message.read = false;
+//            message.addTime = new Date();
+//
+//            messageDAO.save(message);
+//        }
+//
+//        ResponseEntity responseEntity = new ResponseEntity();
+//        responseEntity.code = 200;
+//        responseEntity.body = "ok";
+//        return  Response.status(200).entity(responseEntity).build();
+//    }
 
     @GET
     @Path("/load")

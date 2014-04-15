@@ -1,7 +1,6 @@
 package com.jieli.feature.help.entity;
 
 import com.jieli.mongo.Model;
-import com.jieli.user.entity.User;
 
 import java.util.Date;
 import java.util.List;
@@ -40,6 +39,10 @@ public class HelpInfo extends Model{
      * 关注列表
      */
     private List<String> focusList;
+    /**
+     * 0 需求 1 供给
+     */
+    private int type;
 
     public String getUserId() {
         return userId;
@@ -99,5 +102,13 @@ public class HelpInfo extends Model{
 
     public void setTopCommentList(List<String> topCommentList) {
         this.topCommentList = topCommentList;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
     }
 }

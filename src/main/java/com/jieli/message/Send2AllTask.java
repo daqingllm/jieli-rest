@@ -33,6 +33,7 @@ public class Send2AllTask extends Thread {
         for (User user : users) {
             Message message = new Message();
             message.messageType = type;
+            message.force = true;
             message.userId = user.get_id().toString();
             message.addTime = new Date();
             message.content = msgContent;
