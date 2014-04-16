@@ -51,7 +51,7 @@ public class Common {
 
     public static String MakeAssociationOptionListForSelect(String associationId){
         String assIdOptionList = "";
-        if (associationId != ""){
+        if (associationId == "" || associationId == "undefined"){
             Iterable<com.jieli.association.Association> associations = associationDAO.loadAll();
             for (com.jieli.association.Association association : associations) {
                 assIdOptionList += "<option value='"+association.get_id()+"'>"+association.name+"</option>";
