@@ -467,9 +467,57 @@ public class ActivityService {
             userPics = new ArrayList<String>();
         }
         userPics.addAll(pics);
+        activity.album.put(userId, userPics);
         activityDAO.save(activity);
 
         responseEntity.code = 200;
+        return Response.status(200).entity(responseEntity).build();
+    }
+
+    @POST
+    @Path("/invite")
+    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+    public Response invite(@CookieParam("u")String sessionId, @QueryParam("activityId")String activityId, List<String> friendIds) {
+        if (!IdentifyUtils.isValidate(sessionId)) {
+            return Response.status(403).build();
+        }
+
+        ResponseEntity responseEntity = new ResponseEntity();
+        if (StringUtils.isEmpty(activityId) || CollectionUtils.isEmpty(friendIds)) {
+            responseEntity.code = 3101;
+            responseEntity.msg = "缺少参数";
+            return Response.status(200).entity(responseEntity).build();
+        }
+        if (!MongoUtils.isValidObjectId(activityId)) {
+            responseEntity.code = 3102;
+            responseEntity.msg = "参数Id无效";
+            return Response.status(200).entity(responseEntity).build();
+        }
+
+        String userId = IdentifyUtils.getUserId(sessionId);
+        Activity activity = activityDAO.loadById(activityId);
+        if (activity == null) {
+            responseEntity.code = 3103;
+            responseEntity.msg = "活动不存在";
+            return Response.status(200).entity(responseEntity).build();
+        }
+
+        //邀请消息
+        for (String friendId : friendIds) {
+            Message message = new Message();
+            message.userId = friendId;
+            message.read = false;
+            message.messageType = MessageType.INVITE;
+            message.addTime = new Date();
+
+            ActivityMsg activityMsg = new ActivityMsg();
+            activityMsg.activityId = activityId;
+            activityMsg.msg = IdentifyUtils.getUserName(userId) + "邀请你参加" + activity.title;
+
+            message.content = activityMsg;
+            messageDAO.save(message);
+        }
+
         return Response.status(200).entity(responseEntity).build();
     }
 

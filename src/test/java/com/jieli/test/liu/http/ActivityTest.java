@@ -12,9 +12,7 @@ import org.json.JSONObject;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -47,7 +45,7 @@ public class ActivityTest {
 
     @Test
     public void testLoad() throws IOException {
-        Response response = Request.Get("http://localhost:8080/rest/activity?activityId=5346b723ef8683b864e34aa4")
+        Response response = Request.Get("http://localhost:8080/rest/activity?activityId=53482b95ef862ffc551c0d00")
                 .addHeader("Cookie", "u=533c0010ef86c7014c36fa2f")
                 .execute();
 
@@ -112,6 +110,22 @@ public class ActivityTest {
         System.out.println(new ObjectMapper().writeValueAsString(activity));
         Date date = new Date(1397154458887L);
         System.out.println(date.toString());
+    }
+
+    @Test
+    public void testAlbum() throws IOException {
+//        Map<String, String> infos = new HashMap<String, String>();
+//        infos.put("content", "我是回复字数你妹");
+//        infos.put("topicId", "53482b95ef862ffc551c0d00");
+//        infos.put("commentedUserId", "533c0010ef86c7014c36fa2e");
+        List<String> picIds = Arrays.asList("111", "222", "333");
+
+        Response response = Request.Post("http://localhost:8080/rest/activity/upload?activityId=53482b95ef862ffc551c0d00")
+                .addHeader("Cookie", "u=533c0010ef86c7014c36fa2f")
+                .bodyString(new ObjectMapper().writeValueAsString(picIds), ContentType.APPLICATION_JSON)
+                .execute();
+
+        System.out.println(response.returnContent().asString());
     }
 
 }
