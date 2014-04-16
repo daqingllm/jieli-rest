@@ -6,6 +6,7 @@ import com.jieli.comment.TopicType;
 import com.jieli.common.entity.ResponseEntity;
 import com.jieli.message.*;
 import com.jieli.mongo.BaseDAO;
+import com.jieli.util.CollectionUtils;
 import com.jieli.util.IdentifyUtils;
 import com.jieli.util.MongoUtils;
 import com.sun.jersey.spi.resource.Singleton;
@@ -428,6 +429,47 @@ public class ActivityService {
 
         responseEntity.code = 200;
         responseEntity.msg = "评论成功";
+        return Response.status(200).entity(responseEntity).build();
+    }
+
+    @POST
+    @Path("/upload")
+    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+    public Response uploadPics(@CookieParam("u")String sessionId, @QueryParam("activityId")String activityId, List<String> pics) {
+        if (!IdentifyUtils.isValidate(sessionId)) {
+            return Response.status(403).build();
+        }
+
+        ResponseEntity responseEntity = new ResponseEntity();
+        if (StringUtils.isEmpty(activityId) || CollectionUtils.isEmpty(pics)) {
+            responseEntity.code = 3101;
+            responseEntity.msg = "缺少参数";
+            return Response.status(200).entity(responseEntity).build();
+        }
+        if (!MongoUtils.isValidObjectId(activityId)) {
+            responseEntity.code = 3102;
+            responseEntity.msg = "参数Id无效";
+            return Response.status(200).entity(responseEntity).build();
+        }
+
+        String userId = IdentifyUtils.getUserId(sessionId);
+        Activity activity = activityDAO.loadById(activityId);
+        if (activity == null) {
+            responseEntity.code = 3103;
+            responseEntity.msg = "活动不存在";
+            return Response.status(200).entity(responseEntity).build();
+        }
+        if (activity.album == null) {
+            activity.album = new HashMap<String, List<String>>();
+        }
+        List<String> userPics = activity.album.get(userId);
+        if (userPics == null) {
+            userPics = new ArrayList<String>();
+        }
+        userPics.addAll(pics);
+        activityDAO.save(activity);
+
+        responseEntity.code = 200;
         return Response.status(200).entity(responseEntity).build();
     }
 

@@ -39,6 +39,16 @@ public class Activity extends Model {
 	@JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ", timezone="GMT+8")
 	public Date actDate;
 
+    public Map<String, List<String>> album = new HashMap<String, List<String>>();
+
+    public Map<String, List<String>> getAlbum() {
+        return album;
+    }
+
+    public void setAlbum(Map<String, List<String>> album) {
+        this.album = album;
+    }
+
     //关注的用户
     public List<String> followMembers = new ArrayList<String>();
 
