@@ -48,13 +48,13 @@ public class Account {
     @Produces(MediaType.TEXT_HTML)
     public String editNews(@CookieParam("u")String sessionId,@CookieParam("a")String associationId,@CookieParam("r")String role){
         if (!IdentifyUtils.isValidate(sessionId)) {
-            return News.errorReturn;
+            return Common.errorReturn;
         }
 
         com.jieli.common.entity.Account account = accountDAO.loadById(sessionId);
 
         if (account == null || account.username == null || account.username == "" || account.state == AccountState.ENABLE || account.state == AccountState.DISABLE){
-            return News.errorReturn;
+            return Common.errorReturn;
         }
 
         Map<String, Object> params = new HashMap<String, Object>();
@@ -115,7 +115,7 @@ public class Account {
     @Produces(MediaType.TEXT_HTML)
     public String loadUsers(@CookieParam("u")String sessionId,@QueryParam("id")String id /*,@QueryParam("state")int state*/) throws JsonProcessingException {
         if (!IdentifyUtils.isAdmin(sessionId)) {
-            return News.errorReturn;
+            return Common.errorReturn;
         }
         ResponseEntity responseEntity = new ResponseEntity();
         ObjectMapper om = new ObjectMapper();
@@ -149,7 +149,7 @@ public class Account {
             if (association == null) {
                 responseEntity.code = 2102;
                 responseEntity.msg = "协会不存在";
-                return News.errorReturn;
+                return Common.errorReturn;
             }
             Iterable<com.jieli.common.entity.Account> accountAdmin = accountDAO.loadByAssociationId(associationId.toString(),AccountState.ADMIN);
             for (com.jieli.common.entity.Account account : accountAdmin)

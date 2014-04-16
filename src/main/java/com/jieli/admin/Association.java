@@ -28,7 +28,7 @@ public class Association {
     @Produces(MediaType.TEXT_HTML)
     public String CreateAssociation(@CookieParam("u")String sessionId,@QueryParam("name")String name){
         if (!IdentifyUtils.isSuper(sessionId)){
-            return News.errorReturn;
+            return Common.errorReturn;
         }
 
         Map<String, Object> params = new HashMap<String, Object>();
@@ -42,7 +42,7 @@ public class Association {
     @Produces(MediaType.TEXT_HTML)
     public String GetAssociations(@CookieParam("u")String sessionId){
         if (!IdentifyUtils.isSuper(sessionId))
-            return News.errorReturn;
+            return Common.errorReturn;
 
         com.jieli.common.entity.Account account = accountDAO.loadById(sessionId);
 

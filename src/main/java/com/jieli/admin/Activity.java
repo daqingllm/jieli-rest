@@ -21,7 +21,7 @@ public class Activity {
     @Path("/new")
     public String viewVote(@CookieParam("u") String sessionId, @QueryParam("voteId")String voteId) {
         if(!IdentifyUtils.isValidate(sessionId)) {
-            return News.errorReturn;
+            return Common.errorReturn;
         }
 
         Map<String, Object> params = new HashMap<String, Object>();
