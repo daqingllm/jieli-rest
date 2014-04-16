@@ -455,7 +455,7 @@
         </button>
 
         &nbsp; &nbsp; &nbsp;
-        <button class="btn" type="reset" style="font-weight:bold" onclick="clearImgList();return true;">
+        <button class="btn" type="reset" style="font-weight:bold" onclick="deleteTitleImage();return true;">
             <i class="icon-undo bigger-110"></i>
             清空
         </button>
@@ -1081,7 +1081,7 @@ jQuery(function ($) {
         $('.icon-plus').click(addArrangementDetail);
         addArrangementDetail();
 
-        $('input[name=date-range-picker]').daterangepicker({
+        /*$('input[name=date-range-picker]').daterangepicker({
                     format: 'YYYY-MM-DD'},
                 function(start, end, label) {
                     //alert('A date range was chosen: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
@@ -1091,49 +1091,96 @@ jQuery(function ($) {
                         $('input[name=date-range-picker]').val(start.format('YYYY-MM-DD') + ' 至 ' + end.format('YYYY-MM-DD'));
                     }
                 });
+                */
+        $('input[name=date-range-picker]').datepicker({autoclose:true,format: "yyyy-mm-dd"});
         $('#form-field-dlDate').datepicker({autoclose:true});
     });
 
-    function check(request) {
-        if (request.title == '')
-            return "必须编写投票标题";
-        if (isNaN(request.deadLine.getDate()))
-            return "必须设定投票截止时间";
-        if (request.options.length < 1)
-            return "有效选项至少为一个";
+    function finish(){
+        var act = {};
+        act.title=$("#form-field-title").val();
+        act.actDate=new Date($("#form-field-actDate").val());
+        //act.actDate=null;
+        act.location=$("#form-field-location").val();
+        act.type=$("#form-field-type").val();
+        act.description=$("#form-field-textarea-description").val();
+        act.arrangement=$("#form-field-textarea-arrangement").val();
+        act.details=[];
+
+        $(".arrangement-detail").each(function() {
+            if ($(this).children("input").eq(0).val() != ''
+                    && $(this).children("input").eq(1).val() != ''){
+                act.details.push({
+                    "title":$(this).children("input").eq(0).val(),
+                    "content":$(this).children("input").eq(1).val()
+                });
+            }
+        });
+
+        act.serviceInfo=$("#form-field-textarea-service").val();
+        act.sponsorInfo=$("#form-field-textarea-sponsor").val();
+        // dlDate is beginDate ......
+        act.beginDate=new Date($("#form-field-dlDate").val());
+        //act.beginDate=null;
+        act.fee=$("#form-field-fee").val();
+        act.maxMembers=$("#form-field-max").val();
+        act.url=$("#form-field-imgurl").attr("src");
+
+    <#if isSuper>
+        act.associationId=$("#form-field-associations").val();
+    <#else>
+        act.associationId="";
+    </#if>
+
+        act.addTime=null;
+        act.tag=null;
+        act.followMembers=null;
+        act.joinMembers=null;
+        act.invitees=null;
+
+        var chk = check(act);
+        if (chk != null) {alert(chk);return;}
+
+        $.ajax({
+            type:"POST",
+            url:"/rest/bactivity/add",
+            async:false,
+            data:JSON.stringify(act),
+            contentType:"application/json",
+                cache:false,
+                processData:false
+        });
+    }
+
+    function check(act) {
+        if (act.title == '')
+            return "必须填标题";
+        if (act.location == '')
+            return "必须填地点";
+        if (act.type == '')
+            return "必须填类型";
+        if (act.description == '')
+            return "必须填简介";
+        if (act.fee == '')
+            return "必须填费用";
+        if (act.maxNumbers == '')
+            return "必须填最大人数";
+
+        if (isNaN(act.actDate.getDate()))
+            return "必须设定活动时间";
+        if (isNaN(act.beginDate.getDate()))
+            return "必须设定截止时间";
+
+        <#if isSuper>
+            if ($("#form-field-associations").val() == '')
+                return "必须选择至少一个活动";
+        </#if>
+
         return null;
 
     }
-    function finish() {
-        var request = {};
-        request.title = $('#form-field-title').val();
-        request.multiple = $('#form-field-select-type').val() == 'M' ? true : false;
-        request.deadLine = new Date($('#form-field-date').val());
-        request.description = $('#form-field-textarea').val();
-        request.options = [];
-        $('.vote-choice-text').each(function() {
-            if ($(this).val() != '')
-                request.options.push($(this).val());
-        });
 
-        var reqCheck = check(request);
-        if (reqCheck != null) {
-            alert(reqCheck);
-            return;
-        }
-        alert(
-                JSON.stringify(request)
-        );
-        $.ajax({
-            url : '/rest/feature/vote/addvote',
-            data : JSON.stringify(request),
-            type: 'POST',
-            contentType: "application/json",
-            cache: false,
-            processData: false,
-            async: false
-        });
-    }
+
 </script>
 </body>
 </html>
