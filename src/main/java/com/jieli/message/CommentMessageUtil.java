@@ -45,7 +45,6 @@ public abstract class CommentMessageUtil {
             message.content = commentMsg;
             message.read = false;
             message.addTime = new Date();
-            message.isComment = true;
 
             messageDAO.save(message);
         }
