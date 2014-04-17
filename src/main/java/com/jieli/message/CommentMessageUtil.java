@@ -21,13 +21,13 @@ public abstract class CommentMessageUtil {
     private static UserDAO userDAO = new UserDAO();
     private static MessageDAO messageDAO = new MessageDAO();
 
-    public static void addCommentMessage(Comment comment, MessageType messageType) {
+    public static void addCommentMessage(Comment comment) {
 
         // 给被评论者发消息
         if(StringUtils.isNotEmpty(comment.commentedUserId)){
             Message message = new Message();
             message.userId = comment.commentedUserId; // 消息接受者即为被评论者
-            message.messageType = messageType;
+            message.messageType = MessageType.COMMENT;
 
             CommentUserInfo commentUserInfo = new CommentUserInfo();
             commentUserInfo.userId = comment.commentUserId;
@@ -36,14 +36,15 @@ public abstract class CommentMessageUtil {
             commentUserInfo.userFace = user.userFace;
 
             CommentMsg commentMsg = new CommentMsg();
+            commentMsg.commentId = comment.get_id().toString();
             commentMsg.commentUser = commentUserInfo;
             commentMsg.commentContent = comment.content;
             //commentMsg.topicBrief =  // 被评论内容概述
+            commentMsg.commentTime = comment.addTime;
 
             message.content = commentMsg;
             message.read = false;
             message.addTime = new Date();
-            message.isComment = true;
 
             messageDAO.save(message);
         }

@@ -220,9 +220,7 @@
                 在这里发布一篇新闻、资讯或者企业动态
                 <small>
                     <i class="icon-double-angle-right"></i>
-                    上传图片后文本框内会产生
-                    <img-placeholder src='...'></img-placeholder>
-                    标签，您可以通过移动该标签调整图片位置
+                    上传图片后文本框内会产生&lt;img src='...'&gt;标签，您可以通过移动该标签调整图片位置
                 </small>
             </h1>
         </div>

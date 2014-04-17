@@ -208,6 +208,19 @@ public class UserService {
             return Response.status(200).entity(responseEntity).build();
         }
         directoryDAO.upsertFriend(userId, friend);
+
+        //被关注者添加被关注
+        Directory friendDirectory = directoryDAO.loadByUserId(friend.userId);
+        if (friendDirectory == null) {
+            friendDirectory = new Directory();
+            friendDirectory.userId = friend.userId;
+        }
+        if (friendDirectory.concerned == null) {
+            friendDirectory.concerned = new ArrayList<String>();
+        }
+        friendDirectory.concerned.add(userId);
+        directoryDAO.save(friendDirectory);
+
         responseEntity.code = 200;
         return Response.status(200).entity(responseEntity).build();
     }

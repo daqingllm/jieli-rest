@@ -31,45 +31,6 @@ import java.util.*;
 @Singleton
 @Path("/bnews")
 public class News {
-    public static final
-    String errorReturn = "<!DOCTYPE html>\n" +
-            "<html>\n" +
-            "    <head>\n" +
-            "        <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">\n" +
-            "        <title>请先登录</title>\n" +
-            "    </head>\n" +
-            "    <body>\n" +
-            "\n" +
-            "\t<span>您尚未登录或无权限操作，</span>\n" +
-            "\t<span id=\"totalSecond\">5</span>秒后跳转到登陆页..</span>\n" +
-            "\n" +
-            "\t<script language=\"javascript\" type=\"text/javascript\">\n" +
-            "\t/*alert(document.cookie);*/\n" +
-            "\t\tvar second = document.getElementById('totalSecond').textContent;\n" +
-            "\n" +
-            "\t\tif (navigator.appName.indexOf(\"Explorer\") > -1)\n" +
-            "\t\t\tsecond = document.getElementById('totalSecond').innerText;\n" +
-            "\t\telse\n" +
-            "\t\t\tsecond = document.getElementById('totalSecond').textContent;\n" +
-            "\n" +
-            "\t\tsetInterval(\"redirect()\", 1000);\n" +
-            "\t\t\n" +
-            "\t\tfunction redirect()\n" +
-            "\t\t{\n" +
-            "\t\t\tif (second < 0)\n" +
-            "\t\t\t\tlocation.href = '/rest/baccount/login';\n" +
-            "\t\t\telse {\n" +
-            "\t\t\t\tif (navigator.appName.indexOf(\"Explorer\") > -1)\n" +
-            "\t\t\t\t\tdocument.getElementById('totalSecond').innerText = second--;\n" +
-            "\t\t\t\telse\n" +
-            "\t\t\t\t\tdocument.getElementById('totalSecond').textContent = second--;\n" +
-            "\t\t\t}\n" +
-            "\t\t}\n" +
-            "\t</script>\n" +
-            "    </body>\n" +
-            "</html>";
-
-
     @GET
     @Path("/list")
     @Produces(MediaType.TEXT_HTML)
@@ -78,7 +39,7 @@ public class News {
 
         // 判断用户是否已经登录
         if (!IdentifyUtils.isValidate(sessionId)) {
-            return errorReturn;
+            return Common.errorReturn;
         }
 
         // 载入用户
@@ -94,7 +55,7 @@ public class News {
         //}
 
         if (account == null || account.username == null || account.username == "" || account.state == AccountState.ENABLE || account.state == AccountState.DISABLE){
-            return errorReturn;
+            return Common.errorReturn;
         }
 
 
@@ -160,7 +121,7 @@ public class News {
 
         // 判断用户是否已经登录
         if (!IdentifyUtils.isValidate(sessionId)) {
-            return errorReturn;
+            return Common.errorReturn;
         }
 
         // 载入用户
@@ -176,7 +137,7 @@ public class News {
         //}
 
         if (account == null || account.username == null || account.username == "" || account.state == AccountState.ENABLE || account.state == AccountState.DISABLE){
-            return errorReturn;
+            return Common.errorReturn;
         }
 
 
@@ -196,16 +157,9 @@ public class News {
 
         if (b1 && b2) {
             isSuper = true;
-            Iterable<Association> associations = associationDAO.loadAll();
-            for (Association association : associations) {
-                //System.out.println(activity.get_id());
-                assIdOptionList += "<option value='"+association.get_id()+"'>"+association.name+"</option>";
-            }
-
-            //assIdOptionList = "";
+            assIdOptionList = Common.MakeAssociationOptionListForSelect("");
         }else {
-            Association association = associationDAO.loadById(associationId);
-            assIdOptionList += "<option value='"+associationId+"' selected>"+association.name+"</option>";
+            assIdOptionList = Common.MakeAssociationOptionListForSelect(associationId);
         }
 
         params.put("isSuper",isSuper);
@@ -225,7 +179,7 @@ public class News {
         }
 
         String sc = news.content;
-        /*while(sc.indexOf("\\u0027") >= 0) sc = sc.replace("\\u0027","'");
+        /*while(sc.indexOf("\\u0027") >= 0) sc = sc.repla  ce("\\u0027","'");
         while(sc.indexOf("\\u0022") >= 0) sc = sc.replace("\\u0027","\"");*/
 
         ResponseEntity responseEntity = new ResponseEntity();
@@ -269,7 +223,7 @@ public class News {
 
         // 判断用户是否已经登录
         if (!IdentifyUtils.isValidate(sessionId)) {
-            return errorReturn;
+            return Common.errorReturn;
         }
 
         // 载入用户
@@ -285,7 +239,7 @@ public class News {
         //}
 
         if (account == null || account.username == null || account.username == "" || account.state == AccountState.ENABLE || account.state == AccountState.DISABLE){
-            return errorReturn;
+            return Common.errorReturn;
         }
 
 

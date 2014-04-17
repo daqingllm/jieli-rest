@@ -30,13 +30,13 @@ public class HelloWorld {
     @Produces(MediaType.TEXT_HTML)
     public String Index(@CookieParam("u") String sessionId){
         if (!IdentifyUtils.isValidate(sessionId)) {
-            return News.errorReturn;
+            return Common.errorReturn;
         }
 
         com.jieli.common.entity.Account account = accountDAO.loadById(sessionId);
 
         if (account == null || account.username == null || account.username == "" || account.state == AccountState.ENABLE || account.state == AccountState.DISABLE){
-            return News.errorReturn;
+            return Common.errorReturn;
         }
 
         Map<String, Object> params = new HashMap<String, Object>();
