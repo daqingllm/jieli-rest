@@ -1,5 +1,9 @@
 package com.jieli.admin;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jieli.association.*;
+import com.jieli.association.Association;
 import com.jieli.common.dao.AccountDAO;
 import com.jieli.common.entity.Account;
 import com.jieli.feature.vote.dao.VoteDAO;
@@ -11,7 +15,9 @@ import com.sun.jersey.spi.resource.Singleton;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -21,6 +27,7 @@ import java.util.Map;
 @Path("bvote")
 public class Vote {
     private AccountDAO accountDAO = new AccountDAO();
+    private AssociationDAO associationDAO = new AssociationDAO();
     private VoteDAO voteDAO = new VoteDAO();
     private String errorReturn = "<!DOCTYPE html>\n" +
             "<html>\n" +
@@ -122,5 +129,69 @@ public class Vote {
         params.put("isEditable", true);
         params.put("voteId", voteId);
         return FTLrender.getResult("voteinfo.ftl", params);
+    }
+
+    @GET
+    @Produces(MediaType.TEXT_HTML)
+    @Path("/list")
+    public String getVoteList(@CookieParam("u")String sessionId, @QueryParam("associationId")String associationId) {
+        if(!IdentifyUtils.isValidate(sessionId)) {
+            return errorReturn;
+        }
+        if(!IdentifyUtils.isAdmin(sessionId)) {
+            return errorReturn;
+        }
+        Account account = accountDAO.loadById(sessionId);
+        if (account == null || account.username == null || account.username == ""){
+            return errorReturn;
+        }
+        boolean isSuper = false;
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("username", account.username);
+        List<VoteInfo> voteList = new ArrayList<VoteInfo>();
+        List<Association> associationList = new ArrayList<Association>();
+        Integer pageNo = 1;
+        Integer pageSize = 50;
+        if(IdentifyUtils.isSuper(sessionId)) {
+            isSuper = true;
+            Iterable<com.jieli.association.Association> associations = associationDAO.loadAll();
+            for(Association a : associations) {
+                associationList.add(a);
+            }
+            params.put("associationList", associationList);
+            voteList = voteDAO.paginateVote(pageNo, pageSize,
+                    associationList.get(0).get_id().toString());
+        }
+        else {
+            if(!MongoUtils.isValidObjectId(associationId)) {
+                return FTLrender.getResult("error.ftl", params);
+            }
+            voteList = voteDAO.paginateVote(pageNo, pageSize,
+                    associationId);
+        }
+        //TODO
+        String jsonVoteList;
+        int i;
+        ObjectMapper om = new ObjectMapper();
+        try { //this is a trick, write Object list to json, read json to Java list add the attribute and rewrite to json
+            String tmp = om.writeValueAsString(voteList);
+
+            List<HashMap<String, Object>> l = (List<HashMap<String, Object>>)om.readValue(tmp, List.class);
+            for(Map<String, Object> obj : l) {
+                if (obj.get("associationId") instanceof String) {
+                    Association association = associationDAO.loadById(obj.get("associationId").toString());
+                    obj.put("associationName", association.name);
+                }
+            }
+            jsonVoteList = om.writeValueAsString(l);
+        } catch (Exception e) {
+            e.printStackTrace();
+            jsonVoteList = "[]";
+        }
+
+        params.put("jsonVoteList", jsonVoteList);
+        params.put("isSuper", isSuper);
+        return FTLrender.getResult("vote_list.ftl", params);
+
     }
 }

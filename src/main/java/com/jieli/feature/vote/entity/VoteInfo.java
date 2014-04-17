@@ -24,6 +24,7 @@ public class VoteInfo extends Model {
     boolean multiple; //是否多选
     private List<Vote> voteList; //投票记录
     private Integer totalVote; //每个选项投票数总和
+    private Integer participants;
 
     public String getAssociationId() {
         return associationId;
@@ -123,5 +124,13 @@ public class VoteInfo extends Model {
 
     public void setTotalVote(Integer totalVote) {
         this.totalVote = totalVote;
+    }
+
+    public Integer getParticipants() {
+        return participants;
+    }
+
+    public void setParticipants(Integer participants) {
+        this.participants = participants;
     }
 }

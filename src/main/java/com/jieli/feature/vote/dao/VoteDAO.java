@@ -7,6 +7,7 @@ import com.jieli.feature.vote.entity.Vote;
 import com.jieli.feature.vote.entity.VoteComment;
 import com.jieli.feature.vote.entity.VoteInfo;
 import com.jieli.mongo.GenericDAO;
+import com.jieli.news.News;
 
 import java.util.*;
 
@@ -47,8 +48,10 @@ public class VoteDAO extends GenericDAO<VoteInfo> {
     public VoteInfo vote(Vote vote, String voteId) {
         VoteInfo v = loadById(voteId);
         List<Vote> voteList = v.getVoteList();
+        Integer participants = v.getParticipants();
         if(voteList == null) {
             voteList = new ArrayList<Vote>();
+            participants = 0;
         }
         voteList.add(vote);
         Map<Integer, Integer> optionVotes = v.getOptionVotes();
@@ -59,6 +62,8 @@ public class VoteDAO extends GenericDAO<VoteInfo> {
             optionVotes.put(i, num);
             totalVote++;
         }
+        participants++;
+        v.setParticipants(participants);
         v.setTotalVote(totalVote);
         v.setOptionVotes(optionVotes);
         v.setVoteList(voteList);
@@ -81,4 +86,18 @@ public class VoteDAO extends GenericDAO<VoteInfo> {
         voteInfo.setCommentList(commentList);
         return save(voteInfo);
     }*/
+
+    public List<VoteInfo> paginateVote(int pageNo, int pageSize, String associationId) {
+        Iterable<VoteInfo> voteIterator = col.find("{\"associationId\":#}", associationId)
+                .sort("{addTime:-1}").skip((pageNo - 1) * pageSize).limit(pageSize).as(VoteInfo.class);
+        return iterableToList(voteIterator);
+    }
+
+    private List<VoteInfo> iterableToList(Iterable<VoteInfo> iterable){
+        List<VoteInfo> records = new LinkedList<VoteInfo>();
+        for(VoteInfo t : iterable){
+            records.add(t);
+        }
+        return records;
+    }
 }

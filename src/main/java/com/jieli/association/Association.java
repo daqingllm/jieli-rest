@@ -12,4 +12,8 @@ import com.jieli.mongo.Model;
 public class Association extends Model {
 
     public String name;
+
+    public String getName() {
+        return name;
+    }
 }
