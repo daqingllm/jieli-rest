@@ -1051,7 +1051,7 @@ jQuery(function ($) {
         var arrangementDetail = $('<div class="arrangement-detail">' +
                 '<input type="text"  placeholder="日程安排时间" class="col-xs-10 col-sm-2 arrangement-detail-time" style="padding-left: 7px;" >' +
                 '<span style="padding:10px;float: left;"></span>' +
-                '<input type="text"  placeholder="日程安排，不填即为此时间段无活动内容" class="col-xs-10 col-sm-7 arrangement-detail-content" style="padding-left: 7px;">' +
+                '<input type="text"  placeholder="日程安排，不填即为此时间段无活动内容" class="col-xs-10 col-sm-5 arrangement-detail-content" style="padding-left: 7px;">' +
                 '<div class="icon-remove"></div>' +
                 '</div>');
         arrangementDetail.insertBefore($('.icon-plus').parent());

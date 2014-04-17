@@ -4,9 +4,10 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jieli.activity.AcivityTag;
 import com.jieli.activity.ActivityDAO;
-import com.jieli.association.AssociationDAO;
+import com.jieli.association.*;
 import com.jieli.common.dao.AccountDAO;
 import com.jieli.common.entity.*;
+import com.jieli.common.entity.Account;
 import com.jieli.util.FTLrender;
 import com.jieli.util.IdentifyUtils;
 import com.jieli.util.MongoUtils;
@@ -127,27 +128,74 @@ public class Activity {
 
             for (com.jieli.activity.Activity activity : activities){
                 ////activityList.add(activity);
-                String tmp = objectMapper.writeValueAsString(activity).toString();
-                String tmpObjectId = objectMapper.writeValueAsString(activity.get_id()).toString();
-                String tmpId = activity.get_id().toString();
+                //String tmp = objectMapper.writeValueAsString(activity).toString();
+                //String tmpObjectId = objectMapper.writeValueAsString(activity.get_id()).toString();
+                //String tmpId = activity.get_id().toString();
 
-                activityList += tmp.replace(tmpObjectId,"\""+tmpId+"\"").replace("\"associationId\":\""+account.associationId+"\"","\"associationId\":\""+associationName+"\"");
+                String tmp = Common.ReplaceObjectId(activity);
+
+                activityList += tmp.replace("\"associationId\":\""+account.associationId+"\"","\"associationId\":\""+associationName+"\"");
             }
 
             // 找所有历史活动
-            Iterable<com.jieli.activity.Activity> activities1 = activityDAO.findHistory(account.associationId,1,10,"official");
+            Iterable<com.jieli.activity.Activity> activities1 = activityDAO.findHistory(account.associationId,0,10,"OFFICIAL");
             for (com.jieli.activity.Activity activity : activities1){
                 ////activityList.add(activity);
-                String tmp = objectMapper.writeValueAsString(activity).toString();
-                String tmpObjectId = objectMapper.writeValueAsString(activity.get_id()).toString();
-                String tmpId = activity.get_id().toString();
+                //String tmp = objectMapper.writeValueAsString(activity).toString();
+                //String tmpObjectId = objectMapper.writeValueAsString(activity.get_id()).toString();
+                //String tmpId = activity.get_id().toString();
 
-                activityList += tmp.replace(tmpObjectId,"\""+tmpId+"\"").replace("\"associationId\":\""+account.associationId+"\"","\"associationId\":\""+associationName+"\"");
+                String tmp = Common.ReplaceObjectId(activity);
+
+                activityList += tmp.replace("\"associationId\":\""+account.associationId+"\"","\"associationId\":\""+associationName+"\"");
             }
         }
 
         params.put("activityList","["+activityList+"]");
 
         return FTLrender.getResult("activity_list.ftl",params);
+    }
+
+    @GET
+    @Path("/edit")
+    @Produces(MediaType.TEXT_HTML)
+    public String editActivity(@CookieParam("u")String sessionId,@QueryParam("actid") String actid) {
+
+        com.jieli.activity.Activity activity = activityDAO.loadById(actid);
+        Account account = accountDAO.loadById(sessionId);
+
+        Map<String, Object> params = new HashMap<String, Object>();
+        String activity_data = "";
+        String associationList = "";
+
+        if (activity == null)
+            params.put("got","该活动已被删除！");
+        else {
+            params.put("got", "");
+
+            // 判断用户是否已经登录
+            if (account == null ||
+                    (IdentifyUtils.isAdmin(sessionId) && !activity.associationId.equals(account.associationId)) ||
+                    !IdentifyUtils.isValidate(sessionId) ||
+                    !IdentifyUtils.isAdmin(sessionId) && !IdentifyUtils.isSuper(sessionId)
+                    ) {
+                return Common.errorReturn;
+            }
+
+            activity_data = Common.ReplaceObjectId(activity);
+
+            if (IdentifyUtils.isSuper(sessionId)){
+                Iterable<com.jieli.association.Association> associations = associationDAO.loadAll();
+                for (com.jieli.association.Association association : associations) {
+                    associationList += "<option value='"+association.get_id()+"'>"+association.name+"</option>";
+                }
+            }
+        }
+        params.put("username",account.username);
+        params.put("isSuper",IdentifyUtils.isSuper(sessionId));
+        params.put("act_data",activity_data);
+        params.put("associationList",associationList);
+
+        return FTLrender.getResult("edit_activity.ftl",params);
     }
 }

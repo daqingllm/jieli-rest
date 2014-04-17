@@ -90,6 +90,13 @@ public class News {
             try {
                 //artListString += om.writeValueAsString(n);
                 String tmp = om.writeValueAsString(n);
+
+                String tmpObjectId = om.writeValueAsString(n.get_id()).toString();
+                String tmpId = n.get_id().toString();
+
+                tmp = tmp.replace(tmpObjectId,"\""+tmpId+"\"").replace("\"associationId\":\""+n.associationId+"\"","\"associationId\":\""+associationDAO.loadById(n.associationId).name+"\"");
+
+                /*
                 if (tmp.indexOf("{\"time\":") > -1){
                     tmp = tmp.substring(0,7) + "\"" + n.get_id().toString() + "\"" + tmp.substring(tmp.indexOf("},",7)+1);
 
@@ -99,7 +106,7 @@ public class News {
                     tmp = tmp.replace(assid,association.name);
 
                     //tmp = tmp.replace("_id","id");
-                }
+                }*/
                 artListString += tmp;
             } catch (JsonProcessingException e) {
                 e.printStackTrace();
@@ -284,11 +291,19 @@ public class News {
         String tmp = null;
         try {
             tmp = new ObjectMapper().writeValueAsString(n);
+
+            //String tmp = om.writeValueAsString(n);
+
+            String tmpObjectId = new ObjectMapper().writeValueAsString(n.get_id()).toString();
+            String tmpId = n.get_id().toString();
+
+            tmp = tmp.replace(tmpObjectId,"\""+tmpId+"\"");
+
         } catch (JsonProcessingException e) {
             e.printStackTrace();
             got = "获取资讯失败。";
         }
-        if (tmp.indexOf("{\"time\":") > -1){
+        if (tmp != null && tmp.indexOf("{\"time\":") > -1){
             tmp = tmp.substring(0,7) + "\"" + n.get_id().toString() + "\"" + tmp.substring(tmp.indexOf("},",7)+1);
         }
 
