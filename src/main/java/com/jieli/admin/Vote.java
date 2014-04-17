@@ -158,7 +158,7 @@ public class Vote {
         List<SimpleVoteInfo> voteList = new ArrayList<SimpleVoteInfo>();
         List<Association> associationList = new ArrayList<Association>();
         Integer pageNo = 1;
-        Integer pageSize = 50;
+        Integer pageSize = 20;
         if(IdentifyUtils.isSuper(sessionId)) {
             isSuper = true;
             Iterable<com.jieli.association.Association> associations = associationDAO.loadAll();

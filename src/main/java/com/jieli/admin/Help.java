@@ -98,10 +98,11 @@ public class Help {
             associationId = associationList.get(0).get_id().toString();
         }
         Integer pageNo = 1;
-        Integer pageSize = 50;
-        List<SimpleHelpInfo> helpList = helpDAO.getHelpInfoList(pageNo, pageSize, associationId);
+        Integer pageSize = 20;
+        int type = 0;
+        List<SimpleHelpInfo> helpList = helpDAO.getHelpInfoList(pageNo, pageSize, associationId, type);
 
-        String jsonVoteList;
+        String jsonHelpList;
         int i;
         ObjectMapper om = new ObjectMapper();
         try { //this is a trick, write Object list to json, read json to Java list add the attribute and rewrite to json
@@ -114,12 +115,12 @@ public class Help {
                     obj.put("associationName", association.name);
                 }
             }
-            jsonVoteList = om.writeValueAsString(l);
+            jsonHelpList = om.writeValueAsString(l);
         } catch (Exception e) {
             e.printStackTrace();
-            jsonVoteList = "[]";
+            jsonHelpList = "[]";
         }
-        params.put("jsonVoteList", jsonVoteList);
+        params.put("jsonHelpList", jsonHelpList);
         params.put("isSuper", isSuper);
         return FTLrender.getResult("help_list.ftl", params);
     }

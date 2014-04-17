@@ -36,9 +36,17 @@ public class HelpDAO extends GenericDAO<HelpInfo> {
      * @param associationId
      * @return
      */
-    public List<SimpleHelpInfo> getHelpInfoList(int pageNo, int pageSize, String associationId) {
-        Iterable<SimpleHelpInfo> iterable = col.find("{\"associationId\":#}", associationId)
-                .sort("{addTime:-1}").skip((pageNo - 1) * pageSize).limit(pageSize).as(SimpleHelpInfo.class);
+    public List<SimpleHelpInfo> getHelpInfoList(int pageNo, int pageSize, String associationId, int type) {
+        Iterable<SimpleHelpInfo> iterable;
+        if(type == 0 || type == 1) {
+            iterable = col.find("{associationId:#, type:#}", associationId, type)
+                    .sort("{addTime:-1}").skip((pageNo - 1) * pageSize).limit(pageSize).as(SimpleHelpInfo.class);
+        }
+        else {
+            iterable = col.find("{associationId:#}", associationId)
+                    .sort("{addTime:-1}").skip((pageNo - 1) * pageSize).limit(pageSize).as(SimpleHelpInfo.class);
+        }
+
         List<SimpleHelpInfo> resultList = new ArrayList<SimpleHelpInfo>();
         for(SimpleHelpInfo v : iterable) {
             resultList.add(v);
@@ -119,6 +127,7 @@ public class HelpDAO extends GenericDAO<HelpInfo> {
         List<String> focusList = help.getFocusList();
         if(focusList == null) {
             focusList = new ArrayList<String>();
+
         }
         focusList.add(userId);
         help.setFocusList(focusList);

@@ -229,7 +229,17 @@
                             </#list>
                         </select>
                     </div>
+                    <div class="space-4"></div>
                 </#if>
+                    <label class="col-sm-3 control-label no-padding-right" for="form-field-select-type"> 请选择帮助类型 </label>
+                    <div class="col-sm-9">
+                        <select class="col-xs-10 col-sm-7" id="form-field-select-type" style="padding: 5px 4px;font-size: 14px;">
+                            <option value="需求" selected="selected">供给</option>
+                            <option value="供给">需求</option>
+                        </select>
+                    </div>
+                    <div class="space-4"></div>
+
                     <div class="col-xs-12">
 
                         <!-- PAGE CONTENT BEGINS -->
@@ -399,32 +409,24 @@ Date.prototype.Format = function (fmt) { //author: meizz
 function parseArtData(data){
 
     for (var i = 0 ; i < data.length; i++){
-        if(data[i].multiple) {
-            data[i].type = "多项选择";
+        if(data[i].type == 0) {
+            data[i].type = "需求";
         }
         else {
-            data[i].type = "单项选择";
+            data[i].type = "供给";
         }
 
         var adt = data[i].addTime;
-        var d = data[i].deadLine;
         // ..
         //adt = adt.substr(0,12);
         var now = new Date();now.setTime(adt);
-        var dd = new Date();dd.setTime(d);
         var nowStr = now.Format("yyyy-MM-dd");
-        var dStr = dd.Format("yyyy-MM-dd");
 
         data[i].addTime = nowStr;
-        data[i].deadLine = dStr;
 
         data[i].content = data[i].description.substr(0, 30);
         //data[i].content = data[i].content.substr(0,30);
 
-        //var re = new  RegExp("\\u0022","g");
-        //data[i].content = data[i].content.replace(re,"\"");
-        //re = new RegExp("\\u0027","g");
-        //data[i].content = data[i].content.replace(re,"'");
     }
     return data;
 }
@@ -495,7 +497,7 @@ jQuery(function($) {
     ];
 
     //raw_data.empty();
-    raw_data = ${jsonVoteList};
+    raw_data = ${jsonHelpList};
 
 
     var grid_data = parseArtData(raw_data);
@@ -507,7 +509,7 @@ jQuery(function($) {
         data: grid_data,
         datatype: "local",
         height: 330,
-        colNames:['_id',<#if isSuper>'协会',</#if>'投票标题','投票类型', '投票描述', '添加日期', '截止日期', '参加人数'],
+        colNames:['_id',<#if isSuper>'协会',</#if>'帮助标题','帮助类型', '帮助描述', '添加日期', '关注人数'],
         colModel:[
             {name:"_id",index:"_id",width:10,editable:false,hidden:true},
             //{name:"associationId",index:"associationId",width:40,editable:false, hidden:true},
@@ -516,8 +518,7 @@ jQuery(function($) {
             {name:"type",index:"type",width:"45",editable:false},
             {name:"content",index:"content",width:"270",editable:false},
             {name:"addTime",index:"addTime",width:"75",editable:false,sorttype:"date"},
-            {name:"deadLine",index:"deadLine",width:"75",editable:false, sorttype:"date"},
-            {name:"participants",index:"participants",width:"40",editable:false, sorttype:"int"}
+            {name:"attentionNum",index:"attentionNum",width:"40",editable:false, sorttype:"int"}
         ],
         viewrecords : true,
         rowNum:10,
@@ -538,7 +539,7 @@ jQuery(function($) {
             }, 0);
         },
 
-        caption: "投票列表",
+        caption: "帮助列表",
         autowidth: true
     });
 
@@ -605,7 +606,6 @@ jQuery(function ($) {
      */
 
 });
-
 </script>
 </body>
 </html>

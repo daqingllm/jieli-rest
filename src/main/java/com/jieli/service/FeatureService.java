@@ -44,12 +44,15 @@ public class FeatureService {
     /**
      * 获取互帮互助列表
      * @param sessionId
+     * @param page
+     * @param size
+     * @param type 0-供给 1-需求 2-全部
      * @return
      */
     @Path("/help")
     @GET
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-    public Response getHelpList(@CookieParam("u")String sessionId, @QueryParam("page")int page, @QueryParam("size")int size) {
+    public Response getHelpList(@CookieParam("u")String sessionId, @QueryParam("page")int page, @QueryParam("size")int size, @QueryParam("type")int type) {
         if(!IdentifyUtils.isValidate(sessionId)) {
             return Response.status(403).build();
         }
@@ -78,7 +81,7 @@ public class FeatureService {
         if(size <= 0) {
             size = 20;
         }
-        List<SimpleHelpInfo> simpleHelpInfoList = helpDAO.getHelpInfoList(page, size, associationId);
+        List<SimpleHelpInfo> simpleHelpInfoList = helpDAO.getHelpInfoList(page, size, associationId, type);
 
         responseEntity.code = 200;
         responseEntity.body = simpleHelpInfoList;
@@ -133,6 +136,9 @@ public class FeatureService {
         help.setAddTime(new Date());
         help.setAttentionNum(0);
         help.setUserId(userId);
+        if(help.getType() != 0 || help.getType() != 1) {
+            help.setType(0);
+        }
         HelpInfo result = helpDAO.addHelp(help);
         if(result == null) {
             responseEntity.code = 1210;

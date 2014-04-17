@@ -54,6 +54,9 @@ public class VoteDAO extends GenericDAO<VoteInfo> {
             voteList = new ArrayList<Vote>();
             participants = 0;
         }
+        if(participants == null) {
+            participants = 0;
+        }
         voteList.add(vote);
         Map<Integer, Integer> optionVotes = v.getOptionVotes();
         Integer totalVote = v.getTotalVote();

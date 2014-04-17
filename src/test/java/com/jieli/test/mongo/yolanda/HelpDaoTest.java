@@ -50,7 +50,7 @@ public class HelpDaoTest {
     @Test
     public void getHelpInfoList() {
         String associationId = "5337af643004e0056052bd5a";
-        List<SimpleHelpInfo> resultList = helpDao.getHelpInfoList(1, 20, associationId);
+        List<SimpleHelpInfo> resultList = helpDao.getHelpInfoList(1, 20, associationId, 1);
         for(SimpleHelpInfo s : resultList) {
             System.out.println(s.toString());
         }
