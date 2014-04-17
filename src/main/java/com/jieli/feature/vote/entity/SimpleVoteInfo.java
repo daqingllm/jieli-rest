@@ -11,9 +11,10 @@ public class SimpleVoteInfo extends Model{
     private String associationId;
     private String userId;
     private String title;
+    private String description;
+    boolean multiple; //是否多选
     private Date deadLine;
     private Date addTime;
-    private String picUrl;
     private Integer participants;
 
     public String getAssociationId() {
@@ -56,19 +57,27 @@ public class SimpleVoteInfo extends Model{
         this.deadLine = deadLine;
     }
 
-    public String getPicUrl() {
-        return picUrl;
-    }
-
-    public void setPicUrl(String picUrl) {
-        this.picUrl = picUrl;
-    }
-
     public Integer getParticipants() {
         return participants;
     }
 
     public void setParticipants(Integer participants) {
         this.participants = participants;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public boolean isMultiple() {
+        return multiple;
+    }
+
+    public void setMultiple(boolean multiple) {
+        this.multiple = multiple;
     }
 }

@@ -4,16 +4,15 @@ import com.jieli.activity.Activity;
 import com.jieli.feature.help.entity.HelpComment;
 import com.jieli.feature.help.entity.HelpInfo;
 import com.jieli.feature.help.entity.SimpleHelpInfo;
+import com.jieli.feature.vote.entity.SimpleVoteInfo;
+import com.jieli.feature.vote.entity.VoteInfo;
 import com.jieli.message.Message;
 import com.jieli.message.MessageType;
 import com.jieli.mongo.GenericDAO;
 import com.jieli.user.entity.User;
 import com.jieli.util.CollectionUtils;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -37,11 +36,12 @@ public class HelpDAO extends GenericDAO<HelpInfo> {
      * @param associationId
      * @return
      */
-    public List<SimpleHelpInfo> getHelpInfoList(String associationId) {
-        Iterator<SimpleHelpInfo> iterator = col.find("{\"associationId\":#}", associationId).as(SimpleHelpInfo.class).iterator();
+    public List<SimpleHelpInfo> getHelpInfoList(int pageNo, int pageSize, String associationId) {
+        Iterable<SimpleHelpInfo> iterable = col.find("{\"associationId\":#}", associationId)
+                .sort("{addTime:-1}").skip((pageNo - 1) * pageSize).limit(pageSize).as(SimpleHelpInfo.class);
         List<SimpleHelpInfo> resultList = new ArrayList<SimpleHelpInfo>();
-        for(;iterator.hasNext();) {
-            resultList.add(iterator.next());
+        for(SimpleHelpInfo v : iterable) {
+            resultList.add(v);
         }
         return resultList;
     }
@@ -163,4 +163,5 @@ public class HelpDAO extends GenericDAO<HelpInfo> {
         }
         return null;
     }*/
+
 }

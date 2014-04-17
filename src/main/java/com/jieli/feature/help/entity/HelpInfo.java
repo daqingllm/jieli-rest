@@ -44,6 +44,11 @@ public class HelpInfo extends Model{
      */
     private int type;
 
+    /**
+     * 是否紧急
+     */
+    private boolean isEmergency;
+
     public String getUserId() {
         return userId;
     }
@@ -110,5 +115,13 @@ public class HelpInfo extends Model{
 
     public void setType(int type) {
         this.type = type;
+    }
+
+    public boolean isEmergency() {
+        return isEmergency;
+    }
+
+    public void setEmergency(boolean isEmergency) {
+        this.isEmergency = isEmergency;
     }
 }

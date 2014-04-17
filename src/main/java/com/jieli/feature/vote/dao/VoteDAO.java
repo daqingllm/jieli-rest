@@ -21,11 +21,12 @@ public class VoteDAO extends GenericDAO<VoteInfo> {
      * @param associationId
      * @return
      */
-    public List<SimpleVoteInfo> getVoteInfoList(String associationId) {
-        Iterator<SimpleVoteInfo> iterator = col.find("{\"associationId\":#}", associationId).as(SimpleVoteInfo.class).iterator();
+    public List<SimpleVoteInfo> getVoteInfoList(int pageNo, int pageSize, String associationId) {
+        Iterable<SimpleVoteInfo> voteIterator = col.find("{\"associationId\":#}", associationId)
+                .sort("{addTime:-1}").skip((pageNo - 1) * pageSize).limit(pageSize).as(SimpleVoteInfo.class);
         List<SimpleVoteInfo> resultList = new ArrayList<SimpleVoteInfo>();
-        for(;iterator.hasNext();) {
-            resultList.add(iterator.next());
+        for(SimpleVoteInfo v : voteIterator) {
+            resultList.add(v);
         }
         return resultList;
     }
@@ -87,17 +88,4 @@ public class VoteDAO extends GenericDAO<VoteInfo> {
         return save(voteInfo);
     }*/
 
-    public List<VoteInfo> paginateVote(int pageNo, int pageSize, String associationId) {
-        Iterable<VoteInfo> voteIterator = col.find("{\"associationId\":#}", associationId)
-                .sort("{addTime:-1}").skip((pageNo - 1) * pageSize).limit(pageSize).as(VoteInfo.class);
-        return iterableToList(voteIterator);
-    }
-
-    private List<VoteInfo> iterableToList(Iterable<VoteInfo> iterable){
-        List<VoteInfo> records = new LinkedList<VoteInfo>();
-        for(VoteInfo t : iterable){
-            records.add(t);
-        }
-        return records;
-    }
 }

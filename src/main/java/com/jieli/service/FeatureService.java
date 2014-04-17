@@ -49,7 +49,7 @@ public class FeatureService {
     @Path("/help")
     @GET
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-    public Response getHelpList(@CookieParam("u")String sessionId) {
+    public Response getHelpList(@CookieParam("u")String sessionId, @QueryParam("page")int page, @QueryParam("size")int size) {
         if(!IdentifyUtils.isValidate(sessionId)) {
             return Response.status(403).build();
         }
@@ -72,7 +72,13 @@ public class FeatureService {
             responseEntity.msg = "未加入协会";
             return Response.status(200).entity(responseEntity).build();
         }
-        List<SimpleHelpInfo> simpleHelpInfoList = helpDAO.getHelpInfoList(associationId);
+        if(page <= 0) {
+            page = 1;
+        }
+        if(size <= 0) {
+            size = 20;
+        }
+        List<SimpleHelpInfo> simpleHelpInfoList = helpDAO.getHelpInfoList(page, size, associationId);
 
         responseEntity.code = 200;
         responseEntity.body = simpleHelpInfoList;
@@ -449,7 +455,7 @@ public class FeatureService {
     @Path("/vote")
     @GET
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-    public Response getVoteList(@CookieParam("u")String sessionId) {
+    public Response getVoteList(@CookieParam("u")String sessionId, @QueryParam("page")int page, @QueryParam("size")int size) {
         if(!IdentifyUtils.isValidate(sessionId)) {
             return Response.status(403).build();
         }
@@ -472,7 +478,13 @@ public class FeatureService {
             responseEntity.msg = "未加入协会";
             return Response.status(200).entity(responseEntity).build();
         }
-        List<SimpleVoteInfo> voteList = voteDAO.getVoteInfoList(associationId);
+        if(page <= 0) {
+            page = 1;
+        }
+        if(size <= 0) {
+            size = 20;
+        }
+        List<SimpleVoteInfo> voteList = voteDAO.getVoteInfoList(page, size, associationId);
         responseEntity.code = 200;
         responseEntity.body = voteList;
         return Response.status(200).entity(responseEntity).build();

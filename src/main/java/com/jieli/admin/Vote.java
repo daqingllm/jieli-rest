@@ -7,6 +7,7 @@ import com.jieli.association.Association;
 import com.jieli.common.dao.AccountDAO;
 import com.jieli.common.entity.Account;
 import com.jieli.feature.vote.dao.VoteDAO;
+import com.jieli.feature.vote.entity.SimpleVoteInfo;
 import com.jieli.feature.vote.entity.VoteInfo;
 import com.jieli.util.FTLrender;
 import com.jieli.util.IdentifyUtils;
@@ -73,6 +74,9 @@ public class Vote {
         if (!IdentifyUtils.isValidate(sessionId)) {
             return errorReturn;
         }
+        if(!IdentifyUtils.isAdmin(sessionId)) {
+            return errorReturn;
+        }
         Account account = accountDAO.loadById(sessionId);
         if (account == null || account.username == null || account.username == ""){
             return errorReturn;
@@ -89,6 +93,9 @@ public class Vote {
     @Path("/view")
     public String viewVote(@CookieParam("u") String sessionId, @QueryParam("voteId")String voteId) {
         if(!IdentifyUtils.isValidate(sessionId)) {
+            return errorReturn;
+        }
+        if(!IdentifyUtils.isAdmin(sessionId)) {
             return errorReturn;
         }
         Account account = accountDAO.loadById(sessionId);
@@ -148,7 +155,7 @@ public class Vote {
         boolean isSuper = false;
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("username", account.username);
-        List<VoteInfo> voteList = new ArrayList<VoteInfo>();
+        List<SimpleVoteInfo> voteList = new ArrayList<SimpleVoteInfo>();
         List<Association> associationList = new ArrayList<Association>();
         Integer pageNo = 1;
         Integer pageSize = 50;
@@ -159,17 +166,19 @@ public class Vote {
                 associationList.add(a);
             }
             params.put("associationList", associationList);
-            voteList = voteDAO.paginateVote(pageNo, pageSize,
-                    associationList.get(0).get_id().toString());
         }
         else {
             if(!MongoUtils.isValidObjectId(associationId)) {
                 return FTLrender.getResult("error.ftl", params);
             }
-            voteList = voteDAO.paginateVote(pageNo, pageSize,
-                    associationId);
         }
-        //TODO
+        if(associationId == null) {
+            //首次super进入页面，未选择association
+            //TODO selector传入associationId，ajax请求下一次列表页
+            associationId = associationList.get(0).get_id().toString();
+        }
+        voteList = voteDAO.getVoteInfoList(pageNo, pageSize,
+                associationId);
         String jsonVoteList;
         int i;
         ObjectMapper om = new ObjectMapper();
