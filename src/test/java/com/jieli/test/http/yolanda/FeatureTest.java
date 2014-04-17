@@ -21,9 +21,9 @@ import java.util.Date;
  * Created by YolandaLeo on 14-3-29.
  */
 public class FeatureTest {
-    //@Test
+    @Test
     public void getHelpList() throws IOException {
-        Response response = Request.Get("http://localhost:8080/rest/feature/help")
+        Response response = Request.Get("http://localhost:8080/rest/feature/help?page=1&size=20&type=2")
                 .setHeader("Cookie", "u=5336bbe13004cc09f49432e7")
                 .execute();
         System.out.println(response.returnContent().asString());
