@@ -21,9 +21,9 @@ import java.util.Date;
  * Created by YolandaLeo on 14-3-29.
  */
 public class FeatureTest {
-    //@Test
+    @Test
     public void getHelpList() throws IOException {
-        Response response = Request.Get("http://localhost:8080/rest/feature/help")
+        Response response = Request.Get("http://localhost:8080/rest/feature/help?page=1&size=20&type=2")
                 .setHeader("Cookie", "u=5336bbe13004cc09f49432e7")
                 .execute();
         System.out.println(response.returnContent().asString());
@@ -38,13 +38,15 @@ public class FeatureTest {
         System.out.println(response.returnContent().asString());
     }
 
-    //@Test
+    @Test
     public void addHelpInfo() throws IOException {
         HelpInfo helpInfo = new HelpInfo();
         helpInfo.setAssociationId("5337af643004e0056052bd5a");
-        helpInfo.setTitle("求陪同逛街");
-        helpInfo.setContent("我明天想去久光百货，求陪同，要妹纸啊！");
+        helpInfo.setTitle("求陪吃饭");
+        helpInfo.setContent("我想去吃西贝，有木有人一起，今天晚饭");
         helpInfo.setAddTime(new Date());
+        helpInfo.setType(0);
+        helpInfo.setEmergency(true);
         ObjectMapper mapper = new ObjectMapper();
         Response response = Request.Post("http://localhost:8080/rest/feature/help/add")
                 .setHeader("Cookie", "u=5336bbe13004cc09f49432e7")
@@ -79,12 +81,12 @@ public class FeatureTest {
         System.out.println(response.returnContent().asString());
     }
 
-    //@Test
+    @Test
     public void addFocus() throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         String helpId = "5338115f30043866e28ac0b2";
         Response response = Request.Post("http://localhost:8080/rest/feature/help/detail/comment/focus" +
-                "?helpId=5338115f30043866e28ac0b2")
+                "?helpId=534f9b8f3004055aeb46f7b3")
                 .setHeader("Cookie", "u=5336bb6f3004cc09f49432e5")
                 .bodyString(helpId, ContentType.APPLICATION_JSON)
                 .execute();
@@ -104,8 +106,8 @@ public class FeatureTest {
 
     @Test
     public void getVoteList() throws IOException {
-        Response response = Request.Get("http://localhost:8080/rest/feature/vote")
-                .setHeader("Cookie", "u=533be303300460878a64a158")
+        Response response = Request.Get("http://localhost:8080/rest/feature/vote?page=1&size=20")
+                .setHeader("Cookie", "u=5336b7de3004f3462ed8868b")
                 .execute();
         System.out.println(response.returnContent().asString());
     }
@@ -140,12 +142,12 @@ public class FeatureTest {
     public void vote() throws IOException {
         Vote vote = new Vote();
         vote.setVoteIndex(Arrays.asList(1));
-        vote.setUserId("533be303300460878a64a158");
+        vote.setUserId("5336bbe13004cc09f49432e7");
         vote.setAddTime(new Date());
         String voteId = "533800e530044c7fc286a6c4";
         ObjectMapper mapper = new ObjectMapper();
         Response response = Request.Post("http://localhost:8080/rest/feature/vote/commitvote?voteId=533bfacf300460878a64a159")
-                .addHeader("Cookie", "u=533be303300460878a64a158")
+                .addHeader("Cookie", "u=5336bbe13004cc09f49432e7")
                 .bodyString(mapper.writeValueAsString(vote), ContentType.APPLICATION_JSON)
                 .execute();
         System.out.println(response.returnContent().asString());

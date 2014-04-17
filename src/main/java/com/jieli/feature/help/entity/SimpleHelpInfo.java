@@ -31,6 +31,10 @@ public class SimpleHelpInfo extends Model{
      * 发帖时间
      */
     public Date addTime;
+    /**
+     * 类型 0-需求，1-供给
+     */
+    private int type;
 
     public String getUserId() {
         return userId;
@@ -78,5 +82,13 @@ public class SimpleHelpInfo extends Model{
 
     public void setAddTime(Date addTime) {
         this.addTime = addTime;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
     }
 }

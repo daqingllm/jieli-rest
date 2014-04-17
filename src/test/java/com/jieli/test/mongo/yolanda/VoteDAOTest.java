@@ -66,7 +66,7 @@ public class VoteDAOTest {
     @Test
     public void getVoteInfoList() {
         String associationId = "5337af643004e0056052bd5a";
-        List<SimpleVoteInfo> voteInfoList = voteDAO.getVoteInfoList(associationId);
+        List<SimpleVoteInfo> voteInfoList = voteDAO.getVoteInfoList(1, 20, associationId);
         for(SimpleVoteInfo s : voteInfoList) {
             System.out.println(s.toString());
         }

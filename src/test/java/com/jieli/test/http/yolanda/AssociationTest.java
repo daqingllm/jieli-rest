@@ -22,10 +22,10 @@ public class AssociationTest {
     @Test
     public void testCreate() throws IOException {
         Association association = new Association();
-        association.name = "上海";
+        association.name = "北京";
 
         Response response = Request.Post("http://localhost:8080/rest/association")
-                .addHeader("Cookie", "u=5336bbe13004cc09f49432e7")
+                .addHeader("Cookie", "u=5346965130040cab020b3dd3")
                 .bodyString(new ObjectMapper().writeValueAsString(association), ContentType.APPLICATION_JSON)
                 .execute();
 

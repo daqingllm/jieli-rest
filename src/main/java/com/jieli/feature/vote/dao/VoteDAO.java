@@ -7,6 +7,7 @@ import com.jieli.feature.vote.entity.Vote;
 import com.jieli.feature.vote.entity.VoteComment;
 import com.jieli.feature.vote.entity.VoteInfo;
 import com.jieli.mongo.GenericDAO;
+import com.jieli.news.News;
 
 import java.util.*;
 
@@ -20,11 +21,12 @@ public class VoteDAO extends GenericDAO<VoteInfo> {
      * @param associationId
      * @return
      */
-    public List<SimpleVoteInfo> getVoteInfoList(String associationId) {
-        Iterator<SimpleVoteInfo> iterator = col.find("{\"associationId\":#}", associationId).as(SimpleVoteInfo.class).iterator();
+    public List<SimpleVoteInfo> getVoteInfoList(int pageNo, int pageSize, String associationId) {
+        Iterable<SimpleVoteInfo> voteIterator = col.find("{\"associationId\":#}", associationId)
+                .sort("{addTime:-1}").skip((pageNo - 1) * pageSize).limit(pageSize).as(SimpleVoteInfo.class);
         List<SimpleVoteInfo> resultList = new ArrayList<SimpleVoteInfo>();
-        for(;iterator.hasNext();) {
-            resultList.add(iterator.next());
+        for(SimpleVoteInfo v : voteIterator) {
+            resultList.add(v);
         }
         return resultList;
     }
@@ -47,8 +49,13 @@ public class VoteDAO extends GenericDAO<VoteInfo> {
     public VoteInfo vote(Vote vote, String voteId) {
         VoteInfo v = loadById(voteId);
         List<Vote> voteList = v.getVoteList();
+        Integer participants = v.getParticipants();
         if(voteList == null) {
             voteList = new ArrayList<Vote>();
+            participants = 0;
+        }
+        if(participants == null) {
+            participants = 0;
         }
         voteList.add(vote);
         Map<Integer, Integer> optionVotes = v.getOptionVotes();
@@ -59,6 +66,8 @@ public class VoteDAO extends GenericDAO<VoteInfo> {
             optionVotes.put(i, num);
             totalVote++;
         }
+        participants++;
+        v.setParticipants(participants);
         v.setTotalVote(totalVote);
         v.setOptionVotes(optionVotes);
         v.setVoteList(voteList);
@@ -81,4 +90,5 @@ public class VoteDAO extends GenericDAO<VoteInfo> {
         voteInfo.setCommentList(commentList);
         return save(voteInfo);
     }*/
+
 }
