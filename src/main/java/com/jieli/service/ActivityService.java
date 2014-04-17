@@ -518,6 +518,7 @@ public class ActivityService {
             messageDAO.save(message);
         }
 
+        responseEntity.code = 200;
         return Response.status(200).entity(responseEntity).build();
     }
 

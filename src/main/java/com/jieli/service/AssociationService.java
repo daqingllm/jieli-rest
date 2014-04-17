@@ -2,6 +2,8 @@ package com.jieli.service;
 
 import com.jieli.association.Association;
 import com.jieli.association.AssociationDAO;
+import com.jieli.association.Group;
+import com.jieli.association.GroupDAO;
 import com.jieli.common.dao.AccountDAO;
 import com.jieli.common.entity.Account;
 import com.jieli.common.entity.AccountState;
@@ -30,6 +32,8 @@ public class AssociationService {
     private AssociationDAO associationDAO = new AssociationDAO();
 
     private AccountDAO accountDAO = new AccountDAO();
+
+    private GroupDAO groupDAO = new GroupDAO();
 
     @GET
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
@@ -124,6 +128,41 @@ public class AssociationService {
 
         responseEntity.code = 200;
         responseEntity.body = accounts;
+        return Response.status(200).entity(responseEntity).build();
+    }
+
+    @POST
+    @Path("/group")
+    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+    public Response upsertGroup(@CookieParam("u")String sessionId,@QueryParam("id")String id, Group group) {
+        if (!IdentifyUtils.isAdmin(sessionId)) {
+            return Response.status(403).build();
+        }
+        ResponseEntity responseEntity = new ResponseEntity();
+        String associationId = null;
+        if (IdentifyUtils.getState(sessionId) == AccountState.SUPPER) {
+            if (StringUtils.isEmpty(id)) {
+                responseEntity.code = 2101;
+                responseEntity.msg = "缺少参数";
+                return Response.status(200).entity(responseEntity).build();
+            }
+            associationId = id;
+        } else {
+            associationId = IdentifyUtils.getAssociationId(sessionId);
+        }
+        group.associationId = associationId;
+
+        Iterable<Group> groups = groupDAO.loadAll(associationId);
+        for (Group oldGroup : groups) {
+            if (oldGroup.equals(group)) {
+                responseEntity.code = 2301;
+                responseEntity.msg = "分组已存在";
+                return Response.status(200).entity(responseEntity).build();
+            }
+        }
+
+        groupDAO.save(group);
+        responseEntity.code = 200;
         return Response.status(200).entity(responseEntity).build();
     }
 

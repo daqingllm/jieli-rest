@@ -10,10 +10,7 @@ import org.apache.http.entity.ContentType;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -94,6 +91,21 @@ public class ActivityTest {
         Response response = Request.Post("http://162.243.151.219:8080/jieli-1.0-SNAPSHOT/rest/activity/comment")
                 .addHeader("Cookie", "u=5348210be4b00b2ae52d3f5c")
                 .bodyString(new ObjectMapper().writeValueAsString(infos), ContentType.APPLICATION_JSON)
+                .execute();
+
+        System.out.println(response.returnContent().asString());
+    }
+
+    @Test
+    public void testInvite() throws IOException {
+//        Map<String, String> infos = new HashMap<String, String>();
+//        infos.put("content", "是地方但是");
+//        infos.put("topicId", "534821b9e4b00b2ae52d3f5d");
+        List<String> userIds = Arrays.asList("534950a2e4b0be347782c7ce");
+
+        Response response = Request.Post("http://162.243.151.219:8080/rest/activity/invite?activityId=5348bc69e4b0fce4fd040559")
+                .addHeader("Cookie", "u=5348210be4b00b2ae52d3f5c")
+                .bodyString(new ObjectMapper().writeValueAsString(userIds), ContentType.APPLICATION_JSON)
                 .execute();
 
         System.out.println(response.returnContent().asString());
