@@ -134,7 +134,7 @@ public class Activity {
 
                 String tmp = Common.ReplaceObjectId(activity);
 
-                activityList += tmp.replace("\"associationId\":\""+account.associationId+"\"","\"associationId\":\""+associationName+"\"");
+                activityList += tmp.replace("\"associationId\":\""+account.associationId+"\"","\"associationId\":\""+associationName+"\"") + ",";
             }
 
             // 找所有历史活动
@@ -147,11 +147,11 @@ public class Activity {
 
                 String tmp = Common.ReplaceObjectId(activity);
 
-                activityList += tmp.replace("\"associationId\":\""+account.associationId+"\"","\"associationId\":\""+associationName+"\"");
+                activityList += tmp.replace("\"associationId\":\""+account.associationId+"\"","\"associationId\":\""+associationName+"\"") + ",";
             }
         }
 
-        params.put("activityList","["+activityList+"]");
+        params.put("activityList","["+activityList.substring(0,activityList.length()-1)+"]");
 
         return FTLrender.getResult("activity_list.ftl",params);
     }
