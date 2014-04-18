@@ -67,9 +67,9 @@ public class Help {
             "</html>";
 
     @GET
-    @Path("view")
+    @Path("/view")
     @Produces(MediaType.TEXT_HTML)
-    public String getHelpList(@CookieParam("u")String sessionId, @QueryParam("associationId")String associationId) {
+    public String getHelpList(@CookieParam("u")String sessionId) {
         if(!IdentifyUtils.isValidate(sessionId)) {
             return errorReturn;
         }
@@ -82,9 +82,7 @@ public class Help {
         }
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("username", account.username);
-        if(!MongoUtils.isValidObjectId(associationId)) {
-            return FTLrender.getResult("error.ftl", params);
-        }
+        String associationId = IdentifyUtils.getAssociationId(sessionId);
         boolean isSuper = false;
         if(IdentifyUtils.isSuper(sessionId))
             isSuper = true;
@@ -96,6 +94,11 @@ public class Help {
             }
             params.put("associationList", associationList);
             associationId = associationList.get(0).get_id().toString();
+        }
+        else {
+            if(!MongoUtils.isValidObjectId(associationId)) {
+                return FTLrender.getResult("error.ftl", params);
+            }
         }
         Integer pageNo = 1;
         Integer pageSize = 20;

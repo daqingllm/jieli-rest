@@ -141,7 +141,7 @@ public class Vote {
     @GET
     @Produces(MediaType.TEXT_HTML)
     @Path("/list")
-    public String getVoteList(@CookieParam("u")String sessionId, @QueryParam("associationId")String associationId) {
+    public String getVoteList(@CookieParam("u")String sessionId) {
         if(!IdentifyUtils.isValidate(sessionId)) {
             return errorReturn;
         }
@@ -152,6 +152,7 @@ public class Vote {
         if (account == null || account.username == null || account.username == ""){
             return errorReturn;
         }
+        String associationId = IdentifyUtils.getAssociationId(sessionId);
         boolean isSuper = false;
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("username", account.username);

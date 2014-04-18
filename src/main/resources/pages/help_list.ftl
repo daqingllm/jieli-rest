@@ -2,7 +2,7 @@
 <html lang="zh">
 <head>
     <meta charset="utf-8"/>
-    <title>接力 资讯管理</title>
+    <title>接力 互帮互助管理</title>
     <meta name="description" content="接力"/>
     <!-- basic styles -->
 
@@ -192,10 +192,10 @@
                     </li>
 
                     <li>
-                        <a href="#"> 投票管理 </a>
+                        <a href="#"> 互帮互助管理 </a>
                     </li>
 
-                    <li class="active"> 投票列表 </li>
+                    <li class="active"> 互帮互助列表 </li>
                 </ul>
                 <!-- .breadcrumb -->
 
@@ -214,7 +214,7 @@
             <div class="page-content">
                 <div class="page-header">
                     <h1>
-                        投票列表
+                        互帮互助列表
                     </h1>
                 </div>
                 <!-- /.page-header -->
@@ -223,7 +223,7 @@
                 <#if isSuper>
                     <label class="col-sm-3 control-label no-padding-right" for="form-field-select-type"> 请选择协会 </label>
                     <div class="col-sm-9">
-                        <select class="col-xs-10 col-sm-7" id="form-field-select-type" style="padding: 5px 4px;font-size: 14px;">
+                        <select class="col-xs-10 col-sm-7" id="association-select" style="padding: 5px 4px;font-size: 14px;">
                             <#list associationList as associations>
                                 <option value="${associations.name}" <#if associations_index = 0>selected="selected" </#if>>${associations.name}</option>
                             </#list>
@@ -233,13 +233,12 @@
                 </#if>
                     <label class="col-sm-3 control-label no-padding-right" for="form-field-select-type"> 请选择帮助类型 </label>
                     <div class="col-sm-9">
-                        <select class="col-xs-10 col-sm-7" id="form-field-select-type" style="padding: 5px 4px;font-size: 14px;">
+                        <select class="col-xs-10 col-sm-7" id="help-select" style="padding: 5px 4px;font-size: 14px;">
                             <option value="需求" selected="selected">供给</option>
                             <option value="供给">需求</option>
                         </select>
                     </div>
                     <div class="space-4"></div>
-
                     <div class="col-xs-12">
 
                         <!-- PAGE CONTENT BEGINS -->
@@ -406,7 +405,7 @@ Date.prototype.Format = function (fmt) { //author: meizz
     return fmt;
 }
 
-function parseArtData(data){
+function parseHelpData(data){
 
     for (var i = 0 ; i < data.length; i++){
         if(data[i].type == 0) {
@@ -424,7 +423,7 @@ function parseArtData(data){
 
         data[i].addTime = nowStr;
 
-        data[i].content = data[i].description.substr(0, 30);
+        data[i].content = data[i].content.substr(0, 30);
         //data[i].content = data[i].content.substr(0,30);
 
     }
@@ -500,7 +499,7 @@ jQuery(function($) {
     raw_data = ${jsonHelpList};
 
 
-    var grid_data = parseArtData(raw_data);
+    var grid_data = parseHelpData(raw_data);
 
     var grid_selector = "#grid-table";
     var pager_selector = "#grid-pager";
@@ -518,7 +517,7 @@ jQuery(function($) {
             {name:"type",index:"type",width:"45",editable:false},
             {name:"content",index:"content",width:"270",editable:false},
             {name:"addTime",index:"addTime",width:"75",editable:false,sorttype:"date"},
-            {name:"attentionNum",index:"attentionNum",width:"40",editable:false, sorttype:"int"}
+            {name:"attentionNum",index:"attentionNum",width:"40",editable:false}
         ],
         viewrecords : true,
         rowNum:10,
