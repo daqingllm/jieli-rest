@@ -622,7 +622,7 @@
         spin_img = "";
         bootbox.dialog({
             //message: "<input type='file' id='upload-image-files' name='upload-image-files' >",
-            message: "<form id='rest-upload-form' action='/upload' method='post' enctype='multipart/form-data' acceptcharset='UTF-8'>\n<input id='rest-upload-file' type='file' name='file' size='50' />"+spin_img+"</form>",
+            message: "<form id='rest-upload-form' action='/rest/upload' method='post' enctype='multipart/form-data' acceptcharset='UTF-8'>\n<input id='rest-upload-file' type='file' name='file' size='50' />"+spin_img+"</form>",
             buttons: {
                 "upload": {
                     "label": "<i class='icon-ok'></i> ÉÏ´« ",
