@@ -7,6 +7,9 @@ import com.jieli.association.AssociationDAO;
 import com.jieli.common.dao.AccountDAO;
 import com.jieli.common.entity.AccountState;
 import com.jieli.common.entity.ResponseEntity;
+import com.jieli.user.dao.UserDAO;
+import com.jieli.user.entity.*;
+import com.jieli.user.entity.User;
 import com.jieli.util.FTLrender;
 import com.jieli.util.IdentifyUtils;
 import com.jieli.util.PasswordGenerator;
@@ -30,6 +33,7 @@ import java.util.*;
 @Singleton
 @Path("/baccount")
 public class Account {
+    private UserDAO userDAO = new UserDAO();
     private AccountDAO accountDAO = new AccountDAO();
     private AssociationDAO associationDAO = new AssociationDAO();
 
@@ -169,5 +173,26 @@ public class Account {
         params.put("username",accountDAO.loadById(sessionId).username);
 
         return FTLrender.getResult("account_list.ftl", params);
+    }
+
+    @POST
+    @Path("/reuser")
+    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+    public Response login(@CookieParam("u") String sessionId, com.jieli.user.entity.User user) throws JSONException {
+        ResponseEntity responseEntity = new ResponseEntity();
+
+        Response response = Common.RoleCheckResponse(sessionId);
+        if (response != null) return response;
+
+        String id = user.get_id().toString();
+        User u = userDAO.loadById(id);
+        if (u != null){
+            user.associationId = u.associationId;
+            userDAO.save(user);
+        }
+        responseEntity.code = 200;
+        responseEntity.msg = "成功创建用户"+user.name;
+
+        return  Response.status(200).entity(responseEntity).build();
     }
 }
