@@ -179,6 +179,38 @@
                                             </label>
                                         </#if>
 
+                                            <label class="block clearfix"> <span class="block input-icon input-icon-right">
+															<input type="text" class="form-control" placeholder="姓名" id="register-u-name" />
+															<i class="icon-user"></i> </span> </label>
+
+                                            <label class="block clearfix"> <span class="block input-icon input-icon-right">
+												<!--			<input type="text" class="form-control" placeholder="性别" id="register-u-sex" /> -->
+                                                <select class="form-control" id="register-u-sex">
+                                                    <option value="0" selected>男</option>
+                                                    <option value="1">女</option>
+                                                </select>
+															<i class="icon-user"></i> </span> </label>
+
+                                            <label class="block clearfix"> <span class="block input-icon input-icon-right">
+															<input type="text" class="form-control" placeholder="生日" id="register-u-birthday" />
+															<i class="icon-user"></i> </span> </label>
+
+                                            <label class="block clearfix"> <span class="block input-icon input-icon-right">
+															<input type="text" class="form-control" placeholder="手机" id="register-u-phone" />
+															<i class="icon-user"></i> </span> </label>
+
+                                            <label class="block clearfix"> <span class="block input-icon input-icon-right">
+															<input type="text" class="form-control" placeholder="行业" id="register-u-hy" />
+															<i class="icon-user"></i> </span> </label>
+
+                                            <label class="block clearfix"> <span class="block input-icon input-icon-right">
+															<input type="text" class="form-control" placeholder="公司" id="register-u-company" />
+															<i class="icon-user"></i> </span> </label>
+
+                                            <label class="block clearfix"> <span class="block input-icon input-icon-right">
+															<input type="text" class="form-control" placeholder="职务" id="register-u-zw" />
+															<i class="icon-user"></i> </span> </label>
+
                                             <div class="clearfix">
                                                 <button type="button" class="width-65 pull-right btn btn-sm btn-success" onclick="register();">
                                                     注册

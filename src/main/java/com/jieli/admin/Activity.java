@@ -102,13 +102,27 @@ public class Activity {
     @GET
     @Path("/list")
     @Produces(MediaType.TEXT_HTML)
-    public String ActivityList(@CookieParam("u")String sessionId,@QueryParam("pl") String preload) throws JsonProcessingException {
+    public String ActivityList(@CookieParam("u")String sessionId,@QueryParam("page") String page, @QueryParam("rowNum") String rowNum, @QueryParam("pl") String preload) throws JsonProcessingException {
         String response = Common.RoleCheckString(sessionId);
         if (response != null) return response;
 
         com.jieli.common.entity.Account account = accountDAO.loadById(sessionId);
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("username",account.username);
+
+        int _page = 1,_rowNum = 2,_total=0,_totalPage = 0;
+        try{
+            _page = Integer.parseInt(page);
+            if (_page <= 0) _page = 1;
+        }catch (Exception e){
+            _page = 1;
+        }
+        try{
+            _rowNum = Integer.parseInt(rowNum);
+            if (_rowNum <= 0) _rowNum = 2;
+        }catch (Exception e){
+            _rowNum = 2;
+        }
 
         ////List<com.jieli.activity.Activity> activityList = new ArrayList<com.jieli.activity.Activity>();
         // 以后可能要做两个tab，分别显示进行中的和历史活动
@@ -124,36 +138,65 @@ public class Activity {
 
             String associationName = associationDAO.loadById(account.associationId).name;
             // 找所有的官方进行中的活动，这段以后可能改，可能直接用find函数
-            Iterable<com.jieli.activity.Activity> activities = activityDAO.findOngoingOfficial(account.associationId);
+            Iterable<com.jieli.activity.Activity> activities1 = activityDAO.findOngoingOfficial(account.associationId);
+            Iterable<com.jieli.activity.Activity> activities2 = activityDAO.findHistory(account.associationId,0,Integer.MAX_VALUE,"OFFICIAL");
 
-            for (com.jieli.activity.Activity activity : activities){
-                ////activityList.add(activity);
-                //String tmp = objectMapper.writeValueAsString(activity).toString();
-                //String tmpObjectId = objectMapper.writeValueAsString(activity.get_id()).toString();
-                //String tmpId = activity.get_id().toString();
-
-                String tmp = Common.ReplaceObjectId(activity);
-
-                activityList += tmp.replace("\"associationId\":\""+account.associationId+"\"","\"associationId\":\""+associationName+"\"") + ",";
+            //activities1 = activityDAO.findOngoingOfficial(account.associationId);
+            for (com.jieli.activity.Activity activity : activities1){
+                if (_total >= (_page-1)*_rowNum && _total < _page*_rowNum) {
+                    String tmp = Common.ReplaceObjectId(activity);
+                    activityList += tmp.replace("\"associationId\":\"" + account.associationId + "\"", "\"associationId\":\"" + associationName + "\"") + ",";
+                }
+                _total ++;
             }
 
             // 找所有历史活动
-            Iterable<com.jieli.activity.Activity> activities1 = activityDAO.findHistory(account.associationId,0,10,"OFFICIAL");
-            for (com.jieli.activity.Activity activity : activities1){
-                ////activityList.add(activity);
-                //String tmp = objectMapper.writeValueAsString(activity).toString();
-                //String tmpObjectId = objectMapper.writeValueAsString(activity.get_id()).toString();
-                //String tmpId = activity.get_id().toString();
-
-                String tmp = Common.ReplaceObjectId(activity);
-
-                activityList += tmp.replace("\"associationId\":\""+account.associationId+"\"","\"associationId\":\""+associationName+"\"") + ",";
+            //activities2 = activityDAO.findHistory(account.associationId,0,Integer.MAX_VALUE,"OFFICIAL");
+            for (com.jieli.activity.Activity activity : activities2){
+                if (_total >= (_page-1)*_rowNum && _total < _page*_rowNum) {
+                    String tmp = Common.ReplaceObjectId(activity);
+                    activityList += tmp.replace("\"associationId\":\"" + account.associationId + "\"", "\"associationId\":\"" + associationName + "\"") + ",";
+                }
+                _total ++;
             }
         }
 
-        params.put("activityList","["+activityList.substring(0,activityList.length()-1)+"]");
+        _totalPage = (_total+1)/_rowNum;
+        if (_page > _totalPage) _page = _totalPage+1;
+
+        params.put("activityList","["+(activityList.length()>0?(activityList.substring(0,activityList.length()-1)):"")+"]");
+        params.put("rowNum",_rowNum);
+        params.put("ti",_total);
+        params.put("tp",_totalPage);
+        params.put("cp",_page);
 
         return FTLrender.getResult("activity_list.ftl",params);
+    }
+
+    @POST
+    @Path("/del")
+    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+    public Response getActivityPage(@CookieParam("u")String sessionId,@QueryParam("actid") String activityId){
+
+        Response response = Common.RoleCheckResponse(sessionId);
+        if (response != null) return response;
+
+        ResponseEntity responseEntity = new ResponseEntity();
+        responseEntity.code = 200;
+        responseEntity.msg = "已成功删除";
+
+        if (IdentifyUtils.isAdmin(sessionId)){
+            com.jieli.activity.Activity activity = activityDAO.loadById(activityId);
+            if (activity == null)
+                responseEntity.msg = "该活动已不存在";
+            else{
+                responseEntity.msg += "“"+activity.title+"”";
+                activityDAO.deleteById(activityId);
+            }
+        } else if (IdentifyUtils.isSuper(sessionId)){
+            ;
+        }
+        return Response.status(200).entity(responseEntity).build();
     }
 
     @GET
