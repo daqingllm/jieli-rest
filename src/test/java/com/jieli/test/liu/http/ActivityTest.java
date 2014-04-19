@@ -45,7 +45,7 @@ public class ActivityTest {
 
     @Test
     public void testLoad() throws IOException {
-        Response response = Request.Get("http://localhost:8080/rest/activity?activityId=53482b95ef862ffc551c0d00")
+        Response response = Request.Get("http://localhost:8080/rest/activity?activityId=5348ddc5ef86675f431c426b")
                 .addHeader("Cookie", "u=533c0010ef86c7014c36fa2f")
                 .execute();
 
@@ -120,7 +120,7 @@ public class ActivityTest {
 //        infos.put("commentedUserId", "533c0010ef86c7014c36fa2e");
         List<String> picIds = Arrays.asList("111", "222", "333");
 
-        Response response = Request.Post("http://localhost:8080/rest/activity/upload?activityId=53482b95ef862ffc551c0d00")
+        Response response = Request.Post("http://localhost:8080/rest/activity/upload?activityId=5348ddc5ef86675f431c426b")
                 .addHeader("Cookie", "u=533c0010ef86c7014c36fa2f")
                 .bodyString(new ObjectMapper().writeValueAsString(picIds), ContentType.APPLICATION_JSON)
                 .execute();

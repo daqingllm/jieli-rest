@@ -57,7 +57,7 @@ public class ActivityTest {
 
     @Test
     public void testLoad() throws IOException {
-        Response response = Request.Get("http://162.243.151.219:8080/jieli-1.0-SNAPSHOT/rest/activity?activityId=534821b9e4b00b2ae52d3f5d")
+        Response response = Request.Get("http://162.243.151.219:8080/rest/activity?activityId=535131ece4b007071c52d06e")
                 .addHeader("Cookie", "u=5348210be4b00b2ae52d3f5c")
                 .execute();
 
@@ -106,6 +106,21 @@ public class ActivityTest {
         Response response = Request.Post("http://162.243.151.219:8080/rest/activity/invite?activityId=5348bc69e4b0fce4fd040559")
                 .addHeader("Cookie", "u=5348210be4b00b2ae52d3f5c")
                 .bodyString(new ObjectMapper().writeValueAsString(userIds), ContentType.APPLICATION_JSON)
+                .execute();
+
+        System.out.println(response.returnContent().asString());
+    }
+
+    @Test
+    public void testUpload() throws IOException {
+//        Map<String, String> infos = new HashMap<String, String>();
+//        infos.put("content", "是地方但是");
+//        infos.put("topicId", "534821b9e4b00b2ae52d3f5d");
+        List<String> pics = Arrays.asList("http://xianxing-test.qiniudn.com/13345832224833124_20090529113434168.jpg");
+
+        Response response = Request.Post("http://162.243.151.219:8080/rest/activity/invite?activityId=535131ece4b007071c52d06e")
+                .addHeader("Cookie", "u=5348210be4b00b2ae52d3f5c")
+                .bodyString(new ObjectMapper().writeValueAsString(pics), ContentType.APPLICATION_JSON)
                 .execute();
 
         System.out.println(response.returnContent().asString());
