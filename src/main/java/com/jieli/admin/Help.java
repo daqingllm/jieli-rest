@@ -10,6 +10,7 @@ import com.jieli.feature.help.entity.SimpleHelpInfo;
 import com.jieli.util.FTLrender;
 import com.jieli.util.IdentifyUtils;
 import com.jieli.util.MongoUtils;
+import com.mongodb.Mongo;
 import com.sun.jersey.spi.resource.Singleton;
 
 import javax.ws.rs.*;
@@ -67,7 +68,7 @@ public class Help {
             "</html>";
 
     @GET
-    @Path("/view")
+    @Path("/list")
     @Produces(MediaType.TEXT_HTML)
     public String getHelpList(@CookieParam("u")String sessionId) {
         if(!IdentifyUtils.isValidate(sessionId)) {
@@ -106,6 +107,9 @@ public class Help {
         Integer type = 0;
         List<SimpleHelpInfo> helpList = helpDAO.getHelpInfoList(pageNo, pageSize, associationId, type);
 
+        for(SimpleHelpInfo h : helpList) {
+            h.setId(h.get_id().toString());
+        }
         String jsonHelpList;
         int i;
         ObjectMapper om = new ObjectMapper();
@@ -127,5 +131,38 @@ public class Help {
         params.put("jsonHelpList", jsonHelpList);
         params.put("isSuper", isSuper);
         return FTLrender.getResult("help_list.ftl", params);
+    }
+
+    @GET
+    @Path("/view")
+    @Produces(MediaType.TEXT_HTML)
+    public String viewHelp(@CookieParam("u")String sessionId, @QueryParam("h")String helpId) {
+        if(!IdentifyUtils.isValidate(sessionId)) {
+            return errorReturn;
+        }
+        if(!IdentifyUtils.isAdmin(sessionId)) {
+            return errorReturn;
+        }
+        com.jieli.common.entity.Account account = accountDAO.loadById(sessionId);
+        if (account == null || account.username == null || account.username == ""){
+            return errorReturn;
+        }
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("username", account.username);
+        if(!MongoUtils.isValidObjectId(helpId)) {
+            return FTLrender.getResult("error.ftl", params);
+        }
+        HelpInfo help = helpDAO.loadById(helpId);
+        if(help == null) {
+            return FTLrender.getResult("error.ftl", params);
+        }
+        boolean isSuper = IdentifyUtils.isSuper(sessionId);
+        boolean canDelete = false;
+        if(!isSuper) {
+            canDelete = true;
+        }
+        params.put("canDelete", canDelete);
+        params.put("help", help);
+        return FTLrender.getResult("helpinfo.ftl", params);
     }
 }

@@ -10,6 +10,7 @@ import java.util.Date;
  * Created by YolandaLeo on 14-3-19.
  */
 public class SimpleHelpInfo extends Model{
+    public String id;
     public String userId;
     /**
      * 协会Id
@@ -90,5 +91,13 @@ public class SimpleHelpInfo extends Model{
 
     public void setType(int type) {
         this.type = type;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }

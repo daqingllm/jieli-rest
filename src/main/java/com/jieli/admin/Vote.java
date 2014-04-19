@@ -91,7 +91,7 @@ public class Vote {
     @GET
     @Produces(MediaType.TEXT_HTML)
     @Path("/view")
-    public String viewVote(@CookieParam("u") String sessionId, @QueryParam("voteId")String voteId) {
+    public String viewVote(@CookieParam("u") String sessionId, @QueryParam("v")String voteId) {
         if(!IdentifyUtils.isValidate(sessionId)) {
             return errorReturn;
         }
@@ -180,6 +180,9 @@ public class Vote {
         }
         voteList = voteDAO.getVoteInfoList(pageNo, pageSize,
                 associationId);
+        for(SimpleVoteInfo v : voteList) {
+            v.setId(v.get_id().toString());
+        }
         String jsonVoteList;
         int i;
         ObjectMapper om = new ObjectMapper();

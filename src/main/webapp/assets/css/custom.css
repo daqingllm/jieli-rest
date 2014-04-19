@@ -17,3 +17,7 @@
 .help-center-btn {
     margin-left: 45%;
 }
+
+.textarea-no-resize {
+    resize: none;
+}
