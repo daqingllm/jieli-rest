@@ -8,6 +8,7 @@ import java.util.Date;
  * Created by YolandaLeo on 14-3-29.
  */
 public class SimpleVoteInfo extends Model{
+    private String id;
     private String associationId;
     private String userId;
     private String title;
@@ -79,5 +80,13 @@ public class SimpleVoteInfo extends Model{
 
     public void setMultiple(boolean multiple) {
         this.multiple = multiple;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }

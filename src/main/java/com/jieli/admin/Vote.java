@@ -81,8 +81,10 @@ public class Vote {
         if (account == null || account.username == null || account.username == ""){
             return errorReturn;
         }
+        boolean isSuper = IdentifyUtils.isSuper(sessionId);
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("username",account.username);
+        params.put("isSuper", isSuper);
         params.put("newVote", true);
         params.put("isEditable", true);
         return FTLrender.getResult("voteinfo.ftl", params);
@@ -91,7 +93,7 @@ public class Vote {
     @GET
     @Produces(MediaType.TEXT_HTML)
     @Path("/view")
-    public String viewVote(@CookieParam("u") String sessionId, @QueryParam("voteId")String voteId) {
+    public String viewVote(@CookieParam("u") String sessionId, @QueryParam("v")String voteId) {
         if(!IdentifyUtils.isValidate(sessionId)) {
             return errorReturn;
         }
@@ -102,8 +104,10 @@ public class Vote {
         if (account == null || account.username == null || account.username == ""){
             return errorReturn;
         }
+        boolean isSuper = IdentifyUtils.isSuper(sessionId);
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("username", account.username);
+        params.put("isSuper", isSuper);
         if(!MongoUtils.isValidObjectId(voteId)) {
             return FTLrender.getResult("error.ftl", params);
         }
@@ -127,8 +131,10 @@ public class Vote {
         if (account == null || account.username == null || account.username == ""){
             return errorReturn;
         }
+        boolean isSuper = IdentifyUtils.isSuper(sessionId);
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("username", account.username);
+        params.put("isSuper", isSuper);
         if(!MongoUtils.isValidObjectId(voteId)) {
             return FTLrender.getResult("error.ftl", params);
         }
@@ -180,6 +186,9 @@ public class Vote {
         }
         voteList = voteDAO.getVoteInfoList(pageNo, pageSize,
                 associationId);
+        for(SimpleVoteInfo v : voteList) {
+            v.setId(v.get_id().toString());
+        }
         String jsonVoteList;
         int i;
         ObjectMapper om = new ObjectMapper();

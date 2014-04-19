@@ -362,9 +362,11 @@
 <script type="text/javascript">
 jQuery(function ($) {
 <#if isSuper>
-    $("#sidebar-shortcuts-navlist").load("/sidebar_super.html",function(){$("#nav_list_4_1").addClass("active open");$("#nav_list_2").addClass("active");});
+    $("#sidebar-shortcuts-navlist").load("/sidebar_super.html",function(){$("#nav_list_5_1").addClass("active open");
+    $("#nav_list_5").addClass("active");});
 <#else>
-    $("#sidebar-shortcuts-navlist").load("/sidebar_admin.html",function(){$("#nav_list_4_1").addClass("active open");$("#nav_list_2").addClass("active");});
+    $("#sidebar-shortcuts-navlist").load("/sidebar_admin.html",function(){$("#nav_list_5_1").addClass("active open");
+    $("#nav_list_5").addClass("active");});
 </#if>
     var colorbox_params = {
         reposition: true,
@@ -517,17 +519,21 @@ jQuery(function($) {
         data: grid_data,
         datatype: "local",
         height: 330,
-        colNames:['_id',<#if isSuper>'协会',</#if>'帮助标题','帮助类型', '帮助描述', '添加日期', '关注人数'],
+        colNames:['id',<#if isSuper>'协会',</#if>'帮助标题','帮助类型', '帮助描述', '添加日期', '关注人数'],
         colModel:[
-            {name:"_id",index:"_id",width:10,editable:false,hidden:true},
+            {name:"id",index:"id",width:10,editable:false,hidden:true},
             //{name:"associationId",index:"associationId",width:40,editable:false, hidden:true},
             {name:"associationName",index:"associationName",width:40,editable:false<#if isSuper><#else>,hidden:true</#if>},
-            {name:"title",index:"title",width:"100",editable:false},
+            {name:"title",index:"title",width:"100",editable:false, formatter:function getUrl(cellValue, options, rowObject) {
+                var url = "<a href=\"/rest/bhelp/view?h=" + rowObject.id + "\">" + cellValue + "</a>";
+                return url;
+            }},
             {name:"type",index:"type",width:"45",editable:false},
             {name:"content",index:"content",width:"270",editable:false},
             {name:"addTime",index:"addTime",width:"75",editable:false,sorttype:"date"},
             {name:"attentionNum",index:"attentionNum",width:"40",editable:false}
         ],
+
         viewrecords : true,
         rowNum:10,
         rowList:[10,20,30],
@@ -625,15 +631,13 @@ jQuery(function ($) {
         var association = $("#association-select").val();
         var helpType = $("#help-select").val();
 
-
-        $("grid-table").jqGrid('setGridParam',{
+        $("#grid-table").jqGrid('setGridParam',{
             datatype:'json',
             data:$.ajax({
-                        url : '/rest/feature/ajaxhelp/list?a=' + association + '&t=' + helpType + '&page=1&size=20',
-                        type : 'GET',
-                        contentType: "application/json"
-                    }
-            )
+                url : '/rest/feature/ajaxhelp/list?a=' + association + '&t=' + helpType + '&page=1&size=20',
+                type : 'GET',
+                contentType: "application/json"
+            })
         }).trigger("reloadGrid");
     });
 
