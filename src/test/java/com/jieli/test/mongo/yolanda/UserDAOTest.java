@@ -2,13 +2,9 @@ package com.jieli.test.mongo.yolanda;
 
 import com.jieli.common.dao.AccountDAO;
 import com.jieli.common.entity.Account;
-import com.jieli.common.entity.InterestTag;
 import com.jieli.user.dao.UserDAO;
 import com.jieli.user.entity.User;
 import org.testng.annotations.Test;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -25,17 +21,15 @@ public class UserDAOTest {
     @Test
     public void testInterest() {
         User user = new User();
-        List<InterestTag> interestTags = new ArrayList<InterestTag>();
-        interestTags.add(InterestTag.FOOTBALL);
-        user.interestTags = interestTags;
+//        user.interestTags = interestTags;
         String userId = userDAO.save(user).get_id().toString();
         System.out.println(userId);
 
         User newUser = userDAO.loadById(userId);
         System.out.println(newUser.get_id().toString());
-        for (InterestTag interestTag : newUser.interestTags) {
-            System.out.println(interestTag);
-        }
+//        for (InterestTag interestTag : newUser.interestTags) {
+//            System.out.println(interestTag);
+//        }
 
         userDAO.deleteById(userId);
     }

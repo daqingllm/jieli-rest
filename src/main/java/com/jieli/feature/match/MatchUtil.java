@@ -11,7 +11,7 @@ import com.jieli.user.entity.User;
  */
 public abstract class MatchUtil {
 
-    public static double calcMatchingScore(User user1, User user2) {
+    public static int calcMatchingScore(User user1, User user2) {
         return 50;
     }
 }

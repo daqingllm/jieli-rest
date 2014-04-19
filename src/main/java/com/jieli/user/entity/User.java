@@ -1,6 +1,5 @@
 package com.jieli.user.entity;
 
-import com.jieli.common.entity.InterestTag;
 import com.jieli.mongo.Model;
 
 import java.util.List;
@@ -49,7 +48,8 @@ public class User extends Model {
 
     public String weixin;
 
-    public List<InterestTag> interestTags;
+//    public List<InterestTag> interestTags;
+    public List<String> interests;
 
     //协会
     public String associationId;

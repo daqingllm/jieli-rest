@@ -1,7 +1,6 @@
 package com.jieli.test.remote;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jieli.common.entity.InterestTag;
 import com.jieli.user.entity.Friend;
 import com.jieli.user.entity.User;
 import org.apache.http.client.fluent.Request;
@@ -10,7 +9,6 @@ import org.apache.http.entity.ContentType;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
-import java.util.Arrays;
 
 /**
  * Created with IntelliJ IDEA.
@@ -41,7 +39,7 @@ public class UserTest {
         user.degree = "MBA";
         user.enterpriseName = "阿里巴巴";
         user.identity = "协会元老";
-        user.interestTags = Arrays.asList(InterestTag.FOOTBALL);
+//        user.interestTags = Arrays.asList(InterestTag.FOOTBALL);
         user.mail = "xxx@164.com";
         user.phone = "13123456789";
         user.school = "北京大学";
