@@ -362,9 +362,11 @@
 <script type="text/javascript">
 jQuery(function ($) {
 <#if isSuper>
-    $("#sidebar-shortcuts-navlist").load("/sidebar_super.html",function(){$("#nav_list_4_1").addClass("active open");$("#nav_list_2").addClass("active");});
+    $("#sidebar-shortcuts-navlist").load("/sidebar_super.html",function(){$("#nav_list_5_1").addClass("active open");
+    $("#nav_list_5").addClass("active");});
 <#else>
-    $("#sidebar-shortcuts-navlist").load("/sidebar_admin.html",function(){$("#nav_list_4_1").addClass("active open");$("#nav_list_2").addClass("active");});
+    $("#sidebar-shortcuts-navlist").load("/sidebar_admin.html",function(){$("#nav_list_5_1").addClass("active open");
+    $("#nav_list_5").addClass("active");});
 </#if>
     var colorbox_params = {
         reposition: true,
@@ -629,15 +631,13 @@ jQuery(function ($) {
         var association = $("#association-select").val();
         var helpType = $("#help-select").val();
 
-
-        $("grid-table").jqGrid('setGridParam',{
+        $("#grid-table").jqGrid('setGridParam',{
             datatype:'json',
             data:$.ajax({
-                        url : '/rest/feature/ajaxhelp/list?a=' + association + '&t=' + helpType + '&page=1&size=20',
-                        type : 'GET',
-                        contentType: "application/json"
-                    }
-            )
+                url : '/rest/feature/ajaxhelp/list?a=' + association + '&t=' + helpType + '&page=1&size=20',
+                type : 'GET',
+                contentType: "application/json"
+            })
         }).trigger("reloadGrid");
     });
 

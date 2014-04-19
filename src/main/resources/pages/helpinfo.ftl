@@ -278,17 +278,6 @@
 
             </form>
 
-            <div class="clearfix form-actions">
-                <div class="col-md-offset-3 col-md-9">
-                    <#if canDelete>
-                        &nbsp; &nbsp; &nbsp;
-                        <button class="btn" type="reset" style="font-weight:bold" onclick="alert('not implemented');return true;">
-                            <i class="icon-undo bigger-110"></i>
-                            „h³ý
-                        </button>
-                    </#if>
-                </div>
-            </div>
         </div>
         <!-- /.col -->
     </div>
@@ -412,12 +401,15 @@
 
 <script type="text/javascript">
 jQuery(function ($) {
-    $("#sidebar-shortcuts-navlist").load("/sidebar.html",function(){$("#nav_list_5_2").addClass("active open");$("#nav_list_2").addClass("active");});
-
-    /*$("#sidebar").load("/sidebar.html");$("#nav_list_2_2").addClass("active open");$("#nav_list_2").addClass("active");*/
-
-
-    $("#bootbox-upload-image").on("click", uploadImgBox);
+<#if isSuper>
+    $("#sidebar-shortcuts-navlist").load("/sidebar_super.html",function(){
+        $("#nav_list_5_2").addClass("active open");
+    $("#nav_list_5").addClass("active");});
+<#else>
+    $("#sidebar-shortcuts-navlist").load("/sidebar_admin.html",function(){
+    $("#nav_list_5_2").addClass("active open");
+    $("#nav_list_5").addClass("active");});
+</#if>
 
     var colorbox_params = {
         reposition: true,

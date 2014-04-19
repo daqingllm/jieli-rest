@@ -163,6 +163,7 @@ public class Help {
         }
         params.put("canDelete", canDelete);
         params.put("help", help);
+        params.put("isSuper", isSuper);
         return FTLrender.getResult("helpinfo.ftl", params);
     }
 }

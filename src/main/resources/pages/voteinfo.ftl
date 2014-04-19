@@ -607,10 +607,15 @@
 
 <script type="text/javascript">
 jQuery(function ($) {
-    $("#sidebar-shortcuts-navlist").load("/sidebar.html",function(){$("#nav_list_4_2").addClass("active open");$("#nav_list_2").addClass("active");});
-
-    /*$("#sidebar").load("/sidebar.html");$("#nav_list_2_2").addClass("active open");$("#nav_list_2").addClass("active");*/
-
+<#if isSuper>
+    $("#sidebar-shortcuts-navlist").load("/sidebar_super.html",function(){
+        ${"nav_list_4_2"}.addClass("active open");
+        $("#nav_list_4").addClass("active");});
+<#else>
+    $("#sidebar-shortcuts-navlist").load("/sidebar_admin.html",function(){
+            <#if newVote>$("#nav_list_4_2")<#elseif isEditable>$("#nav_list_4_4")<#else>$("#nav_list_4_3")</#if>.addClass("active open");
+        $("#nav_list_4").addClass("active");});
+</#if>
 
     $("#bootbox-upload-image").on("click", uploadImgBox);
 
