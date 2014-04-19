@@ -20,6 +20,7 @@
 
     <link rel="stylesheet" href="/assets/css/jquery-ui-1.10.3.custom.min.css" />
     <link rel="stylesheet" href="/assets/css/jquery.gritter.css" />
+    <link rel="stylesheet" href="/assets/css/datepicker.css" />
 
     <!-- fonts -->
 
@@ -167,7 +168,7 @@
 
                                             <label class="block clearfix"> <span class="block input-icon input-icon-right">
 															<input type="text" class="form-control" placeholder="用户名" id="register-username" />
-															<i class="icon-user"></i> </span> </label>
+															<i class=""></i> </span> </label>
 
                                         <#if isSuper>
                                             <label class="block clearfix"> <span class="block input-icon input-icon-right">
@@ -178,6 +179,45 @@
 						                            </span>
                                             </label>
                                         </#if>
+
+                                            <label class="block clearfix"> <span class="block input-icon input-icon-right">
+															<input type="text" class="form-control" placeholder="姓名" id="register-u-name" />
+															<i class=""></i> </span> </label>
+
+                                            <label class="block clearfix"> <span class="block input-icon input-icon-right">
+												<!--			<input type="text" class="form-control" placeholder="性别" id="register-u-sex" /> -->
+                                                <select class="form-control" id="register-u-sex">
+                                                    <option value="0" selected>男</option>
+                                                    <option value="1">女</option>
+                                                </select>
+															<i class=""></i> </span> </label>
+
+                                            <label class="block clearfix"> <span class="block input-icon input-icon-right">
+                                                            <input type="text" class="form-control" style="width: 40%;float: left;" placeholder="生日 年" id="register-u-birthday-y" />
+                                                            <input type="text" class="form-control" style="width: 25%;float: left; margin-left: 5%;" placeholder="月" id="register-u-birthday-m" />
+                                                            <input type="text" class="form-control" style="width: 25%;float: left; margin-left: 5%;" placeholder="日" id="register-u-birthday-d" />
+												<!--			<input type="text" class="form-control" placeholder="生日" id="register-u-birthday" /> -->
+                                                <!--<input type="text" id="register-u-birthday" class="form-control hasDatepicker"/>
+                                                <span class="input-group-addon">
+                                                    <i class="icon-calendar"></i>
+                                                </span>-->
+															<i class=""></i> </span> </label>
+
+                                            <label class="block clearfix"> <span class="block input-icon input-icon-right">
+															<input type="text" class="form-control" placeholder="手机" id="register-u-phone" />
+															<i class=""></i> </span> </label>
+
+                                            <label class="block clearfix"> <span class="block input-icon input-icon-right">
+															<input type="text" class="form-control" placeholder="行业" id="register-u-profession" />
+															<i class=""></i> </span> </label>
+
+                                            <label class="block clearfix"> <span class="block input-icon input-icon-right">
+															<input type="text" class="form-control" placeholder="公司" id="register-u-enterprise" />
+															<i class=""></i> </span> </label>
+
+                                            <label class="block clearfix"> <span class="block input-icon input-icon-right">
+															<input type="text" class="form-control" placeholder="职务" id="register-u-identity" />
+															<i class=""></i> </span> </label>
 
                                             <div class="clearfix">
                                                 <button type="button" class="width-65 pull-right btn btn-sm btn-success" onclick="register();">
@@ -232,7 +272,8 @@
 <script src="/assets/js/bootbox.min.js"></script>
 <script src="/assets/js/jquery.easy-pie-chart.min.js"></script>
 <script src="/assets/js/jquery.gritter.min.js"></script>
-<script src="/assets/js/spin.min.js"></script>
+
+<script src="/assets/js/date-time/bootstrap-datepicker.min.js"></script>
 
 <!-- ace scripts -->
 
@@ -299,7 +340,26 @@
                 var jsn_body = "";
                 if (jsn.code == 200){
                     eval("jsn_body="+jsn.body);
-                    showMsg("注册成功", "用户"+_d.username+"的密码是："+jsn_body.password);
+
+                    var user= checkInput();
+
+                    if (user != null) {
+                        user._id = jsn_body.userId;
+                        $.ajax({
+                            type:"POST",
+                            url: '/rest/baccount/reuser',
+                            data:JSON.stringify(user),
+                            contentType : "application/json; charset=utf-8",
+                            dataType : 'json',
+                            success:function(ret){
+                                if (ret.code == 200)
+                                    showMsg("注册成功", "用户"+_d.username+"的密码是："+jsn_body.password);
+                                else
+                                    showMsg("注册失败", ret.msg || "");
+                            }
+                        });
+                    }
+
                 } else
                     showMsg("注册失败", jsn.msg);
             },
@@ -309,7 +369,42 @@
         });
     }
 
+    function checkInput(){
+        var u = {};
+        if ($("#register-u-name").val()==""){
+            alert("请添加用户姓名！");
+            return null;
+        }
+        u.name = $("#register-u-name").val();
+        u.sex = parseInt($("#register-u-sex").val());
+        var y = parseInt($("#register-u-birthday-y").val());
+        var m = parseInt($("#register-u-birthday-m").val());
+        m = (m < 10 ? "0":"") + m;
+        var d = parseInt($("#register-u-birthday-d").val());
+        d = (d < 10 ? "0":"") + d;
+        u.birthday = y + "-" + m + "-" + d;
+        u.constellation = "";
+        u.identity = $("#register-u-identity").val() || "";
+        u.score = 0;
+        u.school = "";
+        u.degree = "";
+        u.profession = $("#register-u-profession").val() || "";
+        u.phone = $("#register-u-phone").val() || "";
+        u.mail = "";
+        u.weixin = "";
+        u.interestTags = [];
+        u.enterpriseName = $("#register-u-enterprise").val() || "";
+        u.userFace = "";
+
+        return u;
+    }
 </script>
 
+<script>
+
+    jQuery(function($){
+        <!--$('#register-u-birthday').datepicker({autoclose:true});-->
+    })
+</script>
 </body>
 </html>

@@ -780,13 +780,14 @@
 		if (data.url && data.url.length > 0){
 			$("#form-field-imgurl").attr("src",data.url);
         	$("#form-field-imgurl").css("display","block");
+            $("#delTitleImage").css("display","block");
 		}
 		<#if isSuper>$("form-field-associations").val(data.associationId);</#if>
         
     <#else>
 
         if(confirm("${got}"));
-        window.location.href = "/rest/bnews/list";
+        window.location.href = "/rest/bactivity/list";
     </#if>
     }
 
@@ -811,9 +812,9 @@
 <script type="text/javascript">
     jQuery(function ($) {
         <#if isSuper>
-            $("#sidebar-shortcuts-navlist").load("/sidebar_super.html",function(){$("#nav_list_2_3").addClass("active open");$("#nav_list_2").addClass("active");});
+            $("#sidebar-shortcuts-navlist").load("/sidebar_super.html",function(){$("#nav_list_3_3").addClass("active open");$("#nav_list_3").addClass("active");});
         <#else>
-            $("#sidebar-shortcuts-navlist").load("/sidebar_admin.html",function(){$("#nav_list_2_3").addClass("active open");$("#nav_list_2").addClass("active");});
+            $("#sidebar-shortcuts-navlist").load("/sidebar_admin.html",function(){$("#nav_list_3_3").addClass("active open");$("#nav_list_3").addClass("active");});
         </#if>
 
         $('#selectAssociationIds').multiselect({
@@ -831,7 +832,7 @@
             spin_img = "";
             bootbox.dialog({
                 //message: "<input type='file' id='upload-image-files' name='upload-image-files' >",
-                message: "<form id='rest-upload-form' action='/upload' method='post' enctype='multipart/form-data' acceptcharset='UTF-8'>\n<input id='rest-upload-file' type='file' name='file' size='50' />"+spin_img+"</form>",
+                message: "<form id='rest-upload-form' action='/rest/upload' method='post' enctype='multipart/form-data' acceptcharset='UTF-8'>\n<input id='rest-upload-file' type='file' name='file' size='50' />"+spin_img+"</form>",
                 buttons: {
                     "upload": {
                         "label": "<i class='icon-ok'></i> ÉÏ´« ",

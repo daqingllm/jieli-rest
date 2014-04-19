@@ -496,13 +496,17 @@ function enableTooltips(table) {
     $(table).find('.ui-pg-div').tooltip({container:'body'});
 }
 
+var total = ${tp};
+var records = ${ti};
+var page = ${cp};
+
 jQuery(function($) {
     var raw_data_test = [
         {_id:1,associationId:"sh",title:"测试1",type:"读书会",tag:"OFFICIAL",description:"测试内容1",beginDate:"20140203T12:13:14.443GMT0+800"},
         {_id:2,associationId:"bj",title:"测试2",type:"运动",tag:"RECOMMEND",description:"测试内容2",beginDate:"20140203T12:13:14.443GMT0+800"}
     ];
 
-    //raw_data.empty();
+    /* init page data !*/
     var raw_data = ${activityList};
 
     var grid_data = parseActData(raw_data);
@@ -525,13 +529,11 @@ jQuery(function($) {
             {name:"beginDate",index:"beginDate",width:"120",editable:false,sorttype:"date"}
         ],
         viewrecords : true,
-        rowNum:10,
-        rowList:[10,20,30],
+        rowNum:${rowNum},
         pager : pager_selector,
         altRows: true,
         multiselect: true,
         multiboxonly: true,
-
         loadComplete : function() {
             var table = this;
             setTimeout(function(){
@@ -544,7 +546,8 @@ jQuery(function($) {
         },
 
         caption: "在这里编辑或删除活动",
-        autowidth: true
+        autowidth: true,
+        onPaging: function(pgButton){item_select('',pgButton);}
     });
 
 
@@ -556,11 +559,32 @@ jQuery(function($) {
 
                 edit: true,
                 editicon : 'icon-pencil blue',
-                editfunc : (function(){var id = $("#grid-table").getGridParam("selrow");id=$("#grid-table > tbody > tr").eq(id).find("td").eq(1).attr("title");window.location.href = '/rest/bactivity/edit?actid='+id;}),
+                editfunc : (function(){
+                    var id = $("#grid-table").getGridParam("selrow");
+                    id=$("#grid-table > tbody > tr").eq(id).find("td").eq(1).attr("title");
+                    window.location.href = '/rest/bactivity/edit?actid='+id;
+                }),
 
-                del: false,
+                del: true,
                 delicon : 'icon-trash red',
-                delfunc : (function(){alert("删除操作!");return false;}),
+                delfunc : (function(){/*alert("删除操作!");*/
+                    if (!confirm("确认删除选中的活动?")){
+                        return false;
+                    }
+
+                    var id = $("#grid-table").getGridParam("selrow");
+                    id=$("#grid-table > tbody > tr").eq(id).find("td").eq(1).attr("title");
+
+                    $.ajax({
+                        url:"/rest/bactivity/del?actid="+id,
+                        type:"POST",
+                        success:function(data){
+                            alert(data.msg);
+                            window.location.reload();
+                        }
+                    });
+                    return false;
+                }),
 
                 search: false,
                 searchicon : 'icon-search orange',
@@ -568,15 +592,61 @@ jQuery(function($) {
 
                 refresh: false,
 
-                view: true,
+                view: false,
                 viewicon : 'icon-zoom-in grey',
                 viewfunc: (function(){alert("预览操作!");return false;})
             }
     );
 
-
     $(".ui-jqgrid-htable").css("font-family","微软雅黑");
+
+    $(".ui-paging-info").html("共有"+records+"条记录");
+    $("#sp_1_grid-pager").html(total);
+    $(".ui-pg-input").val(page);
+    $(".ui-pg-input").bind('keypress',function(event){
+        if (event.keyCode=='13'){
+            var v_input = $(".ui-pg-input").val();
+            try{
+                if (parseInt(v_input) > 0 && parseInt(v_input) <= total) {
+                    var str = "rowNum=${rowNum}&";
+                    str += "page="+parseInt(v_input);
+                    window.location.href = "/rest/bactivity/list?rowNum="+str;
+                }
+            }catch (e){
+                alert("请输入有效的页数！");
+            }
+        }
+    });
+
+    $("#first_grid-pager").removeClass("ui-state-disabled");
+    $("#last_grid-pager").removeClass("ui-state-disabled");
+    $("#prev_grid-pager").removeClass("ui-state-disabled");
+    $("#next_grid-pager").removeClass("ui-state-disabled");
 });
+
+function item_select(o,pgButton){
+    switch (pgButton) {
+        case 'first_grid-pager' :
+            page = 1;
+            break;
+        case 'last_grid-pager' :
+            page = total;
+            break;
+        case 'prev_grid-pager' :
+            page = page - 1;
+            break;
+        case 'next_grid-pager' :
+            page = page + 1;
+            break;
+        default  :
+            break;
+    }
+
+    var str = "rowNum=${rowNum}&";
+    str += "page="+page;
+
+    window.location.href = "/rest/bactivity/list?" + str;
+}
 
 jQuery(function ($) {
     $('[data-rel=tooltip]').tooltip({container: 'body'});
