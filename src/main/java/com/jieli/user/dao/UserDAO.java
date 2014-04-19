@@ -15,4 +15,8 @@ public class UserDAO extends GenericDAO<User> {
     public Iterable<User> loadAll(String associationId) {
         return col.find("{associationId:#}", associationId).as(User.class);
     }
+
+    public Iterable<User> loadByGroup(String associationId, String group) {
+        return col.find("{associationId:#, group:#}", associationId, group).as(User.class);
+    }
 }

@@ -25,11 +25,11 @@ public class ActivityTest {
     public void testCreate() throws IOException {
         Activity activity = new Activity();
         activity.associationId = "5348205ce4b00b2ae52d3f5a";
-        activity.beginDate = new Date(new Date().getTime() + 1000000000);
+        activity.beginDate = new Date(new Date().getTime() - 1000000000);
 //        activity.beginDate = new Date();
-        activity.tag = AcivityTag.PRIVATE;
+        activity.tag = AcivityTag.OFFICIAL;
 //        activity.sponsorUserId = "533799caef869f8e93d30d9c";
-        activity.title = "新的串局";
+        activity.title = "新的官方活动";
         activity.location = "天安门广场";
         activity.description = "官方有奖竞猜";
         activity.fee = 100;
@@ -48,8 +48,8 @@ public class ActivityTest {
 
         Response response = Request.Post("http://162.243.151.219:8080/rest/activity")
                 .addHeader("Cookie", "u=5348210be4b00b2ae52d3f5c")
-//                .bodyString(new ObjectMapper().writeValueAsString(activity), ContentType.APPLICATION_JSON)
-                .bodyString("{\"beginDate\":\"\",\"details\":[],\"fee\":0,\"followMembers\":[],\"invitees\":[],\"joinMembers\":{},\"location\":\"\",\"maxMembers\":0,\"tag\":\"PRIVATE\",\"title\":\"是地方\",\"type\":\"null发起了读书会\"}", ContentType.APPLICATION_JSON)
+                .bodyString(new ObjectMapper().writeValueAsString(activity), ContentType.APPLICATION_JSON)
+//                .bodyString("{\"beginDate\":\"\",\"details\":[],\"fee\":0,\"followMembers\":[],\"invitees\":[],\"joinMembers\":{},\"location\":\"\",\"maxMembers\":0,\"tag\":\"PRIVATE\",\"title\":\"是地方\",\"type\":\"null发起了读书会\"}", ContentType.APPLICATION_JSON)
                 .execute();
 
         System.out.println(response.returnContent().asString());

@@ -19,6 +19,9 @@ public class User extends Model {
 
     public String name;
 
+    //分组
+    public String group;
+
     //0：男，1：女
     public int sex;
 

@@ -20,6 +20,10 @@ public class HelpInfo extends Model{
      */
     private String title;
     /**
+     * 标题注释
+     */
+    private String tips;
+    /**
      * 互帮互助内容
      */
     private String content;
@@ -48,6 +52,26 @@ public class HelpInfo extends Model{
      * 是否紧急
      */
     private boolean isEmergency;
+    /**
+     * 评论数
+     */
+    private int commentCount;
+
+    public int getCommentCount() {
+        return commentCount;
+    }
+
+    public void setCommentCount(int commentCount) {
+        this.commentCount = commentCount;
+    }
+
+    public String getTips() {
+        return tips;
+    }
+
+    public void setTips(String tips) {
+        this.tips = tips;
+    }
 
     public String getUserId() {
         return userId;

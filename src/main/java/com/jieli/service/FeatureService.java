@@ -289,6 +289,9 @@ public class FeatureService {
         commentDAO.save(comment);
         CommentMessageUtil.addCommentMessage(comment);
 
+        helpInfo.setCommentCount(helpInfo.getCommentCount() + 1);
+        helpDAO.save(helpInfo);
+
         responseEntity.code = 200;
         responseEntity.msg = "评论成功";
         return Response.status(200).entity(responseEntity).build();

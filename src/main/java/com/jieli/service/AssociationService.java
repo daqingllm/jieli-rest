@@ -8,6 +8,8 @@ import com.jieli.common.dao.AccountDAO;
 import com.jieli.common.entity.Account;
 import com.jieli.common.entity.AccountState;
 import com.jieli.common.entity.ResponseEntity;
+import com.jieli.user.dao.UserDAO;
+import com.jieli.user.entity.User;
 import com.jieli.util.IdentifyUtils;
 import com.sun.jersey.spi.resource.Singleton;
 import org.apache.commons.lang.StringUtils;
@@ -34,6 +36,8 @@ public class AssociationService {
     private AccountDAO accountDAO = new AccountDAO();
 
     private GroupDAO groupDAO = new GroupDAO();
+
+    private UserDAO userDAO = new UserDAO();
 
     @GET
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
@@ -134,7 +138,7 @@ public class AssociationService {
     @POST
     @Path("/group")
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-    public Response upsertGroup(@CookieParam("u")String sessionId,@QueryParam("id")String id, Group group) {
+    public Response upsertGroup(@CookieParam("u")String sessionId, @QueryParam("id")String id, Group group) {
         if (!IdentifyUtils.isAdmin(sessionId)) {
             return Response.status(403).build();
         }
@@ -143,7 +147,7 @@ public class AssociationService {
         if (IdentifyUtils.getState(sessionId) == AccountState.SUPPER) {
             if (StringUtils.isEmpty(id)) {
                 responseEntity.code = 2101;
-                responseEntity.msg = "缺少参数";
+                responseEntity.msg = "缺少参数协会id";
                 return Response.status(200).entity(responseEntity).build();
             }
             associationId = id;
@@ -163,6 +167,39 @@ public class AssociationService {
 
         groupDAO.save(group);
         responseEntity.code = 200;
+        return Response.status(200).entity(responseEntity).build();
+    }
+
+    @GET
+    @Path("/group")
+    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+    public Response getGroup(@CookieParam("u")String sessionId, @QueryParam("id")String id, @QueryParam("group")String group) {
+        if (!IdentifyUtils.isAdmin(sessionId)) {
+            return Response.status(403).build();
+        }
+        ResponseEntity responseEntity = new ResponseEntity();
+        String associationId = null;
+        if (IdentifyUtils.getState(sessionId) == AccountState.SUPPER) {
+            if (StringUtils.isEmpty(id)) {
+                responseEntity.code = 2101;
+                responseEntity.msg = "缺少参数协会id";
+                return Response.status(200).entity(responseEntity).build();
+            }
+            associationId = id;
+        } else {
+            associationId = IdentifyUtils.getAssociationId(sessionId);
+        }
+
+        if (StringUtils.isEmpty(group)) {
+            Iterable<Group> groups = groupDAO.loadAll(associationId);
+            responseEntity.code = 200;
+            responseEntity.body = groups;
+            return Response.status(200).entity(responseEntity).build();
+        }
+
+        Iterable<User> users = userDAO.loadByGroup(associationId, group);
+        responseEntity.code = 200;
+        responseEntity.body = users;
         return Response.status(200).entity(responseEntity).build();
     }
 
