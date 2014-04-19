@@ -1,5 +1,6 @@
 package com.jieli.feature.help.entity;
 
+import com.jieli.comment.Comment;
 import com.jieli.mongo.Model;
 
 import java.util.Date;
@@ -34,7 +35,7 @@ public class HelpInfo extends Model{
     /**
      * 置顶评论id
      */
-    private List<String> topCommentList;
+    private List<Comment> topCommentList;
     /**
      * 关注列表
      */
@@ -101,11 +102,11 @@ public class HelpInfo extends Model{
 
     public void setFocusList(List<String> focusList) { this.focusList = focusList; }
 
-    public List<String> getTopCommentList() {
+    public List<Comment> getTopCommentList() {
         return topCommentList;
     }
 
-    public void setTopCommentList(List<String> topCommentList) {
+    public void setTopCommentList(List<Comment> topCommentList) {
         this.topCommentList = topCommentList;
     }
 

@@ -3,10 +3,18 @@ package com.jieli.admin;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jieli.association.*;
 import com.jieli.association.Association;
+import com.jieli.comment.Comment;
+import com.jieli.comment.CommentUserInfo;
+import com.jieli.comment.TopicType;
 import com.jieli.common.dao.AccountDAO;
 import com.jieli.feature.help.dao.HelpDAO;
 import com.jieli.feature.help.entity.HelpInfo;
 import com.jieli.feature.help.entity.SimpleHelpInfo;
+import com.jieli.mongo.BaseDAO;
+import com.jieli.mongo.Collections;
+import com.jieli.user.dao.UserDAO;
+import com.jieli.user.entity.*;
+import com.jieli.util.CollectionUtils;
 import com.jieli.util.FTLrender;
 import com.jieli.util.IdentifyUtils;
 import com.jieli.util.MongoUtils;
@@ -15,10 +23,7 @@ import com.sun.jersey.spi.resource.Singleton;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by YolandaLeo on 14-4-17.
@@ -29,6 +34,8 @@ public class Help {
     private HelpDAO helpDAO = new HelpDAO();
     private AccountDAO accountDAO = new AccountDAO();
     private AssociationDAO associationDAO = new AssociationDAO();
+    private UserDAO userDAO = new UserDAO();
+    private BaseDAO<Comment> commentDAO = new BaseDAO<Comment>(Collections.Comment, Comment.class);
 
     private String errorReturn = "<!DOCTYPE html>\n" +
             "<html>\n" +
@@ -153,6 +160,24 @@ public class Help {
             return FTLrender.getResult("error.ftl", params);
         }
         HelpInfo help = helpDAO.loadById(helpId);
+
+        List<Comment> commentList = commentDAO.find("{topicId:#, topicType:#, isDeleted:#}",
+                help.get_id(), TopicType.Help, false);
+        if( !CollectionUtils.isEmpty(commentList) ){
+            for(Comment comment : commentList){
+                String userId = comment.commentUserId;
+                CommentUserInfo commentUserInfo = new CommentUserInfo();
+                commentUserInfo.userId = userId;
+                com.jieli.user.entity.User user = userDAO.loadById(userId);
+                commentUserInfo.name = user.name;
+                commentUserInfo.userFace = user.userFace;
+
+                comment.commentUserInfo = commentUserInfo;
+            }
+        }
+        commentList = sortComment(commentList, help.getTopCommentList());
+        int topSize = 1; //mock data
+        //int topSize = help.getTopCommentList().size();
         if(help == null) {
             return FTLrender.getResult("error.ftl", params);
         }
@@ -161,9 +186,45 @@ public class Help {
         if(!isSuper) {
             canDelete = true;
         }
+        params.put("commentList", commentList);
+        params.put("topSize", topSize);
         params.put("canDelete", canDelete);
         params.put("help", help);
         params.put("isSuper", isSuper);
         return FTLrender.getResult("helpinfo.ftl", params);
+    }
+
+    private List<Comment> sortComment(List<Comment> commentList, List<Comment> topComments) {
+        List<Comment> topOnes = new ArrayList<Comment>();
+        List<Comment> normalOnes = new ArrayList<Comment>();
+        if(commentList == null) { //mock data
+            commentList = new ArrayList<Comment>();
+            topComments = new ArrayList<Comment>();
+            Comment comment = new Comment();
+            comment.addTime = new Date();
+            comment.content = "testtest";
+            comment.topicType = TopicType.Help;
+            comment.commentUserId = "533be198300460878a64a155";
+            CommentUserInfo userInfo = new CommentUserInfo();
+            userInfo.name = "薄荷";
+            userInfo.userId = "533be198300460878a64a155";
+            comment.commentUserInfo = userInfo;
+            comment.topicId = "534f9b8f3004055aeb46f7b3";
+            commentList.add(comment);
+            topComments.add(comment);
+        }
+
+        for(Comment c : commentList) {
+            if(topComments.contains(c)) {
+                topOnes.add(c);
+            }
+            else {
+                normalOnes.add(c);
+            }
+        }
+        commentList.clear();
+        commentList.addAll(topOnes);
+        commentList.addAll(normalOnes);
+        return commentList;
     }
 }

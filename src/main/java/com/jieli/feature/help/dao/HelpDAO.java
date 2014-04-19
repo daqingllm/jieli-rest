@@ -1,6 +1,7 @@
 package com.jieli.feature.help.dao;
 
 import com.jieli.activity.Activity;
+import com.jieli.comment.Comment;
 import com.jieli.feature.help.entity.HelpComment;
 import com.jieli.feature.help.entity.HelpInfo;
 import com.jieli.feature.help.entity.SimpleHelpInfo;
@@ -137,13 +138,13 @@ public class HelpDAO extends GenericDAO<HelpInfo> {
     /**
      * 评论置顶
      * @param helpId
-     * @param commentId
+     * @param comment
      * @return
      */
-    public HelpInfo topComment(String helpId, String commentId) {
+    public HelpInfo topComment(String helpId, Comment comment) {
         HelpInfo help = loadById(helpId);
-        List<String> topCommentList = help.getTopCommentList();
-        topCommentList.add(commentId);
+        List<Comment> topCommentList = help.getTopCommentList();
+        topCommentList.add(comment);
         help.setTopCommentList(topCommentList);
         return save(help);
     }

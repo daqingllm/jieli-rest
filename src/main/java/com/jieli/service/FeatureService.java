@@ -20,6 +20,7 @@ import com.jieli.user.entity.User;
 import com.jieli.util.IdentifyUtils;
 import com.jieli.util.MongoUtils;
 import org.apache.commons.lang.StringUtils;
+import org.bson.types.ObjectId;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -441,7 +442,8 @@ public class FeatureService {
             responseEntity.msg = "权限不足";
             return Response.status(403).entity(responseEntity).build();
         }
-        HelpInfo result = helpDAO.topComment(helpId, commentId);
+        Comment comment = commentDAO.findOne("{_id:#}", new ObjectId(commentId));
+        HelpInfo result = helpDAO.topComment(helpId, comment);
         if(result == null) {
             responseEntity.code = 1206;
             responseEntity.body = "置顶评论失败";

@@ -102,10 +102,10 @@ public class HelpDaoTest {
         System.out.println(result.getFocusList().size());
     }
 
-    @Test
+    /*@Test
     public void topComment() {
         String helpId = "5337bce53004ecd7e04edfcd";
         String commentId = "";
-        helpDao.topComment(helpId, commentId);
-    }
+        helpDao.topComment(helpId, comment);
+    }*/
 }

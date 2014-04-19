@@ -276,8 +276,62 @@
 
                 <div class="space-4"></div>
 
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right" for="form-field-textarea"> 关注人数 </label>
+
+                    <div class="col-sm-9">
+                        <input type="text" id="form-field-addtime" value="${help.attentionNum}"
+                               class="col-xs-10 col-sm-7"
+                               style="padding-left: 7px;"/>
+                    </div>
+                    </div>
+
+                </div>
+
             </form>
 
+        </div>
+
+        <div class="table-responsive">
+        <table id="comment-table" class="table table-striped table-bordered table-hover">
+        <thead>
+        <tr>
+            <th>id</th>
+            <th>评论人</th>
+            <th class="hidden-480">评论内容</th>
+
+            <th>
+                <i class="icon-time bigger-110 hidden-480"></i>
+                评论时间
+            </th>
+            <th class="hidden-480">状态</th>
+
+        </tr>
+        </thead>
+
+        <tbody>
+        <#list commentList as comment>
+        <tr>
+            <td>${comment_index}</td>
+            <td>${comment.commentUserInfo.name}</td>
+            <td class="hidden-480">${comment.content}</td>
+            <td>${comment.addTime?string('yyyy-MM-dd HH:mm:ss')}</td>
+            <#if comment_index lte topSize>
+                <td class="hidden-480">
+                    <span class="label label-sm label-warning">顶</span>
+                </td>
+            <#else>
+                <td class="hidden-480">
+                    <span class="label label-sm label-success">普通</span>
+                </td>
+            </#if>
+
+        </tr>
+        </#list>
+
+
+        </tbody>
+        </table>
         </div>
         <!-- /.col -->
     </div>

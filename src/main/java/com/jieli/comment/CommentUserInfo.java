@@ -15,4 +15,27 @@ public class CommentUserInfo {
 
     public String name;
 
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public String getUserFace() {
+        return userFace;
+    }
+
+    public void setUserFace(String userFace) {
+        this.userFace = userFace;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 }
