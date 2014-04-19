@@ -32,6 +32,8 @@
     <!--[if lte IE 8]>
     <link rel="stylesheet" href="/assets/css/ace-ie.min.css"/>
     <![endif]-->
+    <!-- custom css-->
+    <link rel="stylesheet" href="/assets/css/custom.css" />
 
     <!-- inline styles related to this page -->
 
@@ -225,7 +227,7 @@
                     <div class="col-sm-9">
                         <select class="col-xs-10 col-sm-7" id="association-select" style="padding: 5px 4px;font-size: 14px;">
                             <#list associationList as associations>
-                                <option value="${associations.name}" <#if associations_index = 0>selected="selected" </#if>>${associations.name}</option>
+                                <option value="${associations._id}" <#if associations_index = 0>selected="selected" </#if>>${associations.name}</option>
                             </#list>
                         </select>
                     </div>
@@ -234,11 +236,18 @@
                     <label class="col-sm-3 control-label no-padding-right" for="form-field-select-type"> 请选择帮助类型 </label>
                     <div class="col-sm-9">
                         <select class="col-xs-10 col-sm-7" id="help-select" style="padding: 5px 4px;font-size: 14px;">
-                            <option value="需求" selected="selected">供给</option>
-                            <option value="供给">需求</option>
+                            <option value="0" selected="selected">供给</option>
+                            <option value="1">需求</option>
+                            <option value="2">全部</option>
                         </select>
                     </div>
                     <div class="space-4"></div>
+
+                    <div class="help-btn-purple">
+                        <button class="btn btn-purple help-center-btn" id="submit-btn">确定</button>
+                    </div>
+
+
                     <div class="col-xs-12">
 
                         <!-- PAGE CONTENT BEGINS -->
@@ -605,6 +614,29 @@ jQuery(function ($) {
      */
 
 });
+</script>
+<script>
+    function getAssociationListId(index) {
+        var list = ["<#list associationList as associations>${associations._id}</#list>"];
+        return list[index];
+    }
+
+    $("#submit-btn").click(function() {
+        var association = $("#association-select").val();
+        var helpType = $("#help-select").val();
+
+
+        $("grid-table").jqGrid('setGridParam',{
+            datatype:'json',
+            data:$.ajax({
+                        url : '/rest/feature/ajaxhelp/list?a=' + association + '&t=' + helpType + '&page=1&size=20',
+                        type : 'GET',
+                        contentType: "application/json"
+                    }
+            )
+        }).trigger("reloadGrid");
+    });
+
 </script>
 </body>
 </html>

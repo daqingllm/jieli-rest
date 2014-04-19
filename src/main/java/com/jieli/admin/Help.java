@@ -82,8 +82,9 @@ public class Help {
         }
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("username", account.username);
-        String associationId = IdentifyUtils.getAssociationId(sessionId);
+        //String associationId = IdentifyUtils.getAssociationId(sessionId);
         boolean isSuper = false;
+        String associationId = "";
         if(IdentifyUtils.isSuper(sessionId))
             isSuper = true;
         if(isSuper) {
@@ -102,7 +103,7 @@ public class Help {
         }
         Integer pageNo = 1;
         Integer pageSize = 20;
-        int type = 0;
+        Integer type = 0;
         List<SimpleHelpInfo> helpList = helpDAO.getHelpInfoList(pageNo, pageSize, associationId, type);
 
         String jsonHelpList;
