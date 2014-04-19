@@ -1,9 +1,12 @@
 package com.jieli.admin;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jieli.activity.*;
 import com.jieli.activity.Activity;
 import com.jieli.association.*;
 import com.jieli.association.Association;
+import com.jieli.mongo.Model;
 import com.jieli.util.IdentifyUtils;
 
 import javax.ws.rs.core.Response;
@@ -116,6 +119,7 @@ public class Common {
         return null;
     }
 
+    /* common */
     public static Response RoleCheckResponse(String sessionId){
         // is user ?
         if (!IdentifyUtils.isValidate(sessionId)){
@@ -127,5 +131,21 @@ public class Common {
         }
 
         return null;
+    }
+
+    public static String ReplaceObjectId(Model o){
+        ObjectMapper objectMapper = new ObjectMapper();
+        String ret = "";
+        try {
+            String tmp = objectMapper.writeValueAsString(o).toString();
+            String tmpObjectId = objectMapper.writeValueAsString(o.get_id());
+            String tmpId = o.get_id().toString();
+
+            ret = tmp.replace(tmpObjectId,"\""+tmpId+"\"");
+        } catch (JsonProcessingException e) {
+            //e.printStackTrace();
+            ret = "";
+        }
+        return ret;
     }
 }

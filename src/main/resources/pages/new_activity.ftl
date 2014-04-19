@@ -622,7 +622,7 @@
         spin_img = "";
         bootbox.dialog({
             //message: "<input type='file' id='upload-image-files' name='upload-image-files' >",
-            message: "<form id='rest-upload-form' action='/upload' method='post' enctype='multipart/form-data' acceptcharset='UTF-8'>\n<input id='rest-upload-file' type='file' name='file' size='50' />"+spin_img+"</form>",
+            message: "<form id='rest-upload-form' action='/rest/upload' method='post' enctype='multipart/form-data' acceptcharset='UTF-8'>\n<input id='rest-upload-file' type='file' name='file' size='50' />"+spin_img+"</form>",
             buttons: {
                 "upload": {
                     "label": "<i class='icon-ok'></i> 上传 ",
@@ -1051,7 +1051,7 @@ jQuery(function ($) {
         var arrangementDetail = $('<div class="arrangement-detail">' +
                 '<input type="text"  placeholder="日程安排时间" class="col-xs-10 col-sm-2 arrangement-detail-time" style="padding-left: 7px;" >' +
                 '<span style="padding:10px;float: left;"></span>' +
-                '<input type="text"  placeholder="日程安排，不填即为此时间段无活动内容" class="col-xs-10 col-sm-7 arrangement-detail-content" style="padding-left: 7px;">' +
+                '<input type="text"  placeholder="日程安排，不填即为此时间段无活动内容" class="col-xs-10 col-sm-5 arrangement-detail-content" style="padding-left: 7px;">' +
                 '<div class="icon-remove"></div>' +
                 '</div>');
         arrangementDetail.insertBefore($('.icon-plus').parent());
