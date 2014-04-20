@@ -6,6 +6,9 @@ import com.jieli.user.dao.UserDAO;
 import com.jieli.user.entity.User;
 import org.testng.annotations.Test;
 
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * Created with IntelliJ IDEA.
  * User: liming_liu
@@ -54,5 +57,16 @@ public class UserDAOTest {
         System.out.println(account.get_id());
         Account account1 = accountDAO.loadById(account.get_id().toString());
         System.out.println(account1.userId);
+    }
+
+    @Test
+    public void testSort() {
+        List<Integer> arrays = Arrays.asList(4,2,3,1);
+        Integer[] as = (Integer[]) arrays.toArray();
+        Arrays.sort(as);
+        arrays = Arrays.asList(as);
+        for (Integer i : arrays) {
+            System.out.println(i);
+        }
     }
 }

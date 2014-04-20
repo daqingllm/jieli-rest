@@ -52,7 +52,7 @@ public class FeatureTest {
 
     @Test
     public void testMatch() throws IOException {
-        Response response = Request.Get("http://162.243.151.219:8080/rest/feature/match")
+        Response response = Request.Get("http://162.243.151.219:8080/rest/feature/match?count=1")
                 .setHeader("Cookie", "u=534a2256e4b0038297fb2136")
                 .execute();
         System.out.println(response.returnContent().asString());

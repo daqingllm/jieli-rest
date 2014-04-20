@@ -44,7 +44,9 @@ public class MatchTask {
             topMatches.add(match);
             matchDAO.upsert(match);
         }
-        Arrays.sort(topMatches.toArray());
+        Match[] matches = (Match[]) topMatches.toArray();
+        Arrays.sort(matches);
+        topMatches = Arrays.asList(matches);
 
         if (topMatches.size() > count) {
             topMatches = topMatches.subList(0, count);
