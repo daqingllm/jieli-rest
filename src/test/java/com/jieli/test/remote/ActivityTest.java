@@ -103,7 +103,7 @@ public class ActivityTest {
 //        infos.put("topicId", "534821b9e4b00b2ae52d3f5d");
         List<String> userIds = Arrays.asList("534950a2e4b0be347782c7ce");
 
-        Response response = Request.Post("http://162.243.151.219:8080/rest/activity/invite?activityId=5348bc69e4b0fce4fd040559")
+        Response response = Request.Post("http://162.243.151.219:8080/rest/activity/invite?activityId=535131ece4b007071c52d06e")
                 .addHeader("Cookie", "u=5348210be4b00b2ae52d3f5c")
                 .bodyString(new ObjectMapper().writeValueAsString(userIds), ContentType.APPLICATION_JSON)
                 .execute();
@@ -118,7 +118,7 @@ public class ActivityTest {
 //        infos.put("topicId", "534821b9e4b00b2ae52d3f5d");
         List<String> pics = Arrays.asList("http://xianxing-test.qiniudn.com/13345832224833124_20090529113434168.jpg");
 
-        Response response = Request.Post("http://162.243.151.219:8080/rest/activity/invite?activityId=535131ece4b007071c52d06e")
+        Response response = Request.Post("http://162.243.151.219:8080/rest/activity/upload?activityId=535131ece4b007071c52d06e")
                 .addHeader("Cookie", "u=5348210be4b00b2ae52d3f5c")
                 .bodyString(new ObjectMapper().writeValueAsString(pics), ContentType.APPLICATION_JSON)
                 .execute();

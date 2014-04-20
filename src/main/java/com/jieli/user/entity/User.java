@@ -2,6 +2,7 @@ package com.jieli.user.entity;
 
 import com.jieli.mongo.Model;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -24,7 +25,7 @@ public class User extends Model {
     //0：男，1：女
     public int sex;
 
-    public String birthday;
+    public Date birthday;
 
     //星座
     public String constellation;
@@ -35,9 +36,13 @@ public class User extends Model {
     //积分
     public int score;
 
+    //教育地点 0：国内，1：国外
+    public int eduPlace;
+
     public String school;
 
-    public String degree;
+    //学位 0：学士，1：硕士，2：博士，3：其他
+    public int degree;
 
     //行业、专业
     public String profession;

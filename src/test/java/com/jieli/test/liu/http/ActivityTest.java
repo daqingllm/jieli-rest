@@ -128,4 +128,19 @@ public class ActivityTest {
         System.out.println(response.returnContent().asString());
     }
 
+    @Test
+    public void testInvite() throws IOException {
+//        Map<String, String> infos = new HashMap<String, String>();
+//        infos.put("content", "是地方但是");
+//        infos.put("topicId", "534821b9e4b00b2ae52d3f5d");
+        List<String> userIds = Arrays.asList("534950a2e4b0be347782c7ce");
+
+        Response response = Request.Post("http://localhost:8080/rest/activity/invite?activityId=5348ddc5ef86675f431c426b")
+                .addHeader("Cookie", "u=533c0010ef86c7014c36fa2f")
+                .bodyString(new ObjectMapper().writeValueAsString(userIds), ContentType.APPLICATION_JSON)
+                .execute();
+
+        System.out.println(response.returnContent().asString());
+    }
+
 }

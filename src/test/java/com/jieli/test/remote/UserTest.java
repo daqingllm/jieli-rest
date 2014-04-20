@@ -34,9 +34,9 @@ public class UserTest {
         user.name = "甜瓜";
         user.sex = 0;
         user.profession = "金融";
-        user.birthday = "1988-1-1";
+//        user.birthday = "1988-1-1";
         user.constellation = "天平座";
-        user.degree = "MBA";
+//        user.degree = "MBA";
         user.enterpriseName = "阿里巴巴";
         user.identity = "协会元老";
 //        user.interestTags = Arrays.asList(InterestTag.FOOTBALL);
