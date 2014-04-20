@@ -5,7 +5,7 @@ import com.jieli.user.entity.User;
 import org.apache.commons.lang.StringUtils;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -44,9 +44,7 @@ public class MatchTask {
             topMatches.add(match);
             matchDAO.upsert(match);
         }
-        Match[] matches = (Match[]) topMatches.toArray();
-        Arrays.sort(matches);
-        topMatches = Arrays.asList(matches);
+        Collections.sort(topMatches);
 
         if (topMatches.size() > count) {
             topMatches = topMatches.subList(0, count);

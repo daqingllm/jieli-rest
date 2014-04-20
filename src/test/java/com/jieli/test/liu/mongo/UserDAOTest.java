@@ -2,11 +2,13 @@ package com.jieli.test.liu.mongo;
 
 import com.jieli.common.dao.AccountDAO;
 import com.jieli.common.entity.Account;
+import com.jieli.feature.match.Match;
 import com.jieli.user.dao.UserDAO;
 import com.jieli.user.entity.User;
 import org.testng.annotations.Test;
 
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -61,12 +63,31 @@ public class UserDAOTest {
 
     @Test
     public void testSort() {
-        List<Integer> arrays = Arrays.asList(4,2,3,1);
-        Integer[] as = (Integer[]) arrays.toArray();
-        Arrays.sort(as);
-        arrays = Arrays.asList(as);
-        for (Integer i : arrays) {
-            System.out.println(i);
+//        List<Integer> arrays = Arrays.asList(4,2,3,1);
+//        Integer[] as = (Integer[]) arrays.toArray();
+//        Arrays.sort(as);
+//        arrays = Arrays.asList(as);
+//        for (Integer i : arrays) {
+//            System.out.println(i);
+//        }
+        List<Match> matches = new ArrayList<Match>();
+        Match match1 = new Match();
+        match1.score = 1;
+        matches.add(match1);
+        Match match2 = new Match();
+        match2.score = 3;
+        matches.add(match2);
+        Match match3 = new Match();
+        match3.score = 2;
+        matches.add(match3);
+//
+//        Object[] ms = matches.toArray();
+//        Arrays.sort(ms);
+//        matches = Arrays.asList((Match[]) ms);
+        Collections.sort(matches);
+
+        for (Match match : matches) {
+            System.out.println(match.score);
         }
     }
 }
