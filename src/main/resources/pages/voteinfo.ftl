@@ -285,7 +285,7 @@
                         <label class="col-sm-3 control-label no-padding-right" for="form-field-textarea"> 投票正文 </label>
 
                         <div class="col-sm-9">
-                            <textarea id="form-field-textarea" class="autosize-transition col-xs-10 col-sm-7"
+                            <textarea id="form-field-textarea" class="autosize-transition col-xs-10 col-sm-7 textarea-no-resize"
                                       style="min-height: 140px;"></textarea>
                         </div>
 
@@ -323,7 +323,112 @@
                     </div>
 
                 </form>
+                <!-- vote statistics begin -->
+                <div class="widget-box">
+                    <div class="widget-header widget-header-flat widget-header-small">
+                        <h5>
+                            <i class="icon-signal"></i>
+                            投票统计
+                        </h5>
+                    </div>
 
+                    <div class="widget-body">
+                        <div class="widget-main">
+                            <div id="piechart-placeholder" style="width: 90%; min-height: 150px; padding: 0px; position: relative;">
+                                <canvas class="flot-base" width="704" height="300" style="direction: ltr; position: absolute; left: 0px; top: 0px; width: 352px; height: 150px;"></canvas>
+                                <canvas class="flot-overlay" width="704" height="300" style="direction: ltr; position: absolute; left: 0px; top: 0px; width: 352px; height: 150px;"></canvas>
+                                <div class="legend">
+                                    <div style="position: absolute; width: 106px; height: 110px; top: 15px; right: -30px; background-color: rgb(255, 255, 255); opacity: 0.85;">
+                                </div>
+                                <table style="position:absolute;top:15px;right:-30px;;font-size:smaller;color:#545454">
+                                    <tbody>
+                                    <tr>
+                                        <td class="legendColorBox">
+                                            <div style="border:1px solid null;padding:1px">
+                                                <div style="width:4px;height:0;border:5px solid #68BC31;overflow:hidden">
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="legendLabel">social networks</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="legendColorBox">
+                                            <div style="border:1px solid null;padding:1px">
+                                                <div style="width:4px;height:0;border:5px solid #2091CF;overflow:hidden"></div>
+                                            </div>
+                                        </td>
+                                        <td class="legendLabel">search engines</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="legendColorBox">
+                                            <div style="border:1px solid null;padding:1px">
+                                                <div style="width:4px;height:0;border:5px solid #AF4E96;overflow:hidden"></div>
+                                            </div>
+                                        </td>
+                                        <td class="legendLabel">ad campaigns</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="legendColorBox">
+                                            <div style="border:1px solid null;padding:1px">
+                                                <div style="width:4px;height:0;border:5px solid #DA5430;overflow:hidden"></div>
+                                            </div>
+                                        </td>
+                                        <td class="legendLabel">direct traffic</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="legendColorBox">
+                                            <div style="border:1px solid null;padding:1px">
+                                                <div style="width:4px;height:0;border:5px solid #FEE074;overflow:hidden"></div>
+                                            </div>
+                                        </td>
+                                        <td class="legendLabel">other</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div><!-- /widget-body -->
+                </div>
+
+                <!-- vote statistics end -->
+                <#if !newVote && !isEditable>
+                <div class="table-responsive">
+                    <table id="comment-table" class="table table-striped table-bordered table-hover">
+                        <thead>
+                        <tr>
+                            <th>id</th>
+                            <th>评论人</th>
+                            <th class="hidden-480">评论内容</th>
+
+                            <th>
+                                <i class="icon-time bigger-110 hidden-480"></i>
+                                评论时间
+                            </th>
+                            <th class="hidden-480">状态</th>
+
+                        </tr>
+                        </thead>
+
+                        <tbody>
+                        <#list commentList as comment>
+                        <tr>
+                            <td>${comment_index}</td>
+                            <td>${comment.commentUserInfo.name}</td>
+                            <td class="hidden-480">${comment.content}</td>
+                            <td>${comment.addTime?string('yyyy-MM-dd HH:mm:ss')}</td>
+                            <td class="hidden-480">
+                                <span class="label label-sm label-success">正常</span>
+                            </td>
+                        </tr>
+                        </#list>
+
+
+                        </tbody>
+                    </table>
+                </div>
+                </#if>
                 <div class="clearfix form-actions">
                     <div class="col-md-offset-3 col-md-9">
                         <#if newVote>
@@ -1064,7 +1169,7 @@ function voteInfo(voteId, callback) {
                 response.body.options.forEach(function (option) {
                     addVoteOption(option);
                 });
-                callback();
+                callback(response.body);
             }
         }
     });
@@ -1087,7 +1192,7 @@ function editSettings() {
     enableDatePicker();
 }
 
-function viewSettings() {
+function viewSettings(data) {
     $('#form-field-select-type').attr({disabled : true});
     $('.vote-choice-img').hide();
     $('.icon-remove').remove();

@@ -144,6 +144,9 @@ public class HelpDAO extends GenericDAO<HelpInfo> {
     public HelpInfo topComment(String helpId, Comment comment) {
         HelpInfo help = loadById(helpId);
         List<Comment> topCommentList = help.getTopCommentList();
+        if(topCommentList == null) {
+            topCommentList = new ArrayList<Comment>();
+        }
         topCommentList.add(comment);
         help.setTopCommentList(topCommentList);
         return save(help);

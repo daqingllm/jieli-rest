@@ -437,7 +437,7 @@ public class FeatureService {
             responseEntity.msg = "参数错误";
             return Response.status(200).entity(responseEntity).build();
         }
-        if(!help.getUserId().equals(userId) || !IdentifyUtils.isAdmin(sessionId)) {
+        if(!help.getUserId().equals(userId) && !IdentifyUtils.isAdmin(sessionId)) {
             responseEntity.code = 1403;
             responseEntity.msg = "权限不足";
             return Response.status(403).entity(responseEntity).build();
@@ -761,7 +761,7 @@ public class FeatureService {
             return Response.status(200).entity(responseEntity).build();
         }
         String voteId = commentInfo.get("topicId");
-        if(voteId == null || MongoUtils.isValidObjectId(voteId)) {
+        if(voteId == null || !MongoUtils.isValidObjectId(voteId)) {
             responseEntity.code = 1105;
             responseEntity.msg = "参数Id无效";
             return Response.status(200).entity(responseEntity).build();
