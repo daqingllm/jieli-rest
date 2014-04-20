@@ -9,7 +9,7 @@ import com.jieli.mongo.Model;
  * Time: 下午5:06
  * To change this template use File | Settings | File Templates.
  */
-public class Match extends Model {
+public class Match extends Model implements Comparable<Match> {
 
     public String userId1;
     public String userId2;
@@ -43,5 +43,10 @@ public class Match extends Model {
         result = 31 * result + userId2.hashCode();
         result = 31 * result + (int) (score ^ (score >>> 32));
         return result;
+    }
+
+    @Override
+    public int compareTo(Match o) {
+        return score - o.score;
     }
 }

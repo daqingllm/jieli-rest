@@ -12,6 +12,8 @@ import java.util.Date;
 public class SimpleHelpInfo extends Model{
     public String id;
     public String userId;
+    public String userName;
+    public String userFace;
     /**
      * 协会Id
      */

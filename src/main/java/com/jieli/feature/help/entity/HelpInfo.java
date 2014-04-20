@@ -11,6 +11,8 @@ import java.util.List;
  */
 public class HelpInfo extends Model{
     private String userId;
+    private String userName;
+    private String userFace;
     /**
      * 协会Id
      */
@@ -79,6 +81,22 @@ public class HelpInfo extends Model{
 
     public void setUserId(String userId) {
         this.userId = userId;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getUserFace() {
+        return userFace;
+    }
+
+    public void setUserFace(String userFace) {
+        this.userFace = userFace;
     }
 
     public String getAssociationId() {

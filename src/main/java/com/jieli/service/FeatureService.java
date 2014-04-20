@@ -6,6 +6,10 @@ import com.jieli.common.entity.ResponseEntity;
 import com.jieli.feature.help.dao.HelpDAO;
 import com.jieli.feature.help.entity.HelpInfo;
 import com.jieli.feature.help.entity.SimpleHelpInfo;
+import com.jieli.feature.match.Match;
+import com.jieli.feature.match.MatchDisplay;
+import com.jieli.feature.match.MatchTask;
+import com.jieli.feature.match.MatchUtil;
 import com.jieli.feature.vote.dao.VoteDAO;
 import com.jieli.feature.vote.entity.SimpleVoteInfo;
 import com.jieli.feature.vote.entity.Vote;
@@ -24,10 +28,7 @@ import org.apache.commons.lang.StringUtils;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 功能列表页接口
@@ -136,6 +137,10 @@ public class FeatureService {
         help.setAddTime(new Date());
         help.setAttentionNum(0);
         help.setUserId(userId);
+        User user = userDAO.loadById(userId);
+        help.setUserName(user.name);
+        help.setUserFace(user.userFace);
+
         if(help.getType() != 0 || help.getType() != 1) {
             help.setType(0);
         }
@@ -814,21 +819,50 @@ public class FeatureService {
         return Response.status(200).entity(responseEntity).build();
     }*/
 
-
-    /**
-     * 定向匹配
-     * @param sessionId
-     * @return
-     */
-    /*
+    @Path("/match")
     @GET
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-    public Response getOrientedMatch(@CookieParam("u")String sessionId) {
+    public Response getOrientedMatch(@CookieParam("u")String sessionId, @QueryParam("userId")String userId, @QueryParam("count")int count) {
         if(!IdentifyUtils.isValidate(sessionId)) {
             return Response.status(403).build();
         }
+        if (count == 0) {
+            count = 5;
+        }
         ResponseEntity responseEntity = new ResponseEntity();
-        String userId = IdentifyUtils.getUserId(sessionId);
-        User user = userDAO.loadById(userId);
-    }*/
+        User self = userDAO.loadById(IdentifyUtils.getUserId(sessionId));
+        if (!StringUtils.isEmpty(userId) && MongoUtils.isValidObjectId(userId)) {
+            User user = userDAO.loadById(userId);
+            if (user == null) {
+                responseEntity.code = 1102;
+                responseEntity.msg = "用户不存在";
+                return  Response.status(200).entity(responseEntity).build();
+            }
+            int score = MatchUtil.calcMatchingScore(self, user);
+            responseEntity.code = 200;
+            responseEntity.body = "{\"score\":" + score + "}";
+            return  Response.status(200).entity(responseEntity).build();
+        }
+
+        MatchTask task = new MatchTask(count, self);
+        List<Match> matches = task.getResult();
+        List<MatchDisplay> results = new ArrayList<MatchDisplay>();
+        for (Match match : matches) {
+            MatchDisplay display = new MatchDisplay();
+            User user1 = userDAO.loadById(match.userId1);
+            display.userId1 = user1.get_id().toString();
+            display.name1 = user1.name;
+            display.userFace1 = user1.userFace;
+            User user2 = userDAO.loadById(match.userId2);
+            display.userId2 = user2.get_id().toString();
+            display.name2 = user2.name;
+            display.userFace2 = user2.userFace;
+            display.score = match.score;
+            results.add(display);
+        }
+
+        responseEntity.code = 200;
+        responseEntity.body = results;
+        return  Response.status(200).entity(responseEntity).build();
+    }
 }

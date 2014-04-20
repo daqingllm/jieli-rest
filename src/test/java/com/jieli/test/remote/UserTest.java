@@ -9,6 +9,7 @@ import org.apache.http.entity.ContentType;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
+import java.util.Date;
 
 /**
  * Created with IntelliJ IDEA.
@@ -35,6 +36,7 @@ public class UserTest {
         user.sex = 0;
         user.profession = "金融";
 //        user.birthday = "1988-1-1";
+        user.birthday = new Date();
         user.constellation = "天平座";
 //        user.degree = "MBA";
         user.enterpriseName = "阿里巴巴";
