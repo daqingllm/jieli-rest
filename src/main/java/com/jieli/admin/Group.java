@@ -4,6 +4,10 @@ import com.jieli.association.*;
 import com.jieli.association.Association;
 import com.jieli.common.dao.AccountDAO;
 import com.jieli.common.entity.AccountState;
+import com.jieli.common.entity.ResponseEntity;
+import com.jieli.user.dao.UserDAO;
+import com.jieli.user.entity.*;
+import com.jieli.user.entity.User;
 import com.jieli.util.FTLrender;
 import com.jieli.util.IdentifyUtils;
 
@@ -23,6 +27,38 @@ public class Group {
     private AccountDAO accountDAO = new AccountDAO();
     private AssociationDAO associationDAO = new AssociationDAO();
     private GroupDAO groupDAO = new GroupDAO();
+    private UserDAO userDAO = new UserDAO();
+
+    @POST
+    @Path("/del")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response deleteGroup(@CookieParam("u") String sessionId, @QueryParam("group") String group){
+        Response response = Common.RoleCheckResponse(sessionId);
+        if (response != null) return response;
+
+        ResponseEntity responseEntity = new ResponseEntity();
+
+        if (IdentifyUtils.isSuper(sessionId)){
+            return Response.status(200).entity(responseEntity).build();
+        }
+
+        Iterable<com.jieli.association.Group> groups = groupDAO.loadAll(IdentifyUtils.getAssociationId(sessionId));
+        for (com.jieli.association.Group g : groups){
+            if (g.name.equals(group)){
+                groupDAO.deleteById(g.get_id().toString());
+                {
+                    Iterable<com.jieli.user.entity.User> users = userDAO.loadByGroup(IdentifyUtils.getAssociationId(sessionId), group);
+                    for (User user : users) { user.group = ""; userDAO.save(user);}
+
+                    responseEntity.code = 200;
+                    return Response.status(200).entity(responseEntity).build();
+                }
+            }
+        }
+        responseEntity.code = 9004;
+        responseEntity.msg = "无此分组";
+        return  Response.status(200).entity(responseEntity).build();
+    }
 
     @GET
     @Path("/list")

@@ -215,10 +215,6 @@
         <div class="page-header" style="display: none;">
             <h1>
                 分组列表
-                <small>
-                    <i class="icon-double-angle-right"></i>
-                    请先选中目标分组再点击查看组成员、添加或者删除按钮
-                </small>
             </h1>
         </div>
         <!-- /.page-header -->
@@ -262,8 +258,10 @@
                 <fieldset>
                     <label class="block clearfix">
                 				<span class="block input-icon input-icon-right">
-									<input type="text" class="form-control" placeholder="用户名" id="add-user-name" style="margin-top: 20px;" />
-									<i class="icon-group"></i> 
+									<!--<input type="text" class="form-control" placeholder="用户名" id="add-user-name" style="margin-top: 20px;" />-->
+									<select id="add-user-name" style="margin-top: 20px;" class="form-control">
+
+                                    </select>
                 				</span>
                     </label>
                 </fieldset>
@@ -273,10 +271,6 @@
         <h3 class="header blue lighter smaller">
             <i class="icon-list smaller-90"></i>
             分组列表
-            <small>
-                <i class="icon-double-angle-right"></i>
-                请先选中目标分组再点击查看组成员、添加或者删除按钮
-            </small>
         </h3>
 
         <div id="accordion" class="accordion-style2">
@@ -299,7 +293,7 @@
                 </button>
 
                 &nbsp; &nbsp; &nbsp;
-                <button class="btn" type="reset">
+                <button class="btn" type="reset" onclick="deleteCurrentGroup()">
                     <i class="icon-remove bigger-110"></i>
                     删除当前分组
                 </button>
@@ -442,6 +436,7 @@
 
 <script type="text/javascript">
 jQuery(function ($) {
+    /* sidebar */
 <#if isSuper>
     $("#sidebar-shortcuts-navlist").load("/sidebar_super.html",function(){$("#nav_list_8_1").addClass("active open");$("#nav_list_8").addClass("active");});
 <#else>
@@ -548,10 +543,6 @@ function updatePagerIcons(table) {
     })
 }
 
-function parseActData(data){
-    return data;
-}
-
 function enableTooltips(table) {
     $('.navtable .ui-pg-button').tooltip({container:'body'});
     $(table).find('.ui-pg-div').tooltip({container:'body'});
@@ -586,6 +577,7 @@ jQuery(function($){
     loadThisGroup("${firstGroupName}",true);
 });
 
+/* 载入此分组用户列表 */
 function loadThisGroup(name,refresh){
     if ($("#gn"+name).length == 0) return;
     if (refresh == false
@@ -602,7 +594,7 @@ function loadThisGroup(name,refresh){
 
                 var jsn_body;
                 var btn_html = "<button id='addtocg' style='margin-left:15px;' class='btn btn-xs btn-success' onclick='addAUser()'>向此分组中添加用户</button>";
-                btn_html +="<button id='delfromcg' style='margin-left:15px;' class='btn btn-danger btn-xs'>删除选中的用户</button>";
+                btn_html +="<button id='delfromcg' style='margin-left:15px;' class='btn btn-danger btn-xs' onclick='removeAUser()'>从分组中删除选中的用户</button>";
 
                 if (!(jsn.body) || jsn.body.length == 0){
                     $("#gn"+name).children("div").eq(0).children("p").eq(0).html("暂无用户属于"+name + btn_html);
@@ -621,6 +613,7 @@ function loadThisGroup(name,refresh){
 
 var lastSelectedItem = null;
 
+/* 选择一个用户  */
 function selectUser(obj){
     if (lastSelectedItem == null) lastSelectedItem = obj;
     else if (lastSelectedItem == obj) lastSelectedItem = null;
@@ -645,6 +638,7 @@ function selectUser(obj){
 
 }
 
+/* 显示此分组中的用户列表 */
 function loadGroupMembers(groupName,members,refresh){
     if ( groupName != "" &&
             refresh == false &&
@@ -653,21 +647,95 @@ function loadGroupMembers(groupName,members,refresh){
 
     var html = "";
     for (var i = 0; i < members.length; i++){
-        html += "<li onclick='selectUser(this);' style='width:100px; margin-right:15px; float:left;'>"+members[i].name+"</li>";
+        html += "<li onclick='selectUser(this);' style='width:100px; margin-right:15px; float:left;' value='"+members[i]._id+"'>"+members[i].name+"</li>";
     }
 
     if (groupName == "") ;
     else $("#gn"+groupName).find("ul").html(html);
 }
 
+/* 获取当前选中的分组名称 */
 function getCurrentGroupName(){
     return $(".ui-corner-top").html().substr($(".ui-corner-top").html().lastIndexOf("</span>")+7)
 }
 
+/* 获取用户列表，产生select共添加用户至分组操作使用  */
+function InitUserList(){
+    $.ajax({
+        type:"get",
+        url:"/rest/buser/all",
+        success:function(data){
+            var html = "";
+            for (var i = 0; i < data.body.length; i ++){
+                html += "<option value='"+data.body[i]._id+"'>"+data.body[i].name+"</option>";
+            }
+            $("#add-user-name").html(html);
+        }
+    });
+}
+
+/* 从分组中移除一个用户 */
+function removeAUser(){
+
+    if (lastSelectedItem == null) {alert("请先选择一个用户！");return false;}
+
+    else {
+        var cg = getCurrentGroupName();
+        var oh = $(lastSelectedItem).attr("value");
+
+        var name = $(lastSelectedItem).html().replace("√","").trim();
+
+        if (oh && name && cg &&
+                oh.length > 0 &&
+                name.length > 0 &&
+                cg.length >0 &&
+                confirm("确认要从分组"+cg+"中删除用户"+name+"?")){
+            //alert(oh);
+            $.ajax({
+                type:"POST",
+                url:"/rest/baccount/dfgroup?uname="+oh+"&group="+cg,
+                success:function(data){
+                    if (data.code == 200){
+                        alert("已成功移除用户"+name);
+                    }else{
+                        alert("操作失败，"+data.msg);
+                    }
+
+                    loadThisGroup(cg,true);
+                }
+            });
+        }
+    }
+}
+
+/* 删除当前分组 */
+function deleteCurrentGroup(){
+    var cg = getCurrentGroupName();
+    if (!cg) { alert("请先展开一个分组"); return false;}
+    if (cg.length > 0 && confirm("确认删除分组"+cg+"?")){
+        $.ajax({
+            type:"POST",
+            url:"/rest/bgroup/del?group="+cg,
+            success:function(data){
+                if (data.code == 200) alert("已成功删除分组"+cg);
+                else alert(data.msg);
+
+                window.location.reload();
+            }
+        });
+    }
+}
+
+/* 向当前分组中加入用户 */
 function addAUser(){
     var cg = getCurrentGroupName();
     var t = "<div class='widget-header widget-header-small'><h5 class='smaller'><i class='icon-ok'></i> 向分组\""+cg+"\"中添加一个用户</h5></div>";
     //alert(cg);
+
+    if ($("#add-user-name").children("option").length == 0){
+        InitUserList();
+    }
+
     var dialog = $("#dialog-message-add-user").removeClass('hide').dialog({
         modal:true,
         title: t,
@@ -696,7 +764,7 @@ function addAUser(){
                         async:true,
                         success:function(jsn){
                             if (jsn.code == 200){
-                                alert("已将用户"+uname+"添加至"+cg);
+                                alert("已将用户"+jsn.body+"添加至"+cg);
                                 loadThisGroup(cg,true);
                                 loadThisGroup(jsn.msg,true);
                             }else{
@@ -710,6 +778,7 @@ function addAUser(){
     });
 }
 
+/* 添加分组 */
 function addAGroup(){
     var dialog = $("#dialog-message-add-group").removeClass('hide').dialog({
         modal: true,

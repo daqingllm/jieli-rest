@@ -148,4 +148,19 @@ public class Common {
         }
         return ret;
     }
+
+    public static String TransferNull(String s){
+        return s == null ? "" : s;
+    }
+
+    public static String RemoveLast(String src, String last){
+        if (src == null) return  null;
+        if (src.length() == 0) return src;
+        if (last == null || last.length() == 0) return  src;
+
+        if (src.length() < last.length()) return  src;
+
+        if (src.endsWith(last)) return src.substring(0,src.length()-last.length());
+        else  return src;
+    }
 }

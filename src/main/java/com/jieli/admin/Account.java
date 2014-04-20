@@ -157,15 +157,14 @@ public class Account {
             }
             Iterable<com.jieli.common.entity.Account> accountAdmin = accountDAO.loadByAssociationId(associationId.toString(),AccountState.ADMIN);
             for (com.jieli.common.entity.Account account : accountAdmin)
-                accountList += om.writeValueAsString(account)+",";
+                accountList += Common.ReplaceObjectId(account).replace("}",",\"name\":\""+Common.TransferNull(userDAO.loadById(account.userId) == null ? "" : userDAO.loadById(account.userId).name) + "\"},");
 
             Iterable<com.jieli.common.entity.Account> accountEnable = accountDAO.loadByAssociationId(associationId.toString(),AccountState.ENABLE);
             for (com.jieli.common.entity.Account account : accountEnable)
-                accountList += om.writeValueAsString(account)+",";
+                accountList += Common.ReplaceObjectId(account).replace("}",",\"name\":\""+Common.TransferNull(userDAO.loadById(account.userId) == null ? "" : userDAO.loadById(account.userId).name) + "\"},");
         }
 
-        if (accountList.endsWith(",")) accountList = accountList.substring(0,accountList.length()-1)+"";
-        accountList += "]";
+        accountList = Common.RemoveLast(accountList,",") + "]";
 
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("isSuper",IdentifyUtils.getState(sessionId) == AccountState.SUPPER);
@@ -200,30 +199,50 @@ public class Account {
     @POST
     @Path("/atgroup")
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-    public Response getUserId (@CookieParam("u") String sessionId, @QueryParam("uname") String username, @QueryParam("group") String group){
+    public Response addToGroup (@CookieParam("u") String sessionId, @QueryParam("uname") String userId, @QueryParam("group") String group) {
 
-        com.jieli.common.entity.Account account = accountDAO.loadByUsername(username);
+        User user = userDAO.loadById(userId);
 
         ResponseEntity responseEntity = new ResponseEntity();
-        if (Common.RoleCheckResponse(sessionId) !=null || account == null || (IdentifyUtils.isAdmin(sessionId) && !account.associationId.equals(IdentifyUtils.getAssociationId(sessionId)))) {
+        if (Common.RoleCheckResponse(sessionId) != null || user == null || (IdentifyUtils.isAdmin(sessionId) && !user.associationId.equals(IdentifyUtils.getAssociationId(sessionId)))) {
             responseEntity.code = 9001;
             responseEntity.msg = "no access !";
             return Response.status(200).entity(responseEntity).build();
         }
 
-        if (account != null){
-            User user = userDAO.loadById(account.userId);
-            if (user!= null && user.group != null && !user.group.isEmpty()) responseEntity.msg = user.group;
-            user.group = group;
-            userDAO.update(user);
+        if (user != null && user.group != null && !user.group.isEmpty()) responseEntity.msg = user.group;
+        user.group = group;
+        userDAO.update(user);
 
+        responseEntity.code = 200;
+        responseEntity.body = user.name;
+        return Response.status(200).entity(responseEntity).build();
+    }
+
+    @POST
+    @Path("/dfgroup")
+    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+    public Response deleteFromGroup(@CookieParam("u") String sessionId, @QueryParam("uname") String userId, @QueryParam("group") String group){
+        Response response = Common.RoleCheckResponse(sessionId);
+        if (response != null) return response;
+
+        User user = userDAO.loadById(userId);
+        ResponseEntity responseEntity = new ResponseEntity();
+
+        if (user == null) {responseEntity.code=9001;responseEntity.msg="无此用户";return Response.status(200).entity(responseEntity).build();}
+
+        if (IdentifyUtils.isAdmin(sessionId) && !user.associationId.equals(IdentifyUtils.getAssociationId(sessionId))){responseEntity.code=9001;responseEntity.msg="无权限修改此用户的信息";return Response.status(200).entity(responseEntity).build();}
+
+        if (user.group.equals(group)){
+            user.group = "";
+            userDAO.save(user);
             responseEntity.code = 200;
-            responseEntity.body = account.userId;
             return Response.status(200).entity(responseEntity).build();
         }else{
-            responseEntity.code = 9002;
-            responseEntity.msg = "fail";
+            responseEntity.code = 9003;
+            responseEntity.msg = "此用户不属于改组";
             return Response.status(200).entity(responseEntity).build();
         }
     }
+
 }
