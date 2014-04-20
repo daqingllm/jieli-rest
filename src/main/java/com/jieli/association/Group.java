@@ -13,6 +13,14 @@ public class Group extends Model {
 
     public String name;
 
+    public String getAssociationId() {
+        return associationId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
     public String associationId;
 
     @Override
