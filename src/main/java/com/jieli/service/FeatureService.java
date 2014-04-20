@@ -832,6 +832,11 @@ public class FeatureService {
         ResponseEntity responseEntity = new ResponseEntity();
         User self = userDAO.loadById(IdentifyUtils.getUserId(sessionId));
         if (!StringUtils.isEmpty(userId) && MongoUtils.isValidObjectId(userId)) {
+            if (IdentifyUtils.getUserId(sessionId).equals(userId)) {
+                responseEntity.code = 6102;
+                responseEntity.msg = "不能与自己匹配";
+                return  Response.status(200).entity(responseEntity).build();
+            }
             User user = userDAO.loadById(userId);
             if (user == null) {
                 responseEntity.code = 1102;
@@ -878,8 +883,23 @@ public class FeatureService {
         }
         ResponseEntity responseEntity = new ResponseEntity();
         Iterable<Match> matches = matchDAO.getTopMatch(count);
+        List<MatchDisplay> results = new ArrayList<MatchDisplay>();
+        for (Match match : matches) {
+            MatchDisplay display = new MatchDisplay();
+            User user1 = userDAO.loadById(match.userId1);
+            display.userId1 = user1.get_id().toString();
+            display.name1 = user1.name;
+            display.userFace1 = user1.userFace;
+            User user2 = userDAO.loadById(match.userId2);
+            display.userId2 = user2.get_id().toString();
+            display.name2 = user2.name;
+            display.userFace2 = user2.userFace;
+            display.score = match.score;
+            results.add(display);
+        }
+
         responseEntity.code = 200;
-        responseEntity.body = matches;
+        responseEntity.body = results;
         return  Response.status(200).entity(responseEntity).build();
     }
 }
