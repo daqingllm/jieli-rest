@@ -6,10 +6,7 @@ import com.jieli.common.entity.ResponseEntity;
 import com.jieli.feature.help.dao.HelpDAO;
 import com.jieli.feature.help.entity.HelpInfo;
 import com.jieli.feature.help.entity.SimpleHelpInfo;
-import com.jieli.feature.match.Match;
-import com.jieli.feature.match.MatchDisplay;
-import com.jieli.feature.match.MatchTask;
-import com.jieli.feature.match.MatchUtil;
+import com.jieli.feature.match.*;
 import com.jieli.feature.vote.dao.VoteDAO;
 import com.jieli.feature.vote.entity.SimpleVoteInfo;
 import com.jieli.feature.vote.entity.Vote;
@@ -23,6 +20,7 @@ import com.jieli.user.dao.UserDAO;
 import com.jieli.user.entity.User;
 import com.jieli.util.IdentifyUtils;
 import com.jieli.util.MongoUtils;
+import com.sun.jersey.spi.resource.Singleton;
 import org.apache.commons.lang.StringUtils;
 
 import javax.ws.rs.*;
@@ -35,6 +33,7 @@ import java.util.*;
  * 包括互帮互助、默契匹配、投票列表
  * Created by YolandaLeo on 14-3-19.
  */
+@Singleton
 @Path("/feature")
 public class FeatureService {
     private HelpDAO helpDAO = new HelpDAO();
@@ -42,6 +41,7 @@ public class FeatureService {
     private VoteDAO voteDAO = new VoteDAO();
     BaseDAO<Comment> commentDAO = new BaseDAO<Comment>(com.jieli.mongo.Collections.Comment, Comment.class);
     private MessageDAO messageDAO = new MessageDAO();
+    private MatchDAO matchDAO = new MatchDAO();
     /**
      * 获取互帮互助列表
      * @param sessionId
@@ -863,6 +863,23 @@ public class FeatureService {
 
         responseEntity.code = 200;
         responseEntity.body = results;
+        return  Response.status(200).entity(responseEntity).build();
+    }
+
+    @Path("/topmatch")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+    public Response getOrientedMatch(@CookieParam("u")String sessionId, @QueryParam("count")int count) {
+        if(!IdentifyUtils.isValidate(sessionId)) {
+            return Response.status(403).build();
+        }
+        if (count == 0) {
+            count = 5;
+        }
+        ResponseEntity responseEntity = new ResponseEntity();
+        Iterable<Match> matches = matchDAO.getTopMatch(count);
+        responseEntity.code = 200;
+        responseEntity.body = matches;
         return  Response.status(200).entity(responseEntity).build();
     }
 }

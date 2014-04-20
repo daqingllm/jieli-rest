@@ -29,7 +29,7 @@ public class Activity extends Model {
 
     public String arrangement;
 
-    public String serviceInfo;
+    public List<String> serviceInfo;
 
     public String sponsorInfo;
 
@@ -108,7 +108,7 @@ public class Activity extends Model {
         return arrangement;
     }
 
-    public String getServiceInfo() {
+    public List<String> getServiceInfo() {
         return serviceInfo;
     }
 

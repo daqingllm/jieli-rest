@@ -35,7 +35,7 @@ public class ActivityTest {
         activity.fee = 100;
         activity.maxMembers = 100;
         activity.arrangement = "4、5两天";
-        activity.serviceInfo = "服务信息";
+//        activity.serviceInfo = "服务信息";
         activity.sponsorInfo = "赞助信息";
         activity.invitees = Arrays.asList("user1", "user2", "user3");
         Arrangement a1 = new Arrangement();

@@ -1,15 +1,16 @@
 package com.jieli.admin;
 
-import com.jieli.association.*;
 import com.jieli.association.Association;
+import com.jieli.association.AssociationDAO;
+import com.jieli.association.GroupDAO;
 import com.jieli.common.dao.AccountDAO;
 import com.jieli.common.entity.AccountState;
 import com.jieli.common.entity.ResponseEntity;
 import com.jieli.user.dao.UserDAO;
-import com.jieli.user.entity.*;
 import com.jieli.user.entity.User;
 import com.jieli.util.FTLrender;
 import com.jieli.util.IdentifyUtils;
+import com.sun.jersey.spi.resource.Singleton;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -22,6 +23,7 @@ import java.util.Map;
 /**
  * Created by 95 on 2014/4/19.
  */
+@Singleton
 @Path("/bgroup")
 public class Group {
     private AccountDAO accountDAO = new AccountDAO();

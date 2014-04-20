@@ -1,5 +1,7 @@
 package com.jieli.service;
 
+import com.sun.jersey.spi.resource.Singleton;
+
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -12,6 +14,7 @@ import javax.ws.rs.core.MediaType;
  * Time: 下午11:02
  * To change this template use File | Settings | File Templates.
  */
+@Singleton
 @Path("/hello")
 public class HelloService {
     // This method is called if TEXT_PLAIN is request

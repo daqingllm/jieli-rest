@@ -11,6 +11,7 @@ import com.jieli.common.entity.Account;
 import com.jieli.util.FTLrender;
 import com.jieli.util.IdentifyUtils;
 import com.jieli.util.MongoUtils;
+import com.sun.jersey.spi.resource.Singleton;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -20,6 +21,7 @@ import java.util.*;
 /**
  * Created by 95 on 2014/4/15.
  */
+@Singleton
 @Path("/bactivity")
 public class Activity {
     private AccountDAO accountDAO = new AccountDAO();
