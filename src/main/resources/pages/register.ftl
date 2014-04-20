@@ -387,12 +387,12 @@
         u.identity = $("#register-u-identity").val() || "";
         u.score = 0;
         u.school = "";
-        u.degree = "";
+        u.degree = 3;
         u.profession = $("#register-u-profession").val() || "";
         u.phone = $("#register-u-phone").val() || "";
         u.mail = "";
         u.weixin = "";
-        u.interestTags = [];
+        u.interests = [];
         u.enterpriseName = $("#register-u-enterprise").val() || "";
         u.userFace = "";
 
