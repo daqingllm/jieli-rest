@@ -49,4 +49,12 @@ public class FeatureTest {
                 .execute();
         System.out.println(response.returnContent().asString());
     }
+
+    @Test
+    public void testMatch() throws IOException {
+        Response response = Request.Get("http://162.243.151.219:8080/rest/feature/match")
+                .setHeader("Cookie", "u=534a2256e4b0038297fb2136")
+                .execute();
+        System.out.println(response.returnContent().asString());
+    }
 }

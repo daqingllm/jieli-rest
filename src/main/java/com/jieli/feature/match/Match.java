@@ -47,6 +47,6 @@ public class Match extends Model implements Comparable<Match> {
 
     @Override
     public int compareTo(Match o) {
-        return score - o.score;
+        return o.score - score;
     }
 }
