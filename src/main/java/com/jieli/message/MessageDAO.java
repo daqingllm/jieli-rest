@@ -15,4 +15,8 @@ public class MessageDAO extends GenericDAO<Message> {
     public Iterable<Message> getMessagesByUserId(String userId) {
         return getCollection().find("{userId:#,read:#}", userId, false).as(Message.class);
     }
+
+    public Iterable<Message> getForceMessages(String userId) {
+        return col.find("{userId:#,read:#,force:#}", userId, false, true).as(Message.class);
+    }
 }

@@ -25,7 +25,8 @@ public class MatchDAO extends GenericDAO<Match> {
         if (oldMatch != null) {
             oldMatch.score = match.score;
             save(oldMatch);
+        } else {
+            save(match);
         }
-        save(match);
     }
 }

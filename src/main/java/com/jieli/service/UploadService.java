@@ -4,6 +4,7 @@ import com.jieli.common.entity.ResponseEntity;
 import com.jieli.util.UploaderUtils;
 import com.sun.jersey.core.header.FormDataContentDisposition;
 import com.sun.jersey.multipart.FormDataParam;
+import com.sun.jersey.spi.resource.Singleton;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.HttpHeaders;
@@ -15,6 +16,7 @@ import java.io.InputStream;
  * Created by xianxing on 2014/3/22.
  * 上传图像
  */
+@Singleton
 @Path("/")
 public class UploadService {
     @POST

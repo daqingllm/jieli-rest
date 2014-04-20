@@ -4,6 +4,7 @@ import com.jieli.common.entity.ResponseEntity;
 import com.jieli.message.Message;
 import com.jieli.message.MessageDAO;
 import com.jieli.util.IdentifyUtils;
+import com.sun.jersey.spi.resource.Singleton;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -17,6 +18,7 @@ import java.util.List;
  * Time: 下午8:21
  * To change this template use File | Settings | File Templates.
  */
+@Singleton
 @Path("/message")
 public class MessageService {
 
@@ -24,13 +26,19 @@ public class MessageService {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-    public Response getMessage(@CookieParam("u")String sessionId) {
+    public Response getMessage(@CookieParam("u")String sessionId, @QueryParam("force")boolean force) {
         if (!IdentifyUtils.isValidate(sessionId)) {
             return Response.status(403).build();
         }
 
         ResponseEntity responseEntity = new ResponseEntity();
         String userId = IdentifyUtils.getUserId(sessionId);
+        if (force) {
+            Iterable<Message> messages = messageDAO.getForceMessages(userId);
+            responseEntity.code = 200;
+            responseEntity.body = messages;
+            return Response.status(200).entity(responseEntity).build();
+        }
         Iterable<Message> messages = messageDAO.getMessagesByUserId(userId);
         responseEntity.code = 200;
         responseEntity.body = messages;
