@@ -26,16 +26,17 @@ public class UploadService {
             @FormDataParam("file") FormDataContentDisposition fileDetail){
 
         ResponseEntity responseEntity = new ResponseEntity();
-        String FileName =fileDetail.getFileName();
+        String FileName = "";
 		String FileDirectory = "F:\\";
         FileDirectory = System.getProperty("user.dir")+"\\";
 
         try {
+            FileName = fileDetail.getFileName();
             FileName = new String(FileName.getBytes(System.getProperty("file.encoding")), "UTF-8");
         }catch (Exception e){}
         if (FileName == null && FileName == "") {
             responseEntity.code = 2001;
-            responseEntity.msg="请选择文件";
+            responseEntity.msg = "请选择文件";
             return Response.status(200).entity(responseEntity).build();
         }
         String FilePath = "";
@@ -97,7 +98,7 @@ public class UploadService {
                 "</html>").header(HttpHeaders.CONTENT_TYPE, MediaType.TEXT_HTML + ";charset=UTF-8").build();
 		*/
 
-        return Response.status(200).entity("<!DOCTYPE html>\n" +
+        /*return Response.status(200).entity("<!DOCTYPE html>\n" +
                 "<html>\n" +
                 "<head lang=\"en\">\n" +
                 "    <meta charset=\"UTF-8\">\n" +
@@ -109,6 +110,8 @@ public class UploadService {
                 "    <input type=\"submit\" value=\"Upload\" />\n" +
                 "</form>\n" +
                 "</body>\n" +
-                "</html>").header(HttpHeaders.CONTENT_TYPE, MediaType.TEXT_HTML + ";charset=UTF-8").build();
+                "</html>").header(HttpHeaders.CONTENT_TYPE, MediaType.TEXT_HTML + ";charset=UTF-8").build();*/
+
+        return Response.status(200).build();
     }
 }
