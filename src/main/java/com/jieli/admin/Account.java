@@ -178,7 +178,7 @@ public class Account {
     @POST
     @Path("/reuser")
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-    public Response login(@CookieParam("u") String sessionId, com.jieli.user.entity.User user) throws JSONException {
+    public Response initUserInfo(@CookieParam("u") String sessionId, com.jieli.user.entity.User user) throws JSONException {
         ResponseEntity responseEntity = new ResponseEntity();
 
         Response response = Common.RoleCheckResponse(sessionId);
@@ -194,5 +194,36 @@ public class Account {
         responseEntity.msg = "成功创建用户"+user.name;
 
         return  Response.status(200).entity(responseEntity).build();
+    }
+
+
+    @POST
+    @Path("/atgroup")
+    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+    public Response getUserId (@CookieParam("u") String sessionId, @QueryParam("uname") String username, @QueryParam("group") String group){
+
+        com.jieli.common.entity.Account account = accountDAO.loadByUsername(username);
+
+        ResponseEntity responseEntity = new ResponseEntity();
+        if (Common.RoleCheckResponse(sessionId) !=null || account == null || (IdentifyUtils.isAdmin(sessionId) && !account.associationId.equals(IdentifyUtils.getAssociationId(sessionId)))) {
+            responseEntity.code = 9001;
+            responseEntity.msg = "no access !";
+            return Response.status(200).entity(responseEntity).build();
+        }
+
+        if (account != null){
+            User user = userDAO.loadById(account.userId);
+            if (user!= null && user.group != null && !user.group.isEmpty()) responseEntity.msg = user.group;
+            user.group = group;
+            userDAO.update(user);
+
+            responseEntity.code = 200;
+            responseEntity.body = account.userId;
+            return Response.status(200).entity(responseEntity).build();
+        }else{
+            responseEntity.code = 9002;
+            responseEntity.msg = "fail";
+            return Response.status(200).entity(responseEntity).build();
+        }
     }
 }

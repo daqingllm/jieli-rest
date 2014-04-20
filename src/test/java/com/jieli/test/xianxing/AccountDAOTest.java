@@ -15,4 +15,6 @@ public class AccountDAOTest{
         Iterable<Account> accounts = accountDAO.loadByAssociationId("5348cd0a7c1f43946d7e7549", AccountState.ADMIN);
 
     }
+
+
 }

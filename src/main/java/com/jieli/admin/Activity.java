@@ -29,7 +29,7 @@ public class Activity {
     @GET
     @Produces(MediaType.TEXT_HTML)
     @Path("/new")
-    public String newActivity(@CookieParam("u") String sessionId, @QueryParam("voteId")String voteId) {
+    public String newActivity(@CookieParam("u") String sessionId) {
         if(!IdentifyUtils.isValidate(sessionId)) {
             return Common.errorReturn;
         }
