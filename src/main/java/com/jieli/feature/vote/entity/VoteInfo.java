@@ -1,6 +1,5 @@
 package com.jieli.feature.vote.entity;
 
-import com.jieli.feature.vote.entity.VoteComment;
 import com.jieli.mongo.Model;
 
 import java.util.Date;
@@ -18,13 +17,9 @@ public class VoteInfo extends Model {
     private Date addTime;
     private String picture;
     private String description;
-    private List<String> options; //投票选项
+    private Map<Integer, String> options; //投票选项index，投票选项
     private Map<Integer, String> optionPicsMap; //投票选项，对应图片
-    private Map<Integer, Integer> optionVotes; //投票选项，投票人数
-    boolean multiple; //是否多选
-    private List<Vote> voteList; //投票记录
-    private Integer totalVote; //每个选项投票数总和
-    private Integer participants;
+    private boolean multiple; //是否多选
 
     public String getAssociationId() {
         return associationId;
@@ -82,28 +77,12 @@ public class VoteInfo extends Model {
         this.description = description;
     }
 
-    public List<String> getOptions() {
-        return options;
-    }
-
-    public void setOptions(List<String> options) {
-        this.options = options;
-    }
-
     public Map<Integer, String> getOptionPicsMap() {
         return optionPicsMap;
     }
 
     public void setOptionPicsMap(Map<Integer, String> optionPicsMap) {
         this.optionPicsMap = optionPicsMap;
-    }
-
-    public Map<Integer, Integer> getOptionVotes() {
-        return optionVotes;
-    }
-
-    public void setOptionVotes(Map<Integer, Integer> optionVotes) {
-        this.optionVotes = optionVotes;
     }
 
     public boolean isMultiple() {
@@ -114,23 +93,11 @@ public class VoteInfo extends Model {
         this.multiple = multiple;
     }
 
-    public List<Vote> getVoteList() { return voteList; }
-
-    public void setVoteList(List<Vote> voteList) { this.voteList = voteList; }
-
-    public Integer getTotalVote() {
-        return totalVote;
+    public Map<Integer, String> getOptions() {
+        return options;
     }
 
-    public void setTotalVote(Integer totalVote) {
-        this.totalVote = totalVote;
-    }
-
-    public Integer getParticipants() {
-        return participants;
-    }
-
-    public void setParticipants(Integer participants) {
-        this.participants = participants;
+    public void setOptions(Map<Integer, String> options) {
+        this.options = options;
     }
 }

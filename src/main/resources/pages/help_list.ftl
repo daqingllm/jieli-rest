@@ -630,15 +630,18 @@ jQuery(function ($) {
     $("#submit-btn").click(function() {
         var association = $("#association-select").val();
         var helpType = $("#help-select").val();
-
-        $("#grid-table").jqGrid('setGridParam',{
-            datatype:'json',
-            data:$.ajax({
-                url : '/rest/feature/ajaxhelp/list?a=' + association + '&t=' + helpType + '&page=1&size=20',
-                type : 'GET',
-                contentType: "application/json"
-            })
-        }).trigger("reloadGrid");
+        $.ajax({
+            url : '/rest/feature/ajaxhelp/list?a=' + association + '&t=' + helpType + '&page=1&size=20',
+            type : 'GET',
+            contentType: "application/json",
+            success: function(data) {
+                $('#grid-table').jqGrid('clearGridData', true).trigger('reloadGrid');
+                $("#grid-table").jqGrid('setGridParam',{
+                    datatype: 'local',
+                    data: parseHelpData(data)
+                }).trigger('reloadGrid');
+            }
+        });
     });
 
 </script>

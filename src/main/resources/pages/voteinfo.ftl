@@ -285,7 +285,7 @@
                         <label class="col-sm-3 control-label no-padding-right" for="form-field-textarea"> 投票正文 </label>
 
                         <div class="col-sm-9">
-                            <textarea id="form-field-textarea" class="autosize-transition col-xs-10 col-sm-7"
+                            <textarea id="form-field-textarea" class="autosize-transition col-xs-10 col-sm-7 textarea-no-resize"
                                       style="min-height: 140px;"></textarea>
                         </div>
 
@@ -323,7 +323,45 @@
                     </div>
 
                 </form>
+                <!-- vote statistics begin -->
 
+                <!-- vote statistics end -->
+                <#if !newVote && !isEditable>
+                <div class="table-responsive">
+                    <table id="comment-table" class="table table-striped table-bordered table-hover">
+                        <thead>
+                        <tr>
+                            <th>id</th>
+                            <th>评论人</th>
+                            <th class="hidden-480">评论内容</th>
+
+                            <th>
+                                <i class="icon-time bigger-110 hidden-480"></i>
+                                评论时间
+                            </th>
+                            <th class="hidden-480">状态</th>
+
+                        </tr>
+                        </thead>
+
+                        <tbody>
+                        <#list commentList as comment>
+                        <tr>
+                            <td>${comment_index}</td>
+                            <td>${comment.commentUserInfo.name}</td>
+                            <td class="hidden-480">${comment.content}</td>
+                            <td>${comment.addTime?string('yyyy-MM-dd HH:mm:ss')}</td>
+                            <td class="hidden-480">
+                                <span class="label label-sm label-success">正常</span>
+                            </td>
+                        </tr>
+                        </#list>
+
+
+                        </tbody>
+                    </table>
+                </div>
+                </#if>
                 <div class="clearfix form-actions">
                     <div class="col-md-offset-3 col-md-9">
                         <#if newVote>
@@ -1021,11 +1059,12 @@ function deleteVoteOption() {
     else
         alert('每个投票至少要有一个选项');
 }
-function addVoteOption(value) {
+function addVoteOption(value, percent) {
     if (value == undefined)
         value = "";
     var voteOption = $('<div class="vote-choice">' +
             '<input type="text" value="'+value+'" placeholder="选项内容，不填写为无效选项" class="col-xs-10 col-sm-7 vote-choice-text" style="padding-left: 7px;">' +
+            '<div class="progress-bar" style="width:'+percent+'%;"></div>' +
             '<button type="button" class="btn btn-xs btn-info vote-choice-img">Pic</button>' +
             '<div class="icon-remove"></div>' +
             '</div>');
@@ -1061,10 +1100,14 @@ function voteInfo(voteId, callback) {
                 var dateString = deadLine.toISOString().substr(0, 10); //assume the program will not run after year 10000
                 $('#form-field-date').val(dateString);
                 $('#form-field-select-type').val(response.body.multiple ? 'M' : 'S');
-                response.body.options.forEach(function (option) {
-                    addVoteOption(option);
+                var voteCountArray = response.body.optionVotes;
+                var totalVote = response.body.totalVote;
+                response.body.options.forEach(function (index, option) {
+                    var optionCount = voteCountArray[index];
+                    optionCount = optionCount/totalVote*100;
+                    addVoteOption(option, optionCount);
                 });
-                callback();
+                callback(response.body);
             }
         }
     });
@@ -1073,6 +1116,7 @@ function voteInfo(voteId, callback) {
 function newSettings() {
     enableDatePicker();
     $('.icon-plus').click(function (){ addVoteOption(); });
+    $('.progress-bar').hide();
     addVoteOption();
     addVoteOption();
     addVoteOption();
@@ -1084,10 +1128,11 @@ function editSettings() {
     $('.icon-remove').remove();
     $('.icon-plus').hide();
     $('.vote-choice-text').attr({readOnly : true});
+    $('.progress-bar').hide();
     enableDatePicker();
 }
 
-function viewSettings() {
+function viewSettings(data) {
     $('#form-field-select-type').attr({disabled : true});
     $('.vote-choice-img').hide();
     $('.icon-remove').remove();

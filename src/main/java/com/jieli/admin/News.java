@@ -176,51 +176,101 @@ public class News {
     }
 
     // 不仅要处理多associationid，还要转义json中的引号
+//    @POST
+//    @Path("/add")
+//    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+//    public Response addNews(@CookieParam("u")String sessionId, com.jieli.news.News news){
+//
+//        if (!IdentifyUtils.isValidate(sessionId)) {
+//            return Response.status(403).build();
+//        }
+//
+//        String sc = news.content;
+//        /*while(sc.indexOf("\\u0027") >= 0) sc = sc.repla  ce("\\u0027","'");
+//        while(sc.indexOf("\\u0022") >= 0) sc = sc.replace("\\u0027","\"");*/
+//
+//        ResponseEntity responseEntity = new ResponseEntity();
+//        if(news!=null){
+//            if (news.title == "" || news.title == null){
+//                responseEntity.code = 9001;
+//                responseEntity.msg = "请输入标题";
+//                return Response.status(200).entity(responseEntity).build();
+//            }
+//
+//            if (news.content == "" || news.content == null){
+//                responseEntity.code = 9001;
+//                responseEntity.msg = "请输入内容";
+//                return Response.status(200).entity(responseEntity).build();
+//            }
+//
+//            if( !CollectionUtils.isEmpty(news.images) ){
+//                news.imagesCount = news.images.size();
+//            }
+//            news.addTime = new Date();
+//
+//            String[] assList = news.associationId.split(",");
+//            AccountState accountState = accountDAO.loadById(sessionId).state;
+//            if ((accountState.compareTo(AccountState.SUPPER) == 0) && (assList.length > 1)){
+//                int l = assList.length - 1;
+//                responseEntity.body = "{\"_id\":\"";
+//                while (l >= 0){
+//                    com.jieli.news.News singleNews = singleNews =copyDeep(news);
+//                    singleNews.associationId = assList[l];
+//                    newsDAO.save(singleNews);
+//                    responseEntity.body = responseEntity.body + singleNews.get_id().toString() + (l==0?"":",");
+//                    l--;
+//                }
+//                responseEntity.body = responseEntity.body + "\"}";
+//            }else {
+//                news.associationId = assList[0];
+//                newsDAO.save(news);
+//                responseEntity.body = "{\"_id\":\"" + news.get_id().toString() + "\"}";
+//            }
+//
+//            //newsDAO.save(news);
+//        }
+//
+//        responseEntity.code = 200;
+//        return  Response.status(200).entity(responseEntity).build();
+//
+//    }
+
     @POST
-    @Path("/add")
-    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-    public Response addNews(@CookieParam("u")String sessionId, com.jieli.news.News news){
+    @Path("/del")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response deleteNews(@CookieParam("u") String sessionId, @QueryParam("artid") String artid){
 
-        if (!IdentifyUtils.isValidate(sessionId)) {
-            return Response.status(403).build();
-        }
-
-        String sc = news.content;
-        /*while(sc.indexOf("\\u0027") >= 0) sc = sc.repla  ce("\\u0027","'");
-        while(sc.indexOf("\\u0022") >= 0) sc = sc.replace("\\u0027","\"");*/
+        Response response = Common.RoleCheckResponse(sessionId);
+        if (response != null) return  response;
 
         ResponseEntity responseEntity = new ResponseEntity();
-        if(news!=null){
-            if( !CollectionUtils.isEmpty(news.images) ){
-                news.imagesCount = news.images.size();
-            }
-            news.addTime = new Date();
 
-            String[] assList = news.associationId.split(",");
-            AccountState accountState = accountDAO.loadById(sessionId).state;
-            if ((accountState.compareTo(AccountState.SUPPER) == 0) && (assList.length > 1)){
-                int l = assList.length - 1;
-                responseEntity.body = "{\"_id\":\"";
-                while (l >= 0){
-                    com.jieli.news.News singleNews = singleNews =copyDeep(news);
-                    singleNews.associationId = assList[l];
-                    newsDAO.save(singleNews);
-                    responseEntity.body = responseEntity.body + singleNews.get_id().toString() + (l==0?"":",");
-                    l--;
-                }
-                responseEntity.body = responseEntity.body + "\"}";
-            }else {
-                news.associationId = assList[0];
-                newsDAO.save(news);
-                responseEntity.body = "{\"_id\":\"" + news.get_id().toString() + "\"}";
-            }
-
-            //newsDAO.save(news);
+        if (artid == null || artid == ""){
+            responseEntity.code = 9001;
+            responseEntity.msg = "无此资讯";
+            return Response.status(200).entity(responseEntity).build();
         }
 
-        responseEntity.code = 200;
-        return  Response.status(200).entity(responseEntity).build();
+        artid = artid.split(",")[0];
 
+        com.jieli.news.News news = newsDAO.loadById(artid);
+
+        if (news == null){
+            responseEntity.code = 9001;
+            responseEntity.msg = "无此资讯";
+            return Response.status(200).entity(responseEntity).build();
+        }
+
+        if (IdentifyUtils.isAdmin(sessionId) && !news.associationId.equals(IdentifyUtils.getAssociationId(sessionId))){
+            responseEntity.code = 9001;
+            responseEntity.msg = "无权限";
+            return Response.status(200).entity(responseEntity).build();
+        }
+
+        userDAO.deleteById(artid);
+        responseEntity.code = 200;
+        responseEntity.msg = "删除成功";
+        return Response.status(200).entity(responseEntity).build();
     }
 
     @GET

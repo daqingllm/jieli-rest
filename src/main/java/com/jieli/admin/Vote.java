@@ -4,11 +4,18 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jieli.association.*;
 import com.jieli.association.Association;
+import com.jieli.comment.Comment;
+import com.jieli.comment.CommentUserInfo;
+import com.jieli.comment.TopicType;
 import com.jieli.common.dao.AccountDAO;
 import com.jieli.common.entity.Account;
 import com.jieli.feature.vote.dao.VoteDAO;
 import com.jieli.feature.vote.entity.SimpleVoteInfo;
 import com.jieli.feature.vote.entity.VoteInfo;
+import com.jieli.mongo.BaseDAO;
+import com.jieli.mongo.Collections;
+import com.jieli.user.dao.UserDAO;
+import com.jieli.util.CollectionUtils;
 import com.jieli.util.FTLrender;
 import com.jieli.util.IdentifyUtils;
 import com.jieli.util.MongoUtils;
@@ -30,6 +37,8 @@ public class Vote {
     private AccountDAO accountDAO = new AccountDAO();
     private AssociationDAO associationDAO = new AssociationDAO();
     private VoteDAO voteDAO = new VoteDAO();
+    private UserDAO userDAO = new UserDAO();
+    private BaseDAO<Comment> commentDAO = new BaseDAO<Comment>(Collections.Comment, Comment.class);
     private String errorReturn = "<!DOCTYPE html>\n" +
             "<html>\n" +
             "    <head>\n" +
@@ -104,13 +113,35 @@ public class Vote {
         if (account == null || account.username == null || account.username == ""){
             return errorReturn;
         }
+        if(!MongoUtils.isValidObjectId(voteId)) {
+            return errorReturn;
+        }
+
         boolean isSuper = IdentifyUtils.isSuper(sessionId);
+        List<Comment> commentList = commentDAO.find("{topicId:#, topicType:#, isDeleted:#}",
+                voteId, TopicType.Vote, false);
+        if( !CollectionUtils.isEmpty(commentList) ){
+            for(Comment comment : commentList){
+                String userId = comment.commentUserId;
+                CommentUserInfo commentUserInfo = new CommentUserInfo();
+                commentUserInfo.userId = userId;
+                com.jieli.user.entity.User user = userDAO.loadById(userId);
+                commentUserInfo.name = user.name;
+                commentUserInfo.userFace = user.userFace;
+
+                comment.commentUserInfo = commentUserInfo;
+            }
+        }
+        else {
+            commentList = new ArrayList<Comment>();
+        }
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("username", account.username);
         params.put("isSuper", isSuper);
         if(!MongoUtils.isValidObjectId(voteId)) {
             return FTLrender.getResult("error.ftl", params);
         }
+        params.put("commentList", commentList);
         params.put("newVote", false);
         params.put("isEditable", false);
         params.put("voteId", voteId);

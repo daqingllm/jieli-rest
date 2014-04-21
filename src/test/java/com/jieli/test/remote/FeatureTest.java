@@ -13,6 +13,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by YolandaLeo on 14-4-3.
@@ -40,7 +42,12 @@ public class FeatureTest {
         voteInfo.setDeadLine(format.parse("2014-05-01"));
         voteInfo.setMultiple(true);
         voteInfo.setTitle("油菜花去哪儿");
-        voteInfo.setOptions(Arrays.asList("云南", "奉贤", "江西婺源", "青海"));
+        Map<Integer, String> options = new HashMap<Integer, String>();
+        options.put(1, "云南");
+        options.put(2, "奉贤");
+        options.put(3, "江西婺源");
+        options.put(4, "青海");
+        voteInfo.setOptions(options);
         voteInfo.setDescription("去哪里看油菜花？");
         ObjectMapper mapper = new ObjectMapper();
         Response response = Request.Post("http://162.243.151.219:8080/jieli-1.0-SNAPSHOT/rest/feature/vote/addvote")

@@ -29,4 +29,67 @@ public class Comment extends Model {
 
     public boolean isDeleted = false;  //是否已被删除
 
+    public String getTopicId() {
+        return topicId;
+    }
+
+    public void setTopicId(String topicId) {
+        this.topicId = topicId;
+    }
+
+    public String getTopicType() {
+        return topicType;
+    }
+
+    public void setTopicType(String topicType) {
+        this.topicType = topicType;
+    }
+
+    public String getCommentUserId() {
+        return commentUserId;
+    }
+
+    public void setCommentUserId(String commentUserId) {
+        this.commentUserId = commentUserId;
+    }
+
+    public String getCommentedUserId() {
+        return commentedUserId;
+    }
+
+    public void setCommentedUserId(String commentedUserId) {
+        this.commentedUserId = commentedUserId;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public Date getAddTime() {
+        return addTime;
+    }
+
+    public void setAddTime(Date addTime) {
+        this.addTime = addTime;
+    }
+
+    public CommentUserInfo getCommentUserInfo() {
+        return commentUserInfo;
+    }
+
+    public void setCommentUserInfo(CommentUserInfo commentUserInfo) {
+        this.commentUserInfo = commentUserInfo;
+    }
+
+    public boolean isDeleted() {
+        return isDeleted;
+    }
+
+    public void setDeleted(boolean isDeleted) {
+        this.isDeleted = isDeleted;
+    }
 }

@@ -1,10 +1,8 @@
 package com.jieli.test.http.yolanda;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jieli.feature.help.entity.HelpComment;
 import com.jieli.feature.help.entity.HelpInfo;
 import com.jieli.feature.vote.entity.Vote;
-import com.jieli.feature.vote.entity.VoteComment;
 import com.jieli.feature.vote.entity.VoteInfo;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.client.fluent.Response;
@@ -16,6 +14,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by YolandaLeo on 14-3-29.
@@ -55,17 +55,15 @@ public class FeatureTest {
         System.out.println(response.returnContent().asString());
     }
 
-    //@Test
+    @Test
     public void addHelpComment() throws IOException {
-        HelpComment comment = new HelpComment();
-        comment.setHelpId("5338115f30043866e28ac0b2");
-        comment.setCommentUserId("5336bb6f3004cc09f49432e4");
-        String context = "小明可以去";
+        Map<String, String> commentInfo = new HashMap<String, String>();
+        commentInfo.put("topicId", "534fa1ef30049137259c9dc4");
+        commentInfo.put("content", "TestTestTest");
         ObjectMapper mapper = new ObjectMapper();
-        Response response = Request.Post("http://localhost:8080/rest/feature/help/detail/comment/add" +
-                "?helpId=5338115f30043866e28ac0b2")
-                .setHeader("Cookie", "u=5336bbe13004cc09f49432e7")
-                .bodyString(mapper.writeValueAsString(context), ContentType.APPLICATION_JSON)
+        Response response = Request.Post("http://localhost:8080/rest/feature/help/detail/comment/add")
+                .setHeader("Cookie", "u=533be303300460878a64a158")
+                .bodyString(mapper.writeValueAsString(commentInfo), ContentType.APPLICATION_JSON)
                 .execute();
         System.out.println(response.returnContent().asString());
     }
@@ -97,8 +95,9 @@ public class FeatureTest {
     public void addTop() throws IOException {
         String helpId = "5338115f30043866e28ac0b2";
         Integer index = 1;
-        Response response = Request.Post("http://localhost:8080/rest/feature/help/detail/comment/top?helpId=5338115f30043866e28ac0b2")
-                .setHeader("Cookie", "u=5336bb6f3004cc09f49432e5")
+        Response response = Request.Post("http://localhost:8080/rest/feature/help/detail/comment/top?" +
+                "helpId=534fa1ef30049137259c9dc4&commentId=53534626300492612fdc92dc")
+                .setHeader("Cookie", "u=5336bbe13004cc09f49432e7")
                 .bodyString(index.toString(), ContentType.APPLICATION_JSON)
                 .execute();
         System.out.println(response.returnContent().asString());
@@ -127,12 +126,18 @@ public class FeatureTest {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         voteInfo.setDeadLine(format.parse("2014-05-01"));
         voteInfo.setMultiple(false);
-        voteInfo.setTitle("喜欢的颜色");
-        voteInfo.setOptions(Arrays.asList("红", "黄", "蓝", "绿"));
-        voteInfo.setDescription("喜欢什么颜色？");
+        voteInfo.setTitle("晚饭吃什么");
+        Map<Integer, String> options = new HashMap<Integer, String>();
+        options.put(1, "绿茶");
+        options.put(2, "西贝西北菜");
+        options.put(3, "麻辣香锅");
+        options.put(4, "外婆家");
+        options.put(5, "Miss kiko");
+        voteInfo.setOptions(options);
+        voteInfo.setDescription("晚上聚餐去哪里？");
         ObjectMapper mapper = new ObjectMapper();
         Response response = Request.Post("http://localhost:8080/rest/feature/vote/addvote")
-                .setHeader("Cookie", "u=5336b7de3004f3462ed8868b")
+                .setHeader("Cookie", "u=5346965130040cab020b3dd3")
                 .bodyString(mapper.writeValueAsString(voteInfo), ContentType.APPLICATION_JSON)
                 .execute();
         System.out.println(response.returnContent().asString());
@@ -144,9 +149,9 @@ public class FeatureTest {
         vote.setVoteIndex(Arrays.asList(1));
         vote.setUserId("5336bbe13004cc09f49432e7");
         vote.setAddTime(new Date());
-        String voteId = "533800e530044c7fc286a6c4";
+        String voteId = "5353cfce30040d944ab5b760";
         ObjectMapper mapper = new ObjectMapper();
-        Response response = Request.Post("http://localhost:8080/rest/feature/vote/commitvote?voteId=533bfacf300460878a64a159")
+        Response response = Request.Post("http://localhost:8080/rest/feature/vote/commitvote?voteId=5353cfce30040d944ab5b760")
                 .addHeader("Cookie", "u=5336bbe13004cc09f49432e7")
                 .bodyString(mapper.writeValueAsString(vote), ContentType.APPLICATION_JSON)
                 .execute();
@@ -155,15 +160,13 @@ public class FeatureTest {
 
     @Test
     public void addVoteComment() throws IOException {
-        VoteComment comment = new VoteComment();
-        comment.setVoteId("533bfacf300460878a64a159");
-        comment.setCommentUserId("533be301300460878a64a157");
-        comment.setComment("多点颜色选择更好");
+        Map<String, String> commentInfo = new HashMap<String, String>();
+        commentInfo.put("topicId", "534fa1ef30049137259c9dc5");
+        commentInfo.put("content", "喜欢的颜色好多好多~~~~");
         ObjectMapper mapper = new ObjectMapper();
-        Response response = Request.Post("http://localhost:8080/rest/feature/vote/comment?voteId=533bfacf300460878a64a159")
-                .addHeader("Cookie", "u=533be303300460878a64a158")
-                .addHeader("voteId", "533bfacf300460878a64a159")
-                .bodyString(mapper.writeValueAsString(comment), ContentType.APPLICATION_JSON)
+        Response response = Request.Post("http://localhost:8080/rest/feature/vote/comment")
+                .addHeader("Cookie", "u=5336bbe13004cc09f49432e7")
+                .bodyString(mapper.writeValueAsString(commentInfo), ContentType.APPLICATION_JSON)
                 .execute();
         System.out.println(response.returnContent().asString());
     }

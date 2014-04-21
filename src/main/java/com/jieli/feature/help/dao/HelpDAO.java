@@ -1,15 +1,9 @@
 package com.jieli.feature.help.dao;
 
-import com.jieli.activity.Activity;
-import com.jieli.feature.help.entity.HelpComment;
+import com.jieli.comment.Comment;
 import com.jieli.feature.help.entity.HelpInfo;
 import com.jieli.feature.help.entity.SimpleHelpInfo;
-import com.jieli.feature.vote.entity.SimpleVoteInfo;
-import com.jieli.feature.vote.entity.VoteInfo;
-import com.jieli.message.Message;
-import com.jieli.message.MessageType;
 import com.jieli.mongo.GenericDAO;
-import com.jieli.user.entity.User;
 import com.jieli.util.CollectionUtils;
 
 import java.util.*;
@@ -137,28 +131,31 @@ public class HelpDAO extends GenericDAO<HelpInfo> {
     /**
      * 评论置顶
      * @param helpId
-     * @param commentId
+     * @param comment
      * @return
      */
-    public HelpInfo topComment(String helpId, String commentId) {
+    public HelpInfo topComment(String helpId, Comment comment) {
         HelpInfo help = loadById(helpId);
-        List<String> topCommentList = help.getTopCommentList();
-        topCommentList.add(commentId);
+        List<Comment> topCommentList = help.getTopCommentList();
+        if(topCommentList == null) {
+            topCommentList = new ArrayList<Comment>();
+        }
+        topCommentList.add(comment);
         help.setTopCommentList(topCommentList);
         return save(help);
     }
 
-    private HelpComment loadComment(String commentId, List<HelpComment> comments) {
+    /*private HelpComment loadComment(String commentId, List<HelpComment> comments) {
         if(CollectionUtils.isEmpty(comments)) {
             return null;
         }
-        /*for (HelpComment comment : comments) {
+        for (HelpComment comment : comments) {
             if(comment.get_id() .equals(commentId)) {
                 return comment;
             }
-        }*/
+        }
         return comments.get(Integer.getInteger(commentId));
-    }
+    }*/
 
     /*private HelpInfo updateComment(String helpId, HelpComment newComment) {
         HelpInfo help = loadById(helpId);

@@ -306,6 +306,9 @@
 
                 </form>
 
+                <div id="dialog-message-preview" class="hide">
+                </div><!-- #dialog-message -->
+
                 <div class="clearfix form-actions">
                     <div class="col-md-offset-3 col-md-9">
                         <button class="btn btn-success btn-purple" id="bootbox-upload-image"
@@ -315,7 +318,7 @@
                         </button>
 
                         &nbsp; &nbsp; &nbsp;
-                        <button class="btn btn-success" type="button" style="font-weight:bold">
+                        <button class="btn btn-success" type="button" style="font-weight:bold" onclick="previewThisArticle()">
                             <i class="icon-question bigger-110"></i>
                             ‘§¿¿
                         </button>
@@ -441,6 +444,9 @@
 
 <script src="/assets/js/jquery-ui-1.10.3.custom.min.js"></script>
 <script src="/assets/js/jquery.ui.touch-punch.min.js"></script>
+
+<script src="/assets/js/jquery-ui-1.10.3.full.min.js"></script>
+
 <script src="/assets/js/chosen.jquery.min.js"></script>
 <script src="/assets/js/fuelux/fuelux.spinner.min.js"></script>
 <script src="/assets/js/date-time/bootstrap-datepicker.min.js"></script>

@@ -1,7 +1,6 @@
 package com.jieli.test.mongo.yolanda;
 
 import com.jieli.feature.help.dao.HelpDAO;
-import com.jieli.feature.help.entity.HelpComment;
 import com.jieli.feature.help.entity.HelpInfo;
 import com.jieli.feature.help.entity.SimpleHelpInfo;
 import com.jieli.user.dao.UserDAO;
@@ -102,10 +101,10 @@ public class HelpDaoTest {
         System.out.println(result.getFocusList().size());
     }
 
-    @Test
+    /*@Test
     public void topComment() {
         String helpId = "5337bce53004ecd7e04edfcd";
         String commentId = "";
-        helpDao.topComment(helpId, commentId);
-    }
+        helpDao.topComment(helpId, comment);
+    }*/
 }

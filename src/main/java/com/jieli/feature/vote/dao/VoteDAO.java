@@ -4,7 +4,6 @@ import com.jieli.feature.help.entity.HelpInfo;
 import com.jieli.feature.help.entity.SimpleHelpInfo;
 import com.jieli.feature.vote.entity.SimpleVoteInfo;
 import com.jieli.feature.vote.entity.Vote;
-import com.jieli.feature.vote.entity.VoteComment;
 import com.jieli.feature.vote.entity.VoteInfo;
 import com.jieli.mongo.GenericDAO;
 import com.jieli.news.News;
@@ -40,39 +39,7 @@ public class VoteDAO extends GenericDAO<VoteInfo> {
         return save(voteInfo);
     }
 
-    /**
-     * 投票
-     * @param vote
-     * @param voteId
-     * @return
-     */
-    public VoteInfo vote(Vote vote, String voteId) {
-        VoteInfo v = loadById(voteId);
-        List<Vote> voteList = v.getVoteList();
-        Integer participants = v.getParticipants();
-        if(voteList == null) {
-            voteList = new ArrayList<Vote>();
-            participants = 0;
-        }
-        if(participants == null) {
-            participants = 0;
-        }
-        voteList.add(vote);
-        Map<Integer, Integer> optionVotes = v.getOptionVotes();
-        Integer totalVote = v.getTotalVote();
-        for(Integer i : vote.getVoteIndex()) {
-            Integer num = optionVotes.get(i);
-            num++;
-            optionVotes.put(i, num);
-            totalVote++;
-        }
-        participants++;
-        v.setParticipants(participants);
-        v.setTotalVote(totalVote);
-        v.setOptionVotes(optionVotes);
-        v.setVoteList(voteList);
-        return save(v);
-    }
+
 
     /**
      * 评论投票

@@ -6,6 +6,7 @@ import com.jieli.association.AssociationDAO;
 import com.jieli.common.entity.ResponseEntity;
 import com.jieli.feature.help.dao.HelpDAO;
 import com.jieli.feature.help.entity.SimpleHelpInfo;
+import com.jieli.feature.vote.entity.SimpleVoteInfo;
 import com.jieli.user.dao.UserDAO;
 import com.jieli.user.entity.User;
 import com.jieli.util.IdentifyUtils;
@@ -70,6 +71,9 @@ public class AjaxHelp {
             type = Integer.parseInt(helpType);
         }
         List<SimpleHelpInfo> simpleHelpInfoList = helpDAO.getHelpInfoList(page, size, associationId, type);
+        for(SimpleHelpInfo h : simpleHelpInfoList) {
+            h.setId(h.get_id().toString());
+        }
         String jsonHelpList;
         int i;
         ObjectMapper om = new ObjectMapper();
