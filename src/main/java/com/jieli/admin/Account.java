@@ -7,6 +7,9 @@ import com.jieli.association.AssociationDAO;
 import com.jieli.common.dao.AccountDAO;
 import com.jieli.common.entity.AccountState;
 import com.jieli.common.entity.ResponseEntity;
+import com.jieli.user.dao.UserDAO;
+import com.jieli.user.entity.*;
+import com.jieli.user.entity.User;
 import com.jieli.util.FTLrender;
 import com.jieli.util.IdentifyUtils;
 import com.jieli.util.PasswordGenerator;
@@ -30,6 +33,7 @@ import java.util.*;
 @Singleton
 @Path("/baccount")
 public class Account {
+    private UserDAO userDAO = new UserDAO();
     private AccountDAO accountDAO = new AccountDAO();
     private AssociationDAO associationDAO = new AssociationDAO();
 
@@ -153,15 +157,14 @@ public class Account {
             }
             Iterable<com.jieli.common.entity.Account> accountAdmin = accountDAO.loadByAssociationId(associationId.toString(),AccountState.ADMIN);
             for (com.jieli.common.entity.Account account : accountAdmin)
-                accountList += om.writeValueAsString(account)+",";
+                accountList += Common.ReplaceObjectId(account).replace("}",",\"name\":\""+Common.TransferNull(userDAO.loadById(account.userId) == null ? "" : userDAO.loadById(account.userId).name) + "\"},");
 
             Iterable<com.jieli.common.entity.Account> accountEnable = accountDAO.loadByAssociationId(associationId.toString(),AccountState.ENABLE);
             for (com.jieli.common.entity.Account account : accountEnable)
-                accountList += om.writeValueAsString(account)+",";
+                accountList += Common.ReplaceObjectId(account).replace("}",",\"name\":\""+Common.TransferNull(userDAO.loadById(account.userId) == null ? "" : userDAO.loadById(account.userId).name) + "\"},");
         }
 
-        if (accountList.endsWith(",")) accountList = accountList.substring(0,accountList.length()-1)+"";
-        accountList += "]";
+        accountList = Common.RemoveLast(accountList,",") + "]";
 
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("isSuper",IdentifyUtils.getState(sessionId) == AccountState.SUPPER);
@@ -170,4 +173,76 @@ public class Account {
 
         return FTLrender.getResult("account_list.ftl", params);
     }
+
+    @POST
+    @Path("/reuser")
+    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+    public Response initUserInfo(@CookieParam("u") String sessionId, com.jieli.user.entity.User user) throws JSONException {
+        ResponseEntity responseEntity = new ResponseEntity();
+
+        Response response = Common.RoleCheckResponse(sessionId);
+        if (response != null) return response;
+
+        String id = user.get_id().toString();
+        User u = userDAO.loadById(id);
+        if (u != null){
+            user.associationId = u.associationId;
+            userDAO.save(user);
+        }
+        responseEntity.code = 200;
+        responseEntity.msg = "成功创建用户"+user.name;
+
+        return  Response.status(200).entity(responseEntity).build();
+    }
+
+
+    @POST
+    @Path("/atgroup")
+    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+    public Response addToGroup (@CookieParam("u") String sessionId, @QueryParam("uname") String userId, @QueryParam("group") String group) {
+
+        User user = userDAO.loadById(userId);
+
+        ResponseEntity responseEntity = new ResponseEntity();
+        if (Common.RoleCheckResponse(sessionId) != null || user == null || (IdentifyUtils.isAdmin(sessionId) && !user.associationId.equals(IdentifyUtils.getAssociationId(sessionId)))) {
+            responseEntity.code = 9001;
+            responseEntity.msg = "no access !";
+            return Response.status(200).entity(responseEntity).build();
+        }
+
+        if (user != null && user.group != null && !user.group.isEmpty()) responseEntity.msg = user.group;
+        user.group = group;
+        userDAO.update(user);
+
+        responseEntity.code = 200;
+        responseEntity.body = user.name;
+        return Response.status(200).entity(responseEntity).build();
+    }
+
+    @POST
+    @Path("/dfgroup")
+    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+    public Response deleteFromGroup(@CookieParam("u") String sessionId, @QueryParam("uname") String userId, @QueryParam("group") String group){
+        Response response = Common.RoleCheckResponse(sessionId);
+        if (response != null) return response;
+
+        User user = userDAO.loadById(userId);
+        ResponseEntity responseEntity = new ResponseEntity();
+
+        if (user == null) {responseEntity.code=9001;responseEntity.msg="无此用户";return Response.status(200).entity(responseEntity).build();}
+
+        if (IdentifyUtils.isAdmin(sessionId) && !user.associationId.equals(IdentifyUtils.getAssociationId(sessionId))){responseEntity.code=9001;responseEntity.msg="无权限修改此用户的信息";return Response.status(200).entity(responseEntity).build();}
+
+        if (user.group.equals(group)){
+            user.group = "";
+            userDAO.save(user);
+            responseEntity.code = 200;
+            return Response.status(200).entity(responseEntity).build();
+        }else{
+            responseEntity.code = 9003;
+            responseEntity.msg = "此用户不属于改组";
+            return Response.status(200).entity(responseEntity).build();
+        }
+    }
+
 }

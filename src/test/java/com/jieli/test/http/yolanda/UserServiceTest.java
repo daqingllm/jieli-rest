@@ -1,6 +1,5 @@
 package com.jieli.test.http.yolanda;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jieli.user.entity.User;
 import org.apache.http.client.fluent.Request;
@@ -60,7 +59,7 @@ public class UserServiceTest {
         User user = new User();
         user.associationId = "5337af643004e0056052bd5a";
         user.name = "瓶子";
-        user.birthday = "1998-12-12";
+//        user.birthday = "1998-12-12";
         user.sex = 0;
         ObjectMapper mapper = new ObjectMapper();
         String query = mapper.writeValueAsString(user);

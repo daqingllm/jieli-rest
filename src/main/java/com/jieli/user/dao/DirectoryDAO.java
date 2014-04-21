@@ -36,7 +36,6 @@ public class DirectoryDAO extends GenericDAO<Directory> {
             return save(directory);
         }
 
-        f.group = friend.group;
         f.special = friend.special;
         return save(directory);
     }

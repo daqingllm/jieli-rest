@@ -215,10 +215,6 @@
                 <div class="page-header">
                     <h1>
                         账号列表
-                        <small>
-                            <i class="icon-double-angle-right"></i>
-                            选中目标账号后才会显示密码
-                        </small>
                     </h1>
                 </div>
                 <!-- /.page-header -->
@@ -397,11 +393,11 @@
 <script type="text/javascript">
 jQuery(function ($) {
 
-    <#if isSuper>
-        $("#sidebar-shortcuts-navlist").load("/sidebar_super.html",function(){$("#nav_list_5_1").addClass("active open");$("#nav_list_5").addClass("active");});
-    <#else>
-        $("#sidebar-shortcuts-navlist").load("/sidebar_admin.html",function(){$("#nav_list_5_1").addClass("active open");$("#nav_list_5").addClass("active");});
-    </#if>
+<#if isSuper>
+    $("#sidebar-shortcuts-navlist").load("/sidebar_super.html",function(){$("#nav_list_5_1").addClass("active open");$("#nav_list_5").addClass("active");});
+<#else>
+    $("#sidebar-shortcuts-navlist").load("/sidebar_admin.html",function(){$("#nav_list_5_1").addClass("active open");$("#nav_list_5").addClass("active");});
+</#if>
 
     var colorbox_params = {
         reposition: true,
@@ -537,11 +533,12 @@ jQuery(function($) {
         data: grid_data,
         datatype: "local",
         height: 330,
-        colNames:['_id','协会','用户名','状态','加密密码'],
+        colNames:['_id','协会','用户名','姓名','状态','加密密码'],
         colModel:[
             {name:"_id",index:"_id",width:10,editable:false,hidden:true},
             {name:"associationId",index:"associationId",width:40,editable:false,hidden:true},
             {name:"username",index:"username",width:"100",editable:false},
+            {name:"name",index:"name",width:"100",editable:false},
             {name:"state",index:"state",width:"60",editable:false},
             {name:"password",index:"password",width:"75",editable:false,hidden:true}
         ],
@@ -564,7 +561,7 @@ jQuery(function($) {
             }, 0);
         },
 
-        caption: "请双击账户以修改密码",
+        caption: "无法查看登陆密码，但可以点击按钮修改密码",
         autowidth: true
     });
 

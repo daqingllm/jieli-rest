@@ -16,6 +16,4 @@ public class Friend implements Serializable {
     public String userId;
 
     public boolean special;
-
-    public String group;
 }

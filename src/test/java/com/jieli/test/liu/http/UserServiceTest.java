@@ -42,7 +42,7 @@ public class UserServiceTest {
         user.associationId = "5337a309ef869d4225397d48";
         user.name = "xy_user";
         Response response = Request.Post("http://localhost:8080/rest/user/self")
-                .addHeader("Cookie", "u=533c07a1ef86c7014c36fa31")
+                .addHeader("Cookie", "u=533c0010ef86c7014c36fa2f")
                 .bodyString(new ObjectMapper().writeValueAsString(user), ContentType.APPLICATION_JSON)
                 .execute();
 

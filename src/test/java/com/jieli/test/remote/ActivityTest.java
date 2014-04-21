@@ -25,17 +25,17 @@ public class ActivityTest {
     public void testCreate() throws IOException {
         Activity activity = new Activity();
         activity.associationId = "5348205ce4b00b2ae52d3f5a";
-        activity.beginDate = new Date(new Date().getTime() + 1000000000);
+        activity.beginDate = new Date(new Date().getTime() - 1000000000);
 //        activity.beginDate = new Date();
-        activity.tag = AcivityTag.PRIVATE;
+        activity.tag = AcivityTag.OFFICIAL;
 //        activity.sponsorUserId = "533799caef869f8e93d30d9c";
-        activity.title = "新的串局";
+        activity.title = "新的官方活动";
         activity.location = "天安门广场";
         activity.description = "官方有奖竞猜";
         activity.fee = 100;
         activity.maxMembers = 100;
         activity.arrangement = "4、5两天";
-        activity.serviceInfo = "服务信息";
+//        activity.serviceInfo = "服务信息";
         activity.sponsorInfo = "赞助信息";
         activity.invitees = Arrays.asList("user1", "user2", "user3");
         Arrangement a1 = new Arrangement();
@@ -48,8 +48,8 @@ public class ActivityTest {
 
         Response response = Request.Post("http://162.243.151.219:8080/rest/activity")
                 .addHeader("Cookie", "u=5348210be4b00b2ae52d3f5c")
-//                .bodyString(new ObjectMapper().writeValueAsString(activity), ContentType.APPLICATION_JSON)
-                .bodyString("{\"beginDate\":\"\",\"details\":[],\"fee\":0,\"followMembers\":[],\"invitees\":[],\"joinMembers\":{},\"location\":\"\",\"maxMembers\":0,\"tag\":\"PRIVATE\",\"title\":\"是地方\",\"type\":\"null发起了读书会\"}", ContentType.APPLICATION_JSON)
+                .bodyString(new ObjectMapper().writeValueAsString(activity), ContentType.APPLICATION_JSON)
+//                .bodyString("{\"beginDate\":\"\",\"details\":[],\"fee\":0,\"followMembers\":[],\"invitees\":[],\"joinMembers\":{},\"location\":\"\",\"maxMembers\":0,\"tag\":\"PRIVATE\",\"title\":\"是地方\",\"type\":\"null发起了读书会\"}", ContentType.APPLICATION_JSON)
                 .execute();
 
         System.out.println(response.returnContent().asString());
@@ -57,7 +57,7 @@ public class ActivityTest {
 
     @Test
     public void testLoad() throws IOException {
-        Response response = Request.Get("http://162.243.151.219:8080/jieli-1.0-SNAPSHOT/rest/activity?activityId=534821b9e4b00b2ae52d3f5d")
+        Response response = Request.Get("http://162.243.151.219:8080/rest/activity?activityId=535131ece4b007071c52d06e")
                 .addHeader("Cookie", "u=5348210be4b00b2ae52d3f5c")
                 .execute();
 
@@ -103,9 +103,24 @@ public class ActivityTest {
 //        infos.put("topicId", "534821b9e4b00b2ae52d3f5d");
         List<String> userIds = Arrays.asList("534950a2e4b0be347782c7ce");
 
-        Response response = Request.Post("http://162.243.151.219:8080/rest/activity/invite?activityId=5348bc69e4b0fce4fd040559")
+        Response response = Request.Post("http://162.243.151.219:8080/rest/activity/invite?activityId=535131ece4b007071c52d06e")
                 .addHeader("Cookie", "u=5348210be4b00b2ae52d3f5c")
                 .bodyString(new ObjectMapper().writeValueAsString(userIds), ContentType.APPLICATION_JSON)
+                .execute();
+
+        System.out.println(response.returnContent().asString());
+    }
+
+    @Test
+    public void testUpload() throws IOException {
+//        Map<String, String> infos = new HashMap<String, String>();
+//        infos.put("content", "是地方但是");
+//        infos.put("topicId", "534821b9e4b00b2ae52d3f5d");
+        List<String> pics = Arrays.asList("http://xianxing-test.qiniudn.com/13345832224833124_20090529113434168.jpg");
+
+        Response response = Request.Post("http://162.243.151.219:8080/rest/activity/upload?activityId=535131ece4b007071c52d06e")
+                .addHeader("Cookie", "u=5348210be4b00b2ae52d3f5c")
+                .bodyString(new ObjectMapper().writeValueAsString(pics), ContentType.APPLICATION_JSON)
                 .execute();
 
         System.out.println(response.returnContent().asString());

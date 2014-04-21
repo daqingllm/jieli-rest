@@ -30,7 +30,8 @@ public class AccountTest {
         Response response = Request.Post("http://162.243.151.219:8080/rest/account/login")
                 .setHeader("app", "test")
 //                .bodyString("{\"username\":\"Harden\",\"password\":\"nvb7pug2\"}", ContentType.APPLICATION_JSON)
-                .bodyString("{\"username\":\"Carmelo\",\"password\":\"Carmelo\"}", ContentType.APPLICATION_JSON)
+//                .bodyString("{\"username\":\"Carmelo\",\"password\":\"Carmelo\"}", ContentType.APPLICATION_JSON)
+                .bodyString("{\"username\":\"Harden\",\"password\":\"Harden\"}", ContentType.APPLICATION_JSON)
                 .execute();
 
         System.out.println(response.returnContent().asString());
@@ -78,8 +79,8 @@ public class AccountTest {
     @Test
     public void testChange() throws IOException {
         Account account = new Account();
-        account.username = "Carmelo";
-        account.password = "Carmelo";
+        account.username = "Harden";
+        account.password = "Harden";
         account.state = AccountState.ENABLE;
 
         Response response = Request.Post("http://162.243.151.219:8080/rest/account")

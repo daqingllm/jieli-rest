@@ -158,9 +158,9 @@ public class UserService {
 
                 UserBasicInfo baseUser = new UserBasicInfo();
                 baseUser.userId = friend.userId;
-                baseUser.group = friend.group;
                 baseUser.special = true;
                 baseUser.name = user.name;
+                baseUser.group = user.group;
                 baseUser.identity = user.identity;
                 baseUser.score = user.score;
                 baseUser.sex = user.sex;
@@ -179,6 +179,7 @@ public class UserService {
             baseUser.userId = user.get_id().toString();
             baseUser.special = false;
             baseUser.name = user.name;
+            baseUser.group = user.group;
             baseUser.identity = user.identity;
             baseUser.score = user.score;
             baseUser.sex = user.sex;

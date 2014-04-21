@@ -12,6 +12,8 @@ import java.util.Date;
 public class SimpleHelpInfo extends Model{
     public String id;
     public String userId;
+    public String userName;
+    public String userFace;
     /**
      * 协会Id
      */
@@ -20,6 +22,11 @@ public class SimpleHelpInfo extends Model{
      * 互帮互助标题
      */
     public String title;
+
+    /**
+     * 标题注释
+     */
+    public String tips;
     /**
      * 互帮互助内容
      */
@@ -59,6 +66,14 @@ public class SimpleHelpInfo extends Model{
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getTips() {
+        return tips;
+    }
+
+    public void setTips(String tips) {
+        this.tips = tips;
     }
 
     public String getContent() {

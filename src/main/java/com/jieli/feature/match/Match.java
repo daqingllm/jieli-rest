@@ -9,11 +9,11 @@ import com.jieli.mongo.Model;
  * Time: 下午5:06
  * To change this template use File | Settings | File Templates.
  */
-public class Match extends Model {
+public class Match extends Model implements Comparable<Match> {
 
     public String userId1;
     public String userId2;
-    public double score = 0;
+    public int score = 0;
 
     @Override
     public boolean equals(Object o) {
@@ -23,7 +23,7 @@ public class Match extends Model {
 
         Match match = (Match) o;
 
-        if (Double.compare(match.score, score) != 0) return false;
+        if (match.score != score) return false;
 //        if (!userId1.equals(match.userId1)) return false;
 //        if (!userId2.equals(match.userId2)) return false;
         if (userId1.equals(match.userId1) && userId2.equals(match.userId2)) {
@@ -41,8 +41,12 @@ public class Match extends Model {
         long temp;
         result = 31 * result + userId1.hashCode();
         result = 31 * result + userId2.hashCode();
-        temp = Double.doubleToLongBits(score);
-        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        result = 31 * result + (int) (score ^ (score >>> 32));
         return result;
+    }
+
+    @Override
+    public int compareTo(Match o) {
+        return o.score - score;
     }
 }
