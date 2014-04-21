@@ -20,7 +20,7 @@ public class VoteInfo extends Model {
     private String description;
     private List<String> options; //投票选项
     private Map<Integer, String> optionPicsMap; //投票选项，对应图片
-    private Map<Integer, Integer> optionVotes; //投票选项，投票人数
+    private List<Integer> optionVotes; //投票选项，投票人数
     boolean multiple; //是否多选
     private List<Vote> voteList; //投票记录
     private Integer totalVote; //每个选项投票数总和
@@ -98,11 +98,11 @@ public class VoteInfo extends Model {
         this.optionPicsMap = optionPicsMap;
     }
 
-    public Map<Integer, Integer> getOptionVotes() {
+    public List<Integer> getOptionVotes() {
         return optionVotes;
     }
 
-    public void setOptionVotes(Map<Integer, Integer> optionVotes) {
+    public void setOptionVotes(List<Integer> optionVotes) {
         this.optionVotes = optionVotes;
     }
 

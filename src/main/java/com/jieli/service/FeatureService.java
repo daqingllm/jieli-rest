@@ -1,5 +1,6 @@
 package com.jieli.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jieli.comment.Comment;
 import com.jieli.comment.TopicType;
 import com.jieli.common.entity.ResponseEntity;
@@ -25,10 +26,7 @@ import org.bson.types.ObjectId;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 功能列表页接口
@@ -560,9 +558,9 @@ public class FeatureService {
             return Response.status(200).entity(responseEntity).build();
         }
         voteInfo.setTotalVote(0);
-        Map<Integer, Integer> optionVotesInit = new HashMap<Integer, Integer>();
+        List<Integer> optionVotesInit = new ArrayList<Integer>();
         for(int i = 0; i < voteInfo.getOptions().size(); i++) {
-            optionVotesInit.put(i, 0);
+            optionVotesInit.add(0);
         }
         voteInfo.setOptionVotes(optionVotesInit);
         voteInfo.setUserId(userId);

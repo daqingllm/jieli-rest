@@ -19,17 +19,17 @@ public class VoteDAOTest {
 
     @Test
     public void addVote() {
-        /*VoteInfo voteInfo = new VoteInfo();
+        VoteInfo voteInfo = new VoteInfo();
         voteInfo.setAssociationId("5337af643004e0056052bd5a");
         voteInfo.setTotalVote(0);
         voteInfo.setMultiple(true);
-        voteInfo.setUserId("5336bbe13004cc09f49432e6");
+        voteInfo.setUserId("533be198300460878a64a155");
         voteInfo.setDeadLine(new Date(2014, 8, 1));
         voteInfo.setAddTime(new Date());
         voteInfo.setTitle("晚饭吃什么");
         voteInfo.setDescription("晚上聚餐去哪里？");
         voteInfo.setOptions(Arrays.asList("绿茶", "西贝西北菜", "麻辣香锅", "外婆家", "Miss kiko"));
-        VoteInfo result = voteDAO.addVote(voteInfo);*/
+        VoteInfo result = voteDAO.addVote(voteInfo);
 
         /*VoteInfo voteInfo = new VoteInfo();
         voteInfo.setAssociationId("5337af643004e0056052bd5a");
@@ -43,12 +43,7 @@ public class VoteDAOTest {
         voteInfo.setOptions(Arrays.asList("青海", "婺源", "云南", "奉贤"));
         VoteInfo result = voteDAO.addVote(voteInfo);*/
 
-        VoteInfo voteInfo = new VoteInfo();
-        Map<Integer, Integer> initOptionVote = new HashMap<Integer, Integer>();
-        for(int i = 0; i < 7; i++) {
-            initOptionVote.put(i, 0);
-        }
-        voteInfo.setOptionVotes(initOptionVote);
+        /*VoteInfo voteInfo = new VoteInfo();
         voteInfo.setAssociationId("5337af643004e0056052bd5a");
         voteInfo.setTotalVote(0);
         voteInfo.setMultiple(true);
@@ -58,7 +53,7 @@ public class VoteDAOTest {
         voteInfo.setTitle("羽毛球");
         voteInfo.setDescription("什么时候去打球？");
         voteInfo.setOptions(Arrays.asList("周一", "周二", "周三", "周四", "周五", "周六", "周日"));
-        VoteInfo result = voteDAO.addVote(voteInfo);
+        VoteInfo result = voteDAO.addVote(voteInfo);*/
 
         System.out.println(result.get_id());
     }
@@ -74,9 +69,9 @@ public class VoteDAOTest {
 
     @Test
     public void vote() {
-        String voteId = "533807ec300406d49b957887";
+        String voteId = "5353ce2630041f00d3aeb68e";
         Vote vote = new Vote();
-        vote.setUserId("5336bb6f3004cc09f49432e4");
+        vote.setUserId("533be301300460878a64a157");
         vote.setAddTime(new Date());
         vote.setVoteIndex(Arrays.asList(1, 2));
         VoteInfo result = voteDAO.vote(vote, voteId);

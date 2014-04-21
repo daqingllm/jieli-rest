@@ -58,12 +58,12 @@ public class VoteDAO extends GenericDAO<VoteInfo> {
             participants = 0;
         }
         voteList.add(vote);
-        Map<Integer, Integer> optionVotes = v.getOptionVotes();
+        List<Integer> optionVotes = v.getOptionVotes();
         Integer totalVote = v.getTotalVote();
         for(Integer i : vote.getVoteIndex()) {
             Integer num = optionVotes.get(i);
             num++;
-            optionVotes.put(i, num);
+            optionVotes.set(i, num);
             totalVote++;
         }
         participants++;

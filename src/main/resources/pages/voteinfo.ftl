@@ -324,73 +324,6 @@
 
                 </form>
                 <!-- vote statistics begin -->
-                <div class="widget-box">
-                    <div class="widget-header widget-header-flat widget-header-small">
-                        <h5>
-                            <i class="icon-signal"></i>
-                            投票统计
-                        </h5>
-                    </div>
-
-                    <div class="widget-body">
-                        <div class="widget-main">
-                            <div id="piechart-placeholder" style="width: 90%; min-height: 150px; padding: 0px; position: relative;">
-                                <canvas class="flot-base" width="704" height="300" style="direction: ltr; position: absolute; left: 0px; top: 0px; width: 352px; height: 150px;"></canvas>
-                                <canvas class="flot-overlay" width="704" height="300" style="direction: ltr; position: absolute; left: 0px; top: 0px; width: 352px; height: 150px;"></canvas>
-                                <div class="legend">
-                                    <div style="position: absolute; width: 106px; height: 110px; top: 15px; right: -30px; background-color: rgb(255, 255, 255); opacity: 0.85;">
-                                </div>
-                                <table style="position:absolute;top:15px;right:-30px;;font-size:smaller;color:#545454">
-                                    <tbody>
-                                    <tr>
-                                        <td class="legendColorBox">
-                                            <div style="border:1px solid null;padding:1px">
-                                                <div style="width:4px;height:0;border:5px solid #68BC31;overflow:hidden">
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td class="legendLabel">social networks</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="legendColorBox">
-                                            <div style="border:1px solid null;padding:1px">
-                                                <div style="width:4px;height:0;border:5px solid #2091CF;overflow:hidden"></div>
-                                            </div>
-                                        </td>
-                                        <td class="legendLabel">search engines</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="legendColorBox">
-                                            <div style="border:1px solid null;padding:1px">
-                                                <div style="width:4px;height:0;border:5px solid #AF4E96;overflow:hidden"></div>
-                                            </div>
-                                        </td>
-                                        <td class="legendLabel">ad campaigns</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="legendColorBox">
-                                            <div style="border:1px solid null;padding:1px">
-                                                <div style="width:4px;height:0;border:5px solid #DA5430;overflow:hidden"></div>
-                                            </div>
-                                        </td>
-                                        <td class="legendLabel">direct traffic</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="legendColorBox">
-                                            <div style="border:1px solid null;padding:1px">
-                                                <div style="width:4px;height:0;border:5px solid #FEE074;overflow:hidden"></div>
-                                            </div>
-                                        </td>
-                                        <td class="legendLabel">other</td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div><!-- /widget-body -->
-                </div>
 
                 <!-- vote statistics end -->
                 <#if !newVote && !isEditable>
@@ -1126,11 +1059,12 @@ function deleteVoteOption() {
     else
         alert('每个投票至少要有一个选项');
 }
-function addVoteOption(value) {
+function addVoteOption(value, percent) {
     if (value == undefined)
         value = "";
     var voteOption = $('<div class="vote-choice">' +
             '<input type="text" value="'+value+'" placeholder="选项内容，不填写为无效选项" class="col-xs-10 col-sm-7 vote-choice-text" style="padding-left: 7px;">' +
+            '<div class="progress-bar" style="width:'+percent+'%;"></div>' +
             '<button type="button" class="btn btn-xs btn-info vote-choice-img">Pic</button>' +
             '<div class="icon-remove"></div>' +
             '</div>');
@@ -1166,8 +1100,12 @@ function voteInfo(voteId, callback) {
                 var dateString = deadLine.toISOString().substr(0, 10); //assume the program will not run after year 10000
                 $('#form-field-date').val(dateString);
                 $('#form-field-select-type').val(response.body.multiple ? 'M' : 'S');
-                response.body.options.forEach(function (option) {
-                    addVoteOption(option);
+                var voteCountArray = response.body.optionVotes;
+                var totalVote = response.body.totalVote;
+                response.body.options.forEach(function (index, option) {
+                    var optionCount = voteCountArray[index];
+                    optionCount = optionCount/totalVote*100;
+                    addVoteOption(option, optionCount);
                 });
                 callback(response.body);
             }
@@ -1178,6 +1116,7 @@ function voteInfo(voteId, callback) {
 function newSettings() {
     enableDatePicker();
     $('.icon-plus').click(function (){ addVoteOption(); });
+    $('.progress-bar').hide();
     addVoteOption();
     addVoteOption();
     addVoteOption();
@@ -1189,6 +1128,7 @@ function editSettings() {
     $('.icon-remove').remove();
     $('.icon-plus').hide();
     $('.vote-choice-text').attr({readOnly : true});
+    $('.progress-bar').hide();
     enableDatePicker();
 }
 

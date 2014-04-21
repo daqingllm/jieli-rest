@@ -128,12 +128,12 @@ public class FeatureTest {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         voteInfo.setDeadLine(format.parse("2014-05-01"));
         voteInfo.setMultiple(false);
-        voteInfo.setTitle("喜欢的颜色");
-        voteInfo.setOptions(Arrays.asList("红", "黄", "蓝", "绿"));
-        voteInfo.setDescription("喜欢什么颜色？");
+        voteInfo.setTitle("晚饭吃什么");
+        voteInfo.setOptions(Arrays.asList("绿茶", "西贝西北菜", "麻辣香锅", "外婆家", "Miss kiko"));
+        voteInfo.setDescription("晚上聚餐去哪里？");
         ObjectMapper mapper = new ObjectMapper();
         Response response = Request.Post("http://localhost:8080/rest/feature/vote/addvote")
-                .setHeader("Cookie", "u=5336b7de3004f3462ed8868b")
+                .setHeader("Cookie", "u=5346965130040cab020b3dd3")
                 .bodyString(mapper.writeValueAsString(voteInfo), ContentType.APPLICATION_JSON)
                 .execute();
         System.out.println(response.returnContent().asString());
@@ -145,9 +145,9 @@ public class FeatureTest {
         vote.setVoteIndex(Arrays.asList(1));
         vote.setUserId("5336bbe13004cc09f49432e7");
         vote.setAddTime(new Date());
-        String voteId = "533800e530044c7fc286a6c4";
+        String voteId = "5353cfce30040d944ab5b760";
         ObjectMapper mapper = new ObjectMapper();
-        Response response = Request.Post("http://localhost:8080/rest/feature/vote/commitvote?voteId=533bfacf300460878a64a159")
+        Response response = Request.Post("http://localhost:8080/rest/feature/vote/commitvote?voteId=5353cfce30040d944ab5b760")
                 .addHeader("Cookie", "u=5336bbe13004cc09f49432e7")
                 .bodyString(mapper.writeValueAsString(vote), ContentType.APPLICATION_JSON)
                 .execute();
