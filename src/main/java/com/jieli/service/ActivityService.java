@@ -37,18 +37,25 @@ public class ActivityService {
     @GET
     @Path("/ongoing")
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-    public Response findOngoingActivity(@CookieParam("u")String sessionId, @QueryParam("page")int page, @QueryParam("size")int count) {
+    public Response findOngoingActivity(@CookieParam("u")String sessionId) {
         if (!IdentifyUtils.isValidate(sessionId)) {
             return Response.status(403).build();
         }
-        if (page <= 0) {
-            page = 1;
-        }
-        if (count <= 0) {
-            count = 15;
-        }
         String associationId = IdentifyUtils.getAssociationId(sessionId);
-        Iterable<Activity> activities = activityDAO.findOngoing(associationId, page-1, count);
+        List<Activity> activities = new ArrayList<Activity>();
+        Iterable<Activity> officials = activityDAO.findOngoingOfficial(associationId);
+        Iterable<Activity> recommends = activityDAO.findOngoingRecommend(associationId);
+        Iterable<Activity> privates = activityDAO.findOngoingPrivate(associationId);
+
+        for (Activity official : officials) {
+            activities.add(official);
+        }
+        for (Activity recommend : recommends) {
+            activities.add(recommend);
+        }
+        for (Activity privateAct : privates) {
+            activities.add(privateAct);
+        }
 
         ResponseEntity responseEntity = new ResponseEntity();
         responseEntity.code=200;

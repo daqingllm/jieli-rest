@@ -843,9 +843,11 @@ public class FeatureService {
                 responseEntity.msg = "用户不存在";
                 return  Response.status(200).entity(responseEntity).build();
             }
-            int score = MatchUtil.calcMatchingScore(self, user);
+//            int score = MatchUtil.calcMatchingScore(self, user);
+            MatchUtil matchUtil = new MatchUtil(self, user);
+            Match match = matchUtil.getMatch();
             responseEntity.code = 200;
-            responseEntity.body = "{\"score\":" + score + "}";
+            responseEntity.body = match;
             return  Response.status(200).entity(responseEntity).build();
         }
 

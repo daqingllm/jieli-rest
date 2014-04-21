@@ -3,6 +3,13 @@ package com.jieli.service;
 import com.jieli.common.dao.AccountDAO;
 import com.jieli.common.entity.Account;
 import com.jieli.common.entity.ResponseEntity;
+import com.jieli.feature.match.Match;
+import com.jieli.feature.match.MatchDisplay;
+import com.jieli.feature.match.MatchMsg;
+import com.jieli.feature.match.MatchTask;
+import com.jieli.message.Message;
+import com.jieli.message.MessageDAO;
+import com.jieli.message.MessageType;
 import com.jieli.user.dao.DirectoryDAO;
 import com.jieli.user.dao.UserDAO;
 import com.jieli.user.entity.Directory;
@@ -20,6 +27,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -36,6 +44,7 @@ public class UserService {
     private AccountDAO accountDAO = new AccountDAO();
     private UserDAO userDAO = new UserDAO();
     private DirectoryDAO directoryDAO = new DirectoryDAO();
+    private MessageDAO messageDAO = new MessageDAO();
 
     @GET
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
@@ -121,7 +130,7 @@ public class UserService {
     @POST
     @Path("/self")
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-    public Response editSelf(@CookieParam("u")String sessionId, User user) {
+    public Response editSelf(@CookieParam("u")String sessionId, @QueryParam("first")boolean first, User user) {
         if (!IdentifyUtils.isValidate(sessionId)) {
             return Response.status(403).build();
         }
@@ -130,6 +139,41 @@ public class UserService {
         String userId = IdentifyUtils.getUserId(sessionId);
         user.set_id(new ObjectId(userId));
         userDAO.update(user);
+
+        if (first) {
+            String name = IdentifyUtils.getUserName(userId);
+            MatchTask matchTask = new MatchTask(5, user);
+            List<Match> result = matchTask.getResult();
+            for (Match match : result) {
+                MatchMsg matchMsg = new MatchMsg();
+
+                MatchDisplay display = new MatchDisplay();
+                User user1 = userDAO.loadById(match.userId1);
+                display.userId1 = user1.get_id().toString();
+                display.name1 = user1.name;
+                display.userFace1 = user1.userFace;
+                User user2 = userDAO.loadById(match.userId2);
+                display.userId2 = user2.get_id().toString();
+                display.name2 = user2.name;
+                display.userFace2 = user2.userFace;
+                display.score = match.score;
+                matchMsg.display = display;
+                if (match.score < 100) {
+                    matchMsg.msg = "您和 " + name + " 的匹配值达到 " + match.score + " ，查看详情";
+                } else {
+                    matchMsg.msg = "您和 " + name + " 完全匹配，查看详情";
+                }
+
+                String userId2match = match.userId2;
+                Message message = new Message();
+                message.messageType = MessageType.MATCHING;
+                message.userId = userId2match;
+                message.addTime = new Date();
+                message.content = matchMsg;
+                messageDAO.save(message);
+            }
+        }
+
         responseEntity.code = 200;
         return Response.status(200).entity(responseEntity).build();
     }

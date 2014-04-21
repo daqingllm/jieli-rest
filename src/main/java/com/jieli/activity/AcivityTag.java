@@ -9,7 +9,7 @@ package com.jieli.activity;
  */
 public enum AcivityTag {
 
-    RECOMMEND("recommend"), OFFICIAL("official"), PRIVATE("private");
+    RECOMMEND("RECOMMEND"), OFFICIAL("OFFICIAL"), PRIVATE("PRIVATE");
 
     private String value;
 
