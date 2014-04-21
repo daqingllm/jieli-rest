@@ -8,9 +8,11 @@ import com.jieli.feature.help.dao.HelpDAO;
 import com.jieli.feature.help.entity.HelpInfo;
 import com.jieli.feature.help.entity.SimpleHelpInfo;
 import com.jieli.feature.vote.dao.VoteDAO;
+import com.jieli.feature.vote.dao.VoteResultDAO;
 import com.jieli.feature.vote.entity.SimpleVoteInfo;
 import com.jieli.feature.vote.entity.Vote;
 import com.jieli.feature.vote.entity.VoteInfo;
+import com.jieli.feature.vote.entity.VoteResult;
 import com.jieli.message.CommentMessageUtil;
 import com.jieli.message.Message;
 import com.jieli.message.MessageDAO;
@@ -23,6 +25,7 @@ import com.jieli.util.MongoUtils;
 import org.apache.commons.lang.StringUtils;
 import org.bson.types.ObjectId;
 
+import javax.print.attribute.standard.Media;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -40,6 +43,7 @@ public class FeatureService {
     private VoteDAO voteDAO = new VoteDAO();
     BaseDAO<Comment> commentDAO = new BaseDAO<Comment>(com.jieli.mongo.Collections.Comment, Comment.class);
     private MessageDAO messageDAO = new MessageDAO();
+    private VoteResultDAO voteResultDAO = new VoteResultDAO();
     /**
      * 获取互帮互助列表
      * @param sessionId
@@ -557,17 +561,23 @@ public class FeatureService {
             responseEntity.msg = "参数错误";
             return Response.status(200).entity(responseEntity).build();
         }
-        voteInfo.setTotalVote(0);
-        List<Integer> optionVotesInit = new ArrayList<Integer>();
-        for(int i = 0; i < voteInfo.getOptions().size(); i++) {
-            optionVotesInit.add(0);
-        }
-        voteInfo.setOptionVotes(optionVotesInit);
+
         voteInfo.setUserId(userId);
         voteInfo.setAssociationId(associationId);
         voteInfo.setAddTime(new Date());
         VoteInfo result = voteDAO.addVote(voteInfo);
-        //TODO 发起投票动态
+
+        VoteResult voteResult = new VoteResult();
+        voteResult.setTotalVote(0);
+        Map<Integer, Integer> optionVotesInit = new HashMap<Integer, Integer>();
+        for(int i = 0; i < voteInfo.getOptions().size(); i++) {
+            optionVotesInit.put(i, 0);
+        }
+        voteResult.setOptionVotes(optionVotesInit);
+        voteResult.setVoteId(result.get_id().toString());
+        voteResult.setParticipants(0);
+        voteResultDAO.save(voteResult);
+
         responseEntity.code = 200;
         responseEntity.body = result;
         return Response.status(200).entity(responseEntity).build();
@@ -709,10 +719,10 @@ public class FeatureService {
             responseEntity.msg = "投票信息不存在";
             return  Response.status(200).entity(responseEntity).build();
         }
-        List<Vote> voteList = voteInfo.getVoteList();
-        VoteInfo result;
+        VoteResult voteResult = voteResultDAO.loadByVoteId(voteId);
+        List<Vote> voteList = voteResult.getVoteList();
         if(voteList == null) {
-            result = voteDAO.vote(vote, voteId);
+            voteResultDAO.vote(vote, voteId);
         }
         else {
             for(Vote v : voteList) {
@@ -722,7 +732,7 @@ public class FeatureService {
                     return Response.status(200).entity(responseEntity).build();
                 }
             }
-            result = voteDAO.vote(vote, voteId);
+            voteResultDAO.vote(vote, voteId);
         }
 
         //触发参与投票动态
@@ -734,7 +744,37 @@ public class FeatureService {
 //        message.addTime = new Date();
 //        messageDAO.save(message);
         responseEntity.code = 200;
-        responseEntity.body = "{\"_id\":\"" + result.get_id() + "\"}";;
+        responseEntity.body = "{\"_id\":\"" + voteResult.get_id() + "\"}";;
+        return Response.status(200).entity(responseEntity).build();
+    }
+
+    /**
+     * 获取投票结果
+     * @param sessionId
+     * @param voteId
+     * @return
+     */
+    @Path("vote/result")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+    public Response getVoteResult(@CookieParam("u")String sessionId, @QueryParam("voteId")String voteId) {
+        if(!IdentifyUtils.isValidate(sessionId)) {
+            return Response.status(403).build();
+        }
+        ResponseEntity responseEntity = new ResponseEntity();
+        if(voteId == null || StringUtils.isEmpty(voteId)) {
+            responseEntity.code = 1101;
+            responseEntity.msg = "缺少参数";
+            return Response.status(200).entity(responseEntity).build();
+        }
+        if (!MongoUtils.isValidObjectId(voteId)) {
+            responseEntity.code = 1105;
+            responseEntity.msg = "参数Id无效";
+            return Response.status(200).entity(responseEntity).build();
+        }
+        VoteResult voteResult = voteResultDAO.loadByVoteId(voteId);
+        responseEntity.code = 200;
+        responseEntity.body = voteResult;
         return Response.status(200).entity(responseEntity).build();
     }
 

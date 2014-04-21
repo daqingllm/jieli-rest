@@ -1,10 +1,8 @@
 package com.jieli.test.http.yolanda;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jieli.feature.help.entity.HelpComment;
 import com.jieli.feature.help.entity.HelpInfo;
 import com.jieli.feature.vote.entity.Vote;
-import com.jieli.feature.vote.entity.VoteComment;
 import com.jieli.feature.vote.entity.VoteInfo;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.client.fluent.Response;
@@ -129,7 +127,13 @@ public class FeatureTest {
         voteInfo.setDeadLine(format.parse("2014-05-01"));
         voteInfo.setMultiple(false);
         voteInfo.setTitle("晚饭吃什么");
-        voteInfo.setOptions(Arrays.asList("绿茶", "西贝西北菜", "麻辣香锅", "外婆家", "Miss kiko"));
+        Map<Integer, String> options = new HashMap<Integer, String>();
+        options.put(1, "绿茶");
+        options.put(2, "西贝西北菜");
+        options.put(3, "麻辣香锅");
+        options.put(4, "外婆家");
+        options.put(5, "Miss kiko");
+        voteInfo.setOptions(options);
         voteInfo.setDescription("晚上聚餐去哪里？");
         ObjectMapper mapper = new ObjectMapper();
         Response response = Request.Post("http://localhost:8080/rest/feature/vote/addvote")

@@ -1,7 +1,6 @@
 package com.jieli.test.mongo.yolanda;
 
 import com.jieli.feature.help.dao.HelpDAO;
-import com.jieli.feature.help.entity.HelpComment;
 import com.jieli.feature.help.entity.HelpInfo;
 import com.jieli.feature.help.entity.SimpleHelpInfo;
 import com.jieli.user.dao.UserDAO;
