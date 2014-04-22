@@ -225,7 +225,7 @@
                     <div class="col-sm-9">
                         <select class="col-xs-10 col-sm-7" id="form-field-select-type" style="padding: 5px 4px;font-size: 14px;">
                             <#list associationList as associations>
-                                <option value="${associations.name}" <#if associations_index = 0>selected="selected" </#if>>${associations.name}</option>
+                                <option value="${associations._id}" <#if associations_index = 0>selected="selected" </#if>>${associations.name}</option>
                             </#list>
                         </select>
                     </div>
@@ -324,22 +324,6 @@
 <script src="/assets/js/ace.min.js"></script>
 
 <!-- inline scripts related to this page -->
-<script>
-    function loadThisVote(){
-        var voteid = request.getParameter("voteId");
-        if (artid == null || artid.length < 1) return;
-
-        $.ajax({
-            type:"GET",
-            url:"/rest/feature/vote/detail?voteId="+voteid,
-            async:true,
-            success:function(data){
-                alert(data);
-            }
-        });
-        ;
-    }
-</script>
 
 <script type="text/javascript">
 jQuery(function ($) {
@@ -429,7 +413,6 @@ function parseArtData(data){
     return data;
 }
 
-
 //it causes some flicker when reloading or navigating grid
 //it may be possible to have some custom formatter to do this as the grid is being created to prevent this
 //or go back to default browser checkbox styles for the grid
@@ -488,24 +471,33 @@ function enableTooltips(table) {
     $(table).find('.ui-pg-div').tooltip({container:'body'});
 }
 
+function updateGrid(associationId, page, size) {
+    $.ajax({
+        url: "/rest/feature/ajaxvote/list?a="+associationId+"&page="+page+"&size="+size,
+        type : 'GET',
+        contentType: "application/json",
+        success: function(response) {
+            if (response.code == 200) {
+                var data = response.body;
+
+                $('#grid-table').jqGrid('clearGridData', true).trigger('reloadGrid');
+                $("#grid-table").jqGrid('setGridParam', {
+                    datatype: 'local',
+                    data: parseArtData(data)
+                }).trigger('reloadGrid');
+            }
+        }
+    });
+}
 jQuery(function($) {
-    var raw_data = [
-        {_id:1,associationId:"1",title:"测试1",type:"news",overview:"",content:"测试内容",images:[],imagesCount:2,appreciateUserIds:[],appreciateCount:12,addTime:"20140203T12:13:14.443GMT0+800"},
-        {_id:2,associationId:"2",title:"测试2",type:"news",overview:"",content:"测试内容",images:[],imagesCount:2,appreciateUserIds:[],appreciateCount:12,addTime:"20140203T12:13:14.443GMT0+800"}
-    ];
 
-    //raw_data.empty();
-    raw_data = ${jsonVoteList};
-
-
-    var grid_data = parseArtData(raw_data);
-
-    var grid_selector = "#grid-table";
     var pager_selector = "#grid-pager";
-
+    var grid_selector = '#grid-table';
+    var raw_data=${jsonVoteList};
+    var data = parseArtData(raw_data);
     jQuery(grid_selector).jqGrid({
-        data: grid_data,
-        datatype: "local",
+        datatype: 'local',
+        data: parseArtData(data),
         height: 330,
         colNames:['id',<#if isSuper>'协会',</#if>'投票标题','投票类型', '投票描述', '添加日期', '截止日期', '参加人数'],
         colModel:[
@@ -538,7 +530,10 @@ jQuery(function($) {
                 updateActionIcons(table);
                 updatePagerIcons(table);
                 enableTooltips(table);
+                var associationId = $('#form-field-select-type').val();
+
             }, 0);
+
         },
 
         caption: "投票列表",
@@ -573,6 +568,12 @@ jQuery(function($) {
     );
 
     $(".ui-jqgrid-htable").css("font-family","微软雅黑");
+
+
+    $('#form-field-select-type').change(function(){
+        var associationId = $('#form-field-select-type').val();
+        updateGrid(associationId,1,20);
+    });
 });
 
 jQuery(function ($) {

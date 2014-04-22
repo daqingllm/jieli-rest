@@ -1063,8 +1063,8 @@ function addVoteOption(value, percent) {
     if (value == undefined)
         value = "";
     var voteOption = $('<div class="vote-choice">' +
-            '<input type="text" value="'+value+'" placeholder="选项内容，不填写为无效选项" class="col-xs-10 col-sm-7 vote-choice-text" style="padding-left: 7px;">' +
-            '<div class="progress-bar" style="width:'+percent+'%;"></div>' +
+            '<input type="text" value="'+value+'" placeholder="选项内容，不填写为无效选项" class="col-xs-10 col-sm-6 vote-choice-text" style="padding-left: 7px;">' +
+            '<div class="col-xs-5"><div class="progress" data-percent="'+percent+'%"><div class="progress-bar" style="width:'+percent+'%;"></div></div></div>' +
             '<button type="button" class="btn btn-xs btn-info vote-choice-img">Pic</button>' +
             '<div class="icon-remove"></div>' +
             '</div>');

@@ -217,6 +217,7 @@ public class Vote {
         }
         voteList = voteDAO.getVoteInfoList(pageNo, pageSize,
                 associationId);
+
         for(SimpleVoteInfo v : voteList) {
             v.setId(v.get_id().toString());
         }
