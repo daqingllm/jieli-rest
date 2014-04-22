@@ -36,7 +36,7 @@ public class User {
 
         ResponseEntity responseEntity = new ResponseEntity();
         responseEntity.code = 9001;
-        if (IdentifyUtils.isAdmin(sessionId)) {
+        if (IdentifyUtils.isAdmin(sessionId) && !IdentifyUtils.isSuper(sessionId)) {
             Iterable<com.jieli.user.entity.User> users = userDAO.loadAll(IdentifyUtils.getAssociationId(sessionId));
             responseEntity.code = 200;
             responseEntity.body = users;

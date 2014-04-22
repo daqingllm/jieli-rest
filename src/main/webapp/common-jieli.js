@@ -8,22 +8,23 @@ function test2227(str){
 
 // 点击预览按钮
 function previewThisArticle() {
-    $("#dialog-message-preview").html($("#form-field-textarea").val());
-
-    //override dialog's title function to allow for HTML titles
-    $.widget("ui.dialog", $.extend({}, $.ui.dialog.prototype, {
-        _title: function(title) {
-            var $title = this.options.title || '&nbsp;'
-            if( ("title_html" in this.options) && this.options.title_html == true )
-                title.html($title);
-            else title.text($title);
-        }
-    }));
+    var previewinpage = $("#form-field-textarea").val();
+    var previewinlist;
+    try {
+        previewinlist = $("#grid-table").getGridParam("selrow");
+        if (previewinlist) previewinlist = $("#grid-table > tbody > tr").eq(previewinlist).find("td").eq(5).attr("title");
+    }catch (e){
+        previewinlist = "";
+    }
+    if (previewinpage && previewinpage.length >= previewinlist.length)
+        $("#dialog-message-preview").html(previewinpage);
+    else
+        $("#dialog-message-preview").html(previewinlist);
 
     var dialog = $("#dialog-message-preview").removeClass('hide').dialog({
         modal: true,
         width: 500,
-        title: "<div class='widget-header widget-header-small'><h5 class='smaller'><i class='icon-ok'></i> 添加一个分组 </h5></div>",
+        title: "<div class='widget-header widget-header-small'><h5 class='smaller'><i class='icon-ok'></i> 预览 </h5></div>",
         title_html: true,
         buttons: [
             {
@@ -110,8 +111,8 @@ function postThisArticle(){
     json["appreciateCount"] = 0;
     json["addTime"] = null;
 
-    //var assIds = json["associationId"].split(",");
     var suc = true;
+    // if edit , there is only one element in p_assid
     for (var i = 0; i <p_assid.length;i++) {
         json["associationId"] = p_assid[i];
         $.ajax({
@@ -126,7 +127,10 @@ function postThisArticle(){
         });
     }
 
-    if (suc) {alert("已经成功添加此资讯");window.location.href = "/rest/bnews/list";}
+    if (suc) {
+        if (p_id > -1) {alert("已经成功编辑此资讯");window.location.href = "/rest/bnews/list";}
+        else {alert("已经成功添加此资讯");window.location.href = "/rest/bnews/list";}
+    }
     else  alert("添加资讯失败");
 }
 
@@ -161,3 +165,66 @@ function getTextAreaCursorPosition() {
     return $("#form-field-textarea").getCursorPosition();
 }
 
+(function ($, undefined) {
+    $.fn.getCursorPosition = function () {
+        var el = $(this).get(0);
+        var pos = 0;
+        if ('selectionStart' in el) {
+            pos = el.selectionStart;
+        } else if ('selection' in document) {
+            el.focus();
+            var Sel = document.selection.createRange();
+            var SelLength = document.selection.createRange().text.length;
+            Sel.moveStart('character', -el.value.length);
+            pos = Sel.text.length - SelLength;
+        }
+        return pos;
+    }
+})(jQuery);
+
+// 资讯中上传图片
+var uploadArticleImageOptions = {
+    url: '/rest/upload',
+    type:'post',
+    dataType:'json',
+    contentType:'text/plain',
+    success:function( jsn ) {
+        var msg = jsn.msg;
+        if (jsn.code == 200) {
+            var uploadImgSrc = jsn.body + "";
+
+            uploadImgSrc = "<center><img src='" + uploadImgSrc + "'></center>";
+            var otextarea = $("#form-field-textarea").val().trim();
+            var otextarea_head = "";
+            var otextarea_tail;
+            var pos = getTextAreaCursorPosition() || 0;
+            if (pos > 1)
+                otextarea_head = otextarea.substring(0, pos);
+            otextarea_tail = otextarea.substring(pos);
+
+            //alert(otextarea_head + "[+]" + otextarea_tail);
+
+            $("#form-field-textarea").val(otextarea_head + uploadImgSrc + otextarea_tail);
+
+            // 更新图片集
+            var imgsrc = uploadImgSrc;
+            var newImgHtml = "<li>";
+            newImgHtml += "<a href='" + jsn.body + "' data-rel='colorbox'>";
+            newImgHtml += "<img alt='150x150' width='150' height='150' src='" + jsn.body + "' />";
+            newImgHtml += "</a>";
+            newImgHtml += "<div class='tools tools-right' style='height:30px;'>";
+            // must be " , ' no use
+            var re = new RegExp("\'", "g");
+            newImgHtml += "<a href='#' onclick='deletePic(\"" + uploadImgSrc.replace(re, "") + "\")'><i class='icon-remove red'></i></a></div></li>";
+
+            $("#upload-img-list > li").eq(0).after(newImgHtml);
+
+            $("#img-list-invisible").attr("style", "border-width:0;display:none");
+
+            $('.ace-thumbnails [data-rel="colorbox"]').colorbox(colorbox_params);
+            $("#cboxLoadingGraphic").append("<i class='icon-spinner orange'></i>");//let's add a custom loading icon
+        } else {
+            alert("上传失败");
+        }
+    }
+};

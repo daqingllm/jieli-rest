@@ -232,6 +232,10 @@
                     <!-- /.col -->
                 </div>
                 <!-- /.row -->
+
+                <div id="dialog-message-preview" class="hide">
+                </div><!-- #dialog-message -->
+
             </div>
             <!-- /.page-content -->
         </div>
@@ -330,12 +334,19 @@
 <script src="/assets/js/jquery.colorbox-min.js"></script>
 <script src="/assets/js/date-time/bootstrap-datepicker.min.js"></script>
 <script src="/assets/js/jqGrid/jquery.jqGrid.min.js"></script>
-<script src="/assets/js/jqGrid/i18n/grid.locale-en.js"></script>
+<script src="/assets/js/jqGrid/i18n/grid.locale-zh-art.js"></script>
 
+
+<script src="/assets/js/jquery-ui-1.10.3.full.min.js"></script>
+<script src="/assets/js/jquery-ui-1.10.3.custom.min.js"></script>
+<script src="/assets/js/jquery.ui.touch-punch.min.js"></script>
+<script src="/common-jieli.js"></script>
 
 <!--[if lte IE 8]>
 <script src="/assets/js/excanvas.min.js"></script>
+
 <![endif]-->
+
 
 <!--
 <script src="/assets/js/jquery-ui-1.10.3.custom.min.js"></script>
@@ -362,24 +373,18 @@
 <script src="/assets/js/ace.min.js"></script>
 
 <!-- inline scripts related to this page -->
-<script>
-    function loadThisArticle(){
-        var artid = request.getParameter("artid");
-        if (artid == null || artid.length < 1) return;
-
-        $.ajax({
-            type:"GET",
-            url:"/rest/news/load?new_id="+artid,
-            async:true,
-            success:function(data){
-                alert(data);
-            }
-        });
-        ;
-    }
-</script>
-
 <script type="text/javascript">
+
+    //override dialog's title function to allow for HTML titles
+    $.widget("ui.dialog", $.extend({}, $.ui.dialog.prototype, {
+        _title: function(title) {
+            var $title = this.options.title || '&nbsp;'
+            if( ("title_html" in this.options) && this.options.title_html == true )
+                title.html($title);
+            else title.text($title);
+        }
+    }));
+
 jQuery(function ($) {
     <#if isSuper>
         $("#sidebar-shortcuts-navlist").load("/sidebar_super.html",function(){$("#nav_list_2_1").addClass("active open");$("#nav_list_2").addClass("active");});
@@ -447,51 +452,15 @@ function parseArtData(data){
         data[i].addTime = nowStr;
 
         data[i].content = data[i].overview;
-        //data[i].content = data[i].content.substr(0,30);
-
-        //var re = new  RegExp("\\u0022","g");
-        //data[i].content = data[i].content.replace(re,"\"");
-        //re = new RegExp("\\u0027","g");
-        //data[i].content = data[i].content.replace(re,"'");
     }
     return data;
 }
 
-
-//it causes some flicker when reloading or navigating grid
-//it may be possible to have some custom formatter to do this as the grid is being created to prevent this
-//or go back to default browser checkbox styles for the grid
 function styleCheckbox(table) {
-    /**
-     $(table).find('input:checkbox').addClass('ace')
-     .wrap('<label />')
-     .after('<span class="lbl align-top" />')
-
-
-     $('.ui-jqgrid-labels th[id*="_cb"]:first-child')
-     .find('input.cbox[type=checkbox]').addClass('ace')
-     .wrap('<label />').after('<span class="lbl align-top" />');
-     */
 }
 
 
-//unlike navButtons icons, action icons in rows seem to be hard-coded
-//you can change them like this in here if you want
 function updateActionIcons(table) {
-    /**
-     var replacement =
-     {
-         'ui-icon-pencil' : 'icon-pencil blue',
-         'ui-icon-trash' : 'icon-trash red',
-         'ui-icon-disk' : 'icon-ok green',
-         'ui-icon-cancel' : 'icon-remove red'
-     };
-     $(table).find('.ui-pg-div span.ui-icon').each(function(){
-		var icon = $(this);
-		var $class = $.trim(icon.attr('class').replace('ui-icon', ''));
-		if($class in replacement) icon.attr('class', 'ui-icon '+replacement[$class]);
-	})
-     */
 }
 
 //replace icons with FontAwesome icons like above
@@ -577,11 +546,32 @@ jQuery(function($) {
 
                 edit: true,
                 editicon : 'icon-pencil blue',
-                editfunc : (function(){var id = $("#grid-table").getGridParam("selrow");id=$("#grid-table > tbody > tr").eq(id).find("td").eq(1).attr("title");window.location.href = '/rest/bnews/edit?artid='+id;}),
+                editfunc : (function(){
+                    var id = $("#grid-table").getGridParam("selrow");
+                    if (id) id=$("#grid-table > tbody > tr").eq(id).find("td").eq(1).attr("title");
+                    if (!id || id.length == 0) alert("请先选择一则资讯");
+                    else window.location.href = '/rest/bnews/edit?artid='+id;
+                }),
 
-                del: false,
+                del: true,
                 delicon : 'icon-trash red',
-                delfunc : (function(){alert("删除操作!");return false;}),
+                delfunc : (function(){/*alert("删除操作!");*/
+                    var id = $("#grid-table").getGridParam("selrow");
+                    if (id) id=$("#grid-table > tbody > tr").eq(id).find("td").eq(1).attr("title");
+                    if (!id || id.length == 0) alert("请先选择一则资讯");
+                    $.ajax({
+                        type:"POST",
+                        url:"/rest/bnews/del?artid="+id,
+                        success:function(jsn){
+                            if (jsn.code == 200){
+                                alert("已删除该资讯");
+                                window.location.reload();
+                            }else{
+                                alert("删除失败"+jsn.msg);
+                            }
+                        }
+                    });
+                }),
 
                 search: false,
                 searchicon : 'icon-search orange',
@@ -591,7 +581,7 @@ jQuery(function($) {
 
                 view: true,
                 viewicon : 'icon-zoom-in grey',
-                viewfunc: (function(){alert("预览操作!");return false;})
+                viewfunc: (function(){previewThisArticle();/*alert("预览操作!");*/return false;})
             }
     );
 
@@ -609,9 +599,10 @@ jQuery(function ($) {
     $('.date-picker').datepicker({autoclose: true}).next().on(ace.click_event, function () {
         $(this).prev().focus();
     });
-    $('input[name=date-range-picker]').daterangepicker().prev().on(ace.click_event, function () {
-        $(this).next().focus();
-    });
+
+    //$('input[name=date-range-picker]').daterangepicker().prev().on(ace.click_event, function () {
+    //   $(this).next().focus();
+    //});
 
     //chosen plugin inside a modal will have a zero width because the select element is originally hidden
     //and its width cannot be determined.
