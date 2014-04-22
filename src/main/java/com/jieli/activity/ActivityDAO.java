@@ -22,9 +22,14 @@ public class ActivityDAO extends GenericDAO<Activity> {
         return col.find("{tag:#, associationId:#, beginDate:{$gt:#}}", "OFFICIAL", associationId, now).sort("{beginDate:-1}").as(Activity.class);
     }
 
-    public Iterable<Activity> findOngoingRecommend() {
+    public Iterable<Activity> findOngoingRecommend(String associationId) {
         Date now = new Date();
-        return col.find("{tag:#, beginDate:{$gt:#}}", "RECOMMEND", now).sort("{beginDate:-1}").as(Activity.class);
+        return col.find("{tag:#, associationId:#, beginDate:{$gt:#}}", "RECOMMEND", associationId, now).sort("{beginDate:-1}").as(Activity.class);
+    }
+
+    public Iterable<Activity> findOngoingPrivate(String associationId) {
+        Date now = new Date();
+        return col.find("{tag:#, associationId:#, beginDate:{$gt:#}}", "PRIVATE", associationId, now).sort("{beginDate:-1}").as(Activity.class);
     }
 
     public Iterable<Activity> findOngoing(String associationId, int page, int count) {

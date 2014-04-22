@@ -25,17 +25,18 @@ public class ActivityTest {
     public void testCreate() throws IOException {
         Activity activity = new Activity();
         activity.associationId = "5348205ce4b00b2ae52d3f5a";
-        activity.beginDate = new Date(new Date().getTime() - 1000000000);
+        activity.beginDate = new Date(new Date().getTime() + 1000000000);
 //        activity.beginDate = new Date();
-        activity.tag = AcivityTag.OFFICIAL;
+        activity.tag = AcivityTag.PRIVATE;
 //        activity.sponsorUserId = "533799caef869f8e93d30d9c";
-        activity.title = "新的官方活动";
+        activity.url = "http://xianxing-test.qiniudn.com/12834560259126414_bynam.jpg";
+        activity.title = "串局";
         activity.location = "天安门广场";
         activity.description = "官方有奖竞猜";
         activity.fee = 100;
         activity.maxMembers = 100;
         activity.arrangement = "4、5两天";
-//        activity.serviceInfo = "服务信息";
+        activity.serviceInfo = Arrays.asList("服务信息1", "服务信息2");
         activity.sponsorInfo = "赞助信息";
         activity.invitees = Arrays.asList("user1", "user2", "user3");
         Arrangement a1 = new Arrangement();

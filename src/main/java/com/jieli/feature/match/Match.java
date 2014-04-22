@@ -2,6 +2,9 @@ package com.jieli.feature.match;
 
 import com.jieli.mongo.Model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created with IntelliJ IDEA.
  * User: liming_liu
@@ -14,6 +17,7 @@ public class Match extends Model implements Comparable<Match> {
     public String userId1;
     public String userId2;
     public int score = 0;
+    public List<String> matchInfos = new ArrayList<String>();
 
     @Override
     public boolean equals(Object o) {

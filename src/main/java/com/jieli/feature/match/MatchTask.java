@@ -37,10 +37,12 @@ public class MatchTask {
             if (user.get_id().toString().equals(user2match.get_id().toString())) {
                 continue;
             }
-            Match match = new Match();
-            match.userId1 = user2match.get_id().toString();
-            match.userId2 = user.get_id().toString();
-            match.score = MatchUtil.calcMatchingScore(user2match, user);
+//            Match match = new Match();
+//            match.userId1 = user2match.get_id().toString();
+//            match.userId2 = user.get_id().toString();
+//            match.score = MatchUtil.calcMatchingScore(user2match, user);
+            MatchUtil matchUtil = new MatchUtil(user2match, user);
+            Match match = matchUtil.getMatch();
             topMatches.add(match);
             matchDAO.upsert(match);
         }
