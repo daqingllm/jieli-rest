@@ -28,11 +28,11 @@ public class VoteDAOTest {
         voteInfo.setTitle("晚饭吃什么");
         voteInfo.setDescription("晚上聚餐去哪里？");
         Map<Integer, String> options = new HashMap<Integer, String>();
-        options.put(1, "绿茶");
-        options.put(2, "西贝西北菜");
-        options.put(3, "麻辣香锅");
-        options.put(4, "外婆家");
-        options.put(5, "Miss kiko");
+        options.put(0, "绿茶");
+        options.put(1, "西贝西北菜");
+        options.put(2, "麻辣香锅");
+        options.put(3, "外婆家");
+        options.put(4, "Miss kiko");
         voteInfo.setOptions(options);
         VoteInfo result = voteDAO.addVote(voteInfo);
 
@@ -74,7 +74,7 @@ public class VoteDAOTest {
 
     @Test
     public void vote() {
-        String voteId = "5353ce2630041f00d3aeb68e";
+        String voteId = "535532fb3004e1e0e7fd62d0";
         Vote vote = new Vote();
         vote.setUserId("533be301300460878a64a157");
         vote.setAddTime(new Date());

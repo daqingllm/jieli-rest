@@ -1100,14 +1100,41 @@ function voteInfo(voteId, callback) {
                 var dateString = deadLine.toISOString().substr(0, 10); //assume the program will not run after year 10000
                 $('#form-field-date').val(dateString);
                 $('#form-field-select-type').val(response.body.multiple ? 'M' : 'S');
-                var voteCountArray = response.body.optionVotes;
-                var totalVote = response.body.totalVote;
-                response.body.options.forEach(function (index, option) {
-                    var optionCount = voteCountArray[index];
-                    optionCount = optionCount/totalVote*100;
-                    addVoteOption(option, optionCount);
+                var options = response.body.options;
+                $.ajax({
+                    url: '/rest/feature/vote/result?voteId=' + voteId,
+                    type: 'GET',
+                    success: function (response2) {
+                        if (response2.code == 200) {
+                            var totalVote = response2.body.totalVote;
+                            var optionVotes = response2.body.optionVotes;
+                            var optionPercent = {};
+
+                            if (totalVote == 0) {
+                                for (var index in optionVotes) {
+                                    optionPercent[index] = 0;
+                                }
+                            }
+                            else {
+                                for (var index in optionVotes) {
+                                    optionPercent[index] = Math.round(optionVotes[index] / totalVote * 100);
+                                }
+                            }
+                            var voteOptionsNumber = 0;
+                            for (var index in response.body.options) {
+                                voteOptionsNumber++;
+                            }
+                            for (var index = 0; index < voteOptionsNumber; index++) {
+                                addVoteOption(response.body.options[index.toString()], optionPercent[index.toString()]);
+                            }
+                            callback();
+                        }
+                    }
                 });
-                callback(response.body);
+
+
+
+
             }
         }
     });
@@ -1132,7 +1159,7 @@ function editSettings() {
     enableDatePicker();
 }
 
-function viewSettings(data) {
+function viewSettings() {
     $('#form-field-select-type').attr({disabled : true});
     $('.vote-choice-img').hide();
     $('.icon-remove').remove();
@@ -1179,10 +1206,11 @@ function postNewVote() {
     request.multiple = $('#form-field-select-type').val() == 'M' ? true : false;
     request.deadLine = new Date($('#form-field-date').val());
     request.description = $('#form-field-textarea').val();
-    request.options = [];
+    request.options = {};
+    var index=0;
     $('.vote-choice-text').each(function() {
         if ($(this).val() != '')
-            request.options.push($(this).val());
+            request.options[index++] = $(this).val();
     });
 
     var reqCheck = check(request);
@@ -1203,10 +1231,11 @@ function postEditVote(voteId) {
     request.multiple = $('#form-field-select-type').val() == 'M' ? true : false;
     request.deadLine = new Date($('#form-field-date').val());
     request.description = $('#form-field-textarea').val();
-    request.options = [];
+    request.options = {};
+    var index=0;
     $('.vote-choice-text').each(function() {
         if ($(this).val() != '')
-            request.options.push($(this).val());
+            request.options[index++]=$(this).val();
     });
 
     var reqCheck = check(request);

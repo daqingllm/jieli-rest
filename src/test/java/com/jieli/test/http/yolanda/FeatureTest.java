@@ -128,16 +128,16 @@ public class FeatureTest {
         voteInfo.setMultiple(false);
         voteInfo.setTitle("晚饭吃什么");
         Map<Integer, String> options = new HashMap<Integer, String>();
-        options.put(1, "绿茶");
-        options.put(2, "西贝西北菜");
-        options.put(3, "麻辣香锅");
-        options.put(4, "外婆家");
-        options.put(5, "Miss kiko");
+        options.put(0, "绿茶");
+        options.put(1, "西贝西北菜");
+        options.put(2, "麻辣香锅");
+        options.put(3, "外婆家");
+        options.put(4, "Miss kiko");
         voteInfo.setOptions(options);
         voteInfo.setDescription("晚上聚餐去哪里？");
         ObjectMapper mapper = new ObjectMapper();
         Response response = Request.Post("http://localhost:8080/rest/feature/vote/addvote")
-                .setHeader("Cookie", "u=5346965130040cab020b3dd3")
+                .setHeader("Cookie", "u=5336b7de3004f3462ed8868b")
                 .bodyString(mapper.writeValueAsString(voteInfo), ContentType.APPLICATION_JSON)
                 .execute();
         System.out.println(response.returnContent().asString());
@@ -146,16 +146,16 @@ public class FeatureTest {
     @Test
     public void vote() throws IOException {
         Vote vote = new Vote();
-        vote.setVoteIndex(Arrays.asList(1));
-        vote.setUserId("5336bbe13004cc09f49432e7");
+        vote.setVoteIndex(Arrays.asList(2));
+        vote.setUserId("5346965130040cab020b3dd3");
         vote.setAddTime(new Date());
-        String voteId = "5353cfce30040d944ab5b760";
+        String voteId = "535538c9300485b915c5df60";
         ObjectMapper mapper = new ObjectMapper();
-        Response response = Request.Post("http://localhost:8080/rest/feature/vote/commitvote?voteId=5353cfce30040d944ab5b760")
-                .addHeader("Cookie", "u=5336bbe13004cc09f49432e7")
+        Response response = Request.Post("http://localhost:8080/rest/feature/vote/commitvote?voteId=535538c9300485b915c5df60")
+                .addHeader("Cookie", "u=5346965130040cab020b3dd3")
                 .bodyString(mapper.writeValueAsString(vote), ContentType.APPLICATION_JSON)
                 .execute();
-        System.out.println(response.returnContent().asString());
+        //System.out.println(response.returnContent().asString());
     }
 
     @Test
