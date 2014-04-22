@@ -172,7 +172,7 @@ public class ActivityService {
         } else {
             if (activity.tag == AcivityTag.PRIVATE) {
 
-            } else {
+            } else if(force) {
                 ActivityMsg activityMsg = new ActivityMsg();
                 if (!StringUtils.isEmpty(activity.associationId)) {
                     if (activity.tag == AcivityTag.OFFICIAL) {

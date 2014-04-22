@@ -1,6 +1,5 @@
 package com.jieli.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jieli.comment.Comment;
 import com.jieli.comment.TopicType;
 import com.jieli.common.entity.ResponseEntity;
@@ -10,14 +9,8 @@ import com.jieli.feature.help.entity.SimpleHelpInfo;
 import com.jieli.feature.match.*;
 import com.jieli.feature.vote.dao.VoteDAO;
 import com.jieli.feature.vote.dao.VoteResultDAO;
-import com.jieli.feature.vote.entity.SimpleVoteInfo;
-import com.jieli.feature.vote.entity.Vote;
-import com.jieli.feature.vote.entity.VoteInfo;
-import com.jieli.feature.vote.entity.VoteResult;
-import com.jieli.message.CommentMessageUtil;
-import com.jieli.message.Message;
-import com.jieli.message.MessageDAO;
-import com.jieli.message.MessageType;
+import com.jieli.feature.vote.entity.*;
+import com.jieli.message.*;
 import com.jieli.mongo.BaseDAO;
 import com.jieli.user.dao.UserDAO;
 import com.jieli.user.entity.User;
@@ -27,7 +20,6 @@ import com.sun.jersey.spi.resource.Singleton;
 import org.apache.commons.lang.StringUtils;
 import org.bson.types.ObjectId;
 
-import javax.print.attribute.standard.Media;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -550,7 +542,7 @@ public class FeatureService {
     @Path("/vote/addvote")
     @POST
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-    public Response addVote(@CookieParam("u")String sessionId, VoteInfo voteInfo) {
+    public Response addVote(@CookieParam("u")String sessionId, @QueryParam("force")boolean force, VoteInfo voteInfo) {
         if(!IdentifyUtils.isValidate(sessionId)) {
             return Response.status(403).build();
         }
@@ -588,6 +580,16 @@ public class FeatureService {
         voteResult.setVoteId(result.get_id().toString());
         voteResult.setParticipants(0);
         voteResultDAO.save(voteResult);
+
+        if (force) {
+            VoteMsg voteMsg = new VoteMsg();
+            voteMsg.voteId = result.get_id().toString();
+            voteMsg.msg = result.getTitle() + " 投票发起";
+
+            Send2AllTask task = new Send2AllTask(voteMsg, result.getAssociationId(), MessageType.OTHER);
+            task.run();
+        }
+
 
         responseEntity.code = 200;
         responseEntity.body = result;
@@ -908,6 +910,7 @@ public class FeatureService {
             display.name2 = user2.name;
             display.userFace2 = user2.userFace;
             display.score = match.score;
+            display.infos = match.matchInfos;
             results.add(display);
         }
 
@@ -940,6 +943,7 @@ public class FeatureService {
             display.name2 = user2.name;
             display.userFace2 = user2.userFace;
             display.score = match.score;
+            display.infos = match.matchInfos;
             results.add(display);
         }
 

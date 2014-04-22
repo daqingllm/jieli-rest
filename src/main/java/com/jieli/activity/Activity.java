@@ -29,7 +29,7 @@ public class Activity extends Model {
 
     public String arrangement;
 
-    public List<String> serviceInfo;
+    public Map<String, String> serviceInfo = new LinkedHashMap<String, String>();
 
     public String sponsorInfo;
 
@@ -108,7 +108,7 @@ public class Activity extends Model {
         return arrangement;
     }
 
-    public List<String> getServiceInfo() {
+    public Map<String, String> getServiceInfo() {
         return serviceInfo;
     }
 
