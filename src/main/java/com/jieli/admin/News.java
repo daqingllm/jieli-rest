@@ -31,7 +31,7 @@ import java.util.*;
 @Singleton
 @Path("/bnews")
 public class News {
-    @POST
+    @GET
     @Path("/list")
     @Produces(MediaType.TEXT_HTML)
     public String GetNewsList(@CookieParam("u")String sessionId,@QueryParam("page") String page, @QueryParam("rowNum") String rowNum, @QueryParam("pl") String preload) throws JsonProcessingException {
@@ -57,26 +57,35 @@ public class News {
         }
 
         String newsList = "";
+        List<com.jieli.news.News> newses = new LinkedList<com.jieli.news.News>();
         if (IdentifyUtils.isSuper(sessionId)){
             params.put("isSuper",true);
+            newses = newsDAO.paginateInOrder(_page, _rowNum,"{addTime:-1}", "{type: {$in: [\""+NewsType.newsType+"\",\""+NewsType.associationType+"\",\""+NewsType.enterpriseType+"\"]}}");
         }else{
             params.put("isSuper",false);
-            ObjectMapper objectMapper = new ObjectMapper();
-            String associationName = associationDAO.loadById(account.associationId).name;
-            List<com.jieli.news.News> newses = newsDAO.paginateInOrder(_page - 1, _rowNum,"{addTime:-1}", "{type:#}", "{$in:['enterprise','association']}");
-            for (com.jieli.news.News news : newses){
-                String tmp = Common.ReplaceObjectId(news);
-                newsList += tmp.replace("\"associationId\":\"" + account.associationId + "\"", "\"associationId\":\"" + associationName + "\"") + ",";
-            }
-
-            _totalPage = (_total+1)/_rowNum;
-            if (_page > _totalPage) _page = _totalPage+1;
-
+            newses = newsDAO.paginateInOrder(_page, _rowNum,"{addTime:-1}", "{type: {$in: [\""+NewsType.associationType+"\",\""+NewsType.enterpriseType+"\"]}}");
         }
-        return "";
+
+        Map<String , String> associationNames = new HashMap<String, String>();
+        Iterable<Association> associations = associationDAO.loadAll();
+        for(Association association : associations) associationNames.put(association.get_id().toString(),association.name);
+
+        for (com.jieli.news.News news : newses){
+            _total ++;
+            String tmp = Common.ReplaceObjectId(news);
+            newsList += tmp.replace("\"associationId\":\"" + news.associationId + "\"", "\"associationId\":\"" + associationNames.get(news.associationId) + "\"") + ",";
+        }
+
+        params.put("newsList","["+(newsList.length()>0?(newsList.substring(0,newsList.length()-1)):"")+"]");
+        params.put("rowNum",_rowNum);
+        params.put("ti",_total);
+        //params.put("tp",_totalPage);
+        params.put("cp",_page);
+
+        return FTLrender.getResult("article_list.ftl",params);
     }
 
-    @GET
+    @POST
     @Path("/list")
     @Produces(MediaType.TEXT_HTML)
     public String NewsList(@CookieParam("u")String sessionId,@CookieParam("a")String associationId,@CookieParam("r")String role,@QueryParam("pl") String preload){

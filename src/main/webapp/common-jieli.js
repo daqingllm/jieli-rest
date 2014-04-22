@@ -117,10 +117,11 @@ function postThisArticle(){
         json["associationId"] = p_assid[i];
         $.ajax({
             type: "POST",
-            url: "/rest/news/add",
+            url: "/rest/news/add?force="+$("#form-field-checkbox").is(':checked'),
             data: JSON.stringify(json),
             contentType: "application/json; charset=utf-8",
             dataType: 'json',
+            async: false,
             success: function (ret) {
                 if (ret.code != 200) suc = false;
             }

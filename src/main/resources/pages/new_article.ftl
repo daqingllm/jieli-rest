@@ -304,6 +304,16 @@
 
                     <div class="space-4"></div>
 
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right" for="form-field-checkbox"> 强推选项 </label>
+
+                        <div class="col-sm-9">
+                            <input type="checkbox" id="form-field-checkbox" >
+                        </div>
+                    </div>
+
+                    <div class="space-4"></div>
+
                 </form>
 
                 <div id="dialog-message-preview" class="hide">

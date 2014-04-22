@@ -10,10 +10,10 @@
     $.jgrid = $.jgrid || {};
     $.extend($.jgrid,{
         defaults : {
-            recordtext: "View {0} - {1} of {2}",
-            emptyrecords: "No records to view",
+            recordtext: "本页有 {1} 条数据",
+            emptyrecords: "无数据",
             loadtext: "Loading...",
-            pgtext : "Page {0} of {1}"
+            pgtext : "Page {0}"
         },
         search : {
             caption: "Search...",
@@ -69,10 +69,10 @@
             searchtitle: "Find records",
             refreshtext: "",
             refreshtitle: "Reload Grid",
-            alertcap: "Warning",
-            alerttext: "Please, select row",
-            viewtext: "预览",
-            viewtitle: ""
+            alertcap: "警告",
+            alerttext: "请先选择一条记录",
+            viewtext: "",
+            viewtitle: "预览"
         },
         col : {
             caption: "Select columns",
