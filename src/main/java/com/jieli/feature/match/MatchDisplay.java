@@ -1,6 +1,7 @@
 package com.jieli.feature.match;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -22,4 +23,6 @@ public class MatchDisplay implements Serializable {
     public String userFace2;
 
     public int score;
+
+    public List<String> infos;
 }

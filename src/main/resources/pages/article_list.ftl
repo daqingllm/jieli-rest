@@ -116,181 +116,185 @@
 </div>
 
 <div class="main-container" id="main-container">
-    <script type="text/javascript">
-        try {
-            ace.settings.check('main-container', 'fixed')
-        } catch (e) {
-        }
-    </script>
+<script type="text/javascript">
+    try {
+        ace.settings.check('main-container', 'fixed')
+    } catch (e) {
+    }
+</script>
 
-    <div class="main-container-inner">
-        <a class="menu-toggler" id="menu-toggler" href="#">
-            <span class="menu-text"></span>
-        </a>
+<div class="main-container-inner">
+    <a class="menu-toggler" id="menu-toggler" href="#">
+        <span class="menu-text"></span>
+    </a>
 
-        <div class="sidebar" id="sidebar">
+    <div class="sidebar" id="sidebar">
+        <script type="text/javascript">
+            try {
+                ace.settings.check('sidebar', 'fixed')
+            } catch (e) {
+            }
+        </script>
+
+        <div class="sidebar-shortcuts">
+            <div class="sidebar-shortcuts-large" id="sidebar-shortcuts-large">
+                <button class="btn btn-success">
+                    <i class="icon-signal" style="display: none"></i>
+                </button>
+
+                <button class="btn btn-info">
+                    <i class="icon-pencil" style="display: none"></i>
+                </button>
+
+                <button class="btn btn-warning">
+                    <i class="icon-group" style="display: none"></i>
+                </button>
+
+                <button class="btn btn-danger">
+                    <i class="icon-cogs" style="display: none"></i>
+                </button>
+            </div>
+
+            <div class="sidebar-shortcuts-mini" id="sidebar-shortcuts-mini">
+                <span class="btn btn-success"></span>
+
+                <span class="btn btn-info"></span>
+
+                <span class="btn btn-warning"></span>
+
+                <span class="btn btn-danger"></span>
+            </div>
+        </div>
+        <!-- #sidebar-shortcuts -->
+
+        <ul class="nav nav-list"  id="sidebar-shortcuts-navlist">
+
+        </ul>
+
+        <div class="sidebar-collapse" id="sidebar-collapse">
+            <i class="icon-double-angle-left" data-icon1="icon-double-angle-left" data-icon2="icon-double-angle-right"></i>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="breadcrumbs" id="breadcrumbs">
             <script type="text/javascript">
                 try {
-                    ace.settings.check('sidebar', 'fixed')
+                    ace.settings.check('breadcrumbs', 'fixed')
                 } catch (e) {
                 }
             </script>
 
-            <div class="sidebar-shortcuts">
-                <div class="sidebar-shortcuts-large" id="sidebar-shortcuts-large">
-                    <button class="btn btn-success">
-                        <i class="icon-signal" style="display: none"></i>
-                    </button>
+            <ul class="breadcrumb">
+                <li>
+                    <i class="icon-home home-icon"></i>
+                    <a href="index.html">首页</a>
+                </li>
 
-                    <button class="btn btn-info">
-                        <i class="icon-pencil" style="display: none"></i>
-                    </button>
+                <li>
+                    <a href="#"> 资讯管理 </a>
+                </li>
 
-                    <button class="btn btn-warning">
-                        <i class="icon-group" style="display: none"></i>
-                    </button>
-
-                    <button class="btn btn-danger">
-                        <i class="icon-cogs" style="display: none"></i>
-                    </button>
-                </div>
-
-                <div class="sidebar-shortcuts-mini" id="sidebar-shortcuts-mini">
-                    <span class="btn btn-success"></span>
-
-                    <span class="btn btn-info"></span>
-
-                    <span class="btn btn-warning"></span>
-
-                    <span class="btn btn-danger"></span>
-                </div>
-            </div>
-            <!-- #sidebar-shortcuts -->
-
-            <ul class="nav nav-list"  id="sidebar-shortcuts-navlist">
-
+                <li class="active"> 资讯列表 </li>
             </ul>
+            <!-- .breadcrumb -->
 
-            <div class="sidebar-collapse" id="sidebar-collapse">
-                <i class="icon-double-angle-left" data-icon1="icon-double-angle-left" data-icon2="icon-double-angle-right"></i>
-            </div>
-        </div>
-
-        <div class="main-content">
-            <div class="breadcrumbs" id="breadcrumbs">
-                <script type="text/javascript">
-                    try {
-                        ace.settings.check('breadcrumbs', 'fixed')
-                    } catch (e) {
-                    }
-                </script>
-
-                <ul class="breadcrumb">
-                    <li>
-                        <i class="icon-home home-icon"></i>
-                        <a href="index.html">首页</a>
-                    </li>
-
-                    <li>
-                        <a href="#"> 资讯管理 </a>
-                    </li>
-
-                    <li class="active"> 资讯列表 </li>
-                </ul>
-                <!-- .breadcrumb -->
-
-                <div class="nav-search" id="nav-search">
-                    <form class="form-search">
+            <div class="nav-search" id="nav-search">
+                <form class="form-search">
 								<span class="input-icon">
 									<input type="text" placeholder="搜索 ..." class="nav-search-input"
                                            id="nav-search-input" autocomplete="off"/>
 									<i class="icon-search nav-search-icon"></i>
 								</span>
-                    </form>
-                </div>
-                <!-- #nav-search -->
+                </form>
             </div>
-
-            <div class="page-content">
-                <div class="page-header">
-                    <h1>
-                        资讯列表
-                        <small>
-                            <i class="icon-double-angle-right"></i>
-                            请先选中目标资讯再点击编辑或者删除按钮
-                        </small>
-                    </h1>
-                </div>
-                <!-- /.page-header -->
-
-                <div class="row">
-                    <div class="col-xs-12">
-                        <!-- PAGE CONTENT BEGINS -->
-                        <table id="grid-table"></table>
-                        <div id="grid-pager"></div>
-                    </div>
-                    <!-- /.col -->
-                </div>
-                <!-- /.row -->
-            </div>
-            <!-- /.page-content -->
+            <!-- #nav-search -->
         </div>
-        <!-- /.main-content -->
 
-        <div class="ace-settings-container" id="ace-settings-container">
-            <div class="btn btn-app btn-xs btn-warning ace-settings-btn" id="ace-settings-btn">
-                <i class="icon-cog bigger-150"></i>
+        <div class="page-content">
+            <div class="page-header">
+                <h1>
+                    资讯列表
+                    <small>
+                        <i class="icon-double-angle-right"></i>
+                        请先选中目标资讯再点击编辑，预览或者删除按钮
+                    </small>
+                </h1>
             </div>
+            <!-- /.page-header -->
 
-            <div class="ace-settings-box" id="ace-settings-box">
-                <div>
-                    <div class="pull-left">
-                        <select id="skin-colorpicker" class="hide">
-                            <option data-skin="default" value="#438EB9">#438EB9</option>
-                            <option data-skin="skin-1" value="#222A2D">#222A2D</option>
-                            <option data-skin="skin-2" value="#C6487E">#C6487E</option>
-                            <option data-skin="skin-3" value="#D0D0D0">#D0D0D0</option>
-                        </select>
-                    </div>
-                    <span>&nbsp; Choose Skin</span>
+            <div class="row">
+                <div class="col-xs-12">
+                    <!-- PAGE CONTENT BEGINS -->
+                    <table id="grid-table"></table>
+                    <div id="grid-pager"></div>
                 </div>
-
-                <div>
-                    <input type="checkbox" class="ace ace-checkbox-2" id="ace-settings-navbar"/>
-                    <label class="lbl" for="ace-settings-navbar"> Fixed Navbar</label>
-                </div>
-
-                <div>
-                    <input type="checkbox" class="ace ace-checkbox-2" id="ace-settings-sidebar"/>
-                    <label class="lbl" for="ace-settings-sidebar"> Fixed Sidebar</label>
-                </div>
-
-                <div>
-                    <input type="checkbox" class="ace ace-checkbox-2" id="ace-settings-breadcrumbs"/>
-                    <label class="lbl" for="ace-settings-breadcrumbs"> Fixed Breadcrumbs</label>
-                </div>
-
-                <div>
-                    <input type="checkbox" class="ace ace-checkbox-2" id="ace-settings-rtl"/>
-                    <label class="lbl" for="ace-settings-rtl"> Right To Left (rtl)</label>
-                </div>
-
-                <div>
-                    <input type="checkbox" class="ace ace-checkbox-2" id="ace-settings-add-container"/>
-                    <label class="lbl" for="ace-settings-add-container">
-                        Inside
-                        <b>.container</b>
-                    </label>
-                </div>
+                <!-- /.col -->
             </div>
+            <!-- /.row -->
+
+            <div id="dialog-message-preview" class="hide">
+            </div><!-- #dialog-message -->
+
         </div>
-        <!-- /#ace-settings-container -->
+        <!-- /.page-content -->
     </div>
-    <!-- /.main-container-inner -->
+    <!-- /.main-content -->
 
-    <a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
-        <i class="icon-double-angle-up icon-only bigger-110"></i>
-    </a>
+    <div class="ace-settings-container" id="ace-settings-container">
+        <div class="btn btn-app btn-xs btn-warning ace-settings-btn" id="ace-settings-btn">
+            <i class="icon-cog bigger-150"></i>
+        </div>
+
+        <div class="ace-settings-box" id="ace-settings-box">
+            <div>
+                <div class="pull-left">
+                    <select id="skin-colorpicker" class="hide">
+                        <option data-skin="default" value="#438EB9">#438EB9</option>
+                        <option data-skin="skin-1" value="#222A2D">#222A2D</option>
+                        <option data-skin="skin-2" value="#C6487E">#C6487E</option>
+                        <option data-skin="skin-3" value="#D0D0D0">#D0D0D0</option>
+                    </select>
+                </div>
+                <span>&nbsp; Choose Skin</span>
+            </div>
+
+            <div>
+                <input type="checkbox" class="ace ace-checkbox-2" id="ace-settings-navbar"/>
+                <label class="lbl" for="ace-settings-navbar"> Fixed Navbar</label>
+            </div>
+
+            <div>
+                <input type="checkbox" class="ace ace-checkbox-2" id="ace-settings-sidebar"/>
+                <label class="lbl" for="ace-settings-sidebar"> Fixed Sidebar</label>
+            </div>
+
+            <div>
+                <input type="checkbox" class="ace ace-checkbox-2" id="ace-settings-breadcrumbs"/>
+                <label class="lbl" for="ace-settings-breadcrumbs"> Fixed Breadcrumbs</label>
+            </div>
+
+            <div>
+                <input type="checkbox" class="ace ace-checkbox-2" id="ace-settings-rtl"/>
+                <label class="lbl" for="ace-settings-rtl"> Right To Left (rtl)</label>
+            </div>
+
+            <div>
+                <input type="checkbox" class="ace ace-checkbox-2" id="ace-settings-add-container"/>
+                <label class="lbl" for="ace-settings-add-container">
+                    Inside
+                    <b>.container</b>
+                </label>
+            </div>
+        </div>
+    </div>
+    <!-- /#ace-settings-container -->
+</div>
+<!-- /.main-container-inner -->
+
+<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
+    <i class="icon-double-angle-up icon-only bigger-110"></i>
+</a>
 </div>
 <!-- /.main-container -->
 
@@ -330,12 +334,19 @@
 <script src="/assets/js/jquery.colorbox-min.js"></script>
 <script src="/assets/js/date-time/bootstrap-datepicker.min.js"></script>
 <script src="/assets/js/jqGrid/jquery.jqGrid.min.js"></script>
-<script src="/assets/js/jqGrid/i18n/grid.locale-en.js"></script>
+<script src="/assets/js/jqGrid/i18n/grid.locale-zh-art.js"></script>
 
+
+<script src="/assets/js/jquery-ui-1.10.3.full.min.js"></script>
+<script src="/assets/js/jquery-ui-1.10.3.custom.min.js"></script>
+<script src="/assets/js/jquery.ui.touch-punch.min.js"></script>
+<script src="/common-jieli.js"></script>
 
 <!--[if lte IE 8]>
 <script src="/assets/js/excanvas.min.js"></script>
+
 <![endif]-->
+
 
 <!--
 <script src="/assets/js/jquery-ui-1.10.3.custom.min.js"></script>
@@ -362,30 +373,24 @@
 <script src="/assets/js/ace.min.js"></script>
 
 <!-- inline scripts related to this page -->
-<script>
-    function loadThisArticle(){
-        var artid = request.getParameter("artid");
-        if (artid == null || artid.length < 1) return;
-
-        $.ajax({
-            type:"GET",
-            url:"/rest/news/load?new_id="+artid,
-            async:true,
-            success:function(data){
-                alert(data);
-            }
-        });
-        ;
-    }
-</script>
-
 <script type="text/javascript">
+
+//override dialog's title function to allow for HTML titles
+$.widget("ui.dialog", $.extend({}, $.ui.dialog.prototype, {
+    _title: function(title) {
+        var $title = this.options.title || '&nbsp;'
+        if( ("title_html" in this.options) && this.options.title_html == true )
+            title.html($title);
+        else title.text($title);
+    }
+}));
+
 jQuery(function ($) {
-    <#if isSuper>
-        $("#sidebar-shortcuts-navlist").load("/sidebar_super.html",function(){$("#nav_list_2_1").addClass("active open");$("#nav_list_2").addClass("active");});
-    <#else>
-        $("#sidebar-shortcuts-navlist").load("/sidebar_admin.html",function(){$("#nav_list_2_1").addClass("active open");$("#nav_list_2").addClass("active");});
-    </#if>
+<#if isSuper>
+    $("#sidebar-shortcuts-navlist").load("/sidebar_super.html",function(){$("#nav_list_2_1").addClass("active open");$("#nav_list_2").addClass("active");});
+<#else>
+    $("#sidebar-shortcuts-navlist").load("/sidebar_admin.html",function(){$("#nav_list_2_1").addClass("active open");$("#nav_list_2").addClass("active");});
+</#if>
     var colorbox_params = {
         reposition: true,
         scalePhotos: true,
@@ -447,51 +452,15 @@ function parseArtData(data){
         data[i].addTime = nowStr;
 
         data[i].content = data[i].overview;
-        //data[i].content = data[i].content.substr(0,30);
-
-        //var re = new  RegExp("\\u0022","g");
-        //data[i].content = data[i].content.replace(re,"\"");
-        //re = new RegExp("\\u0027","g");
-        //data[i].content = data[i].content.replace(re,"'");
     }
     return data;
 }
 
-
-//it causes some flicker when reloading or navigating grid
-//it may be possible to have some custom formatter to do this as the grid is being created to prevent this
-//or go back to default browser checkbox styles for the grid
 function styleCheckbox(table) {
-    /**
-     $(table).find('input:checkbox').addClass('ace')
-     .wrap('<label />')
-     .after('<span class="lbl align-top" />')
-
-
-     $('.ui-jqgrid-labels th[id*="_cb"]:first-child')
-     .find('input.cbox[type=checkbox]').addClass('ace')
-     .wrap('<label />').after('<span class="lbl align-top" />');
-     */
 }
 
 
-//unlike navButtons icons, action icons in rows seem to be hard-coded
-//you can change them like this in here if you want
 function updateActionIcons(table) {
-    /**
-     var replacement =
-     {
-         'ui-icon-pencil' : 'icon-pencil blue',
-         'ui-icon-trash' : 'icon-trash red',
-         'ui-icon-disk' : 'icon-ok green',
-         'ui-icon-cancel' : 'icon-remove red'
-     };
-     $(table).find('.ui-pg-div span.ui-icon').each(function(){
-		var icon = $(this);
-		var $class = $.trim(icon.attr('class').replace('ui-icon', ''));
-		if($class in replacement) icon.attr('class', 'ui-icon '+replacement[$class]);
-	})
-     */
 }
 
 //replace icons with FontAwesome icons like above
@@ -516,6 +485,10 @@ function enableTooltips(table) {
     $(table).find('.ui-pg-div').tooltip({container:'body'});
 }
 
+var total = "??";
+var records = ${ti};
+var page = ${cp};
+
 jQuery(function($) {
     var raw_data = [
         {_id:1,associationId:"1",title:"测试1",type:"news",overview:"",content:"测试内容",images:[],imagesCount:2,appreciateUserIds:[],appreciateCount:12,addTime:"20140203T12:13:14.443GMT0+800"},
@@ -523,7 +496,7 @@ jQuery(function($) {
     ];
 
     //raw_data.empty();
-    raw_data = ${jsonArtList};
+    raw_data = ${newsList};
 
     var grid_data = parseArtData(raw_data);
 
@@ -533,7 +506,7 @@ jQuery(function($) {
     jQuery(grid_selector).jqGrid({
         data: grid_data,
         datatype: "local",
-        height: 330,
+        height: 490,
         colNames:['_id','协会','资讯标题','资讯类型', '资讯内容', '添加日期', '图片数量', '点赞数量'],
         colModel:[
             {name:"_id",index:"_id",width:10,editable:false,hidden:true},
@@ -546,8 +519,8 @@ jQuery(function($) {
             {name:"appreciateCount",index:"appreciateCount",width:"40",editable:false}
         ],
         viewrecords : true,
-        rowNum:10,
-        rowList:[10,20,30],
+        rowNum:15,
+        /*rowList:[10,20,30],*/
         pager : pager_selector,
         altRows: true,
         multiselect: true,
@@ -565,7 +538,8 @@ jQuery(function($) {
         },
 
         caption: "在这里编辑或删除文章",
-        autowidth: true
+        autowidth: true,
+        onPaging: function(pgButton){item_select('',pgButton);}
     });
 
 
@@ -577,11 +551,34 @@ jQuery(function($) {
 
                 edit: true,
                 editicon : 'icon-pencil blue',
-                editfunc : (function(){var id = $("#grid-table").getGridParam("selrow");id=$("#grid-table > tbody > tr").eq(id).find("td").eq(1).attr("title");window.location.href = '/rest/bnews/edit?artid='+id;}),
+                editfunc : (function(){
+                    var id = $("#grid-table").getGridParam("selrow");
+                    if (id) id=$("#grid-table > tbody > tr").eq(id).find("td").eq(1).attr("title");
+                    if (!id || id.length == 0) alert("请先选择一则资讯");
+                    else window.location.href = '/rest/bnews/edit?artid='+id;
+                }),
 
-                del: false,
+                del: true,
                 delicon : 'icon-trash red',
-                delfunc : (function(){alert("删除操作!");return false;}),
+                delfunc : (function(){/*alert("删除操作!");*/
+                    var id = $("#grid-table").getGridParam("selrow");
+                    if (id) id=$("#grid-table > tbody > tr").eq(id).find("td").eq(1).attr("title");
+                    if (!id || id.length == 0) alert("请先选择一则资讯");
+                    if (confirm("确认删除选中的资讯？")) {
+                        $.ajax({
+                            type: "POST",
+                            url: "/rest/bnews/del?artid=" + id,
+                            success: function (jsn) {
+                                if (jsn.code == 200) {
+                                    alert("已删除该资讯");
+                                    window.location.reload();
+                                } else {
+                                    alert("删除失败" + jsn.msg);
+                                }
+                            }
+                        });
+                    }
+                }),
 
                 search: false,
                 searchicon : 'icon-search orange',
@@ -591,13 +588,72 @@ jQuery(function($) {
 
                 view: true,
                 viewicon : 'icon-zoom-in grey',
-                viewfunc: (function(){alert("预览操作!");return false;})
+                viewfunc: (function(){previewThisArticle();/*alert("预览操作!");*/return false;})
             }
     );
 
 
     $(".ui-jqgrid-htable").css("font-family","微软雅黑");
+
+    $(".ui-pg-input").val(page);
+
+    $(".ui-pg-input").bind('keypress',function(event){
+        if (event.keyCode=='13'){
+            var v_input = $(".ui-pg-input").val();
+            try{
+                if (!isNaN(parseInt(v_input)) && parseInt(v_input) > 0){
+                    /* 如果输入输入值太大 */
+                    if (parseInt(v_input) > page && records < 15) {
+                        alert("输入的页数太大了!");return false;
+                    }
+                    else{
+                        var str = "rowNum=${rowNum}&";
+                        str += "page="+parseInt(v_input);
+                        window.location.href = "/rest/bnews/list?rowNum="+str;
+                    }
+                }
+            }catch (e){
+                alert("请输入有效的页数！");
+            }
+        }
+    });
+
+    $("#first_grid-pager").removeClass("ui-state-disabled");
+    $("#last_grid-pager").addClass("ui-state-disabled");
+    $("#prev_grid-pager").removeClass("ui-state-disabled");
+    $("#next_grid-pager").removeClass("ui-state-disabled");
 });
+
+
+function item_select(o,pgButton){
+    switch (pgButton) {
+        case 'first_grid-pager' :
+            page = 1;
+            break;
+        case 'last_grid-pager' :
+            return false;
+            break;
+        case 'prev_grid-pager' :
+            page = page - 1;
+            break;
+        case 'next_grid-pager' :
+            page = page + 1;
+            break;
+        default  :
+            break;
+    }
+
+    if (pgButton == 'next_grid-pager' && records < 15)
+    {page = page - 1;return false;}
+
+    if (page == 0)
+    {page = 1; return false;}
+
+    var str = "rowNum=${rowNum}&";
+    str += "page="+page;
+
+    window.location.href = "/rest/bnews/list?" + str;
+}
 
 jQuery(function ($) {
     $('[data-rel=tooltip]').tooltip({container: 'body'});
@@ -609,9 +665,10 @@ jQuery(function ($) {
     $('.date-picker').datepicker({autoclose: true}).next().on(ace.click_event, function () {
         $(this).prev().focus();
     });
-    $('input[name=date-range-picker]').daterangepicker().prev().on(ace.click_event, function () {
-        $(this).next().focus();
-    });
+
+    //$('input[name=date-range-picker]').daterangepicker().prev().on(ace.click_event, function () {
+    //   $(this).next().focus();
+    //});
 
     //chosen plugin inside a modal will have a zero width because the select element is originally hidden
     //and its width cannot be determined.

@@ -304,6 +304,16 @@
 
                     <div class="space-4"></div>
 
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right" for="form-field-checkbox"> 强推选项 </label>
+
+                        <div class="col-sm-9">
+                            <input type="checkbox" id="form-field-checkbox" >
+                        </div>
+                    </div>
+
+                    <div class="space-4"></div>
+
                 </form>
 
                 <div id="dialog-message-preview" class="hide">
@@ -462,6 +472,8 @@
 <script src="/assets/js/jquery.gritter.min.js"></script>
 <script src="/assets/js/bootbox.min.js"></script>
 
+<script src="/assets/js/jquery.form.js"></script>
+
 <!-- ace scripts -->
 
 <script src="/assets/js/ace-elements.min.js"></script>
@@ -470,34 +482,24 @@
 <script src="/common-jieli.js"></script>
 
 <!-- inline scripts related to this page -->
-<script>
-
-    (function ($, undefined) {
-        $.fn.getCursorPosition = function () {
-            var el = $(this).get(0);
-            var pos = 0;
-            if ('selectionStart' in el) {
-                pos = el.selectionStart;
-            } else if ('selection' in document) {
-                el.focus();
-                var Sel = document.selection.createRange();
-                var SelLength = document.selection.createRange().text.length;
-                Sel.moveStart('character', -el.value.length);
-                pos = Sel.text.length - SelLength;
-            }
-            return pos;
-        }
-    })(jQuery);
-</script>
 
 <script type="text/javascript">
+    //override dialog's title function to allow for HTML titles
+    $.widget("ui.dialog", $.extend({}, $.ui.dialog.prototype, {
+        _title: function(title) {
+            var $title = this.options.title || '&nbsp;'
+            if( ("title_html" in this.options) && this.options.title_html == true )
+                title.html($title);
+            else title.text($title);
+        }
+    }));
+
     jQuery(function ($) {
         <#if isSuper>
             $("#sidebar-shortcuts-navlist").load("/sidebar_super.html",function(){$("#nav_list_2_2").addClass("active open");$("#nav_list_2").addClass("active");});
         <#else>
             $("#sidebar-shortcuts-navlist").load("/sidebar_admin.html",function(){$("#nav_list_2_2").addClass("active open");$("#nav_list_2").addClass("active");});
         </#if>
-        /*$("#sidebar").load("/sidebar_super.html");$("#nav_list_2_2").addClass("active open");$("#nav_list_2").addClass("active");*/
 
         $('#selectAssociationIds').multiselect({
             numberDisplayed:10,
@@ -515,79 +517,19 @@
             spin_img = "";
             bootbox.dialog({
                 //message: "<input type='file' id='upload-image-files' name='upload-image-files' >",
-                message: "<form id='rest-upload-form' action='/upload' method='post' enctype='multipart/form-data' acceptcharset='UTF-8'>\n<input id='rest-upload-file' type='file' name='file' size='50' />"+spin_img+"</form>",
+                message: "<form id='rest-upload-form' method='post' enctype='multipart/form-data' acceptcharset='UTF-8'>\n<input id='rest-upload-file' type='file' name='file' size='50' />"+spin_img+"</form>",
                 buttons: {
                     "upload": {
                         "label": "<i class='icon-ok'></i> 上传 ",
                         "className": "btn-sm btn-success",
                         "callback": function () {
-                            // show loading image first
-                            //$("#upload-loading-img").attr("style","display:block");
-
-                            //Example.show("great success");
-                            // upload Image !
-                            var d = new FormData(document.getElementById('rest-upload-form'));
-                            $.ajax({
-                                url: '/rest/upload',
-                                type: 'POST',
-                                contentType: false,
-                                data: d,
-                                cache: false,
-                                processData: false,
-                                async: false,
-                                success: function (jsn) {
-                                    //alert(jsn);
-                                    // untested , but it should be like : code:200,body:filepath,msg...
-
-                                    if (jsn.code == 200) {
-                                        var uploadImgSrc = jsn.body + "";
-
-                                        uploadImgSrc = "<center><img src='" + uploadImgSrc + "'></center>";
-                                        var otextarea = $("#form-field-textarea").val().trim();
-                                        var otextarea_head = "";
-                                        var otextarea_tail;
-                                        var pos = getTextAreaCursorPosition() || 0;
-                                        if (pos > 1)
-                                            otextarea_head = otextarea.substring(0, pos);
-                                        otextarea_tail = otextarea.substring(pos);
-
-                                        //alert(otextarea_head + "[+]" + otextarea_tail);
-
-                                        $("#form-field-textarea").val(otextarea_head + uploadImgSrc + otextarea_tail);
-
-                                        // 更新图片集
-                                        var imgsrc=uploadImgSrc;
-                                        var newImgHtml = "<li>";
-                                        newImgHtml += "<a href='"+jsn.body+"' data-rel='colorbox'>";
-                                        newImgHtml += "<img alt='150x150' width='150' height='150' src='"+jsn.body+"' />";
-                                        newImgHtml += "</a>";
-                                        newImgHtml += "<div class='tools tools-right' style='height:30px;'>";
-                                        // must be " , ' no use
-                                        var re = new RegExp("\'","g");
-                                        newImgHtml += "<a href='#' onclick='deletePic(\""+uploadImgSrc.replace(re,"")+"\")'><i class='icon-remove red'></i></a></div></li>";
-
-                                        /*$("#upload-img-list > li").eq(0).after(newImgHtml);*/
-                                        $("#upload-img-list > li").last().before(newImgHtml);
-
-                                        $("#img-list-invisible").attr("style","border-width:0;display:none");
-
-                                        $('.ace-thumbnails [data-rel="colorbox"]').colorbox(colorbox_params);
-                                        $("#cboxLoadingGraphic").append("<i class='icon-spinner orange'></i>");//let's add a custom loading icon
-
-                                    } else {
-                                        alert("上传失败！");
-                                    }
-                                }
-                            });
-
-                            //$("#upload-loading-img").attr("style","display: none");
+                            $('#rest-upload-form').ajaxSubmit(uploadArticleImageOptions);
                         }
                     },
                     "cancel": {
                         "label": "<i class='icon-remove'></i> 取消",
                         "className": "btn-sm",
                         "callback": function () {
-                            //Example.show("uh oh, look out!");
                             var objFile = document.getElementById('rest-upload-file');
                             objFile.outerHTML = objFile.outerHTML.replace(/(value=\").+\"/i, "$1\"");
                         }
@@ -638,9 +580,10 @@
         $('.date-picker').datepicker({autoclose: true}).next().on(ace.click_event, function () {
             $(this).prev().focus();
         });
-        $('input[name=date-range-picker]').daterangepicker().prev().on(ace.click_event, function () {
-            $(this).next().focus();
-        });
+
+        //$('input[name=date-range-picker]').daterangepicker().prev().on(ace.click_event, function () {
+        //    $(this).next().focus();
+        //});
 
         //chosen plugin inside a modal will have a zero width because the select element is originally hidden
         //and its width cannot be determined.
