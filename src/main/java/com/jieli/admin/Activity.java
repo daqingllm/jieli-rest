@@ -143,7 +143,6 @@ public class Activity {
             Iterable<com.jieli.activity.Activity> activities1 = activityDAO.findOngoingOfficial(account.associationId);
             Iterable<com.jieli.activity.Activity> activities2 = activityDAO.findHistory(account.associationId,0,Integer.MAX_VALUE,"OFFICIAL");
 
-            //activities1 = activityDAO.findOngoingOfficial(account.associationId);
             for (com.jieli.activity.Activity activity : activities1){
                 if (_total >= (_page-1)*_rowNum && _total < _page*_rowNum) {
                     String tmp = Common.ReplaceObjectId(activity);
@@ -220,9 +219,9 @@ public class Activity {
 
             // 判断用户是否已经登录
             if (account == null ||
-                    (IdentifyUtils.isAdmin(sessionId) && !activity.associationId.equals(account.associationId)) ||
+                    (!IdentifyUtils.isSuper(sessionId) && !activity.associationId.equals(account.associationId)) ||
                     !IdentifyUtils.isValidate(sessionId) ||
-                    !IdentifyUtils.isAdmin(sessionId) && !IdentifyUtils.isSuper(sessionId)
+                    !IdentifyUtils.isAdmin(sessionId)
                     ) {
                 return Common.errorReturn;
             }

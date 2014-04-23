@@ -106,6 +106,7 @@ public class Help {
         }
         else {
             if(!MongoUtils.isValidObjectId(associationId)) {
+                params.put("isSuper", false);
                 return FTLrender.getResult("error.ftl", params);
             }
         }
@@ -157,6 +158,7 @@ public class Help {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("username", account.username);
         if(!MongoUtils.isValidObjectId(helpId)) {
+            params.put("isSuper", false);
             return FTLrender.getResult("error.ftl", params);
         }
         HelpInfo help = helpDAO.loadById(helpId);

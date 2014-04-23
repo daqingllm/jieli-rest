@@ -259,19 +259,19 @@
     </div>
     <div class="space-4"></div>
 
-    <#if isSuper>
-        <!--协会-->
-        <div class="form-group">
-            <label class="col-sm-3 control-label no-padding-right" for="form-field-associations"> 协会范围 </label>
+<#if isSuper>
+    <!--协会-->
+    <div class="form-group">
+        <label class="col-sm-3 control-label no-padding-right" for="form-field-associations"> 协会范围 </label>
 
-            <div class="col-sm-9">
-                <select class="col-xs-10 col-sm-7" id="form-field-associations" style="padding: 5px 4px;font-size: 14px;">
-                ${associationList}
-                </select>
-            </div>
+        <div class="col-sm-9">
+            <select class="col-xs-10 col-sm-7" id="form-field-associations" style="padding: 5px 4px;font-size: 14px;">
+            ${associationList}
+            </select>
         </div>
-        <div class="space-4"></div>
-    </#if>
+    </div>
+    <div class="space-4"></div>
+</#if>
 
     <!--时间-->
     <!--<div class="form-group">
@@ -1117,7 +1117,22 @@ jQuery(function ($) {
             }
         });
 
-        act.serviceInfo=$("#form-field-textarea-service").val();
+        act.serviceInfo = {};
+        var serviceRaw = $("#form-field-textarea-service").val();
+        var serviceList = serviceRaw.split("\n");
+        for (var i = 0; i < serviceList.length; i++){
+            var findex = serviceList[i].indexOf(":");
+            if (serviceList[i].indexOf(":") > -1 || serviceList[i].indexOf("：") > -1){
+                if (findex < 0) findex = serviceList[i].indexOf("：");
+                var head = serviceList[i].substr(0,findex);
+                var tail = serviceList[i].substr(findex);
+                eval("act.serviceInfo."+head+"='"+tail+"'");
+            }else{
+                eval("act.serviceInfo."+serviceList[i]+"='"+serviceList[i]+"'");;
+            }
+        }
+        //act.serviceInfo=$("#form-field-textarea-service").val();
+        act.album = {};
         act.sponsorInfo=$("#form-field-textarea-sponsor").val();
         // dlDate is beginDate ......
         act.beginDate=new Date($("#form-field-dlDate").val());
@@ -1147,8 +1162,8 @@ jQuery(function ($) {
             async:false,
             data:JSON.stringify(act),
             contentType:"application/json",
-                cache:false,
-                processData:false
+            cache:false,
+            processData:false
         });
     }
 
@@ -1171,10 +1186,10 @@ jQuery(function ($) {
         if (isNaN(act.beginDate.getDate()))
             return "必须设定截止时间";
 
-        <#if isSuper>
-            if ($("#form-field-associations").val() == '')
-                return "必须选择至少一个活动";
-        </#if>
+    <#if isSuper>
+        if ($("#form-field-associations").val() == '')
+            return "必须选择至少一个活动";
+    </#if>
 
         return null;
 

@@ -34,6 +34,60 @@ public class News {
     @GET
     @Path("/list")
     @Produces(MediaType.TEXT_HTML)
+    public String GetNewsList(@CookieParam("u")String sessionId,@QueryParam("page") String page, @QueryParam("rowNum") String rowNum, @QueryParam("pl") String preload) throws JsonProcessingException {
+        String response = Common.RoleCheckString(sessionId);
+        if (response != null) return response;
+
+        com.jieli.common.entity.Account account = accountDAO.loadById(sessionId);
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("username",account.username);
+
+        int _page = 1,_rowNum = 15,_total=0,_totalPage = 0;
+        try{
+            _page = Integer.parseInt(page);
+            if (_page <= 0) _page = 1;
+        }catch (Exception e){
+            _page = 1;
+        }
+        try{
+            _rowNum = Integer.parseInt(rowNum);
+            if (_rowNum <= 0) _rowNum = 1;
+        }catch (Exception e){
+            _rowNum = 15;
+        }
+
+        String newsList = "";
+        List<com.jieli.news.News> newses = new LinkedList<com.jieli.news.News>();
+        if (IdentifyUtils.isSuper(sessionId)){
+            params.put("isSuper",true);
+            newses = newsDAO.paginateInOrder(_page, _rowNum,"{addTime:-1}", "{type: {$in: [\""+NewsType.newsType+"\",\""+NewsType.associationType+"\",\""+NewsType.enterpriseType+"\"]}}");
+        }else{
+            params.put("isSuper",false);
+            newses = newsDAO.paginateInOrder(_page, _rowNum,"{addTime:-1}", "{type: {$in: [\""+NewsType.associationType+"\",\""+NewsType.enterpriseType+"\"]}}");
+        }
+
+        Map<String , String> associationNames = new HashMap<String, String>();
+        Iterable<Association> associations = associationDAO.loadAll();
+        for(Association association : associations) associationNames.put(association.get_id().toString(),association.name);
+
+        for (com.jieli.news.News news : newses){
+            _total ++;
+            String tmp = Common.ReplaceObjectId(news);
+            newsList += tmp.replace("\"associationId\":\"" + news.associationId + "\"", "\"associationId\":\"" + associationNames.get(news.associationId) + "\"") + ",";
+        }
+
+        params.put("newsList","["+(newsList.length()>0?(newsList.substring(0,newsList.length()-1)):"")+"]");
+        params.put("rowNum",_rowNum);
+        params.put("ti",_total);
+        //params.put("tp",_totalPage);
+        params.put("cp",_page);
+
+        return FTLrender.getResult("article_list.ftl",params);
+    }
+
+    @POST
+    @Path("/list")
+    @Produces(MediaType.TEXT_HTML)
     public String NewsList(@CookieParam("u")String sessionId,@CookieParam("a")String associationId,@CookieParam("r")String role,@QueryParam("pl") String preload){
         if (preload != "y") preload = "n";
 
@@ -251,6 +305,7 @@ public class News {
             return Response.status(200).entity(responseEntity).build();
         }
 
+        // only delete first
         artid = artid.split(",")[0];
 
         com.jieli.news.News news = newsDAO.loadById(artid);
@@ -261,13 +316,13 @@ public class News {
             return Response.status(200).entity(responseEntity).build();
         }
 
-        if (IdentifyUtils.isAdmin(sessionId) && !news.associationId.equals(IdentifyUtils.getAssociationId(sessionId))){
+        if (!IdentifyUtils.isSuper(sessionId) && !news.associationId.equals(IdentifyUtils.getAssociationId(sessionId))){
             responseEntity.code = 9001;
             responseEntity.msg = "无权限";
             return Response.status(200).entity(responseEntity).build();
         }
 
-        userDAO.deleteById(artid);
+        newsDAO.deleteById(artid);
         responseEntity.code = 200;
         responseEntity.msg = "删除成功";
         return Response.status(200).entity(responseEntity).build();

@@ -118,7 +118,7 @@ public class Account {
     @Path("/list")
     @Produces(MediaType.TEXT_HTML)
     public String loadUsers(@CookieParam("u")String sessionId,@QueryParam("id")String id /*,@QueryParam("state")int state*/) throws JsonProcessingException {
-        if (!IdentifyUtils.isAdmin(sessionId)) {
+        if (!IdentifyUtils.isAdmin(sessionId) || IdentifyUtils.isSuper(sessionId)) {
             return Common.errorReturn;
         }
         ResponseEntity responseEntity = new ResponseEntity();
@@ -204,7 +204,7 @@ public class Account {
         User user = userDAO.loadById(userId);
 
         ResponseEntity responseEntity = new ResponseEntity();
-        if (Common.RoleCheckResponse(sessionId) != null || user == null || (IdentifyUtils.isAdmin(sessionId) && !user.associationId.equals(IdentifyUtils.getAssociationId(sessionId)))) {
+        if (Common.RoleCheckResponse(sessionId) != null || user == null || (!IdentifyUtils.isSuper(sessionId) && !user.associationId.equals(IdentifyUtils.getAssociationId(sessionId)))) {
             responseEntity.code = 9001;
             responseEntity.msg = "no access !";
             return Response.status(200).entity(responseEntity).build();
@@ -231,7 +231,7 @@ public class Account {
 
         if (user == null) {responseEntity.code=9001;responseEntity.msg="无此用户";return Response.status(200).entity(responseEntity).build();}
 
-        if (IdentifyUtils.isAdmin(sessionId) && !user.associationId.equals(IdentifyUtils.getAssociationId(sessionId))){responseEntity.code=9001;responseEntity.msg="无权限修改此用户的信息";return Response.status(200).entity(responseEntity).build();}
+        if (!IdentifyUtils.isSuper(sessionId) && !user.associationId.equals(IdentifyUtils.getAssociationId(sessionId))){responseEntity.code=9001;responseEntity.msg="无权限修改此用户的信息";return Response.status(200).entity(responseEntity).build();}
 
         if (user.group.equals(group)){
             user.group = "";

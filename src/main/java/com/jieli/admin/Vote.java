@@ -207,6 +207,7 @@ public class Vote {
         }
         else {
             if(!MongoUtils.isValidObjectId(associationId)) {
+                params.put("isSuper", false);
                 return FTLrender.getResult("error.ftl", params);
             }
         }
