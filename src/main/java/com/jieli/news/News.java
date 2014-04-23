@@ -34,4 +34,8 @@ public class News extends Model {
 
     public int commentCount;
 
+
+    public String professionTag;
+    public List<String> interestTags = new ArrayList<String>();
+
 }

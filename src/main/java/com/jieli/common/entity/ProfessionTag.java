@@ -28,4 +28,8 @@ public abstract class ProfessionTag {
     public static String MEDIA = "传媒/广告/公关";
     public static String OTHER = "其他";
 
+    public static String[] ALL = {
+            IT_INTERNET,FINANCIAL_LAW,TRADE,MEDICAL,BUILDING,FOOD_TRIP,TRAVEL,ENERGY,MACHINE,INFRASTRUCTURE
+            ,AGRICULTURE,GOVERNMENT,SCIENCE,HR,EDUCATION,CULTURE_SPORT,MEDIA,OTHER
+    };
 }

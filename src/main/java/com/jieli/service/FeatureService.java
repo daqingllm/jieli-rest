@@ -14,6 +14,7 @@ import com.jieli.message.*;
 import com.jieli.mongo.BaseDAO;
 import com.jieli.user.dao.UserDAO;
 import com.jieli.user.entity.User;
+import com.jieli.util.CollectionUtils;
 import com.jieli.util.IdentifyUtils;
 import com.jieli.util.MongoUtils;
 import com.sun.jersey.spi.resource.Singleton;
@@ -891,8 +892,19 @@ public class FeatureService {
 //            int score = MatchUtil.calcMatchingScore(self, user);
             MatchUtil matchUtil = new MatchUtil(self, user);
             Match match = matchUtil.getMatch();
+            MatchDisplay display = new MatchDisplay();
+            User user1 = userDAO.loadById(match.userId1);
+            display.userId1 = user1.get_id().toString();
+            display.name1 = user1.name;
+            display.userFace1 = user1.userFace;
+            User user2 = userDAO.loadById(match.userId2);
+            display.userId2 = user2.get_id().toString();
+            display.name2 = user2.name;
+            display.userFace2 = user2.userFace;
+            display.score = match.score;
+            display.infos = match.matchInfos;
             responseEntity.code = 200;
-            responseEntity.body = match;
+            responseEntity.body = display;
             return  Response.status(200).entity(responseEntity).build();
         }
 
@@ -916,7 +928,56 @@ public class FeatureService {
 
         responseEntity.code = 200;
         responseEntity.body = results;
-        return  Response.status(200).entity(responseEntity).build();
+        return Response.status(200).entity(responseEntity).build();
+    }
+
+    @Path("/match")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+    public Response getOrientedMatchs(@CookieParam("u")String sessionId, List<String> userIds) {
+        if(!IdentifyUtils.isValidate(sessionId)) {
+            return Response.status(403).build();
+        }
+        ResponseEntity responseEntity = new ResponseEntity();
+        if (CollectionUtils.isEmpty(userIds)) {
+            responseEntity.code = 6104;
+            responseEntity.msg = "用户列表为空";
+            return Response.status(200).entity(responseEntity).build();
+        }
+        User self = userDAO.loadById(IdentifyUtils.getUserId(sessionId));
+        List<MatchDisplay> results = new ArrayList<MatchDisplay>();
+        for (String userId : userIds) {
+            if (!StringUtils.isEmpty(userId) && MongoUtils.isValidObjectId(userId)) {
+                if (IdentifyUtils.getUserId(sessionId).equals(userId)) {
+                    responseEntity.code = 6102;
+                    responseEntity.msg = "不能与自己匹配";
+                    return  Response.status(200).entity(responseEntity).build();
+                }
+                User user = userDAO.loadById(userId);
+                if (user == null) {
+                    responseEntity.code = 1102;
+                    responseEntity.msg = "用户不存在";
+                    return  Response.status(200).entity(responseEntity).build();
+                }
+                MatchUtil matchUtil = new MatchUtil(self, user);
+                Match match = matchUtil.getMatch();
+                MatchDisplay display = new MatchDisplay();
+                User user1 = userDAO.loadById(match.userId1);
+                display.userId1 = user1.get_id().toString();
+                display.name1 = user1.name;
+                display.userFace1 = user1.userFace;
+                User user2 = userDAO.loadById(match.userId2);
+                display.userId2 = user2.get_id().toString();
+                display.name2 = user2.name;
+                display.userFace2 = user2.userFace;
+                display.score = match.score;
+                display.infos = match.matchInfos;
+                results.add(display);
+            }
+        }
+        responseEntity.code = 200;
+        responseEntity.body = results;
+        return Response.status(200).entity(responseEntity).build();
     }
 
     @Path("/topmatch")
