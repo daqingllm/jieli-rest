@@ -60,12 +60,9 @@ public class AjaxHelp {
             }
         }
 
-        if (page <= 0) {
-            page = 1;
-        }
-        if (size <= 0) {
-            size = 20;
-        }
+        page = 0;
+        size = 0;
+
         int type = 2;
         if (helpType != null) {
             type = Integer.parseInt(helpType);

@@ -493,17 +493,22 @@ jQuery(function($) {
 
     var pager_selector = "#grid-pager";
     var grid_selector = '#grid-table';
-    var raw_data=${jsonVoteList};
+    var tmp = ${jsonVoteList};
+    var raw_data = [];
+    for (i = 0; i < 100; i++) {
+        raw_data.push(tmp[0]);
+    }
+    //var raw_data=${jsonVoteList};
     var data = parseArtData(raw_data);
     jQuery(grid_selector).jqGrid({
         datatype: 'local',
-        data: parseArtData(data),
+        data: data,
         height: 330,
         colNames:['id',<#if isSuper>'协会',</#if>'投票标题','投票类型', '投票描述', '添加日期', '截止日期', '参加人数'],
         colModel:[
             {name:"id",index:"_id",width:10,editable:false,hidden:true},
             //{name:"associationId",index:"associationId",width:40,editable:false, hidden:true},
-            {name:"associationName",index:"associationName",width:40,editable:false<#if isSuper><#else>,hidden:true</#if>},
+            <#if isSuper>{name:"associationName",index:"associationName",width:40,editable:false},</#if>
             {name:"title",index:"title",width:"100",editable:false, formatter:function getUrl(cellValue, options, rowObject) {
                 var url = "<a href=\"/rest/bvote/view?v=" + rowObject.id + "\">" + cellValue + "</a>";
                 return url;
@@ -549,7 +554,10 @@ jQuery(function($) {
 
                 edit: true,
                 editicon : 'icon-pencil blue',
-                editfunc : (function(){var id = $("#grid-table").getGridParam("selrow");id=$("#grid-table > tbody > tr").eq(id).find("td").eq(1).attr("title");window.location.href = '/rest/bnews/edit?voteId='+id;}),
+                editfunc : (function(){
+                    var index = $("#grid-table").getGridParam("selrow");
+                    var id=$("#grid-table > tbody > tr").eq(index).find("td").eq(1).attr("id");
+                    window.location.href = '/rest/bvote/edit?voteId='+index;}),
 
                 del: false,
                 delicon : 'icon-trash red',

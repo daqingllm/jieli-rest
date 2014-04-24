@@ -59,12 +59,8 @@ public class AjaxVote {
                 return Response.status(200).entity(responseEntity).build();
             }
         }
-        if (page <= 0) {
-            page = 1;
-        }
-        if (size <= 0) {
-            size = 20;
-        }
+        page = 0;
+        size = 0;
         List<SimpleVoteInfo> voteInfoList = voteDAO.getVoteInfoList(page, size, associationId);
         for(SimpleVoteInfo v : voteInfoList) {
             v.setId(v.get_id().toString());

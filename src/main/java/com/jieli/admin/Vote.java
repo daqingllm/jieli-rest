@@ -10,6 +10,7 @@ import com.jieli.comment.TopicType;
 import com.jieli.common.dao.AccountDAO;
 import com.jieli.common.entity.Account;
 import com.jieli.feature.vote.dao.VoteDAO;
+import com.jieli.feature.vote.dao.VoteResultDAO;
 import com.jieli.feature.vote.entity.SimpleVoteInfo;
 import com.jieli.feature.vote.entity.VoteInfo;
 import com.jieli.mongo.BaseDAO;
@@ -37,6 +38,7 @@ public class Vote {
     private AccountDAO accountDAO = new AccountDAO();
     private AssociationDAO associationDAO = new AssociationDAO();
     private VoteDAO voteDAO = new VoteDAO();
+    private VoteResultDAO voteResultDAO = new VoteResultDAO();
     private UserDAO userDAO = new UserDAO();
     private BaseDAO<Comment> commentDAO = new BaseDAO<Comment>(Collections.Comment, Comment.class);
     private String errorReturn = "<!DOCTYPE html>\n" +
@@ -221,6 +223,7 @@ public class Vote {
 
         for(SimpleVoteInfo v : voteList) {
             v.setId(v.get_id().toString());
+            v.setParticipants(voteResultDAO.loadByVoteId(v.get_id().toString()).getParticipants());
         }
         String jsonVoteList;
         int i;

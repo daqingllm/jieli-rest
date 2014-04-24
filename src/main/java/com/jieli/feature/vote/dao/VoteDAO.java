@@ -21,8 +21,16 @@ public class VoteDAO extends GenericDAO<VoteInfo> {
      * @return
      */
     public List<SimpleVoteInfo> getVoteInfoList(int pageNo, int pageSize, String associationId) {
-        Iterable<SimpleVoteInfo> voteIterator = col.find("{\"associationId\":#}", associationId)
-                .sort("{addTime:-1}").skip((pageNo - 1) * pageSize).limit(pageSize).as(SimpleVoteInfo.class);
+        Iterable<SimpleVoteInfo> voteIterator;
+        if(pageNo == 0 || pageSize == 0) {
+            voteIterator = col.find("{\"associationId\":#}", associationId)
+                    .sort("{addTime:-1}").as(SimpleVoteInfo.class);
+        }
+        else {
+            voteIterator = col.find("{\"associationId\":#}", associationId)
+                    .sort("{addTime:-1}").skip((pageNo - 1) * pageSize).limit(pageSize).as(SimpleVoteInfo.class);
+        }
+
         List<SimpleVoteInfo> resultList = new ArrayList<SimpleVoteInfo>();
         for(SimpleVoteInfo v : voteIterator) {
             resultList.add(v);

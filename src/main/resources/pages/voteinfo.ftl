@@ -647,14 +647,13 @@
 jQuery(function ($) {
 <#if isSuper>
     $("#sidebar-shortcuts-navlist").load("/sidebar_super.html",function(){
-        ${"nav_list_4_2"}.addClass("active open");
+    ${"nav_list_4_2"}.addClass("active open");
         $("#nav_list_4").addClass("active");});
 <#else>
     $("#sidebar-shortcuts-navlist").load("/sidebar_admin.html",function(){
             <#if newVote>$("#nav_list_4_2")<#elseif isEditable>$("#nav_list_4_4")<#else>$("#nav_list_4_3")</#if>.addClass("active open");
         $("#nav_list_4").addClass("active");});
 </#if>
-
     $("#bootbox-upload-image").on("click", uploadImgBox);
 
     var colorbox_params = {
@@ -1064,7 +1063,9 @@ function addVoteOption(value, percent) {
         value = "";
     var voteOption = $('<div class="vote-choice">' +
             '<input type="text" value="'+value+'" placeholder="选项内容，不填写为无效选项" class="col-xs-10 col-sm-6 vote-choice-text" style="padding-left: 7px;">' +
+            <#if !newVote && !isEditable>
             '<div class="col-xs-5"><div class="progress" data-percent="'+percent+'%"><div class="progress-bar" style="width:'+percent+'%;"></div></div></div>' +
+            </#if>
             '<button type="button" class="btn btn-xs btn-info vote-choice-img">Pic</button>' +
             '<div class="icon-remove"></div>' +
             '</div>');
@@ -1222,7 +1223,12 @@ function postNewVote() {
         url : '/rest/feature/vote/addvote',
         data : JSON.stringify(request),
         type: 'POST',
-        contentType: "application/json"
+        contentType: "application/json",
+        success:function(json) {
+            if(json.code == 200) {
+                window.location.href = '/rest/bvote/list';
+            }
+        }
     });
 }
 function postEditVote(voteId) {
@@ -1247,7 +1253,12 @@ function postEditVote(voteId) {
         url : '/rest/feature/vote/modify?voteId='+voteId,
         data : JSON.stringify(request),
         type: 'POST',
-        contentType: "application/json"
+        contentType: "application/json",
+        success:function(json) {
+            if(json.code == 200) {
+                window.location.href = '/rest/bvote/list';
+            }
+        }
     });
 }
 </script>
