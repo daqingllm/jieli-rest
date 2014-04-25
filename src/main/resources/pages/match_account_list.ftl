@@ -2,7 +2,7 @@
 <html lang="zh">
 <head>
     <meta charset="utf-8"/>
-    <title>接力 资讯管理</title>
+    <title>接力 账号管理</title>
     <meta name="description" content="接力"/>
     <!-- basic styles -->
 
@@ -192,10 +192,10 @@
                     </li>
 
                     <li>
-                        <a href="#"> 投票管理 </a>
+                        <a href="#"> 账号管理 </a>
                     </li>
 
-                    <li class="active"> 投票列表 </li>
+                    <li class="active"> 账号列表 </li>
                 </ul>
                 <!-- .breadcrumb -->
 
@@ -214,28 +214,15 @@
             <div class="page-content">
                 <div class="page-header">
                     <h1>
-                        投票列表
+                        账号列表
                     </h1>
                 </div>
                 <!-- /.page-header -->
 
                 <div class="row">
-                <#if isSuper>
-                    <label class="col-sm-3 control-label no-padding-right" for="form-field-select-type"> 请选择协会 </label>
-                    <div class="col-sm-9">
-                        <select class="col-xs-10 col-sm-7" id="form-field-select-type" style="padding: 5px 4px;font-size: 14px;">
-                            <#list associationList as associations>
-                                <option value="${associations._id}" <#if associations_index = 0>selected="selected" </#if>>${associations.name}</option>
-                            </#list>
-                        </select>
-                    </div>
-                </#if>
                     <div class="col-xs-12">
-
                         <!-- PAGE CONTENT BEGINS -->
-
-                        <div><table id="grid-table"></table></div>
-
+                        <table id="grid-table"></table>
                         <div id="grid-pager"></div>
                     </div>
                     <!-- /.col -->
@@ -262,6 +249,34 @@
                         </select>
                     </div>
                     <span>&nbsp; Choose Skin</span>
+                </div>
+
+                <div>
+                    <input type="checkbox" class="ace ace-checkbox-2" id="ace-settings-navbar"/>
+                    <label class="lbl" for="ace-settings-navbar"> Fixed Navbar</label>
+                </div>
+
+                <div>
+                    <input type="checkbox" class="ace ace-checkbox-2" id="ace-settings-sidebar"/>
+                    <label class="lbl" for="ace-settings-sidebar"> Fixed Sidebar</label>
+                </div>
+
+                <div>
+                    <input type="checkbox" class="ace ace-checkbox-2" id="ace-settings-breadcrumbs"/>
+                    <label class="lbl" for="ace-settings-breadcrumbs"> Fixed Breadcrumbs</label>
+                </div>
+
+                <div>
+                    <input type="checkbox" class="ace ace-checkbox-2" id="ace-settings-rtl"/>
+                    <label class="lbl" for="ace-settings-rtl"> Right To Left (rtl)</label>
+                </div>
+
+                <div>
+                    <input type="checkbox" class="ace ace-checkbox-2" id="ace-settings-add-container"/>
+                    <label class="lbl" for="ace-settings-add-container">
+                        Inside
+                        <b>.container</b>
+                    </label>
                 </div>
             </div>
         </div>
@@ -311,12 +326,33 @@
 <script src="/assets/js/jquery.colorbox-min.js"></script>
 <script src="/assets/js/date-time/bootstrap-datepicker.min.js"></script>
 <script src="/assets/js/jqGrid/jquery.jqGrid.min.js"></script>
-<script src="/assets/js/jqGrid/i18n/grid.locale-en.js"></script>
+<script src="/assets/js/jqGrid/i18n/grid.locale-zh-acc.js"></script>
 
 
 <!--[if lte IE 8]>
 <script src="/assets/js/excanvas.min.js"></script>
 <![endif]-->
+
+<!--
+<script src="/assets/js/jquery-ui-1.10.3.custom.min.js"></script>
+<script src="/assets/js/jquery.ui.touch-punch.min.js"></script>
+<script src="/assets/js/chosen.jquery.min.js"></script>
+<script src="/assets/js/fuelux/fuelux.spinner.min.js"></script>
+<script src="/assets/js/date-time/bootstrap-datepicker.min.js"></script>
+<script src="/assets/js/date-time/bootstrap-timepicker.min.js"></script>
+<script src="/assets/js/date-time/moment.min.js"></script>
+<script src="/assets/js/date-time/daterangepicker.min.js"></script>
+<script src="/assets/js/bootstrap-colorpicker.min.js"></script>
+<script src="/assets/js/jquery.knob.min.js"></script>
+<script src="/assets/js/jquery.autosize.min.js"></script>
+<script src="/assets/js/jquery.inputlimiter.1.3.1.min.js"></script>
+<script src="/assets/js/jquery.maskedinput.min.js"></script>
+<script src="/assets/js/bootstrap-tag.min.js"></script>
+<script src="/assets/js/jquery.gritter.min.js"></script>
+<script src="/assets/js/bootbox.min.js"></script>
+-->
+
+<script src="/assets/js/bootbox.min.js"></script>
 
 <!-- ace scripts -->
 
@@ -324,14 +360,45 @@
 <script src="/assets/js/ace.min.js"></script>
 
 <!-- inline scripts related to this page -->
+<script>
+    function loadThisArticle(){
+        var artid = request.getParameter("artid");
+        if (artid == null || artid.length < 1) return;
+
+        $.ajax({
+            type:"GET",
+            url:"/rest/news/load?new_id="+artid,
+            async:true,
+            success:function(data){
+                alert(data);
+            }
+        });
+        ;
+    }
+
+    function loadAllUsers(sid,state){
+        var d = {"id":sid,"state":state};
+        $.ajax({
+            type:"GET",
+            url:"/rest/association/user",
+            async:ture,
+            data:d,
+            success:function(jsn){
+                var ulist;
+            }
+        });
+    }
+</script>
 
 <script type="text/javascript">
 jQuery(function ($) {
+
 <#if isSuper>
-    $("#sidebar-shortcuts-navlist").load("/sidebar_super.html",function(){$("#nav_list_4_1").addClass("active open");$("#nav_list_4").addClass("active");});
+    $("#sidebar-shortcuts-navlist").load("/sidebar_super.html",function(){$("#nav_list_5_1").addClass("active open");$("#nav_list_5").addClass("active");});
 <#else>
-    $("#sidebar-shortcuts-navlist").load("/sidebar_admin.html",function(){$("#nav_list_4_1").addClass("active open");$("#nav_list_4").addClass("active");});
+    $("#sidebar-shortcuts-navlist").load("/sidebar_admin.html",function(){$("#nav_list_5_1").addClass("active open");$("#nav_list_5").addClass("active");});
 </#if>
+
     var colorbox_params = {
         reposition: true,
         scalePhotos: true,
@@ -381,37 +448,13 @@ Date.prototype.Format = function (fmt) { //author: meizz
 }
 
 function parseArtData(data){
-
+    var states = {"DISABLE":"禁用","ENABLE":"普通用户","ADMIN":"协会管理员","SUPPER":"超级管理员"};
     for (var i = 0 ; i < data.length; i++){
-        if(data[i].multiple) {
-            data[i].type = "多项选择";
-        }
-        else {
-            data[i].type = "单项选择";
-        }
-
-        var adt = data[i].addTime;
-        var d = data[i].deadLine;
-        // ..
-        //adt = adt.substr(0,12);
-        var now = new Date();now.setTime(adt);
-        var dd = new Date();dd.setTime(d);
-        var nowStr = now.Format("yyyy-MM-dd");
-        var dStr = dd.Format("yyyy-MM-dd");
-
-        data[i].addTime = nowStr;
-        data[i].deadLine = dStr;
-
-        data[i].content = data[i].description.substr(0, 30);
-        //data[i].content = data[i].content.substr(0,30);
-
-        //var re = new  RegExp("\\u0022","g");
-        //data[i].content = data[i].content.replace(re,"\"");
-        //re = new RegExp("\\u0027","g");
-        //data[i].content = data[i].content.replace(re,"'");
+        data[i].state = states[data[i].state];
     }
     return data;
 }
+
 
 //it causes some flicker when reloading or navigating grid
 //it may be possible to have some custom formatter to do this as the grid is being created to prevent this
@@ -471,53 +514,33 @@ function enableTooltips(table) {
     $(table).find('.ui-pg-div').tooltip({container:'body'});
 }
 
-function updateGrid(associationId, page, size) {
-    $.ajax({
-        url: "/rest/feature/ajaxvote/list?a="+associationId+"&page="+page+"&size="+size,
-        type : 'GET',
-        contentType: "application/json",
-        success: function(response) {
-            if (response.code == 200) {
-                var data = response.body;
-
-                $('#grid-table').jqGrid('clearGridData', true).trigger('reloadGrid');
-                $("#grid-table").jqGrid('setGridParam', {
-                    datatype: 'local',
-                    data: parseArtData(data)
-                }).trigger('reloadGrid');
-            }
-        }
-    });
-}
 jQuery(function($) {
+    var raw_data = [
+        {_id:1,associationId:"1",title:"测试1",type:"news",overview:"",content:"测试内容",images:[],imagesCount:2,appreciateUserIds:[],appreciateCount:12,addTime:"20140203T12:13:14.443GMT0+800"},
+        {_id:2,associationId:"2",title:"测试2",type:"news",overview:"",content:"测试内容",images:[],imagesCount:2,appreciateUserIds:[],appreciateCount:12,addTime:"20140203T12:13:14.443GMT0+800"}
+    ];
 
+    //raw_data.empty();
+    raw_data = ${jsonAccList};
+
+    var grid_data = parseArtData(raw_data);
+    //var grid_data = raw_data;
+
+    var grid_selector = "#grid-table";
     var pager_selector = "#grid-pager";
-    var grid_selector = '#grid-table';
-    /*var tmp = ${jsonVoteList};
-    var raw_data = [];
-    for (i = 0; i < 100; i++) {
-        raw_data.push(tmp[0]);
-    }*/
-    var raw_data=${jsonVoteList};
-    var data = parseArtData(raw_data);
+
     jQuery(grid_selector).jqGrid({
-        datatype: 'local',
-        data: data,
+        data: grid_data,
+        datatype: "local",
         height: 330,
-        colNames:['id',<#if isSuper>'协会',</#if>'投票标题','投票类型', '投票描述', '添加日期', '截止日期', '参加人数'],
+        colNames:['_id','协会','用户名','姓名','状态','匹配'],
         colModel:[
-            {name:"id",index:"_id",width:10,editable:false,hidden:true},
-            //{name:"associationId",index:"associationId",width:40,editable:false, hidden:true},
-            <#if isSuper>{name:"associationName",index:"associationName",width:40,editable:false},</#if>
-            {name:"title",index:"title",width:"100",editable:false, formatter:function getUrl(cellValue, options, rowObject) {
-                var url = "<a href=\"/rest/bvote/view?v=" + rowObject.id + "\">" + cellValue + "</a>";
-                return url;
-            }},
-            {name:"type",index:"type",width:"45",editable:false},
-            {name:"content",index:"content",width:"270",editable:false},
-            {name:"addTime",index:"addTime",width:"75",editable:false,sorttype:"date"},
-            {name:"deadLine",index:"deadLine",width:"75",editable:false, sorttype:"date"},
-            {name:"participants",index:"participants",width:"40",editable:false, sorttype:"int"}
+            {name:"_id",index:"_id",width:10,editable:false,hidden:true},
+            {name:"associationId",index:"associationId",width:40,editable:false,hidden:true},
+            {name:"username",index:"username",wid加密密码th:"100",editable:false},
+            {name:"name",index:"name",width:"100",editable:false},
+            {name:"state",index:"state",width:"60",editable:false},
+            {name:"password",index:"password",width:"75",editable:false,hidden:true}
         ],
         viewrecords : true,
         rowNum:10,
@@ -535,53 +558,117 @@ jQuery(function($) {
                 updateActionIcons(table);
                 updatePagerIcons(table);
                 enableTooltips(table);
-                var associationId = $('#form-field-select-type').val();
-
             }, 0);
-
         },
 
-        caption: "投票列表",
+        caption: "无法查看登陆密码，但可以点击按钮修改密码",
         autowidth: true
     });
 
+    function makeAccount(){
+        var id = $("#grid-table").getGridParam("selrow");
+        if (id == null) return;
+
+        var states={"禁用":"DISABLE","普通用户":"ENABLE","协会管理员":"ADMIN","超级管理员":"SUPPER"};
+        var acc = {};
+        acc.associationId=$("#grid-table > tbody > tr").eq(id).find("td").eq(2).attr("title");
+        acc.username=$("#grid-table > tbody > tr").eq(id).find("td").eq(3).attr("title");
+        acc.state=$("#grid-table > tbody > tr").eq(id).find("td").eq(4).attr("title");
+        acc.state=states[acc.state];
+        acc.password="";
+        return acc;
+    }
 
     jQuery(grid_selector).jqGrid('navGrid',pager_selector,
             { 	//navbar options
                 add: true,
-                addicon : 'icon-plus-sign purple',
-                addfunc : (function(){window.location.href="/rest/bvote/new";/*alert("添加操作!");*/return false;}),
+                addicon : 'icon-pencil purple',
+                addfunc : (function(){
+                    var uname = "";
+                    var assid = "";
+                    var acc = makeAccount();
+                    bootbox.prompt("请输入用户 ‘"+acc.username+"’的新密码：", function(result) {
+                        // 这里不改状态
+                        if (result !== null) {
+                            if (result.length <= 5){
+                                alert("密码长度必须大于5");
+                            }else{
+                                acc.password=result;
+                                $.ajax({
+                                    type:"POST",
+                                    url:"/rest/account/",
+                                    async:false,
+                                    data:JSON.stringify(acc),
+                                    contentType:"application/json; charset=utf-8",
+                                    success:function(jsn){
+                                        if (jsn.code==200) alert("密码已经修改成"+result);
+                                        else alert("密码修改失败，因为"+jsn.msg);
+                                    }
+                                });
+                            }
+                        }
+                    });
+                }),
 
+            <#if isSuper>
                 edit: true,
-                editicon : 'icon-pencil blue',
+                editicon : 'icon-arrow-up blue',
                 editfunc : (function(){
-                    var index = $("#grid-table").getGridParam("selrow");
-                    var id=$("#grid-table > tbody > tr").eq(index).find("td").eq(1).attr("id");
-                    window.location.href = '/rest/bvote/edit?voteId='+index;}),
+                    var acc=makeAccount();
+                    if (acc.state == 2) return;
+                    acc.state=2;
+                    acc.password="";//donot change password
+                    acc.associationId="";//donot change association
+                    if(confirm("确认升级账户"+acc.username+"为管理员？")){
+                        $.ajax({
+                            type:"POST",
+                            url:"/rest/account/",
+                            async:true,
+                            data:JSON.stringify(acc),
+                            contentType:"application/json; charset=utf-8",
+                            success:function(jsn){
+                                if(jsn.code==200) alert("用户"+acc.username+"已经升级为管理员");
+                                else alert("操作失败，"+jsn.msg);
+                            }
+                        });
+                    }
+                }),
+            <#else>
+                edit: false,
+            </#if>
 
-                del: false,
+                del: true,
                 delicon : 'icon-trash red',
-                delfunc : (function(){alert("删除操作!");return false;}),
+                delfunc : (function(){
+                    var acc=makeAccount();
+                    if (acc.state != 0) return;
+                    acc.password="";//donot change password
+                    acc.associationId="";//donot change association
+                    acc.state=0;
+                    if(confirm("确认删除账号"+acc.username+"？")){
+                        $.ajax({
+                            type:"POST",
+                            url:"/rest/account/",
+                            async:true,
+                            data:JSON.stringify(acc),
+                            contentType:"application/json; charset=utf-8",
+                            success:function(jsn){
+                                if(jsn.code==200) alert("用户"+acc.username+"已被删除");
+                                else alert("操作失败，"+jsn.msg);
+                            }
+                        });
+                    }
+                }),
 
                 search: false,
-                searchicon : 'icon-search orange',
-                searchfunc: (function(){alert("s");return false;}),
-
                 refresh: false,
 
-                view: true,
-                viewicon : 'icon-zoom-in grey',
-                viewfunc: (function(){alert("预览操作!");return false;})
+                view: false
             }
     );
 
+
     $(".ui-jqgrid-htable").css("font-family","微软雅黑");
-
-
-    $('#form-field-select-type').change(function(){
-        var associationId = $('#form-field-select-type').val();
-        updateGrid(associationId,1,20);
-    });
 });
 
 jQuery(function ($) {
@@ -594,9 +681,7 @@ jQuery(function ($) {
     $('.date-picker').datepicker({autoclose: true}).next().on(ace.click_event, function () {
         $(this).prev().focus();
     });
-    //$('input[name=date-range-picker]').daterangepicker().prev().on(ace.click_event, function () {
-    //    $(this).next().focus();
-    //});
+
 
     //chosen plugin inside a modal will have a zero width because the select element is originally hidden
     //and its width cannot be determined.

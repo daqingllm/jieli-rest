@@ -34,7 +34,7 @@ import java.util.Map;
  */
 @Singleton
 @Path("bvote")
-public class Vote {
+public class VoteAction {
     private AccountDAO accountDAO = new AccountDAO();
     private AssociationDAO associationDAO = new AssociationDAO();
     private VoteDAO voteDAO = new VoteDAO();
