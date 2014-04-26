@@ -268,6 +268,20 @@
                     <div class="space-4"></div>
 
                     <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right" for="force-type"> 是否强推 </label>
+
+                        <div class="col-sm-9">
+                            <select class="col-xs-10 col-sm-7" id="force-type"
+                                    style="padding: 5px 4px;font-size: 14px;">
+                                <option value="Y" selected="selected">是</option>
+                                <option value="N">否</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="space-4"></div>
+
+                    <div class="form-group">
                         <label class="col-sm-3 control-label no-padding-right" for="form-field-textarea"> 截止时间 </label>
                         <div class="col-sm-3">
 
@@ -647,14 +661,13 @@
 jQuery(function ($) {
 <#if isSuper>
     $("#sidebar-shortcuts-navlist").load("/sidebar_super.html",function(){
-        ${"nav_list_4_2"}.addClass("active open");
+    ${"nav_list_4_2"}.addClass("active open");
         $("#nav_list_4").addClass("active");});
 <#else>
     $("#sidebar-shortcuts-navlist").load("/sidebar_admin.html",function(){
             <#if newVote>$("#nav_list_4_2")<#elseif isEditable>$("#nav_list_4_4")<#else>$("#nav_list_4_3")</#if>.addClass("active open");
         $("#nav_list_4").addClass("active");});
 </#if>
-
     $("#bootbox-upload-image").on("click", uploadImgBox);
 
     var colorbox_params = {
@@ -1064,7 +1077,9 @@ function addVoteOption(value, percent) {
         value = "";
     var voteOption = $('<div class="vote-choice">' +
             '<input type="text" value="'+value+'" placeholder="选项内容，不填写为无效选项" class="col-xs-10 col-sm-6 vote-choice-text" style="padding-left: 7px;">' +
+            <#if !newVote && !isEditable>
             '<div class="col-xs-5"><div class="progress" data-percent="'+percent+'%"><div class="progress-bar" style="width:'+percent+'%;"></div></div></div>' +
+            </#if>
             '<button type="button" class="btn btn-xs btn-info vote-choice-img">Pic</button>' +
             '<div class="icon-remove"></div>' +
             '</div>');
@@ -1100,6 +1115,7 @@ function voteInfo(voteId, callback) {
                 var dateString = deadLine.toISOString().substr(0, 10); //assume the program will not run after year 10000
                 $('#form-field-date').val(dateString);
                 $('#form-field-select-type').val(response.body.multiple ? 'M' : 'S');
+                $('#force-type').val(response.body.force ? 'Y' : 'N');
                 var options = response.body.options;
                 $.ajax({
                     url: '/rest/feature/vote/result?voteId=' + voteId,
@@ -1161,6 +1177,7 @@ function editSettings() {
 
 function viewSettings() {
     $('#form-field-select-type').attr({disabled : true});
+    $('#force-type').attr({disabled : true});
     $('.vote-choice-img').hide();
     $('.icon-remove').remove();
     $('.icon-plus').hide();
@@ -1204,6 +1221,7 @@ function postNewVote() {
     var request = {};
     request.title = $('#form-field-title').val();
     request.multiple = $('#form-field-select-type').val() == 'M' ? true : false;
+    request.force = $('#force-type').val() == 'Y' ? true : false;
     request.deadLine = new Date($('#form-field-date').val());
     request.description = $('#form-field-textarea').val();
     request.options = {};
@@ -1222,7 +1240,12 @@ function postNewVote() {
         url : '/rest/feature/vote/addvote',
         data : JSON.stringify(request),
         type: 'POST',
-        contentType: "application/json"
+        contentType: "application/json",
+        success:function(json) {
+            if(json.code == 200) {
+                window.location.href = '/rest/bvote/list';
+            }
+        }
     });
 }
 function postEditVote(voteId) {
@@ -1247,7 +1270,18 @@ function postEditVote(voteId) {
         url : '/rest/feature/vote/modify?voteId='+voteId,
         data : JSON.stringify(request),
         type: 'POST',
-        contentType: "application/json"
+        contentType: "application/json",
+        success:function(json) {
+            if(json.code == 200 && json.entity.code == 200) {
+                window.location.href = '/rest/bvote/list';
+            }
+            else if(json.entity.code == 1115) {
+                alert("投票已过期，不可编辑！");
+            }
+            else {
+                alert("出错啦！\n请联系万能的技术人员");
+            }
+        }
     });
 }
 </script>

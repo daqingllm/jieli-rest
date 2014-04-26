@@ -16,6 +16,7 @@ public class VoteInfo extends Model {
     private Date deadLine;
     private Date addTime;
     private String picture;
+    private boolean force;
     private String description;
     private Map<Integer, String> options; //投票选项index，投票选项
     private Map<Integer, String> optionPicsMap; //投票选项，对应图片
@@ -99,5 +100,13 @@ public class VoteInfo extends Model {
 
     public void setOptions(Map<Integer, String> options) {
         this.options = options;
+    }
+
+    public boolean isForce() {
+        return force;
+    }
+
+    public void setForce(boolean force) {
+        this.force = force;
     }
 }

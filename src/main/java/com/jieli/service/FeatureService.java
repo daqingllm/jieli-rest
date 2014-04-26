@@ -543,7 +543,7 @@ public class FeatureService {
     @Path("/vote/addvote")
     @POST
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-    public Response addVote(@CookieParam("u")String sessionId, @QueryParam("force")boolean force, VoteInfo voteInfo) {
+    public Response addVote(@CookieParam("u")String sessionId, VoteInfo voteInfo) {
         if(!IdentifyUtils.isValidate(sessionId)) {
             return Response.status(403).build();
         }
@@ -582,7 +582,7 @@ public class FeatureService {
         voteResult.setParticipants(0);
         voteResultDAO.save(voteResult);
 
-        if (force) {
+        if (voteInfo.isForce()) {
             VoteMsg voteMsg = new VoteMsg();
             voteMsg.voteId = result.get_id().toString();
             voteMsg.msg = result.getTitle() + " 投票发起";
@@ -631,6 +631,12 @@ public class FeatureService {
             return Response.status(200).entity(responseEntity).build();
         }
         VoteInfo oldVote = voteDAO.loadById(voteId);
+        //过期投票不可编辑
+        if(!oldVote.getDeadLine().after(new Date())) {
+            responseEntity.code = 1115;
+            responseEntity.body = "投票已过期";
+            return Response.status(200).entity(responseEntity).build();
+        }
         if(newVote.getTitle() != null) {
             oldVote.setTitle(newVote.getTitle());
         }
@@ -645,27 +651,30 @@ public class FeatureService {
         return Response.status(200).entity(responseEntity).build();
     }
 
-    /*@Path("/vote/deletevote")
-    @GET
+    @Path("/vote/deletevote")
+    @POST
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-    public Response deleteVote(@CookieParam("u")String sessionId, @QueryParam("voteId")String voteId) {
+    public Response deleteVote(@CookieParam("u")String sessionId, List<String> voteIdList) {
         if(!IdentifyUtils.isValidate(sessionId)) {
             return Response.status(403).build();
         }
-        if(!IdentifyUtils.isAdmin(sessionId) || !IdentifyUtils.isSuper(sessionId)) {
+        if(!IdentifyUtils.isAdmin(sessionId)) {
             return Response.status(403).build();
         }
         ResponseEntity responseEntity = new ResponseEntity();
-        if (voteId  == null) {
+        if (voteIdList  == null) {
             responseEntity.code = 1101;
             responseEntity.msg = "缺少参数";
             return Response.status(200).entity(responseEntity).build();
         }
-        if (!MongoUtils.isValidObjectId(voteId)) {
-            responseEntity.code = 1105;
-            responseEntity.msg = "参数Id无效";
-            return Response.status(200).entity(responseEntity).build();
+        for(String v : voteIdList) {
+            if (!MongoUtils.isValidObjectId(v)) {
+                responseEntity.code = 1105;
+                responseEntity.msg = "参数Id无效";
+                return Response.status(200).entity(responseEntity).build();
+            }
         }
+
         String userId = IdentifyUtils.getUserId(sessionId);
         if(StringUtils.isEmpty(userId)) {
             responseEntity.code = 1103;
@@ -679,16 +688,13 @@ public class FeatureService {
             return  Response.status(200).entity(responseEntity).build();
         }
 
-        VoteInfo voteInfo = voteDAO.loadById(voteId);
-        if(voteInfo == null) {
-            responseEntity.code = 1201;
-            responseEntity.msg = "投票信息不存在";
-            return  Response.status(200).entity(responseEntity).build();
+        for(String voteId : voteIdList) {
+            voteDAO.deleteById(voteId);
+            voteResultDAO.deleteByVoteId(voteId);
         }
-        voteDAO.deleteById(voteId);
         responseEntity.code = 200;
         return Response.status(200).entity(responseEntity).build();
-    }*/
+    }
 
     /**
      * 参与投票

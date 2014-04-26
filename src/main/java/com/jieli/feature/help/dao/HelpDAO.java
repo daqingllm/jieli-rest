@@ -32,13 +32,25 @@ public class HelpDAO extends GenericDAO<HelpInfo> {
      */
     public List<SimpleHelpInfo> getHelpInfoList(int pageNo, int pageSize, String associationId, int type) {
         Iterable<SimpleHelpInfo> iterable;
-        if(type == 0 || type == 1) {
-            iterable = col.find("{associationId:#, type:#}", associationId, type)
-                    .sort("{addTime:-1}").skip((pageNo - 1) * pageSize).limit(pageSize).as(SimpleHelpInfo.class);
+        if(pageNo == 0 || pageSize == 0) {
+            if(type == 0 || type == 1) {
+                iterable = col.find("{associationId:#, type:#}", associationId, type)
+                        .sort("{addTime:-1}").as(SimpleHelpInfo.class);
+            }
+            else {
+                iterable = col.find("{associationId:#}", associationId)
+                        .sort("{addTime:-1}").as(SimpleHelpInfo.class);
+            }
         }
         else {
-            iterable = col.find("{associationId:#}", associationId)
-                    .sort("{addTime:-1}").skip((pageNo - 1) * pageSize).limit(pageSize).as(SimpleHelpInfo.class);
+            if(type == 0 || type == 1) {
+                iterable = col.find("{associationId:#, type:#}", associationId, type)
+                        .sort("{addTime:-1}").skip((pageNo - 1) * pageSize).limit(pageSize).as(SimpleHelpInfo.class);
+            }
+            else {
+                iterable = col.find("{associationId:#}", associationId)
+                        .sort("{addTime:-1}").skip((pageNo - 1) * pageSize).limit(pageSize).as(SimpleHelpInfo.class);
+            }
         }
 
         List<SimpleHelpInfo> resultList = new ArrayList<SimpleHelpInfo>();

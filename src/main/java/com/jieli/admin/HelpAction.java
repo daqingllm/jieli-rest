@@ -30,7 +30,7 @@ import java.util.*;
  */
 @Singleton
 @Path("bhelp")
-public class Help {
+public class HelpAction {
     private HelpDAO helpDAO = new HelpDAO();
     private AccountDAO accountDAO = new AccountDAO();
     private AssociationDAO associationDAO = new AssociationDAO();
@@ -103,10 +103,12 @@ public class Help {
             }
             params.put("associationList", associationList);
             associationId = associationList.get(0).get_id().toString();
+            params.put("isSuper", true);
         }
         else {
+            associationId = IdentifyUtils.getAssociationId(sessionId);
+            params.put("isSuper", false);
             if(!MongoUtils.isValidObjectId(associationId)) {
-                params.put("isSuper", false);
                 return FTLrender.getResult("error.ftl", params);
             }
         }

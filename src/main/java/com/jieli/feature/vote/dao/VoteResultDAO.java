@@ -58,4 +58,10 @@ public class VoteResultDAO extends GenericDAO<VoteResult> {
         v.setVoteList(voteList);
         return save(v);
     }
+
+    public void deleteByVoteId(String voteId) {
+        if(voteId != null) {
+            col.remove("{voteId:#}", voteId);
+        }
+    }
 }

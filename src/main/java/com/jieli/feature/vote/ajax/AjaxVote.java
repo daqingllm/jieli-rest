@@ -6,6 +6,7 @@ import com.jieli.association.AssociationDAO;
 import com.jieli.common.entity.ResponseEntity;
 import com.jieli.feature.help.entity.SimpleHelpInfo;
 import com.jieli.feature.vote.dao.VoteDAO;
+import com.jieli.feature.vote.dao.VoteResultDAO;
 import com.jieli.feature.vote.entity.SimpleVoteInfo;
 import com.jieli.user.dao.UserDAO;
 import com.jieli.user.entity.User;
@@ -26,6 +27,7 @@ import java.util.Map;
 public class AjaxVote {
     private UserDAO userDAO = new UserDAO();
     private VoteDAO voteDAO = new VoteDAO();
+    private VoteResultDAO voteResultDAO = new VoteResultDAO();
     private AssociationDAO associationDAO = new AssociationDAO();
 
     @Path("/list")
@@ -59,15 +61,12 @@ public class AjaxVote {
                 return Response.status(200).entity(responseEntity).build();
             }
         }
-        if (page <= 0) {
-            page = 1;
-        }
-        if (size <= 0) {
-            size = 20;
-        }
+        page = 0;
+        size = 0;
         List<SimpleVoteInfo> voteInfoList = voteDAO.getVoteInfoList(page, size, associationId);
         for(SimpleVoteInfo v : voteInfoList) {
             v.setId(v.get_id().toString());
+            v.setParticipants(voteResultDAO.loadByVoteId(v.get_id().toString()).getParticipants());
         }
 
         ObjectMapper om = new ObjectMapper();
