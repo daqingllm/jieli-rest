@@ -15,6 +15,10 @@ public class MatchDAO extends GenericDAO<Match> {
         return col.find().sort("{score:-1}").limit(count).as(Match.class);
     }
 
+    public Iterable<Match> getTopMatchByUserId(String userId, int count) {
+        return col.find("{$or:[{userId1:#},{userId2:#}]}", userId, userId).sort("{score:-1}").limit(count).as(Match.class);
+    }
+
     public void upsert(Match match) {
         Match oldMatch = col.findOne("{userId1:#, userId2:#, score:#}", match.userId1, match.userId2, match).as(Match.class);
         if (oldMatch != null) {
