@@ -1115,7 +1115,7 @@ function voteInfo(voteId, callback) {
                 var dateString = deadLine.toISOString().substr(0, 10); //assume the program will not run after year 10000
                 $('#form-field-date').val(dateString);
                 $('#form-field-select-type').val(response.body.multiple ? 'M' : 'S');
-                $('#force-type').val(response.body.force ? '是' : '否');
+                $('#force-type').val(response.body.force ? 'Y' : 'N');
                 var options = response.body.options;
                 $.ajax({
                     url: '/rest/feature/vote/result?voteId=' + voteId,
@@ -1167,7 +1167,6 @@ function newSettings() {
 
 function editSettings() {
     $('#form-field-select-type').attr({disabled : true});
-    $('#force-type').attr({disabled : true});
     $('.vote-choice-img').hide();
     $('.icon-remove').remove();
     $('.icon-plus').hide();
@@ -1178,7 +1177,7 @@ function editSettings() {
 
 function viewSettings() {
     $('#form-field-select-type').attr({disabled : true});
-    $('force-type').attr({disabled : true});
+    $('#force-type').attr({disabled : true});
     $('.vote-choice-img').hide();
     $('.icon-remove').remove();
     $('.icon-plus').hide();
@@ -1273,8 +1272,14 @@ function postEditVote(voteId) {
         type: 'POST',
         contentType: "application/json",
         success:function(json) {
-            if(json.code == 200) {
+            if(json.code == 200 && json.entity.code == 200) {
                 window.location.href = '/rest/bvote/list';
+            }
+            else if(json.entity.code == 1115) {
+                alert("投票已过期，不可编辑！");
+            }
+            else {
+                alert("出错啦！\n请联系万能的技术人员");
             }
         }
     });

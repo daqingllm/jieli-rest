@@ -631,6 +631,12 @@ public class FeatureService {
             return Response.status(200).entity(responseEntity).build();
         }
         VoteInfo oldVote = voteDAO.loadById(voteId);
+        //过期投票不可编辑
+        if(!oldVote.getDeadLine().after(new Date())) {
+            responseEntity.code = 1115;
+            responseEntity.body = "投票已过期";
+            return Response.status(200).entity(responseEntity).build();
+        }
         if(newVote.getTitle() != null) {
             oldVote.setTitle(newVote.getTitle());
         }
