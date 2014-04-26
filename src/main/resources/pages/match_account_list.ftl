@@ -533,14 +533,19 @@ jQuery(function($) {
         data: grid_data,
         datatype: "local",
         height: 330,
-        colNames:['_id','协会','用户名','姓名','状态','匹配'],
+        colNames:['id','协会','用户名','姓名','状态','匹配'],
         colModel:[
-            {name:"_id",index:"_id",width:10,editable:false,hidden:true},
-            {name:"associationId",index:"associationId",width:40,editable:false,hidden:true},
-            {name:"username",index:"username",wid加密密码th:"100",editable:false},
-            {name:"name",index:"name",width:"100",editable:false},
-            {name:"state",index:"state",width:"60",editable:false},
-            {name:"password",index:"password",width:"75",editable:false,hidden:true}
+            {name:"password",index:"password",width:10,editable:false,hidden:true},
+            {name:"associationName",index:"associationName",width:40,editable:false},
+            {name:"username",index:"username",width:"80",editable:false},
+            {name:"name",index:"name",width:"80",editable:false},
+            {name:"state",index:"state",width:"50",editable:false},
+            {name:"match",index:"match",width:"75",editable:false, formatter:
+                    function(cellValue, options, rowObject) {
+                        var url = "<a href=\"/rest/bmatch/view?v=" + rowObject.password + "\">" + "查看前五匹配</br></a>"
+                                + "<a href=\"/rest/bmatch/history?v=" + rowObject.password + "\">" + "查看历史匹配</a>";
+                        return url;
+            }}
         ],
         viewrecords : true,
         rowNum:10,
@@ -561,7 +566,7 @@ jQuery(function($) {
             }, 0);
         },
 
-        caption: "无法查看登陆密码，但可以点击按钮修改密码",
+        caption: "账号列表",
         autowidth: true
     });
 
@@ -581,7 +586,7 @@ jQuery(function($) {
 
     jQuery(grid_selector).jqGrid('navGrid',pager_selector,
             { 	//navbar options
-                add: true,
+                add: false,
                 addicon : 'icon-pencil purple',
                 addfunc : (function(){
                     var uname = "";
@@ -611,7 +616,7 @@ jQuery(function($) {
                 }),
 
             <#if isSuper>
-                edit: true,
+                edit: false,
                 editicon : 'icon-arrow-up blue',
                 editfunc : (function(){
                     var acc=makeAccount();
@@ -637,7 +642,7 @@ jQuery(function($) {
                 edit: false,
             </#if>
 
-                del: true,
+                del: false,
                 delicon : 'icon-trash red',
                 delfunc : (function(){
                     var acc=makeAccount();

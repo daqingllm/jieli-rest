@@ -121,7 +121,6 @@ public class HelpAction {
             h.setId(h.get_id().toString());
         }
         String jsonHelpList;
-        int i;
         ObjectMapper om = new ObjectMapper();
         try { //this is a trick, write Object list to json, read json to Java list add the attribute and rewrite to json
             String tmp = om.writeValueAsString(helpList);

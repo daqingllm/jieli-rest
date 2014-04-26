@@ -3,20 +3,25 @@ package com.jieli.admin;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jieli.association.*;
+import com.jieli.association.Association;
 import com.jieli.common.dao.AccountDAO;
-import com.jieli.common.entity.AccountState;
-import com.jieli.common.entity.ResponseEntity;
+import com.jieli.common.entity.*;
+import com.jieli.common.entity.Account;
 import com.jieli.user.dao.UserDAO;
 import com.jieli.util.FTLrender;
 import com.jieli.util.IdentifyUtils;
 import com.sun.jersey.spi.resource.Singleton;
+import org.jongo.marshall.jackson.oid.ObjectId;
 
 import javax.ws.rs.CookieParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -67,7 +72,7 @@ public class MatchAction {
             "</html>";
 
     @GET
-    @Path("list")
+    @Path("/list")
     @Produces(MediaType.TEXT_HTML)
     public String getAccountList(@CookieParam("u")String sessionId) throws JsonProcessingException {
         if (!IdentifyUtils.isAdmin(sessionId) || IdentifyUtils.isSuper(sessionId)) {
@@ -76,29 +81,29 @@ public class MatchAction {
         ResponseEntity responseEntity = new ResponseEntity();
         ObjectMapper om = new ObjectMapper();
         String associationId = null;
+        List<Account> accountList = new ArrayList<Account>();
         //List<com.jieli.common.entity.Account> accounts = new ArrayList<com.jieli.common.entity.Account>();
-        String accountList = "[";
         if (IdentifyUtils.getState(sessionId) == AccountState.SUPPER) {
             Iterable<com.jieli.association.Association> associations = associationDAO.loadAll();
             for (com.jieli.association.Association association : associations) {
-                Iterable<com.jieli.common.entity.Account> accountAdmin = accountDAO.loadByAssociationId(association.get_id().toString(), AccountState.ADMIN);
-                for (com.jieli.common.entity.Account account : accountAdmin) {
-                    String tmp = om.writeValueAsString(account);
-                    if (tmp.indexOf("{\"time\":") > -1) {
-                        tmp = tmp.substring(0, 7) + "\"" + account.get_id().toString() + "\"" + tmp.substring(tmp.indexOf("},", 7) + 1);
+                Iterable<Account> accountAdmin = accountDAO.loadByAssociationId(association.get_id().toString(),
+                        AccountState.ADMIN);
+                Iterable<Account> accountEnable = accountDAO.loadByAssociationId(association.get_id().toString(),
+                        AccountState.ENABLE);
+                for(Account a : accountAdmin) {
+                    if(a.username == null) {
+                        a.username = "";
                     }
-                    accountList += tmp + ",";
+                    accountList.add(a);
                 }
-
-                Iterable<com.jieli.common.entity.Account> accountEnable = accountDAO.loadByAssociationId(association.get_id().toString(), AccountState.ENABLE);
-                for (com.jieli.common.entity.Account account : accountEnable) {
-                    String tmp = om.writeValueAsString(account);
-                    if (tmp.indexOf("{\"time\":") > -1) {
-                        tmp = tmp.substring(0, 7) + "\"" + account.get_id().toString() + "\"" + tmp.substring(tmp.indexOf("},", 7) + 1);
+                for (Account b : accountEnable) {
+                    if(b.username == null) {
+                        b.username = "";
                     }
-                    accountList += tmp + ",";
+                    accountList.add(b);
                 }
             }
+
         } else {
             associationId = IdentifyUtils.getAssociationId(sessionId);
             com.jieli.association.Association association = associationDAO.loadById(associationId);
@@ -107,23 +112,57 @@ public class MatchAction {
                 responseEntity.msg = "协会不存在";
                 return Common.errorReturn;
             }
-            Iterable<com.jieli.common.entity.Account> accountAdmin = accountDAO.loadByAssociationId(associationId.toString(),AccountState.ADMIN);
-            for (com.jieli.common.entity.Account account : accountAdmin)
-                accountList += Common.ReplaceObjectId(account).replace("}",",\"name\":\""+Common.TransferNull(userDAO.loadById(account.userId) == null ? "" : userDAO.loadById(account.userId).name) + "\"},");
-
-            Iterable<com.jieli.common.entity.Account> accountEnable = accountDAO.loadByAssociationId(associationId.toString(),AccountState.ENABLE);
-            for (com.jieli.common.entity.Account account : accountEnable)
-                accountList += Common.ReplaceObjectId(account).replace("}",",\"name\":\""+Common.TransferNull(userDAO.loadById(account.userId) == null ? "" : userDAO.loadById(account.userId).name) + "\"},");
+            Iterable<com.jieli.common.entity.Account> accountAdmin = accountDAO
+                    .loadByAssociationId(associationId.toString(),AccountState.ADMIN);
+            Iterable<com.jieli.common.entity.Account> accountEnable = accountDAO
+                    .loadByAssociationId(associationId.toString(),AccountState.ENABLE);
+            for(Account a : accountAdmin) {
+                if(a.username == null) {
+                    a.username = "";
+                }
+                accountList.add(a);
+            }
+            for (Account b : accountEnable) {
+                if(b.username == null) {
+                    b.username = "";
+                }
+                accountList.add(b);
+            }
+        }
+        //trick, to make url in jqgrid
+        for(Account a : accountList) {
+            a.password = a.get_id().toString();
         }
 
-        accountList = Common.RemoveLast(accountList,",") + "]";
-
+        String jsonAccountList;
+        int i;
+        try {
+            String tmp = om.writeValueAsString(accountList);
+            List<HashMap<String, Object>> l = (List<HashMap<String, Object>>)om.readValue(tmp, List.class);
+            for(Map<String, Object> obj : l) {
+                if (obj.get("associationId") instanceof String) {
+                    Association association = associationDAO.loadById(obj.get("associationId").toString());
+                    obj.put("associationName", association.name);
+                }
+            }
+            jsonAccountList = om.writeValueAsString(l);
+        } catch (IOException e) {
+            e.printStackTrace();
+            jsonAccountList = "[]";
+        }
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("isSuper",IdentifyUtils.getState(sessionId) == AccountState.SUPPER);
-        params.put("jsonAccList",accountList);
+        params.put("jsonAccList",jsonAccountList);
         params.put("username",accountDAO.loadById(sessionId).username);
 
         return FTLrender.getResult("match_account_list.ftl", params);
+    }
+
+    @Path("/view")
+    @GET
+    @Produces(MediaType.TEXT_HTML)
+    public String viewMatch() {
+
     }
 
 }
