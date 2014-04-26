@@ -556,12 +556,32 @@ jQuery(function($) {
                 editicon : 'icon-pencil blue',
                 editfunc : (function(){
                     var index = $("#grid-table").getGridParam("selrow");
-                    var id=$("#grid-table > tbody > tr").eq(index).find("td").eq(1).attr("id");
+                    //var id=$("#grid-table > tbody > tr").eq(index).find("td").eq(1).attr("id");
                     window.location.href = '/rest/bvote/edit?voteId='+index;}),
 
-                del: false,
+                <#if isSuper>del: false,
+                <#else>del: true,
+                </#if>
                 delicon : 'icon-trash red',
-                delfunc : (function(){alert("删除操作!");return false;}),
+                delfunc : (function(){
+                    var flag=window.confirm("确定要删除投票吗?");
+                    if(flag) {
+                        var selectedIds = $("#grid-table").getGridParam("selarrrow");
+                        $.ajax({
+                            url: '/rest/feature/vote/deletevote',
+                            data: JSON.stringify(selectedIds),
+                            type: 'POST',
+                            contentType: 'application/json',
+                            success: function(json){
+                                if(json.code == 200) {
+                                    var associationId = $('#form-field-select-type').val();
+                                    updateGrid(associationId,1,20);
+                                }
+                            }
+                        });
+                    }
+
+                    }),
 
                 search: false,
                 searchicon : 'icon-search orange',

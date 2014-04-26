@@ -268,6 +268,20 @@
                     <div class="space-4"></div>
 
                     <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right" for="force-type"> 是否强推 </label>
+
+                        <div class="col-sm-9">
+                            <select class="col-xs-10 col-sm-7" id="force-type"
+                                    style="padding: 5px 4px;font-size: 14px;">
+                                <option value="Y" selected="selected">是</option>
+                                <option value="N">否</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="space-4"></div>
+
+                    <div class="form-group">
                         <label class="col-sm-3 control-label no-padding-right" for="form-field-textarea"> 截止时间 </label>
                         <div class="col-sm-3">
 
@@ -1101,6 +1115,7 @@ function voteInfo(voteId, callback) {
                 var dateString = deadLine.toISOString().substr(0, 10); //assume the program will not run after year 10000
                 $('#form-field-date').val(dateString);
                 $('#form-field-select-type').val(response.body.multiple ? 'M' : 'S');
+                $('#force-type').val(response.body.force ? '是' : '否');
                 var options = response.body.options;
                 $.ajax({
                     url: '/rest/feature/vote/result?voteId=' + voteId,
@@ -1152,6 +1167,7 @@ function newSettings() {
 
 function editSettings() {
     $('#form-field-select-type').attr({disabled : true});
+    $('#force-type').attr({disabled : true});
     $('.vote-choice-img').hide();
     $('.icon-remove').remove();
     $('.icon-plus').hide();
@@ -1162,6 +1178,7 @@ function editSettings() {
 
 function viewSettings() {
     $('#form-field-select-type').attr({disabled : true});
+    $('force-type').attr({disabled : true});
     $('.vote-choice-img').hide();
     $('.icon-remove').remove();
     $('.icon-plus').hide();
@@ -1205,6 +1222,7 @@ function postNewVote() {
     var request = {};
     request.title = $('#form-field-title').val();
     request.multiple = $('#form-field-select-type').val() == 'M' ? true : false;
+    request.force = $('#force-type').val() == 'Y' ? true : false;
     request.deadLine = new Date($('#form-field-date').val());
     request.description = $('#form-field-textarea').val();
     request.options = {};
