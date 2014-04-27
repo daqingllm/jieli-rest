@@ -7,6 +7,9 @@ import com.jieli.association.Association;
 import com.jieli.common.dao.AccountDAO;
 import com.jieli.common.entity.*;
 import com.jieli.common.entity.Account;
+import com.jieli.feature.match.Match;
+import com.jieli.feature.match.MatchDAO;
+import com.jieli.feature.match.MatchDisplay;
 import com.jieli.user.dao.UserDAO;
 import com.jieli.user.entity.*;
 import com.jieli.user.entity.User;
@@ -32,6 +35,7 @@ public class MatchAction {
     private AssociationDAO associationDAO = new AssociationDAO();
     private AccountDAO accountDAO = new AccountDAO();
     private UserDAO userDAO = new UserDAO();
+    private MatchDAO matchDAO = new MatchDAO();
 
     private String errorReturn = "<!DOCTYPE html>\n" +
             "<html>\n" +
@@ -168,11 +172,77 @@ public class MatchAction {
         if(!IdentifyUtils.isAdmin(sessionId)) {
             return errorReturn;
         }
-        User centerUser = userDAO.loadById(center);
+        boolean isSuper = IdentifyUtils.isSuper(sessionId);
+        params.put("isSuper", isSuper);
+        Account self = accountDAO.loadById(sessionId);
+        params.put("username", self.username);
+        if (!IdentifyUtils.isValidate(center)){
+            return FTLrender.getResult("error.ftl", params);
+        }
+        String  userId = IdentifyUtils.getUserId(center);
         if(count <= 0) {
             count = 5;
         }
+        Iterable<Match> matches = matchDAO.getTopMatchByUserId(userId, count);
+        List<MatchDisplay> results = new ArrayList<MatchDisplay>();
+        for (Match match : matches) {
+            MatchDisplay display = new MatchDisplay();
+            User user1 = userDAO.loadById(match.userId1);
+            display.userId1 = user1.get_id().toString();
+            display.name1 = user1.name;
+            display.userFace1 = user1.userFace;
+            User user2 = userDAO.loadById(match.userId2);
+            display.userId2 = user2.get_id().toString();
+            display.name2 = user2.name;
+            display.userFace2 = user2.userFace;
+            display.score = match.score;
+            display.infos = match.matchInfos;
+            results.add(display);
+        }
+        params.put("displayList", results);
+        return FTLrender.getResult("match_view.ftl", params);
+    }
 
+    @Path("/history")
+    @GET
+    @Produces(MediaType.TEXT_HTML)
+    public String viewMatchHistory(@CookieParam("u")String sessionId, @QueryParam("c")String center, @QueryParam("count")int count) {
+        Map<String, Object> params = new HashMap<String, Object>();
+        if(!IdentifyUtils.isValidate(sessionId)) {
+            return errorReturn;
+        }
+        if(!IdentifyUtils.isAdmin(sessionId)) {
+            return errorReturn;
+        }
+        boolean isSuper = IdentifyUtils.isSuper(sessionId);
+        params.put("isSuper", isSuper);
+        Account self = accountDAO.loadById(sessionId);
+        params.put("username", self.username);
+        if (!IdentifyUtils.isValidate(center)){
+            return FTLrender.getResult("error.ftl", params);
+        }
+        String  userId = IdentifyUtils.getUserId(center);
+        if(count <= 0) {
+            count = 30;
+        }
+        Iterable<Match> matches = matchDAO.getTopMatchByUserId(userId, count);
+        List<MatchDisplay> results = new ArrayList<MatchDisplay>();
+        for (Match match : matches) {
+            MatchDisplay display = new MatchDisplay();
+            User user1 = userDAO.loadById(match.userId1);
+            display.userId1 = user1.get_id().toString();
+            display.name1 = user1.name;
+            display.userFace1 = user1.userFace;
+            User user2 = userDAO.loadById(match.userId2);
+            display.userId2 = user2.get_id().toString();
+            display.name2 = user2.name;
+            display.userFace2 = user2.userFace;
+            display.score = match.score;
+            display.infos = match.matchInfos;
+            results.add(display);
+        }
+        params.put("displayList", results);
+        return FTLrender.getResult("match_view.ftl", params);
     }
 
 }

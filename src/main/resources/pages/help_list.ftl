@@ -523,7 +523,7 @@ jQuery(function($) {
         colModel:[
             {name:"id",index:"id",width:10,editable:false,hidden:true},
             //{name:"associationId",index:"associationId",width:40,editable:false, hidden:true},
-            {name:"associationName",index:"associationName",width:40,editable:false<#if isSuper><#else>,hidden:true</#if>},
+            <#if isSuper>{name:"associationName",index:"associationName",width:40,editable:false,hidden:true},</#if>
             {name:"title",index:"title",width:"100",editable:false, formatter:function getUrl(cellValue, options, rowObject) {
                 var url = "<a href=\"/rest/bhelp/view?h=" + rowObject.id + "\">" + cellValue + "</a>";
                 return url;
@@ -622,10 +622,7 @@ jQuery(function ($) {
 });
 </script>
 <script>
-    function getAssociationListId(index) {
-        var list = ["<#list associationList as associations>${associations._id}</#list>"];
-        return list[index];
-    }
+
 
     $("#submit-btn").click(function() {
         var association = $("#association-select").val();

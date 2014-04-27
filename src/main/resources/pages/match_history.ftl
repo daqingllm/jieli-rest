@@ -2,7 +2,7 @@
 <html lang="zh">
 <head>
     <meta charset="utf-8"/>
-    <title>接力 用户匹配</title>
+    <title>接力 用户匹配历史</title>
     <meta name="description" content="接力"/>
     <!-- basic styles -->
 
@@ -197,7 +197,7 @@
                         <a href="#"> 匹配管理 </a>
                     </li>
 
-                    <li class="active">用户匹配</li>
+                    <li class="active">匹配历史</li>
                 </ul>
                 <!-- .breadcrumb -->
 
@@ -216,7 +216,7 @@
             <div class="page-content">
                 <div class="page-header">
                     <h1>
-                        查看用户top5匹配信息
+                        查看用户匹配历史
                     </h1>
                 </div>
                 <!-- /.page-header -->
