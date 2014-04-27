@@ -8,15 +8,14 @@ import com.jieli.common.dao.AccountDAO;
 import com.jieli.common.entity.*;
 import com.jieli.common.entity.Account;
 import com.jieli.user.dao.UserDAO;
+import com.jieli.user.entity.*;
+import com.jieli.user.entity.User;
 import com.jieli.util.FTLrender;
 import com.jieli.util.IdentifyUtils;
 import com.sun.jersey.spi.resource.Singleton;
 import org.jongo.marshall.jackson.oid.ObjectId;
 
-import javax.ws.rs.CookieParam;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -161,7 +160,18 @@ public class MatchAction {
     @Path("/view")
     @GET
     @Produces(MediaType.TEXT_HTML)
-    public String viewMatch() {
+    public String viewTopMatch(@CookieParam("u")String sessionId, @QueryParam("c")String center, @QueryParam("count")int count) {
+        Map<String, Object> params = new HashMap<String, Object>();
+        if(!IdentifyUtils.isValidate(sessionId)) {
+            return errorReturn;
+        }
+        if(!IdentifyUtils.isAdmin(sessionId)) {
+            return errorReturn;
+        }
+        User centerUser = userDAO.loadById(center);
+        if(count <= 0) {
+            count = 5;
+        }
 
     }
 

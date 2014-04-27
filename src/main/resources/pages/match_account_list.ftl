@@ -214,7 +214,7 @@
             <div class="page-content">
                 <div class="page-header">
                     <h1>
-                        账号列表
+                        匹配用户列表
                     </h1>
                 </div>
                 <!-- /.page-header -->
@@ -394,9 +394,9 @@
 jQuery(function ($) {
 
 <#if isSuper>
-    $("#sidebar-shortcuts-navlist").load("/sidebar_super.html",function(){$("#nav_list_5_1").addClass("active open");$("#nav_list_5").addClass("active");});
+    $("#sidebar-shortcuts-navlist").load("/sidebar_super.html",function(){$("#nav_list_6_1").addClass("active open");$("#nav_list_6").addClass("active");});
 <#else>
-    $("#sidebar-shortcuts-navlist").load("/sidebar_admin.html",function(){$("#nav_list_5_1").addClass("active open");$("#nav_list_5").addClass("active");});
+    $("#sidebar-shortcuts-navlist").load("/sidebar_admin.html",function(){$("#nav_list_6_1").addClass("active open");$("#nav_list_6").addClass("active");});
 </#if>
 
     var colorbox_params = {
@@ -566,7 +566,7 @@ jQuery(function($) {
             }, 0);
         },
 
-        caption: "账号列表",
+        caption: "匹配用户列表",
         autowidth: true
     });
 
