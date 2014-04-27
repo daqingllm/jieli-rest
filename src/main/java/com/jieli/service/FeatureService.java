@@ -989,7 +989,7 @@ public class FeatureService {
     @Path("/topmatch")
     @GET
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-    public Response getOrientedMatch(@CookieParam("u")String sessionId, @QueryParam("count")int count) {
+    public Response getTopMatch(@CookieParam("u")String sessionId, @QueryParam("count")int count) {
         if(!IdentifyUtils.isValidate(sessionId)) {
             return Response.status(403).build();
         }
@@ -998,6 +998,36 @@ public class FeatureService {
         }
         ResponseEntity responseEntity = new ResponseEntity();
         Iterable<Match> matches = matchDAO.getTopMatch(count);
+        List<MatchDisplay> results = new ArrayList<MatchDisplay>();
+        for (Match match : matches) {
+            MatchDisplay display = new MatchDisplay();
+            User user1 = userDAO.loadById(match.userId1);
+            display.userId1 = user1.get_id().toString();
+            display.name1 = user1.name;
+            display.userFace1 = user1.userFace;
+            User user2 = userDAO.loadById(match.userId2);
+            display.userId2 = user2.get_id().toString();
+            display.name2 = user2.name;
+            display.userFace2 = user2.userFace;
+            display.score = match.score;
+            display.infos = match.matchInfos;
+            results.add(display);
+        }
+
+        responseEntity.code = 200;
+        responseEntity.body = results;
+        return  Response.status(200).entity(responseEntity).build();
+    }
+
+    @Path("/admintopmatch")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+    public Response getTopMatchByUserId(@CookieParam("u")String sessionId, @QueryParam("userId")String userId, @QueryParam("count")int count) {
+        if(!IdentifyUtils.isAdmin(sessionId)) {
+            return Response.status(403).build();
+        }
+        ResponseEntity responseEntity = new ResponseEntity();
+        Iterable<Match> matches = matchDAO.getTopMatchByUserId(userId, count);
         List<MatchDisplay> results = new ArrayList<MatchDisplay>();
         for (Match match : matches) {
             MatchDisplay display = new MatchDisplay();
