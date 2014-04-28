@@ -242,7 +242,43 @@ public class ActivityService {
             return Response.status(200).entity(responseEntity).build();
         }
 
-        responseEntity.body = generateRelatedActivities(result);
+        responseEntity.body = generateDisplay(result);
+        responseEntity.code = 200;
+        return Response.status(200).entity(responseEntity).build();
+    }
+
+    @GET
+    @Path("/user")
+    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+    public Response findRelatedActivitiesByUserId(@CookieParam("u")String sessionId,@QueryParam("userId")String userId, @QueryParam("page")int page, @QueryParam("size")int count) {
+        if (!IdentifyUtils.isValidate(sessionId)) {
+            return Response.status(403).build();
+        }
+        if (count <= 0) {
+            count = 10;
+        }
+        if (page <= 0) {
+            page = 1;
+        }
+        ResponseEntity responseEntity = new ResponseEntity();
+        if (StringUtils.isEmpty(userId)) {
+            responseEntity.code = 3101;
+            responseEntity.msg = "缺少参数";
+            return Response.status(200).entity(responseEntity).build();
+        }
+        List<ActivityInfo> result = new ArrayList<ActivityInfo>();
+        List<ActivityInfo> infos = relatedDAO.findUserActivities(userId);
+        if (page*count <= infos.size()) {
+            result = infos.subList((page-1)*count, page*count);
+        } else if ((page-1)*count < infos.size()) {
+            result = infos.subList((page-1)*count, infos.size());
+        } else {
+            responseEntity.msg = "无数据";
+            responseEntity.code = 200;
+            return Response.status(200).entity(responseEntity).build();
+        }
+
+        responseEntity.body = generateDisplay(result);
         responseEntity.code = 200;
         return Response.status(200).entity(responseEntity).build();
     }
@@ -260,6 +296,26 @@ public class ActivityService {
         }
 
         return result;
+    }
+
+    private List<RelatedDisplay> generateDisplay(List<ActivityInfo> infos) {
+        List<RelatedDisplay> displays = new ArrayList<RelatedDisplay>();
+        for (ActivityInfo info : infos) {
+            RelatedDisplay display = new RelatedDisplay();
+            display.activityId = info.activityId;
+            Activity activity = activityDAO.loadById(info.activityId);
+            if (info.type == RelatedType.SPONSER) {
+                display.info = "发起了 " + activity.title;
+            } else if (info.type == RelatedType.FOLLOW) {
+                display.info = "关注了 " + activity.title;
+            } else if (info.type == RelatedType.JOIN) {
+                display.info = "参加了 " + activity.title;
+            } else {
+                continue;
+            }
+            displays.add(display);
+        }
+        return displays;
     }
 
     @GET

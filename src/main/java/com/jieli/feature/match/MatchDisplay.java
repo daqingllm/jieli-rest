@@ -17,10 +17,12 @@ public class MatchDisplay implements Serializable {
     public String userId1;
     public String name1;
     public String userFace1;
+    public String phone1;
 
     public String userId2;
     public String name2;
     public String userFace2;
+    public String phone2;
 
     public int score;
 

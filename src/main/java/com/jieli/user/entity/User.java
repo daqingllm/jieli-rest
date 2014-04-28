@@ -61,4 +61,16 @@ public class User extends Model {
 
     //企业
     public String enterpriseName;
+
+    //公司网址
+    public String enterpriseWebsite;
+
+    //公司成立年份
+    public Date enterpriseFoundDate;
+
+    //公司行业
+    public String enterpriseIndustry;
+
+    //公司简介
+    public String enterpriseDescription;
 }

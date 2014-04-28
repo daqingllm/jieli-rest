@@ -898,17 +898,7 @@ public class FeatureService {
 //            int score = MatchUtil.calcMatchingScore(self, user);
             MatchUtil matchUtil = new MatchUtil(self, user);
             Match match = matchUtil.getMatch();
-            MatchDisplay display = new MatchDisplay();
-            User user1 = userDAO.loadById(match.userId1);
-            display.userId1 = user1.get_id().toString();
-            display.name1 = user1.name;
-            display.userFace1 = user1.userFace;
-            User user2 = userDAO.loadById(match.userId2);
-            display.userId2 = user2.get_id().toString();
-            display.name2 = user2.name;
-            display.userFace2 = user2.userFace;
-            display.score = match.score;
-            display.infos = match.matchInfos;
+            MatchDisplay display = makeDisplay(match);
             responseEntity.code = 200;
             responseEntity.body = display;
             return  Response.status(200).entity(responseEntity).build();
@@ -918,17 +908,7 @@ public class FeatureService {
         List<Match> matches = task.getResult();
         List<MatchDisplay> results = new ArrayList<MatchDisplay>();
         for (Match match : matches) {
-            MatchDisplay display = new MatchDisplay();
-            User user1 = userDAO.loadById(match.userId1);
-            display.userId1 = user1.get_id().toString();
-            display.name1 = user1.name;
-            display.userFace1 = user1.userFace;
-            User user2 = userDAO.loadById(match.userId2);
-            display.userId2 = user2.get_id().toString();
-            display.name2 = user2.name;
-            display.userFace2 = user2.userFace;
-            display.score = match.score;
-            display.infos = match.matchInfos;
+            MatchDisplay display = makeDisplay(match);
             results.add(display);
         }
 
@@ -967,17 +947,7 @@ public class FeatureService {
                 }
                 MatchUtil matchUtil = new MatchUtil(self, user);
                 Match match = matchUtil.getMatch();
-                MatchDisplay display = new MatchDisplay();
-                User user1 = userDAO.loadById(match.userId1);
-                display.userId1 = user1.get_id().toString();
-                display.name1 = user1.name;
-                display.userFace1 = user1.userFace;
-                User user2 = userDAO.loadById(match.userId2);
-                display.userId2 = user2.get_id().toString();
-                display.name2 = user2.name;
-                display.userFace2 = user2.userFace;
-                display.score = match.score;
-                display.infos = match.matchInfos;
+                MatchDisplay display = makeDisplay(match);
                 results.add(display);
             }
         }
@@ -1000,17 +970,7 @@ public class FeatureService {
         Iterable<Match> matches = matchDAO.getTopMatch(count);
         List<MatchDisplay> results = new ArrayList<MatchDisplay>();
         for (Match match : matches) {
-            MatchDisplay display = new MatchDisplay();
-            User user1 = userDAO.loadById(match.userId1);
-            display.userId1 = user1.get_id().toString();
-            display.name1 = user1.name;
-            display.userFace1 = user1.userFace;
-            User user2 = userDAO.loadById(match.userId2);
-            display.userId2 = user2.get_id().toString();
-            display.name2 = user2.name;
-            display.userFace2 = user2.userFace;
-            display.score = match.score;
-            display.infos = match.matchInfos;
+            MatchDisplay display = makeDisplay(match);
             results.add(display);
         }
 
@@ -1030,22 +990,31 @@ public class FeatureService {
         Iterable<Match> matches = matchDAO.getTopMatchByUserId(userId, count);
         List<MatchDisplay> results = new ArrayList<MatchDisplay>();
         for (Match match : matches) {
-            MatchDisplay display = new MatchDisplay();
-            User user1 = userDAO.loadById(match.userId1);
-            display.userId1 = user1.get_id().toString();
-            display.name1 = user1.name;
-            display.userFace1 = user1.userFace;
-            User user2 = userDAO.loadById(match.userId2);
-            display.userId2 = user2.get_id().toString();
-            display.name2 = user2.name;
-            display.userFace2 = user2.userFace;
-            display.score = match.score;
-            display.infos = match.matchInfos;
+            MatchDisplay display = makeDisplay(match);
             results.add(display);
         }
 
         responseEntity.code = 200;
         responseEntity.body = results;
         return  Response.status(200).entity(responseEntity).build();
+    }
+
+    private MatchDisplay makeDisplay(Match match) {
+        MatchDisplay display = new MatchDisplay();
+        User user1 = userDAO.loadById(match.userId1);
+        display.userId1 = user1.get_id().toString();
+        display.name1 = user1.name;
+        display.userFace1 = user1.userFace;
+        display.phone1 = user1.phone;
+        User user2 = userDAO.loadById(match.userId2);
+        display.userId2 = user2.get_id().toString();
+        display.name2 = user2.name;
+        display.userFace2 = user2.userFace;
+        display.phone2 = user2.phone;
+
+        display.score = match.score;
+        display.infos = match.matchInfos;
+
+        return display;
     }
 }
