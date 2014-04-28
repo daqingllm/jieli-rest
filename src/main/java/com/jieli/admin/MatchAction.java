@@ -132,7 +132,7 @@ public class MatchAction {
                 accountList.add(b);
             }
         }
-        //trick, to make url in jqgrid
+        //trick, save _id str in password, to make url in jqgrid
         for(Account a : accountList) {
             a.password = a.get_id().toString();
         }
@@ -147,6 +147,10 @@ public class MatchAction {
                     Association association = associationDAO.loadById(obj.get("associationId").toString());
                     obj.put("associationName", association.name);
                 }
+                String id = obj.get("password").toString();
+                Account account = accountDAO.loadById(id);
+                String name = userDAO.loadById(account.userId).name;
+                obj.put("name", name);
             }
             jsonAccountList = om.writeValueAsString(l);
         } catch (IOException e) {

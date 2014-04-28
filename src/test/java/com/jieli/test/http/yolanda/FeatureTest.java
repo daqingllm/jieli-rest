@@ -170,4 +170,12 @@ public class FeatureTest {
                 .execute();
         System.out.println(response.returnContent().asString());
     }
+
+    @Test
+    public void getOrientedMatch() throws IOException {
+        Response response = Request.Get("http://localhost:8080/rest/feature/match")
+                .addHeader("Cookie", "u=533be303300460878a64a158")
+                .execute();
+        System.out.println(response.returnContent().asString());
+    }
 }
