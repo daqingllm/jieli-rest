@@ -304,6 +304,9 @@ public class ActivityService {
             RelatedDisplay display = new RelatedDisplay();
             display.activityId = info.activityId;
             Activity activity = activityDAO.loadById(info.activityId);
+            if (activity == null) {
+                continue;
+            }
             if (info.type == RelatedType.SPONSER) {
                 display.info = "发起了 " + activity.title;
             } else if (info.type == RelatedType.FOLLOW) {
