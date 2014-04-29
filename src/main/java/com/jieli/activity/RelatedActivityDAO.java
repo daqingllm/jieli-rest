@@ -2,6 +2,7 @@ package com.jieli.activity;
 
 import com.jieli.mongo.GenericDAO;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -17,6 +18,9 @@ public class RelatedActivityDAO extends GenericDAO<RelatedActivity> {
 
     public List<ActivityInfo> findUserActivities(String userId) {
         RelatedActivity relatedActivity = col.findOne("{userId:#}", userId).as(RelatedActivity.class);
+        if (relatedActivity == null) {
+            return new ArrayList<ActivityInfo>();
+        }
         Collections.sort(relatedActivity.infos, new InfoComparator());
         return relatedActivity.infos;
     }

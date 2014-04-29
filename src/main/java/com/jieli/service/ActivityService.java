@@ -242,7 +242,7 @@ public class ActivityService {
             return Response.status(200).entity(responseEntity).build();
         }
 
-        responseEntity.body = generateDisplay(result);
+        responseEntity.body = generateRelatedActivities(result);
         responseEntity.code = 200;
         return Response.status(200).entity(responseEntity).build();
     }
