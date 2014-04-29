@@ -15,5 +15,7 @@ public class RelatedDisplay implements Serializable {
 
     public String activityId;
 
-    public String info;
+    public String title;
+
+    public RelatedType type;
 }

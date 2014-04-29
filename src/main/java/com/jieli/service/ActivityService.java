@@ -307,15 +307,8 @@ public class ActivityService {
             if (activity == null) {
                 continue;
             }
-            if (info.type == RelatedType.SPONSER) {
-                display.info = "发起了 " + activity.title;
-            } else if (info.type == RelatedType.FOLLOW) {
-                display.info = "关注了 " + activity.title;
-            } else if (info.type == RelatedType.JOIN) {
-                display.info = "参加了 " + activity.title;
-            } else {
-                continue;
-            }
+            display.type = info.type;
+            display.title = activity.title;
             displays.add(display);
         }
         return displays;
