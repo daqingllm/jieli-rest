@@ -304,11 +304,10 @@
     <label class="col-sm-3 control-label no-padding-right" for="form-field-actDate"> 活动时间 </label>
     <div class="col-sm-3">
         <div class="input-group">
-								<span class="input-group-addon">
-									<i class="icon-calendar bigger-110"></i>
-								</span>
-
-            <input class="form-control" type="text" name="date-range-picker" id="form-field-actDate" />
+            <input type="text" id="form-field-actDate" class="form-control hasDatepicker"/>
+                        		<span class="input-group-addon">
+                        			<i class="icon-calendar"></i>
+                        		</span>
         </div>
     </div>
 </div>
@@ -468,11 +467,6 @@
             上传标题图片
         </button>
 
-        &nbsp; &nbsp; &nbsp;
-        <button class="btn btn-success" type="button" style="font-weight:bold">
-            <i class="icon-question bigger-110"></i>
-            预览
-        </button>
 
         &nbsp; &nbsp; &nbsp;
         <button class="btn btn-info" type="button" style="font-weight:bold" onclick="<#if isSuper>finishActivity(0)<#else>finishActivity(1)</#if>;">
@@ -619,63 +613,6 @@
 <script src="/assets/js/bootstrap-multiselect.js"></script>
 <script>
 
-    function uploadImgBox() {
-        var spin_img = "<div id='upload-loading-img' style='margin-left:30px;margin-top:10px;display: none;'><i class='icon-spinner icon-spin orange bigger-125'></i></div>";
-        spin_img = "";
-        bootbox.dialog({
-            //message: "<input type='file' id='upload-image-files' name='upload-image-files' >",
-            message: "<form id='rest-upload-form' action='/rest/upload' method='post' enctype='multipart/form-data' acceptcharset='UTF-8'>\n<input id='rest-upload-file' type='file' name='file' size='50' />"+spin_img+"</form>",
-            buttons: {
-                "upload": {
-                    "label": "<i class='icon-ok'></i> 上传 ",
-                    "className": "btn-sm btn-success",
-                    "callback": function () {
-                        // show loading image first
-                        //$("#upload-loading-img").attr("style","display:block");
-
-                        //Example.show("great success");
-                        // upload Image !
-                        var d = new FormData(document.getElementById('rest-upload-form'));
-                        $.ajax({
-                            url: '/rest/upload',
-                            type: 'POST',
-                            contentType: false,
-                            data: d,
-                            cache: false,
-                            processData: false,
-                            async: false,
-                            success: function (jsn) {
-                                //alert(jsn);
-                                // untested , but it should be like : code:200,body:filepath,msg...
-
-                                if (jsn.code == 200) {
-                                    var uploadImgSrc = jsn.body + "";
-
-                                    $("#form-field-imgurl").attr("src",uploadImgSrc);
-                                    $("#form-field-imgurl").css("display","block");
-                                    $("#delTitleImage").css("display","block");
-
-                                } else {
-                                    alert("上传失败！");
-                                }
-                            }
-                        });
-
-                        //$("#upload-loading-img").attr("style","display: none");
-                    }
-                },
-                "cancel": {
-                    "label": "<i class='icon-remove'></i> 取消",
-                    "className": "btn-sm",
-                    "callback": function () {
-                        //Example.show("uh oh, look out!");
-                        var objFile = document.getElementById('rest-upload-file');
-                        objFile.outerHTML = objFile.outerHTML.replace(/(value=\").+\"/i, "$1\"");
-                    }
-                }
-            }
-        });
-    }
     (function ($, undefined) {
         $.fn.getCursorPosition = function () {
             var el = $(this).get(0);
@@ -695,89 +632,90 @@
 </script>
 
 <script type="text/javascript">
-jQuery(function ($) {
-<#if isSuper>
-    $("#sidebar-shortcuts-navlist").load("/sidebar_super.html",function(){$("#nav_list_3_2").addClass("active open");$("#nav_list_3").addClass("active");});
-<#else>
-    $("#sidebar-shortcuts-navlist").load("/sidebar_admin.html",function(){$("#nav_list_3_2").addClass("active open");$("#nav_list_3").addClass("active");});
-</#if>
+    jQuery(function ($) {
+    <#if isSuper>
+        $("#sidebar-shortcuts-navlist").load("/sidebar_super.html",function(){$("#nav_list_3_2").addClass("active open");$("#nav_list_3").addClass("active");});
+    <#else>
+        $("#sidebar-shortcuts-navlist").load("/sidebar_admin.html",function(){$("#nav_list_3_2").addClass("active open");$("#nav_list_3").addClass("active");});
+    </#if>
 
-    $('#selectAssociationIds').multiselect({
-        numberDisplayed:10,
-        buttonClass: 'btn-link btn ',
-        selectAllText: '全选',
-        selectAllValue: '全部',
-        nonSelectedText: '请选择',
-        nSelectedText: ' 被选中了',
-        maxHeight:400
-    });
+        $('#selectAssociationIds').multiselect({
+            numberDisplayed:10,
+            buttonClass: 'btn-link btn ',
+            selectAllText: '全选',
+            selectAllValue: '全部',
+            nonSelectedText: '请选择',
+            nSelectedText: ' 被选中了',
+            maxHeight:400
+        });
 
-    $("#bootbox-upload-image").on("click", uploadImgBox);
+        $("#bootbox-upload-image").on("click", uploadImgBox);
 
-    var colorbox_params = {
-        reposition: true,
-        scalePhotos: true,
-        scrolling: false,
-        previous: '<i class="icon-arrow-left"></i>',
-        next: '<i class="icon-arrow-right"></i>',
-        close: '&times;',
-        current: '{current} of {total}',
-        maxWidth: '100%',
-        maxHeight: '100%',
-        onOpen: function () {
-            document.body.style.overflow = 'hidden';
-        },
-        onClosed: function () {
-            document.body.style.overflow = 'auto';
-        },
-        onComplete: function () {
-            $.colorbox.resize();
-        }
-    };
+        var colorbox_params = {
+            reposition: true,
+            scalePhotos: true,
+            scrolling: false,
+            previous: '<i class="icon-arrow-left"></i>',
+            next: '<i class="icon-arrow-right"></i>',
+            close: '&times;',
+            current: '{current} of {total}',
+            maxWidth: '100%',
+            maxHeight: '100%',
+            onOpen: function () {
+                document.body.style.overflow = 'hidden';
+            },
+            onClosed: function () {
+                document.body.style.overflow = 'auto';
+            },
+            onComplete: function () {
+                $.colorbox.resize();
+            }
+        };
 
-    $('.ace-thumbnails [data-rel="colorbox"]').colorbox(colorbox_params);
-    $("#cboxLoadingGraphic").append("<i class='icon-spinner orange'></i>");//let's add a custom loading icon
+        $('.ace-thumbnails [data-rel="colorbox"]').colorbox(colorbox_params);
+        $("#cboxLoadingGraphic").append("<i class='icon-spinner orange'></i>");//let's add a custom loading icon
 
-    /**$(window).on('resize.colorbox', function() {
+        /**$(window).on('resize.colorbox', function() {
 					try {
 						//this function has been changed in recent versions of colorbox, so it won't work
 						$.fn.colorbox.load();//to redraw the current frame
 					} catch(e){}
 				});*/
-});
-
-jQuery(function ($) {
-
-    $('.date-picker').datepicker({autoclose: true}).next().on(ace.click_event, function () {
-        $(this).prev().focus();
     });
 
-});
+    jQuery(function ($) {
+
+        $('.date-picker').datepicker({autoclose: true}).next().on(ace.click_event, function () {
+            $(this).prev().focus();
+        });
+
+    });
 </script>
 <script>
 
 
-jQuery(function($){
-    $("#form-field-actDate").val(GetDate10(new Date(),0));
-    addArrangementDetail();
-    addServiceInfo();
+    jQuery(function($){
+        $("#form-field-actDate").val(GetDate10(new Date(),0));
+        addArrangementDetail();
+        addServiceInfo();
 
-    $('#icon-plus-ad').click(addArrangementDetail);
-    $('#icon-plus-si').click(addServiceInfo);
+        $('#icon-plus-ad').click(addArrangementDetail);
+        $('#icon-plus-si').click(addServiceInfo);
 
-    /*$('input[name=date-range-picker]').daterangepicker({
-                format: 'YYYY-MM-DD'},
-            function(start, end, label) {
-                //alert('A date range was chosen: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
-                if (start.format('YYYY-MM-DD') == end.format('YYYY-MM-DD')){
-                    $('input[name=date-range-picker]').val(start.format('YYYY-MM-DD'));
-                }else{
-                    $('input[name=date-range-picker]').val(start.format('YYYY-MM-DD') + ' 至 ' + end.format('YYYY-MM-DD'));
-                }
-            });
-            */
-    $('#form-field-dlDate').datepicker({autoclose:true});
-});
+        /*$('input[name=date-range-picker]').daterangepicker({
+                    format: 'YYYY-MM-DD'},
+                function(start, end, label) {
+                    //alert('A date range was chosen: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
+                    if (start.format('YYYY-MM-DD') == end.format('YYYY-MM-DD')){
+                        $('input[name=date-range-picker]').val(start.format('YYYY-MM-DD'));
+                    }else{
+                        $('input[name=date-range-picker]').val(start.format('YYYY-MM-DD') + ' 至 ' + end.format('YYYY-MM-DD'));
+                    }
+                });
+                */
+        $('#form-field-dlDate').datepicker({autoclose:true,format: "yyyy-mm-dd"});
+        $('#form-field-actDate').datepicker({autoclose:true,format: "yyyy-mm-dd"});
+    });
 
 
 

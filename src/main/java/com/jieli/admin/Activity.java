@@ -217,6 +217,8 @@ public class Activity {
 
         if (activity == null)
             params.put("got","该活动已被删除！");
+        else if(activity.actDate .compareTo( new Date()) < 0)
+            params.put("got","该活动已成历史了！");
         else {
             params.put("got", "");
 
@@ -231,11 +233,10 @@ public class Activity {
 
             activity_data = Common.ReplaceObjectId(activity);
 
-            if (IdentifyUtils.isSuper(sessionId)){
-                Iterable<com.jieli.association.Association> associations = associationDAO.loadAll();
-                for (com.jieli.association.Association association : associations) {
-                    associationList += "<option value='"+association.get_id()+"'>"+association.name+"</option>";
-                }
+            if (IdentifyUtils.isSuper(sessionId)) {
+                associationList = Common.MakeAssociationOptionListForSelect("");
+            } else {
+                associationList = Common.MakeAssociationOptionListForSelect(IdentifyUtils.getAssociationId(sessionId));
             }
         }
         params.put("username",account.username);

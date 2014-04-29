@@ -1,3 +1,20 @@
+
+Date.prototype.Format = function (fmt) { //author: meizz
+    var o = {
+        "M+": this.getMonth() + 1, //月份
+        "d+": this.getDate(), //日
+        "h+": this.getHours(), //小时
+        "m+": this.getMinutes(), //分
+        "s+": this.getSeconds(), //秒
+        "q+": Math.floor((this.getMonth() + 3) / 3), //季度
+        "S": this.getMilliseconds() //毫秒
+    };
+    if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+    for (var k in o)
+        if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+    return fmt;
+}
+
 function test2227(str){
     if (str.indexOf("'")>-1 || str.indexOf("\"")>-1) {
         alert(str + "中含有英文的单引号或双引号，请改正为中文引号。");
@@ -233,7 +250,15 @@ var uploadArticleImageOptions = {
 
 
 function finishActivity(type){
+
     var act = {};
+    var p_id = window.location.href.indexOf("actid=");
+    if (p_id > -1) {
+        act["_id"] = window.location.href.substr(p_id + "actid=".length);
+        if (act["_id"].indexOf("&") > -1)
+            act["_id"] = act["_id"].substr(0, act["_id"].indexOf("&"));
+    }
+
     if (type == 0)
     act.tag = "RECOMMEND";
     else
@@ -309,6 +334,7 @@ function finishActivity(type){
     var chk = check(act);
     if (chk != null) {alert(chk);return;}
 
+    var suc = true;
     for (var i = 0; i <p_assid.length;i++) {
         act.associationId = p_assid[i];
         $.ajax({
@@ -318,9 +344,20 @@ function finishActivity(type){
             data:JSON.stringify(act),
             contentType:"application/json",
             cache:false,
-            processData:false
+            processData:false,
+            success:function(data){
+                if (data.code != 200){
+                    suc = false;
+                }
+            }
         });
     }
+
+    if (suc) {
+        if (p_id > -1) {alert("已经成功编辑此活动");window.location.href = "/rest/bactivity/list";}
+        else {alert("已经成功添加此活动");window.location.href = "/rest/bactivity/list";}
+    }
+    else  alert("添加活动失败");
 }
 
 function check(act) {
@@ -423,4 +460,63 @@ function GetDate10(dateStr,offsetDay) {
     var day = datetime.getDate() < 10 ? "0" + datetime.getDate() : datetime.getDate();
 
     return year+"-"+month+"-"+day;
+}
+
+
+function uploadImgBox() {
+    var spin_img = "<div id='upload-loading-img' style='margin-left:30px;margin-top:10px;display: none;'><i class='icon-spinner icon-spin orange bigger-125'></i></div>";
+    spin_img = "";
+    bootbox.dialog({
+        //message: "<input type='file' id='upload-image-files' name='upload-image-files' >",
+        message: "<form id='rest-upload-form' action='/rest/upload' method='post' enctype='multipart/form-data' acceptcharset='UTF-8'>\n<input id='rest-upload-file' type='file' name='file' size='50' />"+spin_img+"</form>",
+        buttons: {
+            "upload": {
+                "label": "<i class='icon-ok'></i> 上传 ",
+                "className": "btn-sm btn-success",
+                "callback": function () {
+                    // show loading image first
+                    //$("#upload-loading-img").attr("style","display:block");
+
+                    //Example.show("great success");
+                    // upload Image !
+                    var d = new FormData(document.getElementById('rest-upload-form'));
+                    $.ajax({
+                        url: '/rest/upload',
+                        type: 'POST',
+                        contentType: false,
+                        data: d,
+                        cache: false,
+                        processData: false,
+                        async: false,
+                        success: function (jsn) {
+                            //alert(jsn);
+                            // untested , but it should be like : code:200,body:filepath,msg...
+
+                            if (jsn.code == 200) {
+                                var uploadImgSrc = jsn.body + "";
+
+                                $("#form-field-imgurl").attr("src",uploadImgSrc);
+                                $("#form-field-imgurl").css("display","block");
+                                $("#delTitleImage").css("display","block");
+
+                            } else {
+                                alert("上传失败！");
+                            }
+                        }
+                    });
+
+                    //$("#upload-loading-img").attr("style","display: none");
+                }
+            },
+            "cancel": {
+                "label": "<i class='icon-remove'></i> 取消",
+                "className": "btn-sm",
+                "callback": function () {
+                    //Example.show("uh oh, look out!");
+                    var objFile = document.getElementById('rest-upload-file');
+                    objFile.outerHTML = objFile.outerHTML.replace(/(value=\").+\"/i, "$1\"");
+                }
+            }
+        }
+    });
 }
