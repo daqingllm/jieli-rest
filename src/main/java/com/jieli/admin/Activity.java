@@ -46,6 +46,9 @@ public class Activity {
         if (IdentifyUtils.isSuper(sessionId)) {
             isSuper = true;
             associationList = Common.MakeAssociationOptionListForSelect("");
+        } else {
+            isSuper = false;
+            associationList = Common.MakeAssociationOptionListForSelect(IdentifyUtils.getAssociationId(sessionId));
         }
 
         String username = accountDAO.loadById(sessionId).username;

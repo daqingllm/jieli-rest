@@ -101,7 +101,7 @@
                         <li class="divider"></li>-->
 
                         <li>
-                            <a href="#">
+                            <a href="#" onclick="document.cookie='u=;path=/';window.location.href='/rest/baccount/login'">
                                 <i class="icon-off"></i>
                                 ÍË³ö
                             </a>
