@@ -74,7 +74,7 @@ public class UserTest {
 
     @Test
     public void loadSelf() throws IOException {
-        Response response = Request.Get("http://162.243.151.219:8080/jieli-1.0-SNAPSHOT/rest/user/self")
+        Response response = Request.Get("http://162.243.151.219:8080/rest/user/self")
                 .addHeader("Cookie", "u=533c061de4b05bd824aeda56")
                 .execute();
 

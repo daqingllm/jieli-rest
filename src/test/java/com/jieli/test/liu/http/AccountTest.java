@@ -53,14 +53,14 @@ public class AccountTest {
     @Test
     public void testChange() throws IOException {
         Account account = new Account();
-        account.username = "桃子Strawberry";
-        account.password = "admin";
+        account.username = "Harden";
+        account.password = "Harden";
 //        account.associationId = "5337a309ef869d4225397d48";
 //        account.userId = "533c07a1ef86c7014c36fa30";
         account.state = AccountState.ADMIN;
 
         Response response = Request.Post("http://localhost:8080/rest/account")
-                .addHeader("Cookie", "u=5346965130040cab020b3dd3")
+                .addHeader("Cookie", "u=533c07a1ef86c7014c36fa31")
                 .setHeader("app", "test")
                 .bodyString(new ObjectMapper().writeValueAsString(account), ContentType.APPLICATION_JSON)
                 .execute();
