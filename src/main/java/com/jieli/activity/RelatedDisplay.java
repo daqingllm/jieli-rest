@@ -1,6 +1,7 @@
 package com.jieli.activity;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * Created with IntelliJ IDEA.
@@ -18,4 +19,6 @@ public class RelatedDisplay implements Serializable {
     public String title;
 
     public RelatedType type;
+
+    public Date time;
 }

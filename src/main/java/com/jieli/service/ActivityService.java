@@ -309,6 +309,7 @@ public class ActivityService {
             }
             display.type = info.type;
             display.title = activity.title;
+            display.time = info.time;
             displays.add(display);
         }
         return displays;
@@ -421,6 +422,7 @@ public class ActivityService {
         ActivityInfo info = new ActivityInfo();
         info.activityId = activityId;
         info.type = relatedType;
+        info.time = new Date();
         if (relatedActivity.infos.contains(info)) {
             return;
         }
