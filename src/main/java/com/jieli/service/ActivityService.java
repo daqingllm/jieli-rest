@@ -242,7 +242,7 @@ public class ActivityService {
             return Response.status(200).entity(responseEntity).build();
         }
 
-        responseEntity.body = generateDisplay(result);
+        responseEntity.body = generateRelatedActivities(result);
         responseEntity.code = 200;
         return Response.status(200).entity(responseEntity).build();
     }
@@ -304,15 +304,12 @@ public class ActivityService {
             RelatedDisplay display = new RelatedDisplay();
             display.activityId = info.activityId;
             Activity activity = activityDAO.loadById(info.activityId);
-            if (info.type == RelatedType.SPONSER) {
-                display.info = "发起了 " + activity.title;
-            } else if (info.type == RelatedType.FOLLOW) {
-                display.info = "关注了 " + activity.title;
-            } else if (info.type == RelatedType.JOIN) {
-                display.info = "参加了 " + activity.title;
-            } else {
+            if (activity == null) {
                 continue;
             }
+            display.type = info.type;
+            display.title = activity.title;
+            display.time = info.time;
             displays.add(display);
         }
         return displays;
@@ -425,6 +422,7 @@ public class ActivityService {
         ActivityInfo info = new ActivityInfo();
         info.activityId = activityId;
         info.type = relatedType;
+        info.time = new Date();
         if (relatedActivity.infos.contains(info)) {
             return;
         }
