@@ -233,6 +233,7 @@ public class NewsService {
 
         responseEntity.code = 200;
         responseEntity.msg = "评论成功";
+        responseEntity.body = comment;
         return Response.status(200).entity(responseEntity).build();
     }
 }

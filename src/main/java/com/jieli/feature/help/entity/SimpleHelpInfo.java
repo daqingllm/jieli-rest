@@ -44,6 +44,8 @@ public class SimpleHelpInfo extends Model{
      */
     private int type;
 
+    public int commentCount;
+
     public String getUserId() {
         return userId;
     }
