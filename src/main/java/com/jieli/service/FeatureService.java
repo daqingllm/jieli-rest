@@ -448,17 +448,37 @@ public class FeatureService {
             responseEntity.msg = "权限不足";
             return Response.status(403).entity(responseEntity).build();
         }
-        Comment comment = commentDAO.findOne("{_id:#}", new ObjectId(commentId));
-        HelpInfo result = helpDAO.topComment(helpId, comment);
-        if(result == null) {
-            responseEntity.code = 1206;
-            responseEntity.body = "置顶评论失败";
+        Comment top = getTopComment(help, commentId);
+        if (top == null) {
+
+            Comment comment = commentDAO.findOne("{_id:#}", new ObjectId(commentId));
+            help.getTopCommentList().add(comment);
+            helpDAO.save(help);
+            responseEntity.code = 200;
+            responseEntity.msg = "评论已置顶";
+            responseEntity.body = help;
+            return Response.status(200).entity(responseEntity).build();
+        } else {
+            help.getTopCommentList().remove(top);
+            helpDAO.save(help);
+            responseEntity.code = 200;
+            responseEntity.msg = "置顶已取消";
+            responseEntity.body = help;
             return Response.status(200).entity(responseEntity).build();
         }
-        responseEntity.code = 200;
-        responseEntity.body = "{\"_id\":\"" + result.get_id() + "\"}";;
-        return Response.status(200).entity(responseEntity).build();
 
+    }
+
+    private Comment getTopComment(HelpInfo helpInfo, String commentId) {
+        if (CollectionUtils.isEmpty(helpInfo.getTopCommentList())) {
+            return null;
+        }
+        for (Comment comment : helpInfo.getTopCommentList()) {
+            if (comment.get_id().toString().equals(commentId)) {
+                return comment;
+            }
+        }
+        return null;
     }
 
     /**
