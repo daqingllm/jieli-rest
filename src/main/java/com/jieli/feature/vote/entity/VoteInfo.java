@@ -21,6 +21,8 @@ public class VoteInfo extends Model {
     private Map<Integer, String> optionPicsMap; //投票选项，对应图片
     private Map<Integer, Integer> optionVotes; //投票选项index，票数
     private boolean multiple; //是否多选
+    private Integer totalVote; //总票数
+    private Integer participants; //参与人数
 
     public String getAssociationId() {
         return associationId;
@@ -116,5 +118,21 @@ public class VoteInfo extends Model {
 
     public void setOptionVotes(Map<Integer, Integer> optionVotes) {
         this.optionVotes = optionVotes;
+    }
+
+    public Integer getTotalVote() {
+        return totalVote;
+    }
+
+    public void setTotalVote(Integer totalVote) {
+        this.totalVote = totalVote;
+    }
+
+    public Integer getParticipants() {
+        return participants;
+    }
+
+    public void setParticipants(Integer participants) {
+        this.participants = participants;
     }
 }

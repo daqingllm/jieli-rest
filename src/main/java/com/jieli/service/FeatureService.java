@@ -779,6 +779,8 @@ public class FeatureService {
             afterVote = voteResultDAO.vote(vote, voteId);
         }
         voteInfo.setOptionVotes(afterVote.getOptionVotes());
+        voteInfo.setParticipants(afterVote.getParticipants());
+        voteInfo.setTotalVote(afterVote.getTotalVote());
         voteDAO.save(voteInfo);
 
         //触发参与投票动态
