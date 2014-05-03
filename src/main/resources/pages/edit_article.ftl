@@ -291,6 +291,34 @@
                             </div>
                         </div>
                     </div>
+                    <div class="space-4"></div>
+
+
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right" for="form-field-select-pro"> 行业标签 </label>
+
+                        <div class="col-sm-9">
+                            <select class="col-xs-10 col-sm-7" id="form-field-select-pro"
+                                    style="padding: 5px 4px;font-size: 14px;">
+                            ${professionOptionList}
+                            </select>
+                        </div>
+                    </div>
+
+
+                    <div class="space-4"></div>
+
+
+
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right" for="form-input-readonly"> 兴趣标签 </label>
+
+                        <div class="col-sm-9">
+                            <select id="selectInterest" multiple="multiple" class="multiselect">${interestOptionList}</select>
+                        </div>
+                    </div>
 
                     <div class="space-4"></div>
 
@@ -299,6 +327,16 @@
 
                         <div class="col-sm-9">
                             <select id="selectAssociationIds" multiple="multiple" class="multiselect">${assIdOptionList}</select>
+                        </div>
+                    </div>
+
+                    <div class="space-4"></div>
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right" for="form-field-checkbox"> 强推选项 </label>
+
+                        <div class="col-sm-9">
+                            <input type="checkbox" id="form-field-checkbox" >
                         </div>
                     </div>
 
@@ -471,12 +509,18 @@
 
 <!-- inline scripts related to this page -->
 <script>
+    var data = null;
+</script>
+<script>
     function loadThisArticle(){
     <#if got?length==0>
 
-        var data = ${art_data};
+        data = ${art_data};
         //$("#seletAssociationIds").multiselect('select',data["associationId"]);
-        $("option[value="+data["associationId"]+"]").attr("selected","selected");
+        $("#seletAssociationIds option[value="+data["associationId"]+"]").attr("selected","selected");
+        for (var i = 0; i < data["interestTags"].length; i++)
+            $("#selectInterest option[value="+data["interestTags"][i]+"]").attr("selected","selected");
+        $("#form-field-select-pro").val(data["professionTag"]);
         $("#form-field-title").val(data["title"]);
         $("#form-field-select-type").val(data["type"]);
         $("#form-field-textarea").val(data["content"]);
@@ -535,7 +579,15 @@
             nSelectedText: ' 被选中了',
             maxHeight:400
         });
-
+        $('#selectInterest').multiselect({
+            numberDisplayed:10,
+            buttonClass: 'btn-link btn ',
+            selectAllText: '全选',
+            selectAllValue: '全部',
+            nonSelectedText: '请选择',
+            nSelectedText: ' 被选中了',
+            maxHeight:400
+        });
         $("#bootbox-upload-image").on("click", function () {
             var spin_img = "<div id='upload-loading-img' style='margin-left:30px;margin-top:10px;display: none;'><i class='icon-spinner icon-spin orange bigger-125'></i></div>";
             spin_img = "";

@@ -615,7 +615,7 @@
 
 <!-- inline scripts related to this page -->
 <script>
-    var data;
+    var data = null;
 </script>
 <script>
 

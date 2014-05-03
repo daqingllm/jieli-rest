@@ -70,11 +70,14 @@ function postThisArticle(){
     var json = {};
     json["_id"] = null;
 
+    var isEdit = false;
     var p_id = window.location.href.indexOf("artid=");
     if (p_id > -1) {
         json["_id"] = window.location.href.substr(p_id + "artid=".length);
-        if (json["_id"].indexOf("&") > -1)
+        if (json["_id"].indexOf("&") > -1) {
             json["_id"] = json["_id"].substr(0, json["_id"].indexOf("&"));
+        }
+        isEdit = true;
     }
 
     var p_assid,p_title,p_type,p_overview,p_content,p_images;
@@ -83,6 +86,19 @@ function postThisArticle(){
     if (p_assid == null || p_assid == "") {alert("请选择协会！");return;}
     if (!test2227(p_assid)) return;
     //json["associationId"] = p_assid[0];
+
+    var p_pt,p_it;
+    p_pt = $("#form-field-select-pro").val();
+    if (p_pt == null || p_pt == "") {alert("请选择行业标签！");return;}
+    json["professionTag"] = p_pt;
+
+    p_it = $("#selectInterest").val();
+    if (p_it.length == 0){alert("请选择兴趣标签！");return;}
+    json["interestTags"] = [];
+    for (var i = 0; i < p_it.length; i++){
+        json["interestTags"].push(p_it[i]);
+    }
+
 
     p_title = $("#form-field-title").val();
     if (p_title == null || p_title == "") {alert("请填写标题！");return;}
@@ -127,6 +143,12 @@ function postThisArticle(){
     json["appreciateUserIds"] = [];
     json["appreciateCount"] = 0;
     json["addTime"] = null;
+
+    if (isEdit){
+        json["appreciateUserIds"] = data["appreciateUserIds"];
+        json["appreciateCount"] = data["appreciateCount"];
+        json["addTime"] = data["addTime"];
+    }
 
     var suc = true;
     // if edit , there is only one element in p_assid
@@ -253,10 +275,12 @@ function finishActivity(type){
 
     var act = {};
     var p_id = window.location.href.indexOf("actid=");
+    var isEdit  = false;
     if (p_id > -1) {
         act["_id"] = window.location.href.substr(p_id + "actid=".length);
         if (act["_id"].indexOf("&") > -1)
             act["_id"] = act["_id"].substr(0, act["_id"].indexOf("&"));
+        isEdit = true;
     }
 
     if (type == 0)
@@ -331,15 +355,24 @@ function finishActivity(type){
     act.joinMembers={};
     act.invitees=[];
 
+    if (isEdit){
+        act.album = data.album;
+        act.addTime = data.addTime;
+        act.followMembers = data.followMembers;
+        act.joinMembers = data.joinMembers;
+        act.invitees = data.invitees;
+    }
+
     var chk = check(act);
     if (chk != null) {alert(chk);return;}
 
     var suc = true;
+    var url = "/rest/activity/?activityId="+(isEdit?act["_id"]:"")+"&force="+$("#form-field-checkbox").is(':checked');
     for (var i = 0; i <p_assid.length;i++) {
         act.associationId = p_assid[i];
         $.ajax({
             type:"POST",
-            url:"/rest/activity/?force="+$("#form-field-checkbox").is(':checked'),
+            url:url,
             async:false,
             data:JSON.stringify(act),
             contentType:"application/json",

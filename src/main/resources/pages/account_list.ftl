@@ -394,9 +394,9 @@
 jQuery(function ($) {
 
 <#if isSuper>
-    $("#sidebar-shortcuts-navlist").load("/sidebar_super.html",function(){$("#nav_list_5_1").addClass("active open");$("#nav_list_5").addClass("active");});
+    $("#sidebar-shortcuts-navlist").load("/sidebar_super.html",function(){$("#nav_list_7_1").addClass("active open");$("#nav_list_7").addClass("active");});
 <#else>
-    $("#sidebar-shortcuts-navlist").load("/sidebar_admin.html",function(){$("#nav_list_5_1").addClass("active open");$("#nav_list_5").addClass("active");});
+    $("#sidebar-shortcuts-navlist").load("/sidebar_admin.html",function(){$("#nav_list_7_1").addClass("active open");$("#nav_list_7").addClass("active");});
 </#if>
 
     var colorbox_params = {
@@ -532,7 +532,7 @@ jQuery(function($) {
     jQuery(grid_selector).jqGrid({
         data: grid_data,
         datatype: "local",
-        height: 330,
+        height: 490,
         colNames:['_id','协会','用户名','姓名','状态','加密密码'],
         colModel:[
             {name:"_id",index:"_id",width:10,editable:false,hidden:true},
@@ -543,8 +543,8 @@ jQuery(function($) {
             {name:"password",index:"password",width:"75",editable:false,hidden:true}
         ],
         viewrecords : true,
-        rowNum:10,
-        rowList:[10,20,30],
+        rowNum:15,
+        /*rowList:[10,20,30],*/
         pager : pager_selector,
         altRows: true,
         multiselect: true,
