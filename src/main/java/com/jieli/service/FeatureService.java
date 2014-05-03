@@ -591,14 +591,15 @@ public class FeatureService {
         voteInfo.setUserId(userId);
         voteInfo.setAssociationId(associationId);
         voteInfo.setAddTime(new Date());
-        VoteInfo result = voteDAO.addVote(voteInfo);
-
-        VoteResult voteResult = new VoteResult();
-        voteResult.setTotalVote(0);
         Map<Integer, Integer> optionVotesInit = new HashMap<Integer, Integer>();
         for(int i = 0; i < voteInfo.getOptions().size(); i++) {
             optionVotesInit.put(i, 0);
         }
+        voteInfo.setOptionVotes(optionVotesInit);
+        VoteInfo result = voteDAO.addVote(voteInfo);
+
+        VoteResult voteResult = new VoteResult();
+        voteResult.setTotalVote(0);
         voteResult.setOptionVotes(optionVotesInit);
         voteResult.setVoteId(result.get_id().toString());
         voteResult.setParticipants(0);
@@ -763,8 +764,9 @@ public class FeatureService {
         }
         VoteResult voteResult = voteResultDAO.loadByVoteId(voteId);
         List<Vote> voteList = voteResult.getVoteList();
+        VoteResult afterVote = null;
         if(voteList == null) {
-            voteResultDAO.vote(vote, voteId);
+            afterVote = voteResultDAO.vote(vote, voteId);
         }
         else {
             for(Vote v : voteList) {
@@ -774,8 +776,10 @@ public class FeatureService {
                     return Response.status(200).entity(responseEntity).build();
                 }
             }
-            voteResultDAO.vote(vote, voteId);
+            afterVote = voteResultDAO.vote(vote, voteId);
         }
+        voteInfo.setOptionVotes(afterVote.getOptionVotes());
+        voteDAO.save(voteInfo);
 
         //触发参与投票动态
 //        Message message = new Message();

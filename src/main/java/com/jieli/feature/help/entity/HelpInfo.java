@@ -50,6 +50,10 @@ public class HelpInfo extends Model{
      * 0 需求 1 供给
      */
     private int type;
+    /**
+     * 0 人 1 物
+     */
+    private int typeDetail;
 
     /**
      * 是否紧急
