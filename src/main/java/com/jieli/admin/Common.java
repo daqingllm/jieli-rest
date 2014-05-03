@@ -6,6 +6,8 @@ import com.jieli.activity.*;
 import com.jieli.activity.Activity;
 import com.jieli.association.*;
 import com.jieli.association.Association;
+import com.jieli.common.entity.InterestTag;
+import com.jieli.common.entity.ProfessionTag;
 import com.jieli.mongo.Model;
 import com.jieli.util.IdentifyUtils;
 
@@ -59,6 +61,24 @@ public class Common {
 
     /* 协会相关函数 */
     private static AssociationDAO associationDAO = new AssociationDAO();
+
+    public static String MakeInterestOptionList(){
+        String all [] = InterestTag.ALL;
+        String interestOptionList = "";
+        for (String it : all){
+            interestOptionList += "<option value='"+it+"'>"+it+"</option>";
+        }
+        return interestOptionList;
+    }
+
+    public static String MakeProfessionOptionList(){
+        String all [] = ProfessionTag.ALL;
+        String professionOptionList = "";
+        for (String it : all){
+            professionOptionList += "<option value='"+it+"'>"+it+"</option>";
+        }
+        return professionOptionList;
+    }
 
     public static String MakeAssociationOptionListForSelect(String associationId){
         String assIdOptionList = "";

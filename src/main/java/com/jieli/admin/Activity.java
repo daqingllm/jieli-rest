@@ -115,7 +115,7 @@ public class Activity {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("username",account.username);
 
-        int _page = 1,_rowNum = 2,_total=0,_totalPage = 0;
+        int _page = 1,_rowNum = 15,_total=0,_totalPage = 0;
         try{
             _page = Integer.parseInt(page);
             if (_page <= 0) _page = 1;
@@ -124,9 +124,9 @@ public class Activity {
         }
         try{
             _rowNum = Integer.parseInt(rowNum);
-            if (_rowNum <= 0) _rowNum = 2;
+            if (_rowNum <= 0) _rowNum = 15;
         }catch (Exception e){
-            _rowNum = 2;
+            _rowNum = 15;
         }
 
         ////List<com.jieli.activity.Activity> activityList = new ArrayList<com.jieli.activity.Activity>();
@@ -216,7 +216,7 @@ public class Activity {
         String associationList = "";
 
         if (activity == null)
-            params.put("got","该活动已被删除！");
+            params.put("got","无此活动！");
         else if(activity.actDate .compareTo( new Date()) < 0)
             params.put("got","该活动已成历史了！");
         else {
