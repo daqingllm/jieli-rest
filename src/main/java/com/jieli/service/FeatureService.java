@@ -471,6 +471,7 @@ public class FeatureService {
 
     private Comment getTopComment(HelpInfo helpInfo, String commentId) {
         if (CollectionUtils.isEmpty(helpInfo.getTopCommentList())) {
+            helpInfo.setTopCommentList(new ArrayList<Comment>());
             return null;
         }
         for (Comment comment : helpInfo.getTopCommentList()) {

@@ -71,4 +71,15 @@ public class FeatureTest {
                 .execute();
         System.out.println(response.returnContent().asString());
     }
+
+    @Test
+    public void addTop() throws IOException {
+        Integer index = 1;
+        Response response = Request.Post("http://162.243.151.219:8080/rest/feature/help/detail/comment/top?" +
+                "helpId=536473a3e4b0e94e289b1821&commentId=53541ea4e4b03c806e4892b2")
+                .setHeader("Cookie", "u=5348210be4b00b2ae52d3f5c")
+                .bodyString(index.toString(), ContentType.APPLICATION_JSON)
+                .execute();
+        System.out.println(response.returnContent().asString());
+    }
 }
