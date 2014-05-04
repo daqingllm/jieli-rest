@@ -51,7 +51,8 @@ public class UserTest {
 
         Response response = Request.Post("http://162.243.151.219:8080/rest/user/self")
                 .addHeader("Cookie", "u=534a2256e4b0038297fb2136")
-                .bodyString(new ObjectMapper().writeValueAsString(user), ContentType.APPLICATION_JSON)
+//                .bodyString(new ObjectMapper().writeValueAsString(user), ContentType.APPLICATION_JSON)
+                .bodyString("{\"_id\":\"534a2256e4b0038297fb2135\",\"associationId\":\"5348205ce4b00b2ae52d3f5a\",\"birthday\":1397971950689,\"constellation\":\"水瓶座\",\"degree\":0,\"eduPlace\":0,\"enterpriseName\":\"阿里巴巴\",\"group\":\"读书会\",\"identity\":\"协会元老\",\"mail\":\"xxx@164.com\",\"name\":\"甜瓜\",\"phone\":\"139\",\"profession\":\"协会元老\",\"school\":\"北京大学\",\"score\":0,\"sex\":0,\"userFace\":\"http://xianxing-test.qiniudn.com/12834560259126414_bynam.jpg\",\"weixin\":\"hadeng\"}", ContentType.APPLICATION_JSON)
                 .execute();
 
         System.out.println(response.returnContent().asString());
@@ -75,7 +76,7 @@ public class UserTest {
     @Test
     public void loadSelf() throws IOException {
         Response response = Request.Get("http://162.243.151.219:8080/rest/user/self")
-                .addHeader("Cookie", "u=533c061de4b05bd824aeda56")
+                .addHeader("Cookie", "u=534a2256e4b0038297fb2136")
                 .execute();
 
         System.out.println(response.returnContent().asString());
