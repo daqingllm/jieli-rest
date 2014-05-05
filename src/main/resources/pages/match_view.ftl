@@ -196,8 +196,12 @@
                     <li>
                         <a href="#"> 匹配管理 </a>
                     </li>
-
+                <#if isHistory>
+                    <li class="active">匹配历史</li>
+                <#else>
                     <li class="active">用户匹配</li>
+                </#if>
+
                 </ul>
                 <!-- .breadcrumb -->
 
@@ -215,9 +219,15 @@
 
             <div class="page-content">
                 <div class="page-header">
-                    <h1>
-                        查看用户top5匹配信息
-                    </h1>
+                    <#if isHistory>
+                        <h1>
+                            查看历史匹配
+                        </h1>
+                    <#else>
+                        <h1>
+                            查看用户top5匹配信息
+                        </h1>
+                    </#if>
                 </div>
                 <!-- /.page-header -->
 
@@ -379,12 +389,20 @@
 jQuery(function ($) {
 <#if isSuper>
     $("#sidebar-shortcuts-navlist").load("/sidebar_super.html",function(){
-        $("#nav_list_6_2").addClass("active open");
-        $("#nav_list_6").addClass("active");});
+        $("#nav_list_6").addClass("active");
+        <#if isHistory>
+            $("#nav_list_6_1").addClass("active open");
+        <#else>
+            $("#nav_list_6_3").addClass("active open");
+        </#if>});
 <#else>
     $("#sidebar-shortcuts-navlist").load("/sidebar_admin.html",function(){
-        $("#nav_list_6_2").addClass("active open");
-        $("#nav_list_6").addClass("active");});
+        $("#nav_list_6").addClass("active");
+        <#if isHistory>
+            $("#nav_list_6_1").addClass("active open");
+        <#else>
+            $("#nav_list_6_3").addClass("active open");
+        </#if>});
 </#if>
 
     var colorbox_params = {

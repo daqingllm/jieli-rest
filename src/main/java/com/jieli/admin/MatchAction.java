@@ -180,6 +180,7 @@ public class MatchAction {
         params.put("isSuper", isSuper);
         Account self = accountDAO.loadById(sessionId);
         params.put("username", self.username);
+        params.put("isHistory", false);
         if (!IdentifyUtils.isValidate(center)){
             return FTLrender.getResult("error.ftl", params);
         }
@@ -210,7 +211,7 @@ public class MatchAction {
     @Path("/history")
     @GET
     @Produces(MediaType.TEXT_HTML)
-    public String viewMatchHistory(@CookieParam("u")String sessionId, @QueryParam("c")String center, @QueryParam("count")int count) {
+    public String viewMatchHistory(@CookieParam("u")String sessionId) {
         Map<String, Object> params = new HashMap<String, Object>();
         if(!IdentifyUtils.isValidate(sessionId)) {
             return errorReturn;
@@ -222,14 +223,9 @@ public class MatchAction {
         params.put("isSuper", isSuper);
         Account self = accountDAO.loadById(sessionId);
         params.put("username", self.username);
-        if (!IdentifyUtils.isValidate(center)){
-            return FTLrender.getResult("error.ftl", params);
-        }
-        String  userId = IdentifyUtils.getUserId(center);
-        if(count <= 0) {
-            count = 30;
-        }
-        Iterable<Match> matches = matchDAO.getTopMatchByUserId(userId, count);
+        params.put("isHistory", true);
+        Integer count = 30;
+        Iterable<Match> matches = matchDAO.getTopMatch(count);
         List<MatchDisplay> results = new ArrayList<MatchDisplay>();
         for (Match match : matches) {
             MatchDisplay display = new MatchDisplay();
@@ -245,6 +241,7 @@ public class MatchAction {
             display.infos = match.matchInfos;
             results.add(display);
         }
+
         params.put("displayList", results);
         return FTLrender.getResult("match_view.ftl", params);
     }
