@@ -19,7 +19,7 @@ import java.util.LinkedHashMap;
 /**
  * Created by 95 on 2014/4/16.
  */
-public class Common {
+public class CommonUtil {
     /* 如果发生权限错误，显示错误信息，并跳转至登陆页 */
     /* 暂时还没有样式设置 */
     public static final String errorReturn = "<!DOCTYPE html>\n" +
