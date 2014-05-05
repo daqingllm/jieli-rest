@@ -456,6 +456,11 @@ public class FeatureService {
         if (top == null) {
 
             Comment comment = commentDAO.findOne("{_id:#}", new ObjectId(commentId));
+            if (comment == null) {
+                responseEntity.code = 1003;
+                responseEntity.msg = "评论不存在";
+                return Response.status(200).entity(responseEntity).build();
+            }
             help.getTopCommentList().add(comment);
             helpDAO.save(help);
             responseEntity.code = 200;
@@ -479,6 +484,9 @@ public class FeatureService {
             return null;
         }
         for (Comment comment : helpInfo.getTopCommentList()) {
+            if (comment == null) {
+                continue;
+            }
             if (comment.get_id().toString().equals(commentId)) {
                 return comment;
             }
