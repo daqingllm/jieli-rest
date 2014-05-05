@@ -58,7 +58,7 @@ public class HelpInfo extends Model{
     /**
      * 是否紧急
      */
-    private boolean isEmergency;
+    public boolean isEmergency;
     /**
      * 评论数
      */
@@ -162,14 +162,6 @@ public class HelpInfo extends Model{
 
     public void setType(int type) {
         this.type = type;
-    }
-
-    public boolean isEmergency() {
-        return isEmergency;
-    }
-
-    public void setIsEmergency(boolean isEmergency) {
-        this.isEmergency = isEmergency;
     }
 
     public int getTypeDetail() {
