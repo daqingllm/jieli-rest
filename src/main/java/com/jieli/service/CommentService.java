@@ -2,13 +2,12 @@ package com.jieli.service;
 
 
 import com.jieli.comment.Comment;
-import com.jieli.comment.CommentUserInfo;
+import com.jieli.comment.CommentUserInfoUtil;
 import com.jieli.common.entity.ResponseEntity;
 import com.jieli.message.Message;
 import com.jieli.mongo.BaseDAO;
 import com.jieli.mongo.Collections;
 import com.jieli.user.dao.UserDAO;
-import com.jieli.user.entity.User;
 import com.jieli.util.CollectionUtils;
 import com.jieli.util.MongoUtils;
 import com.sun.jersey.spi.resource.Singleton;
@@ -92,23 +91,18 @@ public class CommentService {
     @GET
     @Path("/load")
     @Produces(MediaType.APPLICATION_JSON+ ";charset=utf-8")
-    public Response load(@QueryParam("topicId")String topicId, @QueryParam("topicType")String topicType, @QueryParam("page")int page, @QueryParam("count")int count){
+    public Response load(@QueryParam("commentId")String commentId, @QueryParam("topicId")String topicId, @QueryParam("topicType")String topicType, @QueryParam("page")int page, @QueryParam("count")int count){
+        ResponseEntity responseEntity = new ResponseEntity();
+
         List<Comment> comments = commentDAO.find("{topicId:#, topicType:#, isDeleted:#}", topicId, topicType, false);
 
         if( !CollectionUtils.isEmpty(comments) ){
             for(Comment comment : comments){
-                String userId = comment.commentUserId;
-                CommentUserInfo commentUserInfo = new CommentUserInfo();
-                commentUserInfo.userId = userId;
-                User user = userDAO.loadById(userId);
-                commentUserInfo.name = user.name;
-                commentUserInfo.userFace = user.userFace;
-
-                comment.commentUserInfo = commentUserInfo;
+                comment.commentUserInfo = CommentUserInfoUtil.generate(comment.commentUserId);
+                comment.commentedUserInfo = CommentUserInfoUtil.generate(comment.commentedUserId);
             }
         }
 
-        ResponseEntity responseEntity = new ResponseEntity();
         responseEntity.code = 200;
         responseEntity.body = comments;
         return  Response.status(200).entity(responseEntity).build();

@@ -16,6 +16,7 @@ public class Comment extends Model {
 
     public String topicId; // 评论内容id
     public String topicType; // 被评论内容类型
+    public String topicTitle;
 
     public String commentUserId;  // 回复者id
     public String commentedUserId; // 被回复者id
@@ -26,6 +27,7 @@ public class Comment extends Model {
 
 
     public CommentUserInfo commentUserInfo; // 评论者详细信息，用于展示
+    public CommentUserInfo commentedUserInfo; // 被回复者详细信息，用于展示
 
     public boolean isDeleted = false;  //是否已被删除
 

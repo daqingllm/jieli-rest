@@ -6,6 +6,7 @@ import com.jieli.comment.TopicType;
 import com.jieli.common.entity.ResponseEntity;
 import com.jieli.message.*;
 import com.jieli.mongo.BaseDAO;
+import com.jieli.user.entity.FriendMsg;
 import com.jieli.util.CollectionUtils;
 import com.jieli.util.IdentifyUtils;
 import com.jieli.util.MongoUtils;
@@ -394,12 +395,19 @@ public class ActivityService {
             responseEntity.body = "{\"count\":"+activity.joinMembers.size()+",\"join\":"+0+"}";
             insertRelated(userId, activityId, RelatedType.JOIN);
             List<String> concernedUserIds = IdentifyUtils.getConcerned(userId);
+
             for (String concernedUserId : concernedUserIds) {
                 Message message = new Message();
                 message.messageType = MessageType.FRIEND;
                 message.userId = concernedUserId;
-                message.content = "您关注的 " + IdentifyUtils.getUserName(userId) + " 参加了活动 " + activity.title;
                 message.addTime = new Date();
+
+                FriendMsg friendMsg = new FriendMsg();
+                friendMsg.msg = "您关注的 " + IdentifyUtils.getUserName(userId) + " 参加了活动 " + activity.title;
+                friendMsg.topicId = activityId;
+                friendMsg.topicType = TopicType.Activity;
+                message.content = friendMsg;
+
                 messageDAO.save(message);
             }
         } else {
@@ -468,18 +476,11 @@ public class ActivityService {
             responseEntity.msg = "活动不存在";
             return Response.status(200).entity(responseEntity).build();
         }
-        if (activity.tag == AcivityTag.PRIVATE && !activity.sponsorUserId.equals(IdentifyUtils.getUserId(sessionId))) {
-            Message message = new Message();
-            message.messageType = MessageType.COMMENT;
-            message.userId = activity.sponsorUserId;
-            message.content = "你发起的串局 " + activity.title + " 被 " + IdentifyUtils.getUserName(IdentifyUtils.getUserId(sessionId)) + " 评论";
-            message.addTime = new Date();
-            messageDAO.save(message);
-        }
 
         Comment comment = new Comment();
         comment.topicId = activityId;
         comment.topicType = TopicType.Activity;
+        comment.topicTitle = activity.title;
         comment.commentUserId = IdentifyUtils.getUserId(sessionId);
         comment.commentedUserId = commentInfo.get("commentedUserId");
         comment.content = content;
@@ -487,6 +488,10 @@ public class ActivityService {
         commentDAO.save(comment);
         //message
         CommentMessageUtil.addCommentMessage(comment);
+
+        if (activity.tag == AcivityTag.PRIVATE && !activity.sponsorUserId.equals(IdentifyUtils.getUserId(sessionId))) {
+            CommentMessageUtil.addCommentAuthorMessage(comment, activity.sponsorUserId);
+        }
 
         responseEntity.code = 200;
         responseEntity.msg = "评论成功";

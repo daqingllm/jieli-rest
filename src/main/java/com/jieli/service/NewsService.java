@@ -223,6 +223,7 @@ public class NewsService {
         Comment comment = new Comment();
         comment.topicId = newsId;
         comment.topicType = TopicType.News;
+        comment.topicTitle = news.title;
         comment.commentUserId = IdentifyUtils.getUserId(sessionId);
         comment.commentedUserId = commentInfo.get("commentedUserId");
         comment.content = content;

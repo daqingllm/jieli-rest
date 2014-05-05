@@ -12,8 +12,15 @@ import java.util.Date;
  */
 public class CommentMsg {
 
+    public String msg;
+
+    //0 发帖被评论；1 评论被回复
+    public int commentType;
+
+    public String topicId; // 评论内容id
+    public String topicType; // 被评论内容类型
+
     public String commentId;
-    public String topicBrief;
     public String commentContent;
     public CommentUserInfo commentUser;
     public Date commentTime;
