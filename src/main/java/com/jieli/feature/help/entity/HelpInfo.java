@@ -168,7 +168,15 @@ public class HelpInfo extends Model{
         return isEmergency;
     }
 
-    public void setEmergency(boolean isEmergency) {
+    public void setIsEmergency(boolean isEmergency) {
         this.isEmergency = isEmergency;
+    }
+
+    public int getTypeDetail() {
+        return typeDetail;
+    }
+
+    public void setTypeDetail(int typeDetail) {
+        this.typeDetail = typeDetail;
     }
 }
