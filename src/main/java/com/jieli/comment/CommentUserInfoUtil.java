@@ -15,6 +15,9 @@ public abstract class CommentUserInfoUtil {
     public static CommentUserInfo generate(String userId) {
         UserDAO userDAO = new UserDAO();
         User user = userDAO.loadById(userId);
+        if (user == null) {
+            return null;
+        }
         CommentUserInfo commentUserInfo = new CommentUserInfo();
         commentUserInfo.userId = userId;
         commentUserInfo.userFace = user.userFace;

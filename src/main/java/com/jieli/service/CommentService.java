@@ -11,6 +11,7 @@ import com.jieli.user.dao.UserDAO;
 import com.jieli.util.CollectionUtils;
 import com.jieli.util.MongoUtils;
 import com.sun.jersey.spi.resource.Singleton;
+import org.apache.commons.lang.StringUtils;
 import org.bson.types.ObjectId;
 
 import javax.ws.rs.GET;
@@ -99,7 +100,9 @@ public class CommentService {
         if( !CollectionUtils.isEmpty(comments) ){
             for(Comment comment : comments){
                 comment.commentUserInfo = CommentUserInfoUtil.generate(comment.commentUserId);
-                comment.commentedUserInfo = CommentUserInfoUtil.generate(comment.commentedUserId);
+                if (StringUtils.isNotEmpty(comment.commentedUserId)) {
+                    comment.commentedUserInfo = CommentUserInfoUtil.generate(comment.commentedUserId);
+                }
             }
         }
 
