@@ -11,7 +11,6 @@ import org.junit.Test;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -61,6 +60,25 @@ public class FeatureTest {
     public void testMatch() throws IOException {
         Response response = Request.Get("http://162.243.151.219:8080/rest/feature/topmatch")
                 .setHeader("Cookie", "u=534a2256e4b0038297fb2136")
+                .execute();
+        System.out.println(response.returnContent().asString());
+    }
+
+    @Test
+    public void testOMatch() throws IOException {
+        Response response = Request.Get("http://162.243.151.219:8080/rest/feature/admintopmatch?userId=5348210be4b00b2ae52d3f5b")
+                .setHeader("Cookie", "u=5348210be4b00b2ae52d3f5c")
+                .execute();
+        System.out.println(response.returnContent().asString());
+    }
+
+    @Test
+    public void addTop() throws IOException {
+        Integer index = 1;
+        Response response = Request.Post("http://162.243.151.219:8080/rest/feature/help/detail/comment/top?" +
+                "helpId=536473a3e4b0e94e289b1821&commentId=53541ea4e4b03c806e4892b2")
+                .setHeader("Cookie", "u=5348210be4b00b2ae52d3f5c")
+                .bodyString(index.toString(), ContentType.APPLICATION_JSON)
                 .execute();
         System.out.println(response.returnContent().asString());
     }

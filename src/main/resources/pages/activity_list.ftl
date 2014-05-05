@@ -330,7 +330,7 @@
 <script src="/assets/js/jquery.colorbox-min.js"></script>
 <script src="/assets/js/date-time/bootstrap-datepicker.min.js"></script>
 <script src="/assets/js/jqGrid/jquery.jqGrid.min.js"></script>
-<script src="/assets/js/jqGrid/i18n/grid.locale-en.js"></script>
+<script src="/assets/js/jqGrid/i18n/grid.locale-zh-act.js"></script>
 
 
 <!--[if lte IE 8]>
@@ -496,7 +496,7 @@ function enableTooltips(table) {
     $(table).find('.ui-pg-div').tooltip({container:'body'});
 }
 
-var total = ${tp};
+var total = "??";
 var records = ${ti};
 var page = ${cp};
 
@@ -517,7 +517,7 @@ jQuery(function($) {
     jQuery(grid_selector).jqGrid({
         data: grid_data,
         datatype: "local",
-        height: 330,
+        height: 490,
         colNames:['_id','协会','活动名称','活动种类','活动类型', '活动简介', '报名截止日期'],
         colModel:[
             {name:"_id",index:"_id",width:10,editable:false,hidden:true},
@@ -529,7 +529,7 @@ jQuery(function($) {
             {name:"beginDate",index:"beginDate",width:"120",editable:false,sorttype:"date"}
         ],
         viewrecords : true,
-        rowNum:${rowNum},
+        rowNum: 15,
         pager : pager_selector,
         altRows: true,
         multiselect: true,
@@ -642,6 +642,12 @@ function item_select(o,pgButton){
             break;
     }
 
+    if (pgButton == 'next_grid-pager' && records < 15)
+    {page = page - 1;return false;}
+
+    if (page == 0)
+    {page = 1; return false;}
+
     var str = "rowNum=${rowNum}&";
     str += "page="+page;
 
@@ -658,9 +664,9 @@ jQuery(function ($) {
     $('.date-picker').datepicker({autoclose: true}).next().on(ace.click_event, function () {
         $(this).prev().focus();
     });
-    $('input[name=date-range-picker]').daterangepicker().prev().on(ace.click_event, function () {
+    /*$('input[name=date-range-picker]').daterangepicker().prev().on(ace.click_event, function () {
         $(this).next().focus();
-    });
+    });*/
 
     //chosen plugin inside a modal will have a zero width because the select element is originally hidden
     //and its width cannot be determined.

@@ -3,7 +3,6 @@ package com.jieli.feature.vote.entity;
 import com.jieli.mongo.Model;
 
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -20,7 +19,10 @@ public class VoteInfo extends Model {
     private String description;
     private Map<Integer, String> options; //投票选项index，投票选项
     private Map<Integer, String> optionPicsMap; //投票选项，对应图片
+    private Map<Integer, Integer> optionVotes; //投票选项index，票数
     private boolean multiple; //是否多选
+    private Integer totalVote; //总票数
+    private Integer participants; //参与人数
 
     public String getAssociationId() {
         return associationId;
@@ -108,5 +110,29 @@ public class VoteInfo extends Model {
 
     public void setForce(boolean force) {
         this.force = force;
+    }
+
+    public Map<Integer, Integer> getOptionVotes() {
+        return optionVotes;
+    }
+
+    public void setOptionVotes(Map<Integer, Integer> optionVotes) {
+        this.optionVotes = optionVotes;
+    }
+
+    public Integer getTotalVote() {
+        return totalVote;
+    }
+
+    public void setTotalVote(Integer totalVote) {
+        this.totalVote = totalVote;
+    }
+
+    public Integer getParticipants() {
+        return participants;
+    }
+
+    public void setParticipants(Integer participants) {
+        this.participants = participants;
     }
 }

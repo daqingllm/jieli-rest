@@ -1,5 +1,7 @@
 package com.jieli.activity;
 
+import java.util.Date;
+
 /**
  * Created with IntelliJ IDEA.
  * User: liming_liu
@@ -12,6 +14,8 @@ public class ActivityInfo {
     public String activityId;
 
     public RelatedType type;
+
+    public Date time;
 
     @Override
     public boolean equals(Object o) {

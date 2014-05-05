@@ -27,10 +27,10 @@ public class ActivityTest {
         activity.associationId = "5348205ce4b00b2ae52d3f5a";
         activity.beginDate = new Date(new Date().getTime() + 1000000000);
 //        activity.beginDate = new Date();
-        activity.tag = AcivityTag.PRIVATE;
+        activity.tag = AcivityTag.OFFICIAL;
 //        activity.sponsorUserId = "533799caef869f8e93d30d9c";
         activity.url = "http://xianxing-test.qiniudn.com/12834560259126414_bynam.jpg";
-        activity.title = "串局";
+        activity.title = "一个新的活动";
         activity.location = "天安门广场";
         activity.description = "官方有奖竞猜";
         activity.fee = 100;
@@ -67,7 +67,7 @@ public class ActivityTest {
 
     @Test
     public void testOngoing() throws IOException {
-        Response response = Request.Get("http://162.243.151.219:8080/jieli-1.0-SNAPSHOT/rest/activity/ongoing")
+        Response response = Request.Get("http://162.243.151.219:8080/rest/activity/ongoing")
                 .addHeader("Cookie", "u=5348210be4b00b2ae52d3f5c")
                 .execute();
 

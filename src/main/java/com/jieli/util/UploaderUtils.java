@@ -14,11 +14,16 @@ import java.io.*;
  */
 public class UploaderUtils {
     private static Mac mac = null;
-    private static String bucketName = "xianxing-test";
+    //private static String bucketName = "xianxing-test";
+    private static String bucketName = "jieli-images";
 
     public static void Init(){
+        // xianxing-test
         Config.ACCESS_KEY = "BC1Z-BtDVW8dVxdbBBUXc59k1fIZievdyGCQfFj9";
         Config.SECRET_KEY = "3dQ3sP9bukfPn6hN6GGbTUnVf7Az6GT2FRHRF7Cd";
+        // jieli-images
+        Config.ACCESS_KEY = "hNiaFP5arH5pOPcF9Hj67Id0opYIy6QABVNmxe8M";
+        Config.SECRET_KEY = "jvMCjKarxU0EpVmSelQlTKuXNpLvdgEkS2dudrz_";
         mac = new Mac(Config.ACCESS_KEY, Config.SECRET_KEY);
     }
 
@@ -27,7 +32,7 @@ public class UploaderUtils {
     public static String GetUploadToken(){
         try{
         // 空间名称
-        bucketName = "xianxing-test";
+        //bucketName = "xianxing-test";
         // 上传策略，可以进行更多细节设置
         PutPolicy putPolicy = new PutPolicy(bucketName);
         if (mac == null)

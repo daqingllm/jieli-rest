@@ -298,6 +298,7 @@ public class FeatureService {
 
         responseEntity.code = 200;
         responseEntity.msg = "评论成功";
+        responseEntity.body = comment;
         return Response.status(200).entity(responseEntity).build();
     }
 
@@ -448,17 +449,38 @@ public class FeatureService {
             responseEntity.msg = "权限不足";
             return Response.status(403).entity(responseEntity).build();
         }
-        Comment comment = commentDAO.findOne("{_id:#}", new ObjectId(commentId));
-        HelpInfo result = helpDAO.topComment(helpId, comment);
-        if(result == null) {
-            responseEntity.code = 1206;
-            responseEntity.body = "置顶评论失败";
+        Comment top = getTopComment(help, commentId);
+        if (top == null) {
+
+            Comment comment = commentDAO.findOne("{_id:#}", new ObjectId(commentId));
+            help.getTopCommentList().add(comment);
+            helpDAO.save(help);
+            responseEntity.code = 200;
+            responseEntity.msg = "评论已置顶";
+            responseEntity.body = help;
+            return Response.status(200).entity(responseEntity).build();
+        } else {
+            help.getTopCommentList().remove(top);
+            helpDAO.save(help);
+            responseEntity.code = 200;
+            responseEntity.msg = "置顶已取消";
+            responseEntity.body = help;
             return Response.status(200).entity(responseEntity).build();
         }
-        responseEntity.code = 200;
-        responseEntity.body = "{\"_id\":\"" + result.get_id() + "\"}";;
-        return Response.status(200).entity(responseEntity).build();
 
+    }
+
+    private Comment getTopComment(HelpInfo helpInfo, String commentId) {
+        if (CollectionUtils.isEmpty(helpInfo.getTopCommentList())) {
+            helpInfo.setTopCommentList(new ArrayList<Comment>());
+            return null;
+        }
+        for (Comment comment : helpInfo.getTopCommentList()) {
+            if (comment.get_id().toString().equals(commentId)) {
+                return comment;
+            }
+        }
+        return null;
     }
 
     /**
@@ -569,14 +591,15 @@ public class FeatureService {
         voteInfo.setUserId(userId);
         voteInfo.setAssociationId(associationId);
         voteInfo.setAddTime(new Date());
-        VoteInfo result = voteDAO.addVote(voteInfo);
-
-        VoteResult voteResult = new VoteResult();
-        voteResult.setTotalVote(0);
         Map<Integer, Integer> optionVotesInit = new HashMap<Integer, Integer>();
         for(int i = 0; i < voteInfo.getOptions().size(); i++) {
             optionVotesInit.put(i, 0);
         }
+        voteInfo.setOptionVotes(optionVotesInit);
+        VoteInfo result = voteDAO.addVote(voteInfo);
+
+        VoteResult voteResult = new VoteResult();
+        voteResult.setTotalVote(0);
         voteResult.setOptionVotes(optionVotesInit);
         voteResult.setVoteId(result.get_id().toString());
         voteResult.setParticipants(0);
@@ -741,8 +764,9 @@ public class FeatureService {
         }
         VoteResult voteResult = voteResultDAO.loadByVoteId(voteId);
         List<Vote> voteList = voteResult.getVoteList();
+        VoteResult afterVote = null;
         if(voteList == null) {
-            voteResultDAO.vote(vote, voteId);
+            afterVote = voteResultDAO.vote(vote, voteId);
         }
         else {
             for(Vote v : voteList) {
@@ -752,8 +776,12 @@ public class FeatureService {
                     return Response.status(200).entity(responseEntity).build();
                 }
             }
-            voteResultDAO.vote(vote, voteId);
+            afterVote = voteResultDAO.vote(vote, voteId);
         }
+        voteInfo.setOptionVotes(afterVote.getOptionVotes());
+        voteInfo.setParticipants(afterVote.getParticipants());
+        voteInfo.setTotalVote(afterVote.getTotalVote());
+        voteDAO.save(voteInfo);
 
         //触发参与投票动态
 //        Message message = new Message();
@@ -833,8 +861,10 @@ public class FeatureService {
         comment.addTime = new Date();
         commentDAO.save(comment);
         CommentMessageUtil.addCommentMessage(comment);
+
         responseEntity.code = 200;
         responseEntity.msg = "评论成功";
+        responseEntity.body = comment;
         return Response.status(200).entity(responseEntity).build();
     }
 
@@ -898,17 +928,7 @@ public class FeatureService {
 //            int score = MatchUtil.calcMatchingScore(self, user);
             MatchUtil matchUtil = new MatchUtil(self, user);
             Match match = matchUtil.getMatch();
-            MatchDisplay display = new MatchDisplay();
-            User user1 = userDAO.loadById(match.userId1);
-            display.userId1 = user1.get_id().toString();
-            display.name1 = user1.name;
-            display.userFace1 = user1.userFace;
-            User user2 = userDAO.loadById(match.userId2);
-            display.userId2 = user2.get_id().toString();
-            display.name2 = user2.name;
-            display.userFace2 = user2.userFace;
-            display.score = match.score;
-            display.infos = match.matchInfos;
+            MatchDisplay display = makeDisplay(match);
             responseEntity.code = 200;
             responseEntity.body = display;
             return  Response.status(200).entity(responseEntity).build();
@@ -918,17 +938,7 @@ public class FeatureService {
         List<Match> matches = task.getResult();
         List<MatchDisplay> results = new ArrayList<MatchDisplay>();
         for (Match match : matches) {
-            MatchDisplay display = new MatchDisplay();
-            User user1 = userDAO.loadById(match.userId1);
-            display.userId1 = user1.get_id().toString();
-            display.name1 = user1.name;
-            display.userFace1 = user1.userFace;
-            User user2 = userDAO.loadById(match.userId2);
-            display.userId2 = user2.get_id().toString();
-            display.name2 = user2.name;
-            display.userFace2 = user2.userFace;
-            display.score = match.score;
-            display.infos = match.matchInfos;
+            MatchDisplay display = makeDisplay(match);
             results.add(display);
         }
 
@@ -967,17 +977,7 @@ public class FeatureService {
                 }
                 MatchUtil matchUtil = new MatchUtil(self, user);
                 Match match = matchUtil.getMatch();
-                MatchDisplay display = new MatchDisplay();
-                User user1 = userDAO.loadById(match.userId1);
-                display.userId1 = user1.get_id().toString();
-                display.name1 = user1.name;
-                display.userFace1 = user1.userFace;
-                User user2 = userDAO.loadById(match.userId2);
-                display.userId2 = user2.get_id().toString();
-                display.name2 = user2.name;
-                display.userFace2 = user2.userFace;
-                display.score = match.score;
-                display.infos = match.matchInfos;
+                MatchDisplay display = makeDisplay(match);
                 results.add(display);
             }
         }
@@ -1000,17 +1000,7 @@ public class FeatureService {
         Iterable<Match> matches = matchDAO.getTopMatch(count);
         List<MatchDisplay> results = new ArrayList<MatchDisplay>();
         for (Match match : matches) {
-            MatchDisplay display = new MatchDisplay();
-            User user1 = userDAO.loadById(match.userId1);
-            display.userId1 = user1.get_id().toString();
-            display.name1 = user1.name;
-            display.userFace1 = user1.userFace;
-            User user2 = userDAO.loadById(match.userId2);
-            display.userId2 = user2.get_id().toString();
-            display.name2 = user2.name;
-            display.userFace2 = user2.userFace;
-            display.score = match.score;
-            display.infos = match.matchInfos;
+            MatchDisplay display = makeDisplay(match);
             results.add(display);
         }
 
@@ -1030,22 +1020,31 @@ public class FeatureService {
         Iterable<Match> matches = matchDAO.getTopMatchByUserId(userId, count);
         List<MatchDisplay> results = new ArrayList<MatchDisplay>();
         for (Match match : matches) {
-            MatchDisplay display = new MatchDisplay();
-            User user1 = userDAO.loadById(match.userId1);
-            display.userId1 = user1.get_id().toString();
-            display.name1 = user1.name;
-            display.userFace1 = user1.userFace;
-            User user2 = userDAO.loadById(match.userId2);
-            display.userId2 = user2.get_id().toString();
-            display.name2 = user2.name;
-            display.userFace2 = user2.userFace;
-            display.score = match.score;
-            display.infos = match.matchInfos;
+            MatchDisplay display = makeDisplay(match);
             results.add(display);
         }
 
         responseEntity.code = 200;
         responseEntity.body = results;
         return  Response.status(200).entity(responseEntity).build();
+    }
+
+    private MatchDisplay makeDisplay(Match match) {
+        MatchDisplay display = new MatchDisplay();
+        User user1 = userDAO.loadById(match.userId1);
+        display.userId1 = user1.get_id().toString();
+        display.name1 = user1.name;
+        display.userFace1 = user1.userFace;
+        display.phone1 = user1.phone;
+        User user2 = userDAO.loadById(match.userId2);
+        display.userId2 = user2.get_id().toString();
+        display.name2 = user2.name;
+        display.userFace2 = user2.userFace;
+        display.phone2 = user2.phone;
+
+        display.score = match.score;
+        display.infos = match.matchInfos;
+
+        return display;
     }
 }

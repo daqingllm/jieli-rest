@@ -247,6 +247,42 @@ public class ActivityService {
         return Response.status(200).entity(responseEntity).build();
     }
 
+    @GET
+    @Path("/user")
+    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+    public Response findRelatedActivitiesByUserId(@CookieParam("u")String sessionId,@QueryParam("userId")String userId, @QueryParam("page")int page, @QueryParam("size")int count) {
+        if (!IdentifyUtils.isValidate(sessionId)) {
+            return Response.status(403).build();
+        }
+        if (count <= 0) {
+            count = 10;
+        }
+        if (page <= 0) {
+            page = 1;
+        }
+        ResponseEntity responseEntity = new ResponseEntity();
+        if (StringUtils.isEmpty(userId)) {
+            responseEntity.code = 3101;
+            responseEntity.msg = "缺少参数";
+            return Response.status(200).entity(responseEntity).build();
+        }
+        List<ActivityInfo> result = new ArrayList<ActivityInfo>();
+        List<ActivityInfo> infos = relatedDAO.findUserActivities(userId);
+        if (page*count <= infos.size()) {
+            result = infos.subList((page-1)*count, page*count);
+        } else if ((page-1)*count < infos.size()) {
+            result = infos.subList((page-1)*count, infos.size());
+        } else {
+            responseEntity.msg = "无数据";
+            responseEntity.code = 200;
+            return Response.status(200).entity(responseEntity).build();
+        }
+
+        responseEntity.body = generateDisplay(result);
+        responseEntity.code = 200;
+        return Response.status(200).entity(responseEntity).build();
+    }
+
     private Map<RelatedType, List<Activity>> generateRelatedActivities(List<ActivityInfo> infos) {
         Map<RelatedType, List<Activity>> result = new HashMap<RelatedType, List<Activity>>();
         for (ActivityInfo info : infos) {
@@ -260,6 +296,23 @@ public class ActivityService {
         }
 
         return result;
+    }
+
+    private List<RelatedDisplay> generateDisplay(List<ActivityInfo> infos) {
+        List<RelatedDisplay> displays = new ArrayList<RelatedDisplay>();
+        for (ActivityInfo info : infos) {
+            RelatedDisplay display = new RelatedDisplay();
+            display.activityId = info.activityId;
+            Activity activity = activityDAO.loadById(info.activityId);
+            if (activity == null) {
+                continue;
+            }
+            display.type = info.type;
+            display.title = activity.title;
+            display.time = info.time;
+            displays.add(display);
+        }
+        return displays;
     }
 
     @GET
@@ -369,6 +422,7 @@ public class ActivityService {
         ActivityInfo info = new ActivityInfo();
         info.activityId = activityId;
         info.type = relatedType;
+        info.time = new Date();
         if (relatedActivity.infos.contains(info)) {
             return;
         }
@@ -436,6 +490,7 @@ public class ActivityService {
 
         responseEntity.code = 200;
         responseEntity.msg = "评论成功";
+        responseEntity.body = comment;
         return Response.status(200).entity(responseEntity).build();
     }
 

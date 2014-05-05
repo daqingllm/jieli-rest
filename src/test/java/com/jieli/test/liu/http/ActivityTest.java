@@ -26,18 +26,15 @@ public class ActivityTest {
     @Test
     public void testCreate() throws IOException, JSONException {
         Activity activity = new Activity();
-//        activity.associationId = "5337a309ef869d4225397d48";
-//        activity.beginDate = new Date(new Date().getTime()+10000000);
-//        activity.tag = AcivityTag.PRIVATE;
-//        activity.sponsorUserId = "533799caef869f8e93d30d9c";
+        activity.beginDate = new Date(new Date().getTime()+10000000);
+        activity.tag = AcivityTag.OFFICIAL;
         activity.title = "S1";
-        activity.tag = AcivityTag.PRIVATE;
         JSONObject json = new JSONObject("{\"beginDate\":\"\",\"details\":[],\"fee\":0,\"followMembers\":[],\"invitees\":[],\"joinMembers\":{},\"location\":\"\",\"maxMembers\":0,\"tag\":\"PRIVATE\",\"title\":\"是地方\",\"type\":\"null发起了读书会\"}");
 
         Response response = Request.Post("http://localhost:8080/rest/activity")
                 .addHeader("Cookie", "u=533c07a1ef86c7014c36fa31")
-//                .bodyString(new ObjectMapper().writeValueAsString(activity), ContentType.APPLICATION_JSON)
-                .bodyString(json.toString(), ContentType.APPLICATION_JSON)
+                .bodyString(new ObjectMapper().writeValueAsString(activity), ContentType.APPLICATION_JSON)
+//                .bodyString(json.toString(), ContentType.APPLICATION_JSON)
                 .execute();
 
         System.out.println(response.returnContent().asString());
@@ -45,7 +42,7 @@ public class ActivityTest {
 
     @Test
     public void testLoad() throws IOException {
-        Response response = Request.Get("http://localhost:8080/rest/activity?activityId=5348ddc5ef86675f431c426b")
+        Response response = Request.Get("http://localhost:8080/rest/activity?activityId=535f91e8ef86075815d95546")
                 .addHeader("Cookie", "u=533c0010ef86c7014c36fa2f")
                 .execute();
 
@@ -138,6 +135,15 @@ public class ActivityTest {
         Response response = Request.Post("http://localhost:8080/rest/activity/invite?activityId=5348ddc5ef86675f431c426b")
                 .addHeader("Cookie", "u=533c0010ef86c7014c36fa2f")
                 .bodyString(new ObjectMapper().writeValueAsString(userIds), ContentType.APPLICATION_JSON)
+                .execute();
+
+        System.out.println(response.returnContent().asString());
+    }
+
+    @Test
+    public void testActive() throws IOException {
+        Response response = Request.Get("http://localhost:8080/rest/activity/user?userId=533c07a1ef86c7014c36fa30")
+                .addHeader("Cookie", "u=533c0010ef86c7014c36fa2f")
                 .execute();
 
         System.out.println(response.returnContent().asString());

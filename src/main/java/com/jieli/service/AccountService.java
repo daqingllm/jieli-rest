@@ -189,7 +189,7 @@ public class AccountService {
 //                    || !account.userId.equals(account.userId)) {
 //                return Response.status(403).build();
 //            }
-            if (!IdentifyUtils.isAdmin(sessionId) || account.state.equals(AccountState.SUPPER) || !(account.associationId.equals(IdentifyUtils.getAssociationId(sessionId)))) {
+            if (!IdentifyUtils.isAdmin(sessionId) || account.state.equals(AccountState.SUPPER) || !(current.associationId.equals(IdentifyUtils.getAssociationId(sessionId)))) {
                 return Response.status(403).build();
             }
             if (StringUtils.isNotEmpty(account.password)) {

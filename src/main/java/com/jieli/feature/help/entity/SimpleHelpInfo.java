@@ -43,6 +43,12 @@ public class SimpleHelpInfo extends Model{
      * 类型 0-需求，1-供给
      */
     private int type;
+    /**
+     * 0 人 1 物
+     */
+    private int typeDetail;
+
+    public int commentCount;
 
     public String getUserId() {
         return userId;

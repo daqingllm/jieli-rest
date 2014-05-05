@@ -17,6 +17,7 @@ public class SimpleVoteInfo extends Model{
     private Date deadLine;
     private Date addTime;
     private Integer participants;
+    private Integer totalVote; //总票数
 
     public String getAssociationId() {
         return associationId;
@@ -88,5 +89,13 @@ public class SimpleVoteInfo extends Model{
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public Integer getTotalVote() {
+        return totalVote;
+    }
+
+    public void setTotalVote(Integer totalVote) {
+        this.totalVote = totalVote;
     }
 }

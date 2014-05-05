@@ -101,7 +101,7 @@
                         <li class="divider"></li>-->
 
                         <li>
-                            <a href="#">
+                            <a href="#" onclick="document.cookie='u=;path=/';window.location.href='/rest/baccount/login'">
                                 <i class="icon-off"></i>
                                 退出
                             </a>
@@ -293,6 +293,38 @@
                     </div>
 
                     <div class="space-4"></div>
+
+
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right" for="form-field-select-pro"> 行业标签 </label>
+
+                        <div class="col-sm-9">
+                            <select class="col-xs-10 col-sm-7" id="form-field-select-pro"
+                                    style="padding: 5px 4px;font-size: 14px;">
+                                ${professionOptionList}
+                            </select>
+                        </div>
+                    </div>
+
+
+                    <div class="space-4"></div>
+
+
+
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right" for="form-input-readonly"> 兴趣标签 </label>
+
+                        <div class="col-sm-9">
+                            <select id="selectInterest" multiple="multiple" class="multiselect">${interestOptionList}</select>
+                        </div>
+                    </div>
+
+
+
+                    <div class="space-4"></div>
+
 
                     <div class="form-group <#if isSuper==false>hidden</#if>">
                         <label class="col-sm-3 control-label no-padding-right" for="form-input-readonly"> 选择协会 </label>
@@ -502,6 +534,16 @@
         </#if>
 
         $('#selectAssociationIds').multiselect({
+            numberDisplayed:10,
+            buttonClass: 'btn-link btn ',
+            selectAllText: '全选',
+            selectAllValue: '全部',
+            nonSelectedText: '请选择',
+            nSelectedText: ' 被选中了',
+            maxHeight:400
+        });
+
+        $('#selectInterest').multiselect({
             numberDisplayed:10,
             buttonClass: 'btn-link btn ',
             selectAllText: '全选',
