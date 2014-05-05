@@ -46,7 +46,7 @@ public class FeatureTest {
         helpInfo.setContent("我想去吃西贝，有木有人一起，今天晚饭");
         helpInfo.setAddTime(new Date());
         helpInfo.setType(0);
-        helpInfo.setIsEmergency(true);
+        helpInfo.isEmergency = true;
         ObjectMapper mapper = new ObjectMapper();
         Response response = Request.Post("http://localhost:8080/rest/feature/help/add")
                 .setHeader("Cookie", "u=5336bbe13004cc09f49432e7")
