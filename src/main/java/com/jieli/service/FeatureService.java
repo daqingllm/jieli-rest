@@ -181,6 +181,47 @@ public class FeatureService {
         return Response.status(200).entity(responseEntity).build();
     }
 
+    /**
+     * 更新互帮互助
+     * @param sessionId
+     * @param newHelp
+     * @return
+     */
+    @Path("/help/update")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+    public Response updateHelpInfo(@CookieParam("u") String sessionId, HelpInfo newHelp) {
+        if(!IdentifyUtils.isValidate(sessionId)) {
+            return Response.status(403).build();
+        }
+        ResponseEntity responseEntity = new ResponseEntity();
+        if(newHelp == null) {
+            responseEntity.code = 1101;
+            responseEntity.msg = "缺少参数";
+            return Response.status(200).entity(responseEntity).build();
+        }
+        String userId = IdentifyUtils.getUserId(sessionId);
+        HelpInfo oldHelp = helpDAO.loadById(newHelp.get_id().toString());
+        if(!oldHelp.getUserId().equals(userId) || !IdentifyUtils.isAdmin(sessionId)) {
+            responseEntity.code = 1403;
+            responseEntity.msg = "非自己互帮互助帖，不能修改";
+            return Response.status(200).entity(responseEntity).build();
+        }
+        if(newHelp.getType() == 0 || newHelp.getType() == 1) {
+            oldHelp.setType(newHelp.getType());
+        }
+        if(newHelp.getTitle() != null) {
+            oldHelp.setTitle(newHelp.getTitle());
+        }
+        if(newHelp.getContent() != null) {
+            oldHelp.setContent(newHelp.getContent());
+        }
+        helpDAO.save(oldHelp);
+        responseEntity.code = 200;
+        responseEntity.body = oldHelp.get_id();
+        return Response.status(200).entity(responseEntity).build();
+    }
+
     @Path("/help/delete")
     @GET
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
