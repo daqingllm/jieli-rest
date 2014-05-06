@@ -586,9 +586,14 @@ jQuery(function($) {
                     return false;
                 }),
 
-                search: false,
+                search: true,
                 searchicon : 'icon-search orange',
-                searchfunc: (function(){alert("s");return false;}),
+                searchfunc: (function(){
+                    var id = $("#grid-table").getGridParam("selrow");
+                    if (id) id=$("#grid-table > tbody > tr").eq(id).find("td").eq(1).attr("title");
+                    if (!id || id.length == 0) alert("请先选择一个活动");
+                    else window.location.href = '/rest/bactivity/comment?actid='+id;
+                }),
 
                 refresh: false,
 

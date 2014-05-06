@@ -464,9 +464,10 @@ public class News {
             params.put("username",account.username);
             params.put("isSuper",IdentifyUtils.isSuper(sessionId));
             params.put("jsonCommentList",commentListString);
-            params.put("articleId",newsId);
+            params.put("topicId",newsId);
+            params.put("ctype","news");
 
-            return FTLrender.getResult("article_comment_list.ftl",params);
+            return FTLrender.getResult("comment_list.ftl",params);
         }else{
             return CommonUtil.errorReturn;
         }

@@ -2,7 +2,11 @@
 <html lang="zh">
 <head>
     <meta charset="utf-8"/>
+<#if ctype=="news">
     <title>接力 资讯管理</title>
+<#elseif ctype=="activity">
+    <title>接力 活动管理</title>
+</#if>
     <meta name="description" content="接力"/>
     <!-- basic styles -->
 
@@ -81,22 +85,6 @@
                     </a>
 
                     <ul class="user-menu pull-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
-                        <!--<li>
-                            <a href="#">
-                                <i class="icon-cog"></i>
-                                设置
-                            </a>
-                        </li>
-
-                        <li>
-                            <a href="#">
-                                <i class="icon-user"></i>
-                                个人资料
-                            </a>
-                        </li>
-
-                        <li class="divider"></li>-->
-
                         <li>
                             <a href="#" onclick="document.cookie='u=;path=/';window.location.href='/rest/baccount/login'">
                                 <i class="icon-off"></i>
@@ -191,9 +179,15 @@
                         <a href="index.html">首页</a>
                     </li>
 
+                <#if ctype=="news">
                     <li>
                         <a href="#"> 资讯管理 </a>
                     </li>
+                <#elseif ctype=="activity">
+                    <li>
+                        <a href="#"> 活动管理 </a>
+                    </li>
+                </#if>
 
                     <li class="active"> 评论列表 </li>
                 </ul>
@@ -360,35 +354,6 @@
 <script src="/assets/js/ace.min.js"></script>
 
 <!-- inline scripts related to this page -->
-<script>
-    function loadThisArticle(){
-        var artid = request.getParameter("artid");
-        if (artid == null || artid.length < 1) return;
-
-        $.ajax({
-            type:"GET",
-            url:"/rest/news/load?new_id="+artid,
-            async:true,
-            success:function(data){
-                alert(data);
-            }
-        });
-        ;
-    }
-
-    function loadAllUsers(sid,state){
-        var d = {"id":sid,"state":state};
-        $.ajax({
-            type:"GET",
-            url:"/rest/association/user",
-            async:ture,
-            data:d,
-            success:function(jsn){
-                var ulist;
-            }
-        });
-    }
-</script>
 
 <script type="text/javascript">
 jQuery(function ($) {
@@ -448,7 +413,6 @@ Date.prototype.Format = function (fmt) { //author: meizz
 }
 
 function parseArtData(data){
-    //var states = {"DISABLE":"禁用","ENABLE":"普通用户","ADMIN":"协会管理员","SUPPER":"超级管理员"};
     for (var i = 0 ; i < data.length; i++){
         //data[i].state = states[data[i].state];
         if (data[i].commentUserInfo) data[i].commentUserId_Name = data[i].commentUserInfo.name || "无名";
@@ -526,14 +490,11 @@ function enableTooltips(table) {
 }
 
 jQuery(function($) {
-    var raw_data = [
-        {_id:1,associationId:"1",title:"测试1",type:"news",overview:"",content:"测试内容",images:[],imagesCount:2,appreciateUserIds:[],appreciateCount:12,addTime:"20140203T12:13:14.443GMT0+800"},
-        {_id:2,associationId:"2",title:"测试2",type:"news",overview:"",content:"测试内容",images:[],imagesCount:2,appreciateUserIds:[],appreciateCount:12,addTime:"20140203T12:13:14.443GMT0+800"}
-    ];
+    var raw_data = [];
 
     //raw_data.empty();
     raw_data = ${jsonCommentList};
-    var artid = "${articleId}";
+    var artid = "${topicId}";
 
     var grid_data = parseArtData(raw_data);
     //var grid_data = raw_data;
@@ -603,7 +564,11 @@ jQuery(function($) {
 
                                 $.ajax({
                                     type:"POST",
+                                <#if ctype=="news">
                                     url:"/rest/news/comment",
+                                <#elseif ctype=="activity">
+                                    url:"/rest/activity/comment",
+                                </#if>
                                     async:false,
                                     data:JSON.stringify(cmt),
                                     contentType:"application/json; charset=utf-8",
