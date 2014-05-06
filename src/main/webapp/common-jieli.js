@@ -29,7 +29,8 @@ function previewThisArticle() {
     var previewinlist;
     try {
         previewinlist = $("#grid-table").getGridParam("selrow");
-        if (previewinlist) previewinlist = $("#grid-table > tbody > tr").eq(previewinlist).find("td").eq(5).attr("title");
+        //if (previewinlist) previewinlist = $("#grid-table > tbody > tr").eq(previewinlist).find("td").eq(5).attr("title");
+        if (previewinlist) previewinlist = $("#grid-table > tbody > tr").eq(previewinlist).find("td").eq(9).html();
     }catch (e){
         previewinlist = "";
     }
@@ -93,7 +94,7 @@ function postThisArticle(){
     json["professionTag"] = p_pt;
 
     p_it = $("#selectInterest").val();
-    if (p_it.length == 0){alert("请选择兴趣标签！");return;}
+    if (p_it == null || p_it.length == 0){alert("请选择兴趣标签！");return;}
     json["interestTags"] = [];
     for (var i = 0; i < p_it.length; i++){
         json["interestTags"].push(p_it[i]);
@@ -185,12 +186,15 @@ function clearImgList(){
 
 // 删除一个图片
 function deletePic(ph){
-    var _src=ph.replace("<center><img src=","");
-    _src = _src.substr(0,_src.length-"></center>".length);
+    var _src=ph.replace("<center><img src='","");
+    _src = _src.replace("'></center>","");
+    _src = _src.replace("<center><img src=","");
+    _src = _src.replace("></center>","");
 
     // clear textarea
     var otextarea = $("#form-field-textarea").val().trim();
-    otextarea = otextarea.replace(ph,"");
+    //otextarea = otextarea.replace(ph,"");
+    otextarea = otextarea.replace("<center><img src='"+_src+"'></center>","");
     $("#form-field-textarea").val(otextarea);
 
     // delete pic

@@ -451,7 +451,7 @@ function parseArtData(data){
 
         data[i].addTime = nowStr;
 
-        data[i].content = data[i].overview;
+        //data[i].content = data[i].overview;
     }
     return data;
 }
@@ -507,16 +507,17 @@ jQuery(function($) {
         data: grid_data,
         datatype: "local",
         height: 490,
-        colNames:['_id','协会','资讯标题','资讯类型', '资讯内容', '添加日期', '图片数量', '点赞数量'],
+        colNames:['_id','协会','资讯标题','资讯类型', '资讯内容', '添加日期', '图片数量', '点赞数量','资讯内容html'],
         colModel:[
             {name:"_id",index:"_id",width:10,editable:false,hidden:true},
             {name:"associationId",index:"associationId",width:40,editable:false<#if isSuper><#else>,hidden:true</#if>},
             {name:"title",index:"title",width:"100",editable:false},
             {name:"type",index:"type",width:"45",editable:false},
-            {name:"content",index:"content",width:"330",editable:false},
+            {name:"overview",index:"overview",width:"330",editable:false},
             {name:"addTime",index:"addTime",width:"120",editable:false,sorttype:"date"},
             {name:"imagesCount",index:"imagesCount",width:"40",editable:false},
-            {name:"appreciateCount",index:"appreciateCount",width:"40",editable:false}
+            {name:"appreciateCount",index:"appreciateCount",width:"40",editable:false},
+            {name:"content",index:"content",width:"4000",hidden:true}
         ],
         viewrecords : true,
         rowNum:15,
@@ -597,6 +598,7 @@ jQuery(function($) {
             }
     );
 
+    $("#grid-pager_left .ui-state-disabled").remove();
 
     $(".ui-jqgrid-htable").css("font-family","微软雅黑");
 

@@ -562,7 +562,9 @@ jQuery(function($) {
                 editfunc : (function(){
                     var id = $("#grid-table").getGridParam("selrow");
                     id=$("#grid-table > tbody > tr").eq(id).find("td").eq(1).attr("title");
-                    window.location.href = '/rest/bactivity/edit?actid='+id;
+
+                    if (!id || id.length == 0) alert("请先选择一个活动");
+                    else window.location.href = '/rest/bactivity/edit?actid='+id;
                 }),
 
                 del: true,
@@ -575,6 +577,8 @@ jQuery(function($) {
                     var id = $("#grid-table").getGridParam("selrow");
                     id=$("#grid-table > tbody > tr").eq(id).find("td").eq(1).attr("title");
 
+                    if (!id || id.length == 0) alert("请先选择一个活动");
+                    else
                     $.ajax({
                         url:"/rest/bactivity/del?actid="+id,
                         type:"POST",
@@ -597,13 +601,20 @@ jQuery(function($) {
 
                 refresh: false,
 
-                view: false,
+                view: true,
                 viewicon : 'icon-zoom-in grey',
-                viewfunc: (function(){alert("预览操作!");return false;})
+                viewfunc: (function(){
+                    var id = $("#grid-table").getGridParam("selrow");
+                    if (id) id=$("#grid-table > tbody > tr").eq(id).find("td").eq(1).attr("title");
+                    if (!id || id.length == 0) alert("请先选择一个活动");
+                    else window.location.href = '/rest/bactivity/view?actid='+id;
+                })
             }
     );
 
     $(".ui-jqgrid-htable").css("font-family","微软雅黑");
+
+    $("#grid-pager_left .ui-state-disabled").remove();
 
     $(".ui-paging-info").html("共有"+records+"条记录");
     $("#sp_1_grid-pager").html(total);

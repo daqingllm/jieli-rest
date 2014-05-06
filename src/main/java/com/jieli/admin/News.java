@@ -467,6 +467,12 @@ public class News {
             params.put("topicId",newsId);
             params.put("ctype","news");
 
+
+            if (newsId == null || newsDAO.loadById(newsId) == null || newsDAO.loadById(newsId).title == null)
+                params.put("topicTitle","");
+            else
+                params.put("topicTitle",newsDAO.loadById(newsId).title);
+
             return FTLrender.getResult("comment_list.ftl",params);
         }else{
             return CommonUtil.errorReturn;

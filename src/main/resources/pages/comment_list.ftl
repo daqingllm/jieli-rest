@@ -209,6 +209,13 @@
                 <div class="page-header">
                     <h1>
                         评论列表
+                        <#if topicTitle?length==0>
+                        <#else>
+                        <small>
+                            <i class="icon-double-angle-right" style="margin-left:10px;margin-right:10px;"></i>
+                            "${topicTitle}" 的评论
+                        </small>
+                        </#if>
                     </h1>
                 </div>
                 <!-- /.page-header -->
@@ -359,9 +366,21 @@
 jQuery(function ($) {
 
 <#if isSuper>
-    $("#sidebar-shortcuts-navlist").load("/sidebar_super.html",function(){;});
+    $("#sidebar-shortcuts-navlist").load("/sidebar_super.html",function(){
+        <#if ctype=="news">
+            $("#nav_list_2").addClass("active");
+        <#elseif ctype=="activity">
+            $("#nav_list_3").addClass("active");
+        </#if>
+    });
 <#else>
-    $("#sidebar-shortcuts-navlist").load("/sidebar_admin.html",function(){;});
+    $("#sidebar-shortcuts-navlist").load("/sidebar_admin.html",function(){
+        <#if ctype=="news">
+            $("#nav_list_2").addClass("active");
+        <#elseif ctype=="activity">
+            $("#nav_list_3").addClass("active");
+        </#if>
+    });
 </#if>
 
     var colorbox_params = {
