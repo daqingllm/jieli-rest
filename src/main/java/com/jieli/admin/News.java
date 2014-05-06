@@ -383,8 +383,7 @@ public class News {
 
 
         String got = "";
-        if (n == null) got = "此文章已经不存在了。";
-
+        if (n == null || n.addTime == null) got = "此文章已经不存在了。";
 
         //if (b1 && b2) {
         if (IdentifyUtils.isSuper(sessionId)){

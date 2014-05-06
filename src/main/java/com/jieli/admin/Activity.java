@@ -216,7 +216,8 @@ public class Activity {
 
         if (activity == null)
             params.put("got","无此活动！");
-        else if(activity.actDate .compareTo( new Date()) < 0)
+        else if(activity.actDate != null
+         && activity.actDate.compareTo(new Date()) < 0)
             params.put("got","该活动已成历史了！");
         else {
             params.put("got", "");
