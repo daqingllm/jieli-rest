@@ -543,7 +543,7 @@ jQuery(function($) {
             {name:"match",index:"match",width:"75",editable:false, formatter:
                     function(cellValue, options, rowObject) {
                         var url = "<a href=\"/rest/bmatch/view?c=" + rowObject.password + "&count=5\">" + "查看前五匹配</br></a>"
-                                + "<a href=\"/rest/bmatch/history?c=" + rowObject.password + "\">" + "查看历史匹配</a>";
+                                /*+ "<a href=\"/rest/bmatch/history?c=" + rowObject.password + "\">" + "查看历史匹配</a>"*/;
                         return url;
             }}
         ],

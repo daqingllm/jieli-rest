@@ -2,7 +2,6 @@ package com.jieli.admin;
 
 import com.jieli.common.entity.ResponseEntity;
 import com.jieli.user.dao.UserDAO;
-import com.jieli.util.FTLrender;
 import com.jieli.util.IdentifyUtils;
 import com.sun.jersey.spi.resource.Singleton;
 
@@ -12,8 +11,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.
@@ -31,7 +28,7 @@ public class User {
     @Path("/all")
     @Produces(MediaType.APPLICATION_JSON)
     public Response loadUsers(@CookieParam("u") String sessionId) {
-        Response response = Common.RoleCheckResponse(sessionId);
+        Response response = CommonUtil.RoleCheckResponse(sessionId);
         if (response != null) return response;
 
         ResponseEntity responseEntity = new ResponseEntity();

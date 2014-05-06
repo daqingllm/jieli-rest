@@ -4,17 +4,19 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jieli.association.Association;
 import com.jieli.association.AssociationDAO;
+import com.jieli.comment.*;
 import com.jieli.common.dao.AccountDAO;
 import com.jieli.common.entity.*;
+import com.jieli.mongo.*;
 import com.jieli.news.Image;
 import com.jieli.news.NewsDAO;
 import com.jieli.news.NewsType;
 import com.jieli.user.dao.UserDAO;
-import com.jieli.util.CollectionUtils;
 import com.jieli.util.FTLrender;
 import com.jieli.util.IdentifyUtils;
 import com.jieli.util.PasswordGenerator;
 import com.sun.jersey.spi.resource.Singleton;
+import org.bson.types.ObjectId;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -35,7 +37,7 @@ public class News {
     @Path("/list")
     @Produces(MediaType.TEXT_HTML)
     public String GetNewsList(@CookieParam("u")String sessionId,@QueryParam("page") String page, @QueryParam("rowNum") String rowNum, @QueryParam("pl") String preload) throws JsonProcessingException {
-        String response = Common.RoleCheckString(sessionId);
+        String response = CommonUtil.RoleCheckString(sessionId);
         if (response != null) return response;
 
         com.jieli.common.entity.Account account = accountDAO.loadById(sessionId);
@@ -72,7 +74,7 @@ public class News {
 
         for (com.jieli.news.News news : newses){
             _total ++;
-            String tmp = Common.ReplaceObjectId(news);
+            String tmp = CommonUtil.ReplaceObjectId(news);
             newsList += tmp.replace("\"associationId\":\"" + news.associationId + "\"", "\"associationId\":\"" + associationNames.get(news.associationId) + "\"") + ",";
         }
 
@@ -93,7 +95,7 @@ public class News {
 //
 //        // 判断用户是否已经登录
 //        if (!IdentifyUtils.isValidate(sessionId)) {
-//            return Common.errorReturn;
+//            return CommonUtil.errorReturn;
 //        }
 //
 //        // 载入用户
@@ -109,7 +111,7 @@ public class News {
 //        //}
 //
 //        if (account == null || account.username == null || account.username == "" || account.state == AccountState.ENABLE || account.state == AccountState.DISABLE){
-//            return Common.errorReturn;
+//            return CommonUtil.errorReturn;
 //        }
 //
 //
@@ -182,7 +184,7 @@ public class News {
 
         // 判断用户是否已经登录
         if (!IdentifyUtils.isValidate(sessionId)) {
-            return Common.errorReturn;
+            return CommonUtil.errorReturn;
         }
 
         // 载入用户
@@ -198,7 +200,7 @@ public class News {
         //}
 
         if (account == null || account.username == null || account.username == "" || account.state == AccountState.ENABLE || account.state == AccountState.DISABLE){
-            return Common.errorReturn;
+            return CommonUtil.errorReturn;
         }
 
 
@@ -220,12 +222,12 @@ public class News {
 
         if (b1 && b2) {
             isSuper = true;
-            assIdOptionList = Common.MakeAssociationOptionListForSelect("");
+            assIdOptionList = CommonUtil.MakeAssociationOptionListForSelect("");
         }else {
-            assIdOptionList = Common.MakeAssociationOptionListForSelect(associationId);
+            assIdOptionList = CommonUtil.MakeAssociationOptionListForSelect(associationId);
         }
-        interestOptionList = Common.MakeInterestOptionList();
-        professionOptionList = Common.MakeProfessionOptionList();
+        interestOptionList = CommonUtil.MakeInterestOptionList();
+        professionOptionList = CommonUtil.MakeProfessionOptionList();
 
         params.put("isSuper",isSuper);
         params.put("assIdOptionList",assIdOptionList);
@@ -300,7 +302,7 @@ public class News {
     @Produces(MediaType.APPLICATION_JSON)
     public Response deleteNews(@CookieParam("u") String sessionId, @QueryParam("artid") String artid){
 
-        Response response = Common.RoleCheckResponse(sessionId);
+        Response response = CommonUtil.RoleCheckResponse(sessionId);
         if (response != null) return  response;
 
         ResponseEntity responseEntity = new ResponseEntity();
@@ -341,7 +343,7 @@ public class News {
 
         // 判断用户是否已经登录
         if (!IdentifyUtils.isValidate(sessionId)) {
-            return Common.errorReturn;
+            return CommonUtil.errorReturn;
         }
 
         // 载入用户
@@ -357,7 +359,7 @@ public class News {
         //}
 
         if (account == null || account.username == null || account.username == "" || account.state == AccountState.ENABLE || account.state == AccountState.DISABLE){
-            return Common.errorReturn;
+            return CommonUtil.errorReturn;
         }
 
 
@@ -374,17 +376,17 @@ public class News {
         String interestOptionList = "";
         String professionOptionList = "";
 
-        boolean b1 = associationId.equals("undefined");
-        boolean b2 = PasswordGenerator.md5Encode(AccountState.SUPPER+"").equals(role);
+        //boolean b1 = associationId.equals("undefined");
+        //boolean b2 = PasswordGenerator.md5Encode(AccountState.SUPPER+"").equals(role);
 
         com.jieli.news.News n = newsDAO.loadById(artid);
 
 
         String got = "";
-        if (n == null) got = "此文章已经不存在了。";
+        if (n == null || n.addTime == null) got = "此文章已经不存在了。";
 
-
-        if (b1 && b2) {
+        //if (b1 && b2) {
+        if (IdentifyUtils.isSuper(sessionId)){
             isSuper = true;
             Iterable<Association> associations = associationDAO.loadAll();
             for (Association association : associations) {
@@ -400,8 +402,8 @@ public class News {
             Association association = associationDAO.loadById(associationId);
             assIdOptionList += "<option value='"+associationId+"' selected>"+association.name+"</option>";
         }
-        interestOptionList = Common.MakeInterestOptionList();
-        professionOptionList = Common.MakeProfessionOptionList();
+        interestOptionList = CommonUtil.MakeInterestOptionList();
+        professionOptionList = CommonUtil.MakeProfessionOptionList();
 
         String tmp = null;
         try {
@@ -432,6 +434,44 @@ public class News {
         return FTLrender.getResult("edit_article.ftl", params);
     }
 
+    @GET
+    @Path("/comment")
+    @Produces(MediaType.TEXT_HTML)
+    public String GetNewsCommentList(@CookieParam("u")String sessionId,@QueryParam("artid") String newsId){
+        String response = CommonUtil.RoleCheckString(sessionId);
+        if (response != null) return  response;
+
+        ResponseEntity responseEntity = new ResponseEntity();
+        List<com.jieli.comment.Comment> commentList = new LinkedList<com.jieli.comment.Comment>();
+        String commentListString = "[";
+        if (newsId != null){
+            commentList = commentDAO.find("{topicId:#, isDeleted:#}", newsId, false);
+            if (commentList != null) {
+                for (com.jieli.comment.Comment comment : commentList) {
+                    comment.commentUserInfo = CommentUserInfoUtil.generate(comment.commentUserId);
+                    comment.commentedUserInfo = CommentUserInfoUtil.generate(comment.commentedUserId);
+                    commentListString += CommonUtil.ReplaceObjectId(comment) + ",";
+                }
+            }
+            if (commentListString.endsWith(",")){
+                commentListString = commentListString.substring(0,commentListString.length()-1);
+            }
+            commentListString += "]";
+
+            com.jieli.common.entity.Account account = accountDAO.loadById(sessionId);
+            Map<String, Object> params = new HashMap<String, Object>();
+            params.put("username",account.username);
+            params.put("isSuper",IdentifyUtils.isSuper(sessionId));
+            params.put("jsonCommentList",commentListString);
+            params.put("articleId",newsId);
+
+            return FTLrender.getResult("article_comment_list.ftl",params);
+        }else{
+            return CommonUtil.errorReturn;
+        }
+    }
+
+
     private com.jieli.news.News copyDeep(com.jieli.news.News n){
         com.jieli.news.News nn = new com.jieli.news.News();
 
@@ -453,4 +493,5 @@ public class News {
     private AccountDAO accountDAO = new AccountDAO();
     private AssociationDAO associationDAO = new AssociationDAO();
     private NewsDAO newsDAO = new NewsDAO();
+    private BaseDAO<com.jieli.comment.Comment> commentDAO = new BaseDAO<com.jieli.comment.Comment>(com.jieli.mongo.Collections.Comment, com.jieli.comment.Comment.class);
 }

@@ -11,12 +11,10 @@ import com.jieli.feature.match.Match;
 import com.jieli.feature.match.MatchDAO;
 import com.jieli.feature.match.MatchDisplay;
 import com.jieli.user.dao.UserDAO;
-import com.jieli.user.entity.*;
 import com.jieli.user.entity.User;
 import com.jieli.util.FTLrender;
 import com.jieli.util.IdentifyUtils;
 import com.sun.jersey.spi.resource.Singleton;
-import org.jongo.marshall.jackson.oid.ObjectId;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -79,7 +77,7 @@ public class MatchAction {
     @Produces(MediaType.TEXT_HTML)
     public String getAccountList(@CookieParam("u")String sessionId) throws JsonProcessingException {
         if (!IdentifyUtils.isAdmin(sessionId) || IdentifyUtils.isSuper(sessionId)) {
-            return Common.errorReturn;
+            return CommonUtil.errorReturn;
         }
         ResponseEntity responseEntity = new ResponseEntity();
         ObjectMapper om = new ObjectMapper();
@@ -113,7 +111,7 @@ public class MatchAction {
             if (association == null) {
                 responseEntity.code = 2102;
                 responseEntity.msg = "协会不存在";
-                return Common.errorReturn;
+                return CommonUtil.errorReturn;
             }
             Iterable<com.jieli.common.entity.Account> accountAdmin = accountDAO
                     .loadByAssociationId(associationId.toString(),AccountState.ADMIN);
