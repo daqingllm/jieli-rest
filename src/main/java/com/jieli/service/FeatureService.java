@@ -17,6 +17,7 @@ import com.jieli.feature.vote.entity.*;
 import com.jieli.message.*;
 import com.jieli.mongo.BaseDAO;
 import com.jieli.user.dao.UserDAO;
+import com.jieli.user.entity.FriendMsg;
 import com.jieli.user.entity.User;
 import com.jieli.util.CollectionUtils;
 import com.jieli.util.IdentifyUtils;
@@ -162,11 +163,16 @@ public class FeatureService {
             Message message = new Message();
             message.messageType = MessageType.FRIEND;
             message.userId = concernedUserId;
+
+            FriendMsg friendMsg = new FriendMsg();
+            friendMsg.topicType = TopicType.Help;
+            friendMsg.topicId = help.get_id().toString();
             if (help.getType() == 0) {
-                message.content = "您关注的 " + IdentifyUtils.getUserName(userId) + " 发起了一条需求 " + help.getTitle();
+                friendMsg.msg = "您关注的 " + IdentifyUtils.getUserName(userId) + " 发起了一条需求 " + help.getTitle();
             } else {
-                message.content = "您关注的 " + IdentifyUtils.getUserName(userId) + " 参加了一条供给 " + help.getTitle();
+                friendMsg.msg = "您关注的 " + IdentifyUtils.getUserName(userId) + " 参加了一条供给 " + help.getTitle();
             }
+            message.content = friendMsg;
             message.addTime = new Date();
             messageDAO.save(message);
         }
@@ -278,18 +284,10 @@ public class FeatureService {
             return Response.status(200).entity(responseEntity).build();
         }
         HelpInfo helpInfo = helpDAO.loadById(helpId);
-//        if(helpInfo.getUserId() == userId) {
-//            responseEntity.code = 1200;
-//            responseEntity.msg = "不能评论自己";
-//            return Response.status(403).entity(responseEntity).build();
-//        }
-        if (!helpInfo.getUserId().equals(userId)) {
-            Message message = new Message();
-            message.messageType = MessageType.COMMENT;
-            message.userId = helpInfo.getUserId();
-            message.content = "你发起的帮忙贴 " + helpInfo.getTitle() + " 被 " + IdentifyUtils.getUserName(IdentifyUtils.getUserId(sessionId)) + " 评论";
-            message.addTime = new Date();
-            messageDAO.save(message);
+        if (helpInfo == null) {
+            responseEntity.code = 3000;
+            responseEntity.msg = "帖子不存在";
+            return Response.status(200).entity(responseEntity).build();
         }
 
         Comment comment = new Comment();
@@ -299,8 +297,13 @@ public class FeatureService {
         comment.topicType = TopicType.Help;
         comment.addTime = new Date();
         comment.topicId = helpId;
+        comment.topicTitle = helpInfo.getTitle();
         commentDAO.save(comment);
         CommentMessageUtil.addCommentMessage(comment);
+
+        if (!helpInfo.getUserId().equals(userId)) {
+            CommentMessageUtil.addCommentAuthorMessage(comment, helpInfo.getUserId());
+        }
 
         helpInfo.setCommentCount(helpInfo.getCommentCount() + 1);
         helpDAO.save(helpInfo);
@@ -464,6 +467,11 @@ public class FeatureService {
         if (top == null) {
 
             Comment comment = commentDAO.findOne("{_id:#}", new ObjectId(commentId));
+            if (comment == null) {
+                responseEntity.code = 1003;
+                responseEntity.msg = "评论不存在";
+                return Response.status(200).entity(responseEntity).build();
+            }
             help.getTopCommentList().add(comment);
             helpDAO.save(help);
             responseEntity.code = 200;
@@ -487,6 +495,9 @@ public class FeatureService {
             return null;
         }
         for (Comment comment : helpInfo.getTopCommentList()) {
+            if (comment == null) {
+                continue;
+            }
             if (comment.get_id().toString().equals(commentId)) {
                 return comment;
             }
@@ -865,9 +876,17 @@ public class FeatureService {
             responseEntity.msg = "参数Id无效";
             return Response.status(200).entity(responseEntity).build();
         }
+        VoteInfo voteInfo = voteDAO.loadById(voteId);
+        if (voteInfo == null) {
+            responseEntity.code = 3000;
+            responseEntity.msg = "投票不存在";
+            return Response.status(200).entity(responseEntity).build();
+        }
+
         Comment comment = new Comment();
         comment.topicId = voteId;
         comment.topicType = TopicType.Vote;
+        comment.topicTitle = voteInfo.getTitle();
         comment.content = content;
         comment.commentUserId = userId;
         comment.commentedUserId = commentInfo.get("commentedUserId");

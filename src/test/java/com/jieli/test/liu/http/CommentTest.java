@@ -17,7 +17,7 @@ public class CommentTest {
 
     @Test
     public void loadComments() throws IOException {
-        Response response = Request.Get("http://localhost:8080/rest/comment/load?topicId=5337cf1cef868c3955e498c7&topicType=activity")
+        Response response = Request.Get("http://localhost:8080/rest/comment/load?topicId=53482b95ef862ffc551c0d00&topicType=activity")
                 .addHeader("Cookie", "u=533c0010ef86c7014c36fa2f")
                 .execute();
 
@@ -26,7 +26,7 @@ public class CommentTest {
 
     @Test
     public void deleteComment() throws IOException {
-        Response response = Request.Get("http://localhost:8080/rest/comment/delete?commentId=5341075cef86bf409a51125d")
+        Response response = Request.Get("http://localhost:8080/rest/comment/delete?commentId=53482badef862ffc551c0d04")
                 .addHeader("Cookie", "u=533c0010ef86c7014c36fa2f")
                 .execute();
 

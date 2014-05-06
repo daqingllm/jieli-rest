@@ -58,7 +58,7 @@ public class ActivityTest {
 
     @Test
     public void testLoad() throws IOException {
-        Response response = Request.Get("http://162.243.151.219:8080/rest/activity?activityId=535131ece4b007071c52d06e")
+        Response response = Request.Get("http://162.243.151.219:8080/rest/activity?activityId=535f9262e4b09c3b501250bc")
                 .addHeader("Cookie", "u=5348210be4b00b2ae52d3f5c")
                 .execute();
 
@@ -87,11 +87,21 @@ public class ActivityTest {
     public void testComment() throws IOException {
         Map<String, String> infos = new HashMap<String, String>();
         infos.put("content", "是地方但是");
-        infos.put("topicId", "534821b9e4b00b2ae52d3f5d");
+        infos.put("topicId", "535f9262e4b09c3b501250bc");
 
-        Response response = Request.Post("http://162.243.151.219:8080/jieli-1.0-SNAPSHOT/rest/activity/comment")
+        Response response = Request.Post("http://162.243.151.219:8080/rest/activity/comment")
                 .addHeader("Cookie", "u=5348210be4b00b2ae52d3f5c")
                 .bodyString(new ObjectMapper().writeValueAsString(infos), ContentType.APPLICATION_JSON)
+                .execute();
+
+        System.out.println(response.returnContent().asString());
+    }
+
+    @Test
+    public void loadComment() throws IOException {
+
+        Response response = Request.Get("http://162.243.151.219:8080/rest/comment/load?topicId=535f9262e4b09c3b501250bc&topicType=activity")
+                .addHeader("Cookie", "u=5348210be4b00b2ae52d3f5c")
                 .execute();
 
         System.out.println(response.returnContent().asString());

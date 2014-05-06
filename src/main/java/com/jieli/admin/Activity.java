@@ -10,7 +10,6 @@ import com.jieli.common.entity.*;
 import com.jieli.common.entity.Account;
 import com.jieli.util.FTLrender;
 import com.jieli.util.IdentifyUtils;
-import com.jieli.util.MongoUtils;
 import com.sun.jersey.spi.resource.Singleton;
 
 import javax.ws.rs.*;
@@ -33,11 +32,11 @@ public class Activity {
     @Path("/new")
     public String newActivity(@CookieParam("u") String sessionId) {
         if(!IdentifyUtils.isValidate(sessionId)) {
-            return Common.errorReturn;
+            return CommonUtil.errorReturn;
         }
 
         if (!IdentifyUtils.isSuper(sessionId) && !IdentifyUtils.isAdmin(sessionId)){
-            return Common.errorReturn;
+            return CommonUtil.errorReturn;
         }
 
         boolean isSuper = false;
@@ -45,10 +44,10 @@ public class Activity {
 
         if (IdentifyUtils.isSuper(sessionId)) {
             isSuper = true;
-            associationList = Common.MakeAssociationOptionListForSelect("");
+            associationList = CommonUtil.MakeAssociationOptionListForSelect("");
         } else {
             isSuper = false;
-            associationList = Common.MakeAssociationOptionListForSelect(IdentifyUtils.getAssociationId(sessionId));
+            associationList = CommonUtil.MakeAssociationOptionListForSelect(IdentifyUtils.getAssociationId(sessionId));
         }
 
         String username = accountDAO.loadById(sessionId).username;
@@ -68,7 +67,7 @@ public class Activity {
     @Path("/add")
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     public Response addNews(@CookieParam("u")String sessionId, com.jieli.activity.Activity activity) {
-        Response response = Common.RoleCheckResponse(sessionId);
+        Response response = CommonUtil.RoleCheckResponse(sessionId);
         if (response != null) return response;
 
         activity.addTime = new Date();
@@ -82,7 +81,7 @@ public class Activity {
             for (String assId : associations){
                 if (associationDAO.loadById(assId) == null) continue;
 
-                com.jieli.activity.Activity activityTmp = Common.copyDeepClean(activity);
+                com.jieli.activity.Activity activityTmp = CommonUtil.copyDeepClean(activity);
                 activityTmp.associationId = assId;
 
                 activityDAO.save(activityTmp);
@@ -108,7 +107,7 @@ public class Activity {
     @Path("/list")
     @Produces(MediaType.TEXT_HTML)
     public String ActivityList(@CookieParam("u")String sessionId,@QueryParam("page") String page, @QueryParam("rowNum") String rowNum, @QueryParam("pl") String preload) throws JsonProcessingException {
-        String response = Common.RoleCheckString(sessionId);
+        String response = CommonUtil.RoleCheckString(sessionId);
         if (response != null) return response;
 
         com.jieli.common.entity.Account account = accountDAO.loadById(sessionId);
@@ -148,7 +147,7 @@ public class Activity {
 
             for (com.jieli.activity.Activity activity : activities1){
                 if (_total >= (_page-1)*_rowNum && _total < _page*_rowNum) {
-                    String tmp = Common.ReplaceObjectId(activity);
+                    String tmp = CommonUtil.ReplaceObjectId(activity);
                     activityList += tmp.replace("\"associationId\":\"" + account.associationId + "\"", "\"associationId\":\"" + associationName + "\"") + ",";
                 }
                 _total ++;
@@ -158,7 +157,7 @@ public class Activity {
             //activities2 = activityDAO.findHistory(account.associationId,0,Integer.MAX_VALUE,"OFFICIAL");
             for (com.jieli.activity.Activity activity : activities2){
                 if (_total >= (_page-1)*_rowNum && _total < _page*_rowNum) {
-                    String tmp = Common.ReplaceObjectId(activity);
+                    String tmp = CommonUtil.ReplaceObjectId(activity);
                     activityList += tmp.replace("\"associationId\":\"" + account.associationId + "\"", "\"associationId\":\"" + associationName + "\"") + ",";
                 }
                 _total ++;
@@ -182,7 +181,7 @@ public class Activity {
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     public Response getActivityPage(@CookieParam("u")String sessionId,@QueryParam("actid") String activityId){
 
-        Response response = Common.RoleCheckResponse(sessionId);
+        Response response = CommonUtil.RoleCheckResponse(sessionId);
         if (response != null) return response;
 
         ResponseEntity responseEntity = new ResponseEntity();
@@ -228,15 +227,15 @@ public class Activity {
                     !IdentifyUtils.isValidate(sessionId) ||
                     !IdentifyUtils.isAdmin(sessionId)
                     ) {
-                return Common.errorReturn;
+                return CommonUtil.errorReturn;
             }
 
-            activity_data = Common.ReplaceObjectId(activity);
+            activity_data = CommonUtil.ReplaceObjectId(activity);
 
             if (IdentifyUtils.isSuper(sessionId)) {
-                associationList = Common.MakeAssociationOptionListForSelect("");
+                associationList = CommonUtil.MakeAssociationOptionListForSelect("");
             } else {
-                associationList = Common.MakeAssociationOptionListForSelect(IdentifyUtils.getAssociationId(sessionId));
+                associationList = CommonUtil.MakeAssociationOptionListForSelect(IdentifyUtils.getAssociationId(sessionId));
             }
         }
         params.put("username",account.username);

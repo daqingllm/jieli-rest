@@ -11,7 +11,6 @@ import com.sun.jersey.spi.resource.Singleton;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -28,7 +27,7 @@ public class Association {
     @Produces(MediaType.TEXT_HTML)
     public String CreateAssociation(@CookieParam("u")String sessionId,@QueryParam("name")String name){
         if (!IdentifyUtils.isSuper(sessionId)){
-            return Common.errorReturn;
+            return CommonUtil.errorReturn;
         }
 
         Map<String, Object> params = new HashMap<String, Object>();
@@ -42,7 +41,7 @@ public class Association {
     @Produces(MediaType.TEXT_HTML)
     public String GetAssociations(@CookieParam("u")String sessionId){
         if (!IdentifyUtils.isSuper(sessionId))
-            return Common.errorReturn;
+            return CommonUtil.errorReturn;
 
         com.jieli.common.entity.Account account = accountDAO.loadById(sessionId);
 

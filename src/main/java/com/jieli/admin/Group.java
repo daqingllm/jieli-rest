@@ -35,7 +35,7 @@ public class Group {
     @Path("/del")
     @Produces(MediaType.APPLICATION_JSON)
     public Response deleteGroup(@CookieParam("u") String sessionId, @QueryParam("group") String group){
-        Response response = Common.RoleCheckResponse(sessionId);
+        Response response = CommonUtil.RoleCheckResponse(sessionId);
         if (response != null) return response;
 
         ResponseEntity responseEntity = new ResponseEntity();
@@ -66,7 +66,7 @@ public class Group {
     @Path("/list")
     @Produces(MediaType.TEXT_HTML)
     public String groupList(@CookieParam("u")String sessionId){
-        String er = Common.RoleCheckString(sessionId);
+        String er = CommonUtil.RoleCheckString(sessionId);
         if (er != null) return  er;
 
         com.jieli.common.entity.Account account = accountDAO.loadById(sessionId);
@@ -94,7 +94,7 @@ public class Group {
         for (com.jieli.association.Group group : groups){
             groupListRet.add(group);
             if (groupList.equals("[")) firstGroupName = group.name;
-            groupList += Common.ReplaceObjectId(group).replace("\"associationId\":\"" + account.associationId + "\"", "\"associationId\":\"" + association.name + "\"") +",";
+            groupList += CommonUtil.ReplaceObjectId(group).replace("\"associationId\":\"" + account.associationId + "\"", "\"associationId\":\"" + association.name + "\"") +",";
         }
         if (groupList.endsWith(",")) groupList = groupList.substring(0,groupList.length()-1);
         groupList += "]";

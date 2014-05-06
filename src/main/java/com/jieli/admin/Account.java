@@ -8,13 +8,11 @@ import com.jieli.common.dao.AccountDAO;
 import com.jieli.common.entity.AccountState;
 import com.jieli.common.entity.ResponseEntity;
 import com.jieli.user.dao.UserDAO;
-import com.jieli.user.entity.*;
 import com.jieli.user.entity.User;
 import com.jieli.util.FTLrender;
 import com.jieli.util.IdentifyUtils;
 import com.jieli.util.PasswordGenerator;
 import com.sun.jersey.spi.resource.Singleton;
-import org.apache.commons.lang.StringUtils;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
@@ -52,13 +50,13 @@ public class Account {
     @Produces(MediaType.TEXT_HTML)
     public String editNews(@CookieParam("u")String sessionId,@CookieParam("a")String associationId,@CookieParam("r")String role){
         if (!IdentifyUtils.isValidate(sessionId)) {
-            return Common.errorReturn;
+            return CommonUtil.errorReturn;
         }
 
         com.jieli.common.entity.Account account = accountDAO.loadById(sessionId);
 
         if (account == null || account.username == null || account.username == "" || account.state == AccountState.ENABLE || account.state == AccountState.DISABLE){
-            return Common.errorReturn;
+            return CommonUtil.errorReturn;
         }
 
         Map<String, Object> params = new HashMap<String, Object>();
@@ -119,7 +117,7 @@ public class Account {
     @Produces(MediaType.TEXT_HTML)
     public String loadUsers(@CookieParam("u")String sessionId,@QueryParam("id")String id /*,@QueryParam("state")int state*/) throws JsonProcessingException {
         if (!IdentifyUtils.isAdmin(sessionId) || IdentifyUtils.isSuper(sessionId)) {
-            return Common.errorReturn;
+            return CommonUtil.errorReturn;
         }
         ResponseEntity responseEntity = new ResponseEntity();
         ObjectMapper om = new ObjectMapper();
@@ -153,18 +151,18 @@ public class Account {
             if (association == null) {
                 responseEntity.code = 2102;
                 responseEntity.msg = "协会不存在";
-                return Common.errorReturn;
+                return CommonUtil.errorReturn;
             }
             Iterable<com.jieli.common.entity.Account> accountAdmin = accountDAO.loadByAssociationId(associationId.toString(),AccountState.ADMIN);
             for (com.jieli.common.entity.Account account : accountAdmin)
-                accountList += Common.ReplaceObjectId(account).replace("}",",\"name\":\""+Common.TransferNull(userDAO.loadById(account.userId) == null ? "" : userDAO.loadById(account.userId).name) + "\"},");
+                accountList += CommonUtil.ReplaceObjectId(account).replace("}",",\"name\":\""+ CommonUtil.TransferNull(userDAO.loadById(account.userId) == null ? "" : userDAO.loadById(account.userId).name) + "\"},");
 
             Iterable<com.jieli.common.entity.Account> accountEnable = accountDAO.loadByAssociationId(associationId.toString(),AccountState.ENABLE);
             for (com.jieli.common.entity.Account account : accountEnable)
-                accountList += Common.ReplaceObjectId(account).replace("}",",\"name\":\""+Common.TransferNull(userDAO.loadById(account.userId) == null ? "" : userDAO.loadById(account.userId).name) + "\"},");
+                accountList += CommonUtil.ReplaceObjectId(account).replace("}",",\"name\":\""+ CommonUtil.TransferNull(userDAO.loadById(account.userId) == null ? "" : userDAO.loadById(account.userId).name) + "\"},");
         }
 
-        accountList = Common.RemoveLast(accountList,",") + "]";
+        accountList = CommonUtil.RemoveLast(accountList, ",") + "]";
 
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("isSuper",IdentifyUtils.getState(sessionId) == AccountState.SUPPER);
@@ -180,7 +178,7 @@ public class Account {
     public Response initUserInfo(@CookieParam("u") String sessionId, com.jieli.user.entity.User user) throws JSONException {
         ResponseEntity responseEntity = new ResponseEntity();
 
-        Response response = Common.RoleCheckResponse(sessionId);
+        Response response = CommonUtil.RoleCheckResponse(sessionId);
         if (response != null) return response;
 
         String id = user.get_id().toString();
@@ -204,7 +202,7 @@ public class Account {
         User user = userDAO.loadById(userId);
 
         ResponseEntity responseEntity = new ResponseEntity();
-        if (Common.RoleCheckResponse(sessionId) != null || user == null || (!IdentifyUtils.isSuper(sessionId) && !user.associationId.equals(IdentifyUtils.getAssociationId(sessionId)))) {
+        if (CommonUtil.RoleCheckResponse(sessionId) != null || user == null || (!IdentifyUtils.isSuper(sessionId) && !user.associationId.equals(IdentifyUtils.getAssociationId(sessionId)))) {
             responseEntity.code = 9001;
             responseEntity.msg = "no access !";
             return Response.status(200).entity(responseEntity).build();
@@ -223,7 +221,7 @@ public class Account {
     @Path("/dfgroup")
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     public Response deleteFromGroup(@CookieParam("u") String sessionId, @QueryParam("uname") String userId, @QueryParam("group") String group){
-        Response response = Common.RoleCheckResponse(sessionId);
+        Response response = CommonUtil.RoleCheckResponse(sessionId);
         if (response != null) return response;
 
         User user = userDAO.loadById(userId);

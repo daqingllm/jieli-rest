@@ -3,8 +3,8 @@ package com.jieli.message;
 import com.jieli.comment.Comment;
 import com.jieli.comment.CommentMsg;
 import com.jieli.comment.CommentUserInfo;
+import com.jieli.comment.CommentUserInfoUtil;
 import com.jieli.user.dao.UserDAO;
-import com.jieli.user.entity.User;
 import org.apache.commons.lang.StringUtils;
 
 import java.util.Date;
@@ -29,18 +29,17 @@ public abstract class CommentMessageUtil {
             message.userId = comment.commentedUserId; // 消息接受者即为被评论者
             message.messageType = MessageType.COMMENT;
 
-            CommentUserInfo commentUserInfo = new CommentUserInfo();
-            commentUserInfo.userId = comment.commentUserId;
-            User user = userDAO.loadById(commentUserInfo.userId);
-            commentUserInfo.name = user.name;
-            commentUserInfo.userFace = user.userFace;
+            CommentUserInfo commentUserInfo = CommentUserInfoUtil.generate(comment.commentUserId);
 
             CommentMsg commentMsg = new CommentMsg();
             commentMsg.commentId = comment.get_id().toString();
             commentMsg.commentUser = commentUserInfo;
             commentMsg.commentContent = comment.content;
-            //commentMsg.topicBrief =  // 被评论内容概述
             commentMsg.commentTime = comment.addTime;
+            commentMsg.commentType = 1;
+            commentMsg.topicType = comment.topicType;
+            commentMsg.topicId = comment.topicId;
+            commentMsg.msg = "你在 " + comment.topicTitle + " 中的评论被 " + commentUserInfo.name + " 回复了";
 
             message.content = commentMsg;
             message.read = false;
@@ -48,5 +47,29 @@ public abstract class CommentMessageUtil {
 
             messageDAO.save(message);
         }
+    }
+
+    public static void addCommentAuthorMessage(Comment comment, String authorId) {
+        Message message = new Message();
+        message.userId = authorId;
+        message.messageType = MessageType.COMMENT;
+
+        CommentUserInfo commentUserInfo = CommentUserInfoUtil.generate(comment.commentUserId);
+
+        CommentMsg commentMsg = new CommentMsg();
+        commentMsg.commentId = comment.get_id().toString();
+        commentMsg.commentUser = commentUserInfo;
+        commentMsg.commentContent = comment.content;
+        commentMsg.commentTime = comment.addTime;
+        commentMsg.commentType = 0;
+        commentMsg.topicType = comment.topicType;
+        commentMsg.topicId = comment.topicId;
+        commentMsg.msg = "你发起的 " + comment.topicTitle + " 被 " + commentUserInfo.name + " 评论了";
+
+        message.content = commentMsg;
+        message.read = false;
+        message.addTime = new Date();
+
+        messageDAO.save(message);
     }
 }
