@@ -174,7 +174,7 @@ public class FeatureTest {
     @Test
     public void getOrientedMatch() throws IOException {
         Response response = Request.Get("http://localhost:8080/rest/feature/match")
-                .addHeader("Cookie", "u=533be303300460878a64a158")
+                .addHeader("Cookie", "u=536751603004959582a675e2")
                 .execute();
         System.out.println(response.returnContent().asString());
     }

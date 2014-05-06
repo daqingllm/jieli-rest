@@ -1,13 +1,17 @@
 package com.jieli.service;
 
+import com.jieli.activity.ActivityInfo;
+import com.jieli.activity.RelatedActivity;
+import com.jieli.activity.RelatedType;
 import com.jieli.comment.Comment;
 import com.jieli.comment.TopicType;
 import com.jieli.common.entity.ResponseEntity;
 import com.jieli.feature.help.dao.HelpDAO;
-import com.jieli.feature.help.entity.HelpInfo;
-import com.jieli.feature.help.entity.SimpleHelpInfo;
+import com.jieli.feature.help.dao.HelpDynamicDAO;
+import com.jieli.feature.help.entity.*;
 import com.jieli.feature.match.*;
 import com.jieli.feature.vote.dao.VoteDAO;
+import com.jieli.feature.vote.dao.VoteDynamicDAO;
 import com.jieli.feature.vote.dao.VoteResultDAO;
 import com.jieli.feature.vote.entity.*;
 import com.jieli.message.*;
@@ -37,6 +41,8 @@ public class FeatureService {
     private HelpDAO helpDAO = new HelpDAO();
     private UserDAO userDAO = new UserDAO();
     private VoteDAO voteDAO = new VoteDAO();
+    private HelpDynamicDAO helpDynamicDAO = new HelpDynamicDAO();
+    private VoteDynamicDAO voteDynamicDAO = new VoteDynamicDAO();
     BaseDAO<Comment> commentDAO = new BaseDAO<Comment>(com.jieli.mongo.Collections.Comment, Comment.class);
     private MessageDAO messageDAO = new MessageDAO();
     private VoteResultDAO voteResultDAO = new VoteResultDAO();
@@ -149,6 +155,8 @@ public class FeatureService {
             responseEntity.msg = "互帮互助帖子添加失败";
             return Response.status(200).entity(responseEntity).build();
         }
+        insertHelpDynamic(userId, result.get_id().toString(), HelpDynamicType.SPONSER);
+
         List<String> concernedUserIds = IdentifyUtils.getConcerned(userId);
         for (String concernedUserId : concernedUserIds) {
             Message message = new Message();
@@ -201,6 +209,7 @@ public class FeatureService {
             responseEntity.msg = "互帮互助信息不存在";
             return  Response.status(200).entity(responseEntity).build();
         }
+        removeHelpDynamic(userId, helpId, HelpDynamicType.SPONSER);
         helpDAO.deleteById(helpId);
         responseEntity.code = 200;
         return Response.status(200).entity(responseEntity).build();
@@ -295,6 +304,8 @@ public class FeatureService {
 
         helpInfo.setCommentCount(helpInfo.getCommentCount() + 1);
         helpDAO.save(helpInfo);
+
+        insertHelpDynamic(userId, helpId, HelpDynamicType.REPLY);
 
         responseEntity.code = 200;
         responseEntity.msg = "评论成功";
@@ -783,6 +794,8 @@ public class FeatureService {
         voteInfo.setTotalVote(afterVote.getTotalVote());
         voteDAO.save(voteInfo);
 
+        insertVoteDynamic(userId, voteId, VoteDynamicType.JOIN);
+
         //触发参与投票动态
 //        Message message = new Message();
 //        message.messageType = MessageType.VOTE;
@@ -792,7 +805,7 @@ public class FeatureService {
 //        message.addTime = new Date();
 //        messageDAO.save(message);
         responseEntity.code = 200;
-        responseEntity.body = "{\"_id\":\"" + voteResult.get_id() + "\"}";;
+        responseEntity.body = "{\"_id\":\"" + voteResult.get_id() + "\"}";
         return Response.status(200).entity(responseEntity).build();
     }
 
@@ -1029,6 +1042,206 @@ public class FeatureService {
         return  Response.status(200).entity(responseEntity).build();
     }
 
+    @GET
+    @Path("/help/self")
+    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+    public Response findHelpDynamics(@CookieParam("u")String sessionId, @QueryParam("page")int page, @QueryParam("size")int count) {
+        if (!IdentifyUtils.isValidate(sessionId)) {
+            return Response.status(403).build();
+        }
+        if (count <= 0) {
+            count = 10;
+        }
+        if (page <= 0) {
+            page = 1;
+        }
+        ResponseEntity responseEntity = new ResponseEntity();
+        List<HelpDynamicShow> result = new ArrayList<HelpDynamicShow>();
+        String userId = IdentifyUtils.getUserId(sessionId);
+        List<HelpDynamicShow> infos = helpDynamicDAO.findUserHelp(userId);
+        if (page*count <= infos.size()) {
+            result = infos.subList((page-1)*count, page*count);
+        } else if ((page-1)*count < infos.size()) {
+            result = infos.subList((page-1)*count, infos.size());
+        } else {
+            responseEntity.msg = "无数据";
+            responseEntity.code = 200;
+            return Response.status(200).entity(responseEntity).build();
+        }
+
+        responseEntity.body = generateHelpDynamics(result);
+        responseEntity.code = 200;
+        return Response.status(200).entity(responseEntity).build();
+    }
+
+    @GET
+    @Path("/help/user")
+    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+    public Response findHelpDynamicsByUserId(@CookieParam("u")String sessionId,@QueryParam("userId")String userId, @QueryParam("page")int page, @QueryParam("size")int count) {
+        if (!IdentifyUtils.isValidate(sessionId)) {
+            return Response.status(403).build();
+        }
+        if (count <= 0) {
+            count = 10;
+        }
+        if (page <= 0) {
+            page = 1;
+        }
+        ResponseEntity responseEntity = new ResponseEntity();
+        if (StringUtils.isEmpty(userId)) {
+            responseEntity.code = 3101;
+            responseEntity.msg = "缺少参数";
+            return Response.status(200).entity(responseEntity).build();
+        }
+        List<HelpDynamicShow> result = new ArrayList<HelpDynamicShow>();
+        List<HelpDynamicShow> infos = helpDynamicDAO.findUserHelp(userId);
+        if (page*count <= infos.size()) {
+            result = infos.subList((page-1)*count, page*count);
+        } else if ((page-1)*count < infos.size()) {
+            result = infos.subList((page-1)*count, infos.size());
+        } else {
+            responseEntity.msg = "无数据";
+            responseEntity.code = 200;
+            return Response.status(200).entity(responseEntity).build();
+        }
+
+        responseEntity.body = generateHelpDisplay(result);
+        responseEntity.code = 200;
+        return Response.status(200).entity(responseEntity).build();
+    }
+
+    @GET
+    @Path("/vote/self")
+    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+    public Response findVoteDynamics(@CookieParam("u")String sessionId, @QueryParam("page")int page, @QueryParam("size")int count) {
+        if (!IdentifyUtils.isValidate(sessionId)) {
+            return Response.status(403).build();
+        }
+        if (count <= 0) {
+            count = 10;
+        }
+        if (page <= 0) {
+            page = 1;
+        }
+        ResponseEntity responseEntity = new ResponseEntity();
+        List<VoteDynamicShow> result = new ArrayList<VoteDynamicShow>();
+        String userId = IdentifyUtils.getUserId(sessionId);
+        List<VoteDynamicShow> infos = voteDynamicDAO.findUserVote(userId);
+        if (page*count <= infos.size()) {
+            result = infos.subList((page-1)*count, page*count);
+        } else if ((page-1)*count < infos.size()) {
+            result = infos.subList((page-1)*count, infos.size());
+        } else {
+            responseEntity.msg = "无数据";
+            responseEntity.code = 200;
+            return Response.status(200).entity(responseEntity).build();
+        }
+
+        responseEntity.body = generateVoteDynamics(result);
+        responseEntity.code = 200;
+        return Response.status(200).entity(responseEntity).build();
+    }
+
+    @GET
+    @Path("/vote/user")
+    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+    public Response findVoteDynamicsByUserId(@CookieParam("u")String sessionId,@QueryParam("userId")String userId, @QueryParam("page")int page, @QueryParam("size")int count) {
+        if (!IdentifyUtils.isValidate(sessionId)) {
+            return Response.status(403).build();
+        }
+        if (count <= 0) {
+            count = 10;
+        }
+        if (page <= 0) {
+            page = 1;
+        }
+        ResponseEntity responseEntity = new ResponseEntity();
+        if (StringUtils.isEmpty(userId)) {
+            responseEntity.code = 3101;
+            responseEntity.msg = "缺少参数";
+            return Response.status(200).entity(responseEntity).build();
+        }
+        List<VoteDynamicShow> result = new ArrayList<VoteDynamicShow>();
+        List<VoteDynamicShow> infos = voteDynamicDAO.findUserVote(userId);
+        if (page*count <= infos.size()) {
+            result = infos.subList((page-1)*count, page*count);
+        } else if ((page-1)*count < infos.size()) {
+            result = infos.subList((page-1)*count, infos.size());
+        } else {
+            responseEntity.msg = "无数据";
+            responseEntity.code = 200;
+            return Response.status(200).entity(responseEntity).build();
+        }
+
+        responseEntity.body = generateVoteDisplay(result);
+        responseEntity.code = 200;
+        return Response.status(200).entity(responseEntity).build();
+    }
+
+    private Map<HelpDynamicType, List<HelpInfo>> generateHelpDynamics(List<HelpDynamicShow> infos) {
+        Map<HelpDynamicType, List<HelpInfo>> result = new HashMap<HelpDynamicType, List<HelpInfo>>();
+        for (HelpDynamicShow info : infos) {
+            HelpDynamicType type = info.type;
+            if (result.get(type) == null) {
+                List<HelpInfo> activities = new ArrayList<HelpInfo>();
+                result.put(type, activities);
+            }
+            HelpInfo helpInfo = helpDAO.loadById(info.helpId);
+            result.get(type).add(helpInfo);
+        }
+
+        return result;
+    }
+
+    private List<HelpDynamicDisplay> generateHelpDisplay(List<HelpDynamicShow> infos) {
+        List<HelpDynamicDisplay> displays = new ArrayList<HelpDynamicDisplay>();
+        for (HelpDynamicShow info : infos) {
+            HelpDynamicDisplay display = new HelpDynamicDisplay();
+            display.helpId = info.helpId;
+            HelpInfo helpInfo = helpDAO.loadById(info.helpId);
+            if (helpInfo == null) {
+                continue;
+            }
+            display.type = info.type;
+            display.title = helpInfo.getTitle();
+            display.time = info.time;
+            displays.add(display);
+        }
+        return displays;
+    }
+
+    private Map<VoteDynamicType, List<VoteInfo>> generateVoteDynamics(List<VoteDynamicShow> infos) {
+        Map<VoteDynamicType, List<VoteInfo>> result = new HashMap<VoteDynamicType, List<VoteInfo>>();
+        for (VoteDynamicShow info : infos) {
+            VoteDynamicType type = info.type;
+            if (result.get(type) == null) {
+                List<VoteInfo> activities = new ArrayList<VoteInfo>();
+                result.put(type, activities);
+            }
+            VoteInfo voteInfo = voteDAO.loadById(info.voteId);
+            result.get(type).add(voteInfo);
+        }
+
+        return result;
+    }
+
+    private List<VoteDynamicDisplay> generateVoteDisplay(List<VoteDynamicShow> infos) {
+        List<VoteDynamicDisplay> displays = new ArrayList<VoteDynamicDisplay>();
+        for (VoteDynamicShow info : infos) {
+            VoteDynamicDisplay display = new VoteDynamicDisplay();
+            display.voteId = info.voteId;
+            VoteInfo voteInfo = voteDAO.loadById(info.voteId);
+            if (voteInfo == null) {
+                continue;
+            }
+            display.type = info.type;
+            display.title = voteInfo.getTitle();
+            display.time = info.time;
+            displays.add(display);
+        }
+        return displays;
+    }
+
     private MatchDisplay makeDisplay(Match match) {
         MatchDisplay display = new MatchDisplay();
         User user1 = userDAO.loadById(match.userId1);
@@ -1046,5 +1259,50 @@ public class FeatureService {
         display.infos = match.matchInfos;
 
         return display;
+    }
+
+    private void insertHelpDynamic(String userId, String topicId, HelpDynamicType type) {
+        HelpDynamic helpDynamic = helpDynamicDAO.findByUserId(userId);
+        if (helpDynamic == null) {
+            helpDynamic = new HelpDynamic();
+            helpDynamic.userId = userId;
+        }
+        HelpDynamicShow info = new HelpDynamicShow();
+        info.helpId = topicId;
+        info.type = type;
+        info.time = new Date();
+        if (helpDynamic.infos.contains(info)) {
+            return;
+        }
+        helpDynamic.infos.add(info);
+        helpDynamicDAO.save(helpDynamic);
+    }
+
+    private void insertVoteDynamic(String userId, String topicId, VoteDynamicType type) {
+        VoteDynamic voteDynamic = voteDynamicDAO.findByUserId(userId);
+        if (voteDynamic == null) {
+            voteDynamic = new VoteDynamic();
+            voteDynamic.userId = userId;
+        }
+        VoteDynamicShow info = new VoteDynamicShow();
+        info.voteId = topicId;
+        info.type = type;
+        info.time = new Date();
+        if (voteDynamic.infos.contains(info)) {
+            return;
+        }
+        voteDynamic.infos.add(info);
+        voteDynamicDAO.save(voteDynamic);
+    }
+
+    private void removeHelpDynamic(String userId, String topicId, HelpDynamicType type) {
+        HelpDynamic helpDynamic = helpDynamicDAO.findByUserId(userId);
+        HelpDynamicShow info = new HelpDynamicShow();
+        info.helpId = topicId;
+        info.type = type;
+        if (helpDynamic.infos.contains(info)) {
+            helpDynamic.infos.remove(info);
+            helpDynamicDAO.save(helpDynamic);
+        }
     }
 }
