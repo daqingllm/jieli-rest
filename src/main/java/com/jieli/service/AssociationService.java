@@ -16,6 +16,8 @@ import org.codehaus.jettison.json.JSONObject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.
@@ -131,6 +133,43 @@ public class AssociationService {
 
         responseEntity.code = 200;
         responseEntity.body = accounts;
+        return Response.status(200).entity(responseEntity).build();
+    }
+
+    @GET
+    @Path("/organization")
+    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+    public Response loadOrganization(@CookieParam("u")String sessionId, @QueryParam("id")String id) {
+        if (!IdentifyUtils.isValidate(sessionId)) {
+            return Response.status(403).build();
+        }
+        ResponseEntity responseEntity = new ResponseEntity();
+        String associationId = null;
+        if (IdentifyUtils.getState(sessionId) == AccountState.SUPPER) {
+            if (StringUtils.isEmpty(id)) {
+                responseEntity.code = 2101;
+                responseEntity.msg = "缺少参数";
+                return Response.status(200).entity(responseEntity).build();
+            }
+            associationId = id;
+        } else {
+            associationId = IdentifyUtils.getAssociationId(sessionId);
+        }
+        Association association = associationDAO.loadById(associationId);
+        if (association == null) {
+            responseEntity.code = 2102;
+            responseEntity.msg = "协会不存在";
+            return Response.status(200).entity(responseEntity).build();
+        }
+
+        Iterable<Identify> identifies = identifyDAO.loadAll(associationId);
+        Map<String, Iterable<User>> result = new HashMap<String, Iterable<User>>();
+        for (Identify identify : identifies) {
+            Iterable<User> users = userDAO.loadByIdentify(associationId, identify.name);
+            result.put(identify.name, users);
+        }
+        responseEntity.code = 200;
+        responseEntity.body = result;
         return Response.status(200).entity(responseEntity).build();
     }
 
