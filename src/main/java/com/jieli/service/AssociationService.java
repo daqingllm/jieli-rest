@@ -1,9 +1,6 @@
 package com.jieli.service;
 
-import com.jieli.association.Association;
-import com.jieli.association.AssociationDAO;
-import com.jieli.association.Group;
-import com.jieli.association.GroupDAO;
+import com.jieli.association.*;
 import com.jieli.common.dao.AccountDAO;
 import com.jieli.common.entity.Account;
 import com.jieli.common.entity.AccountState;
@@ -36,6 +33,8 @@ public class AssociationService {
     private AccountDAO accountDAO = new AccountDAO();
 
     private GroupDAO groupDAO = new GroupDAO();
+
+    private IdentifyDAO identifyDAO = new IdentifyDAO();
 
     private UserDAO userDAO = new UserDAO();
 
@@ -198,6 +197,74 @@ public class AssociationService {
         }
 
         Iterable<User> users = userDAO.loadByGroup(associationId, group);
+        responseEntity.code = 200;
+        responseEntity.body = users;
+        return Response.status(200).entity(responseEntity).build();
+    }
+
+    @POST
+    @Path("/identify")
+    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+    public Response upsertIdentify(@CookieParam("u")String sessionId, @QueryParam("id")String id, Identify identify) {
+        if (!IdentifyUtils.isAdmin(sessionId)) {
+            return Response.status(403).build();
+        }
+        ResponseEntity responseEntity = new ResponseEntity();
+        String associationId = null;
+        if (IdentifyUtils.getState(sessionId) == AccountState.SUPPER) {
+            if (StringUtils.isEmpty(id)) {
+                responseEntity.code = 2101;
+                responseEntity.msg = "缺少参数协会id";
+                return Response.status(200).entity(responseEntity).build();
+            }
+            associationId = id;
+        } else {
+            associationId = IdentifyUtils.getAssociationId(sessionId);
+        }
+        identify.associationId = associationId;
+
+        Iterable<Identify> identifies = identifyDAO.loadAll(associationId);
+        for (Identify oldIdentify : identifies) {
+            if (oldIdentify.equals(identify)) {
+                responseEntity.code = 2301;
+                responseEntity.msg = "职位已存在";
+                return Response.status(200).entity(responseEntity).build();
+            }
+        }
+
+        identifyDAO.save(identify);
+        responseEntity.code = 200;
+        return Response.status(200).entity(responseEntity).build();
+    }
+
+    @GET
+    @Path("/identify")
+    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+    public Response getIdentify(@CookieParam("u")String sessionId, @QueryParam("id")String id, @QueryParam("identify")String identify) {
+        if (!IdentifyUtils.isAdmin(sessionId)) {
+            return Response.status(403).build();
+        }
+        ResponseEntity responseEntity = new ResponseEntity();
+        String associationId = null;
+        if (IdentifyUtils.getState(sessionId) == AccountState.SUPPER) {
+            if (StringUtils.isEmpty(id)) {
+                responseEntity.code = 2101;
+                responseEntity.msg = "缺少参数协会id";
+                return Response.status(200).entity(responseEntity).build();
+            }
+            associationId = id;
+        } else {
+            associationId = IdentifyUtils.getAssociationId(sessionId);
+        }
+
+        if (StringUtils.isEmpty(identify)) {
+            Iterable<Identify> identifies = identifyDAO.loadAll(associationId);
+            responseEntity.code = 200;
+            responseEntity.body = identifies;
+            return Response.status(200).entity(responseEntity).build();
+        }
+
+        Iterable<User> users = userDAO.loadByGroup(associationId, identify);
         responseEntity.code = 200;
         responseEntity.body = users;
         return Response.status(200).entity(responseEntity).build();
