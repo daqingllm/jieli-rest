@@ -242,7 +242,7 @@ public class MatchAction {
         }
 
         params.put("displayList", results);
-        return FTLrender.getResult("match_view.ftl", params);
+        return FTLrender.getResult("match_history.ftl", params);
     }
 
 }
