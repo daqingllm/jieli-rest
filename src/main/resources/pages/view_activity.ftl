@@ -2,8 +2,8 @@
 <html lang="zh">
 <head>
     <meta charset="utf-8"/>
-    <title>æ¥åŠ› æ´»åŠ¨ç®¡ç†</title>
-    <meta name="description" content="æ¥åŠ›"/>
+    <title>½ÓÁ¦ »î¶¯¹ÜÀí</title>
+    <meta name="description" content="½ÓÁ¦"/>
     <!-- basic styles -->
 
     <link href="/assets/css/bootstrap.min.css" rel="stylesheet"/>
@@ -89,7 +89,7 @@
             <a href="index.html" class="navbar-brand">
                 <small>
                     <i class="icon-leaf"></i>
-                    æ¥åŠ› åå°ç®¡ç†ç³»ç»Ÿ
+                    ½ÓÁ¦ ºóÌ¨¹ÜÀíÏµÍ³
                 </small>
             </a><!-- /.brand -->
         </div>
@@ -101,7 +101,7 @@
                     <a data-toggle="dropdown" href="#" class="dropdown-toggle">
                         <img class="nav-user-photo" src="/assets/avatars/user.jpg" alt="Jason's Photo"/>
 								<span class="user-info">
-									<small>æ¬¢è¿å…‰ä¸´,</small>
+									<small>»¶Ó­¹âÁÙ,</small>
                                 ${username}
 								</span>
 
@@ -112,14 +112,14 @@
                         <!--<li>
                             <a href="#">
                                 <i class="icon-cog"></i>
-                                è®¾ç½®
+                                ÉèÖÃ
                             </a>
                         </li>
 
                         <li>
                             <a href="#">
                                 <i class="icon-user"></i>
-                                ä¸ªäººèµ„æ–™
+                                ¸öÈË×ÊÁÏ
                             </a>
                         </li>
 
@@ -128,7 +128,7 @@
                         <li>
                             <a href="#"  onclick="document.cookie='u=;path=/';window.location.href='/rest/baccount/login'">
                                 <i class="icon-off"></i>
-                                é€€å‡º
+                                ÍË³ö
                             </a>
                         </li>
                     </ul>
@@ -216,21 +216,21 @@
     <ul class="breadcrumb">
         <li>
             <i class="icon-home home-icon"></i>
-            <a href="index.html">é¦–é¡µ</a>
+            <a href="index.html">Ê×Ò³</a>
         </li>
 
         <li>
-            <a href="#"> æ´»åŠ¨ç®¡ç† </a>
+            <a href="#"> »î¶¯¹ÜÀí </a>
         </li>
 
-        <li class="active"> æŸ¥çœ‹æ´»åŠ¨</li>
+        <li class="active"> ²é¿´»î¶¯</li>
     </ul>
     <!-- .breadcrumb -->
 
     <div class="nav-search" id="nav-search">
         <form class="form-search">
 								<span class="input-icon">
-									<input type="text" placeholder="æœç´¢ ..." class="nav-search-input"
+									<input type="text" placeholder="ËÑË÷ ..." class="nav-search-input"
                                            id="nav-search-input" autocomplete="off"/>
 									<i class="icon-search nav-search-icon"></i>
 								</span>
@@ -242,7 +242,7 @@
 <div class="page-content">
 <div class="page-header">
     <h1>
-        åœ¨è¿™é‡ŒæŸ¥çœ‹<#if isSuper>æ¨èæ´»åŠ¨<#else>å®˜æ–¹æ´»åŠ¨</#if>
+        ÔÚÕâÀï²é¿´<#if isSuper>ÍÆ¼ö»î¶¯<#else>¹Ù·½»î¶¯</#if>
     </h1>
 </div>
 <!-- /.page-header -->
@@ -253,12 +253,12 @@
 
 <form class="form-horizontal" role="form">
 
-<!--æ ‡é¢˜-->
+<!--±êÌâ-->
 <div class="form-group">
-    <label class="col-sm-3 control-label no-padding-right" for="form-field-title"> æ´»åŠ¨æ ‡é¢˜ </label>
+    <label class="col-sm-3 control-label no-padding-right" for="form-field-title"> »î¶¯±êÌâ </label>
 
     <div class="col-sm-9">
-        <input type="text" id="form-field-title" placeholder="æ ‡é¢˜" class="col-xs-10 col-sm-7"
+        <input type="text" id="form-field-title" placeholder="±êÌâ" class="col-xs-10 col-sm-7"
                style="padding-left: 7px;"/>
     </div>
 </div>
@@ -266,7 +266,7 @@
 
 <!--<#if isSuper>
 				        <div class="form-group">
-				            <label class="col-sm-3 control-label no-padding-right" for="form-field-associations"> åä¼šèŒƒå›´ </label>
+				            <label class="col-sm-3 control-label no-padding-right" for="form-field-associations"> Ğ­»á·¶Î§ </label>
 
 				            <div class="col-sm-9">
 				                <select class="col-xs-10 col-sm-7" id="form-field-associations" style="padding: 5px 4px;font-size: 14px;">
@@ -278,7 +278,7 @@
 				    </#if>-->
 
 <div class="form-group <#if isSuper==false>hidden</#if>">
-    <label class="col-sm-3 control-label no-padding-right" for="selectAssociationIds"> é€‰æ‹©åä¼š </label>
+    <label class="col-sm-3 control-label no-padding-right" for="selectAssociationIds"> Ñ¡ÔñĞ­»á </label>
 
     <div class="col-sm-9">
         <select id="selectAssociationIds" multiple="multiple" class="multiselect">${associationList}</select>
@@ -287,9 +287,9 @@
 
 <div class="space-4"></div>
 
-<!--æ—¶é—´-->
+<!--Ê±¼ä-->
 <!--<div class="form-group">
-    <label class="col-sm-3 control-label no-padding-right" for="form-field-actDate"> æ´»åŠ¨æ—¶é—´ </label>
+    <label class="col-sm-3 control-label no-padding-right" for="form-field-actDate"> »î¶¯Ê±¼ä </label>
     <div class="col-sm-3">
         <div class="input-group input-group-sm">
             <input type="text" id="form-field-actDate" class="form-control hasDatepicker"/>
@@ -300,7 +300,7 @@
     </div>
 </div>-->
 <div class="form-group">
-    <label class="col-sm-3 control-label no-padding-right" for="form-field-actDate"> æ´»åŠ¨æ—¶é—´ </label>
+    <label class="col-sm-3 control-label no-padding-right" for="form-field-actDate"> »î¶¯Ê±¼ä </label>
     <div class="col-sm-3">
         <div class="input-group">
             <input type="text" id="form-field-actDate" class="form-control hasDatepicker"/>
@@ -313,23 +313,23 @@
 
 <div class="space-4"></div>
 
-<!--åœ°ç‚¹-->
+<!--µØµã-->
 <div class="form-group">
-    <label class="col-sm-3 control-label no-padding-right" for="form-field-location"> æ´»åŠ¨åœ°ç‚¹ </label>
+    <label class="col-sm-3 control-label no-padding-right" for="form-field-location"> »î¶¯µØµã </label>
 
     <div class="col-sm-9">
-        <input type="text" id="form-field-location" placeholder="åœ°ç‚¹" class="col-xs-10 col-sm-7"
+        <input type="text" id="form-field-location" placeholder="µØµã" class="col-xs-10 col-sm-7"
                style="padding-left: 7px;"/>
     </div>
 </div>
 <div class="space-4"></div>
 
-<!--ç±»å‹-->
+<!--ÀàĞÍ-->
 <div class="form-group">
-    <label class="col-sm-3 control-label no-padding-right" for="form-field-type"> æ´»åŠ¨ç±»å‹ </label>
+    <label class="col-sm-3 control-label no-padding-right" for="form-field-type"> »î¶¯ÀàĞÍ </label>
 
     <div class="col-sm-9">
-        <input type="text" id="form-field-type" placeholder="ç±»å‹" class="col-xs-10 col-sm-7"
+        <input type="text" id="form-field-type" placeholder="ÀàĞÍ" class="col-xs-10 col-sm-7"
                style="padding-left: 7px;"/>
     </div>
 </div>
@@ -337,9 +337,9 @@
 <div class="space-4"></div>
 <div class="space-4"></div>
 
-<!--ç®€ä»‹-->
+<!--¼ò½é-->
 <div class="form-group">
-    <label class="col-sm-3 control-label no-padding-right" for="form-field-textarea-description"> æ´»åŠ¨ç®€ä»‹ </label>
+    <label class="col-sm-3 control-label no-padding-right" for="form-field-textarea-description"> »î¶¯¼ò½é </label>
 
     <div class="col-sm-9">
         <textarea id="form-field-textarea-description" class="autosize-transition col-xs-10 col-sm-7"
@@ -348,9 +348,9 @@
 </div>
 <div class="space-4"></div>
 
-<!--å®‰æ’-->
+<!--°²ÅÅ-->
 <div class="form-group">
-    <label class="col-sm-3 control-label no-padding-right" for="form-field-textarea-arrangement"> æ¦‚è¦å®‰æ’ </label>
+    <label class="col-sm-3 control-label no-padding-right" for="form-field-textarea-arrangement"> ¸ÅÒª°²ÅÅ </label>
 
     <div class="col-sm-9">
         <textarea id="form-field-textarea-arrangement" class="autosize-transition col-xs-10 col-sm-7"
@@ -359,9 +359,9 @@
 </div>
 <div class="space-4"></div>
 
-<!--è¯¦ç»†å®‰æ’-->
+<!--ÏêÏ¸°²ÅÅ-->
 <div class="form-group">
-    <label class="col-sm-3 control-label no-padding-right" for="arrangement-details"> æ—¥ç¨‹å®‰æ’ </label>
+    <label class="col-sm-3 control-label no-padding-right" for="arrangement-details"> ÈÕ³Ì°²ÅÅ </label>
 
     <div id="arrangement-details" class="col-sm-9">
         <div>
@@ -372,21 +372,21 @@
 <div class="space-4"></div>
 <div class="space-4"></div>
 
-<!--æœåŠ¡-->
+<!--·şÎñ-->
 <div class="form-group">
-    <label class="col-sm-3 control-label no-padding-right" for="ervice-info"> æœåŠ¡ä¿¡æ¯ </label>
+    <label class="col-sm-3 control-label no-padding-right" for="ervice-info"> ·şÎñĞÅÏ¢ </label>
 
     <div class="col-sm-9" id="service-info">
         <!--<textarea id="form-field-textarea-service" class="autosize-transition col-xs-10 col-sm-7"
-                  style="min-height: 140px;" placeholder="è¯·ç”¨å†’å·å’Œå›è½¦åˆ†éš”æœåŠ¡ä¿¡æ¯"></textarea>-->
+                  style="min-height: 140px;" placeholder="ÇëÓÃÃ°ºÅºÍ»Ø³µ·Ö¸ô·şÎñĞÅÏ¢"></textarea>-->
         <div><div class="icon-plus" id="icon-plus-si"></div></div>
     </div>
 </div>
 <div class="space-4"></div>
 
-<!--èµåŠ©-->
+<!--ÔŞÖú-->
 <div class="form-group">
-    <label class="col-sm-3 control-label no-padding-right" for="form-field-textarea-sponsor"> èµåŠ©ä¿¡æ¯ </label>
+    <label class="col-sm-3 control-label no-padding-right" for="form-field-textarea-sponsor"> ÔŞÖúĞÅÏ¢ </label>
 
     <div class="col-sm-9">
         <textarea id="form-field-textarea-sponsor" class="autosize-transition col-xs-10 col-sm-7"
@@ -396,9 +396,9 @@
 <div class="space-4"></div>
 <div class="space-4"></div>
 
-<!--æˆªæ­¢-->
+<!--½ØÖ¹-->
 <div class="form-group">
-    <label class="col-sm-3 control-label no-padding-right" for="form-field-dlDate"> æŠ¥åæˆªæ­¢æ—¶é—´ </label>
+    <label class="col-sm-3 control-label no-padding-right" for="form-field-dlDate"> ±¨Ãû½ØÖ¹Ê±¼ä </label>
     <div class="col-sm-3">
         <div class="input-group input-group-sm">
             <input type="text" id="form-field-dlDate" class="form-control hasDatepicker"/>
@@ -410,23 +410,23 @@
 </div>
 <div class="space-4"></div>
 
-<!--è´¹ç”¨-->
+<!--·ÑÓÃ-->
 <div class="form-group">
-    <label class="col-sm-3 control-label no-padding-right" for="form-field-fee"> æ´»åŠ¨è´¹ç”¨ </label>
+    <label class="col-sm-3 control-label no-padding-right" for="form-field-fee"> »î¶¯·ÑÓÃ </label>
 
     <div class="col-sm-9">
-        <input type="text" id="form-field-fee" placeholder="è´¹ç”¨" class="col-xs-10 col-sm-7"
+        <input type="text" id="form-field-fee" placeholder="·ÑÓÃ" class="col-xs-10 col-sm-7"
                style="padding-left: 7px;"/>
     </div>
 </div>
 <div class="space-4"></div>
 
-<!--äººæ•°é™åˆ¶-->
+<!--ÈËÊıÏŞÖÆ-->
 <div class="form-group">
-    <label class="col-sm-3 control-label no-padding-right" for="form-field-max"> äººæ•°é™åˆ¶ </label>
+    <label class="col-sm-3 control-label no-padding-right" for="form-field-max"> ÈËÊıÏŞÖÆ </label>
 
     <div class="col-sm-9">
-        <input type="text" id="form-field-max" placeholder="æœ€å¤§äººæ•°" class="col-xs-10 col-sm-7"
+        <input type="text" id="form-field-max" placeholder="×î´óÈËÊı" class="col-xs-10 col-sm-7"
                style="padding-left: 7px;"/>
     </div>
 </div>
@@ -435,7 +435,7 @@
 <div class="space-4"></div>
 
 <div class="form-group">
-    <label class="col-sm-3 control-label no-padding-right" for="form-field-imgurl"> æ ‡é¢˜å›¾ </label>
+    <label class="col-sm-3 control-label no-padding-right" for="form-field-imgurl"> ±êÌâÍ¼ </label>
 
     <div class="col-sm-9">
         <div class="col-sm-9">
@@ -449,7 +449,7 @@
 <div class="space-4"></div>
 
 <div class="form-group" style="display: none" >
-    <label class="col-sm-3 control-label no-padding-right" for="form-field-checkbox"> å¼ºæ¨é€‰é¡¹ </label>
+    <label class="col-sm-3 control-label no-padding-right" for="form-field-checkbox"> Ç¿ÍÆÑ¡Ïî </label>
 
     <div class="col-sm-9">
         <input type="checkbox" id="form-field-checkbox" >
@@ -465,20 +465,20 @@
         <button class="btn btn-success btn-purple" id="bootbox-upload-image"
                 style="font-weight:bold">
             <i class="icon-cloud-upload bigger-110"></i>
-            ä¸Šä¼ æ ‡é¢˜å›¾ç‰‡
+            ÉÏ´«±êÌâÍ¼Æ¬
         </button>
 
 
         &nbsp; &nbsp; &nbsp;
         <button class="btn btn-info" type="button" style="font-weight:bold" onclick="return false;">
             <i class="icon-ok bigger-110"></i>
-            å®Œæˆ
+            Íê³É
         </button>
 
         &nbsp; &nbsp; &nbsp;
         <button class="btn" type="reset" style="font-weight:bold" onclick="return false;">
             <i class="icon-undo bigger-110"></i>
-            æ¸…ç©º
+            Çå¿Õ
         </button>
     </div>
 </div>
@@ -640,9 +640,9 @@
             for(var i=0;i<data.details.length;i++){
                 var dtl = data.details[i];
                 var arrangementDetail = $('<div class="arrangement-detail">' +
-                        '<input type="text"  placeholder="æ—¥ç¨‹å®‰æ’æ—¶é—´" class="col-xs-10 col-sm-2 arrangement-detail-time" style="padding-left: 7px;" >' +
+                        '<input type="text"  placeholder="ÈÕ³Ì°²ÅÅÊ±¼ä" class="col-xs-10 col-sm-2 arrangement-detail-time" style="padding-left: 7px;" >' +
                         '<span style="padding:10px;float: left;"></span>' +
-                        '<input type="text"  placeholder="æ—¥ç¨‹å®‰æ’ï¼Œä¸å¡«å³ä¸ºæ­¤æ—¶é—´æ®µæ— æ´»åŠ¨å†…å®¹" class="col-xs-10 col-sm-5 arrangement-detail-content" style="padding-left: 7px;" >' +
+                        '<input type="text"  placeholder="ÈÕ³Ì°²ÅÅ£¬²»Ìî¼´Îª´ËÊ±¼ä¶ÎÎŞ»î¶¯ÄÚÈİ" class="col-xs-10 col-sm-5 arrangement-detail-content" style="padding-left: 7px;" >' +
                         '<div class="icon-remove"></div>' +
                         '</div>');
                 arrangementDetail.insertBefore($('#icon-plus-ad').parent());
@@ -661,9 +661,9 @@
                 //alert(o);
                 //alert(data.serviceInfo[o]);
                 var serviceInfo = $('<div class="service-info">' +
-                        '<input type="text" placeholder="æœåŠ¡åç§°" class="col-xs-10 col-sm-2 service-info-name" style="padding-left: 7px;" >' +
+                        '<input type="text" placeholder="·şÎñÃû³Æ" class="col-xs-10 col-sm-2 service-info-name" style="padding-left: 7px;" >' +
                         '<span style="padding:10px;float: left;"></span>' +
-                        '<input type="text" placeholder="æœåŠ¡å†…å®¹" class="col-xs-10 col-sm-5 service-info-content" style="padding-left: 7px;">' +
+                        '<input type="text" placeholder="·şÎñÄÚÈİ" class="col-xs-10 col-sm-5 service-info-content" style="padding-left: 7px;">' +
                         '<div class="icon-remove"></div>' +
                         '</div>');
                 serviceInfo.insertBefore($('#icon-plus-si').parent());
@@ -707,10 +707,10 @@
         $('#selectAssociationIds').multiselect({
             numberDisplayed:10,
             buttonClass: 'btn-link btn ',
-            selectAllText: 'å…¨é€‰',
-            selectAllValue: 'å…¨éƒ¨',
-            nonSelectedText: 'è¯·é€‰æ‹©',
-            nSelectedText: ' è¢«é€‰ä¸­äº†',
+            selectAllText: 'È«Ñ¡',
+            selectAllValue: 'È«²¿',
+            nonSelectedText: 'ÇëÑ¡Ôñ',
+            nSelectedText: ' ±»Ñ¡ÖĞÁË',
             maxHeight:400
         });
 

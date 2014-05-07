@@ -219,8 +219,8 @@ public class Activity {
 
         if (activity == null)
             params.put("got","无此活动！");
-        else if(activity.actDate != null
-         && activity.actDate.compareTo(new Date()) < 0)
+        else if(activity.beginDate != null
+         && activity.beginDate.compareTo(new Date()) < 0)
             params.put("got","old");
         else {
             params.put("got", "");
@@ -265,8 +265,8 @@ public class Activity {
 
         if (activity == null)
             params.put("got","无此活动！");
-        else if(activity.actDate != null
-                && activity.actDate.compareTo(new Date()) < 0)
+        else if(activity.beginDate != null
+                && activity.beginDate.compareTo(new Date()) < 0)
             params.put("got","old");
         else {
             params.put("got", "");
