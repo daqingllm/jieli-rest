@@ -62,7 +62,7 @@
             edittext: "",
             edittitle: "编辑选中活动",
             addtext:"",
-            addtitle: "添加一篇活动",
+            addtitle: "添加活动",
             deltext: "",
             deltitle: "删除选中活动",
             searchtext: "",
@@ -70,9 +70,9 @@
             refreshtext: "",
             refreshtitle: "Reload Grid",
             alertcap: "警告",
-            alerttext: "请先选择一条记录",
+            alerttext: "请先选择一个活动",
             viewtext: "",
-            viewtitle: ""
+            viewtitle: "查看活动"
         },
         col : {
             caption: "Select columns",

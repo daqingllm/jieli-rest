@@ -6,6 +6,7 @@ import com.jieli.activity.ActivityInfo;
 import com.jieli.activity.RelatedActivity;
 import com.jieli.activity.RelatedType;
 import com.jieli.comment.Comment;
+import com.jieli.comment.CommentUserInfoUtil;
 import com.jieli.comment.TopicType;
 import com.jieli.common.entity.ResponseEntity;
 import com.jieli.feature.help.dao.HelpDAO;
@@ -515,6 +516,8 @@ public class FeatureService {
                 responseEntity.msg = "评论不存在";
                 return Response.status(200).entity(responseEntity).build();
             }
+            comment.commentUserInfo = CommentUserInfoUtil.generate(comment.commentUserId);
+            comment.commentedUserInfo = CommentUserInfoUtil.generate(comment.commentedUserId);
             help.getTopCommentList().add(comment);
             helpDAO.save(help);
             responseEntity.code = 200;

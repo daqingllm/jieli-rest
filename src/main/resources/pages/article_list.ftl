@@ -7,11 +7,13 @@
     <!-- basic styles -->
 
     <link href="/assets/css/bootstrap.min.css" rel="stylesheet"/>
-    <link rel="stylesheet" href="/assets/css/font-awesome.min.css"/>
+    <!--<link rel="stylesheet" href="/assets/css/font-awesome.min.css"/>-->
 
-    <!--[if IE 7]>
-    <link rel="stylesheet" href="/assets/css/font-awesome-ie7.min.css"/>
-    <![endif]-->
+    <!--[if IE 7]>-->
+    <!--<link rel="stylesheet" href="/assets/css/font-awesome-ie7.min.css"/>-->
+    <!--<![endif]-->
+
+    <link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
 
     <!-- page specific plugin styles -->
 
@@ -60,7 +62,7 @@
         <div class="navbar-header pull-left">
             <a href="index.html" class="navbar-brand">
                 <small>
-                    <i class="icon-leaf"></i>
+                    <i class="fa fa-leaf"></i>
                     接力 后台管理系统
                 </small>
             </a><!-- /.brand -->
@@ -77,29 +79,13 @@
                                 ${username}
 								</span>
 
-                        <i class="icon-caret-down"></i>
+                        <i class="fa fa-caret-down"></i>
                     </a>
 
                     <ul class="user-menu pull-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
-                        <!--<li>
-                            <a href="#">
-                                <i class="icon-cog"></i>
-                                设置
-                            </a>
-                        </li>
-
-                        <li>
-                            <a href="#">
-                                <i class="icon-user"></i>
-                                个人资料
-                            </a>
-                        </li>
-
-                        <li class="divider"></li>-->
-
                         <li>
                             <a href="#" onclick="document.cookie='u=;path=/';window.location.href='/rest/baccount/login'">
-                                <i class="icon-off"></i>
+                                <i class="fa fa-power-off"></i>
                                 退出
                             </a>
                         </li>
@@ -116,185 +102,185 @@
 </div>
 
 <div class="main-container" id="main-container">
-<script type="text/javascript">
-    try {
-        ace.settings.check('main-container', 'fixed')
-    } catch (e) {
-    }
-</script>
+    <script type="text/javascript">
+        try {
+            ace.settings.check('main-container', 'fixed')
+        } catch (e) {
+        }
+    </script>
 
-<div class="main-container-inner">
-    <a class="menu-toggler" id="menu-toggler" href="#">
-        <span class="menu-text"></span>
-    </a>
+    <div class="main-container-inner">
+        <a class="menu-toggler" id="menu-toggler" href="#">
+            <span class="menu-text"></span>
+        </a>
 
-    <div class="sidebar" id="sidebar">
-        <script type="text/javascript">
-            try {
-                ace.settings.check('sidebar', 'fixed')
-            } catch (e) {
-            }
-        </script>
-
-        <div class="sidebar-shortcuts">
-            <div class="sidebar-shortcuts-large" id="sidebar-shortcuts-large">
-                <button class="btn btn-success">
-                    <i class="icon-signal" style="display: none"></i>
-                </button>
-
-                <button class="btn btn-info">
-                    <i class="icon-pencil" style="display: none"></i>
-                </button>
-
-                <button class="btn btn-warning">
-                    <i class="icon-group" style="display: none"></i>
-                </button>
-
-                <button class="btn btn-danger">
-                    <i class="icon-cogs" style="display: none"></i>
-                </button>
-            </div>
-
-            <div class="sidebar-shortcuts-mini" id="sidebar-shortcuts-mini">
-                <span class="btn btn-success"></span>
-
-                <span class="btn btn-info"></span>
-
-                <span class="btn btn-warning"></span>
-
-                <span class="btn btn-danger"></span>
-            </div>
-        </div>
-        <!-- #sidebar-shortcuts -->
-
-        <ul class="nav nav-list"  id="sidebar-shortcuts-navlist">
-
-        </ul>
-
-        <div class="sidebar-collapse" id="sidebar-collapse">
-            <i class="icon-double-angle-left" data-icon1="icon-double-angle-left" data-icon2="icon-double-angle-right"></i>
-        </div>
-    </div>
-
-    <div class="main-content">
-        <div class="breadcrumbs" id="breadcrumbs">
+        <div class="sidebar" id="sidebar">
             <script type="text/javascript">
                 try {
-                    ace.settings.check('breadcrumbs', 'fixed')
+                    ace.settings.check('sidebar', 'fixed')
                 } catch (e) {
                 }
             </script>
 
-            <ul class="breadcrumb">
-                <li>
-                    <i class="icon-home home-icon"></i>
-                    <a href="index.html">首页</a>
-                </li>
+            <div class="sidebar-shortcuts">
+                <div class="sidebar-shortcuts-large" id="sidebar-shortcuts-large">
+                    <button class="btn btn-success">
+                        <i class="fa fa-signal" style="display: none"></i>
+                    </button>
 
-                <li>
-                    <a href="#"> 资讯管理 </a>
-                </li>
+                    <button class="btn btn-info">
+                        <i class="fa fa-pencil" style="display: none"></i>
+                    </button>
 
-                <li class="active"> 资讯列表 </li>
+                    <button class="btn btn-warning">
+                        <i class="fa fa-group" style="display: none"></i>
+                    </button>
+
+                    <button class="btn btn-danger">
+                        <i class="fa fa-cogs" style="display: none"></i>
+                    </button>
+                </div>
+
+                <div class="sidebar-shortcuts-mini" id="sidebar-shortcuts-mini">
+                    <span class="btn btn-success"></span>
+
+                    <span class="btn btn-info"></span>
+
+                    <span class="btn btn-warning"></span>
+
+                    <span class="btn btn-danger"></span>
+                </div>
+            </div>
+            <!-- #sidebar-shortcuts -->
+
+            <ul class="nav nav-list"  id="sidebar-shortcuts-navlist">
+
             </ul>
-            <!-- .breadcrumb -->
 
-            <div class="nav-search" id="nav-search">
-                <form class="form-search">
+            <div class="sidebar-collapse" id="sidebar-collapse">
+                <i class="fa fa-angle-double-left" data-icon1="fa fa-angle-double-left" data-icon2="fa fa-angle-double-right"></i>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="breadcrumbs" id="breadcrumbs">
+                <script type="text/javascript">
+                    try {
+                        ace.settings.check('breadcrumbs', 'fixed')
+                    } catch (e) {
+                    }
+                </script>
+
+                <ul class="breadcrumb">
+                    <li>
+                        <i class="fa fa-home home-icon"></i>
+                        <a href="index.html">首页</a>
+                    </li>
+
+                    <li>
+                        <a href="#"> 资讯管理 </a>
+                    </li>
+
+                    <li class="active"> 资讯列表 </li>
+                </ul>
+                <!-- .breadcrumb -->
+
+                <div class="nav-search" id="nav-search">
+                    <form class="form-search">
 								<span class="input-icon">
 									<input type="text" placeholder="搜索 ..." class="nav-search-input"
                                            id="nav-search-input" autocomplete="off"/>
-									<i class="icon-search nav-search-icon"></i>
+									<i class="fa fa-search nav-search-icon" style="position: absolute;top: 1px;bottom: 1px;left: 3px;"></i>
 								</span>
-                </form>
-            </div>
-            <!-- #nav-search -->
-        </div>
-
-        <div class="page-content">
-            <div class="page-header">
-                <h1>
-                    资讯列表
-                    <small>
-                        <i class="icon-double-angle-right"></i>
-                        请先选中目标资讯再点击编辑，预览或者删除按钮
-                    </small>
-                </h1>
-            </div>
-            <!-- /.page-header -->
-
-            <div class="row">
-                <div class="col-xs-12">
-                    <!-- PAGE CONTENT BEGINS -->
-                    <table id="grid-table"></table>
-                    <div id="grid-pager"></div>
+                    </form>
                 </div>
-                <!-- /.col -->
+                <!-- #nav-search -->
             </div>
-            <!-- /.row -->
 
-            <div id="dialog-message-preview" class="hide">
-            </div><!-- #dialog-message -->
-
-        </div>
-        <!-- /.page-content -->
-    </div>
-    <!-- /.main-content -->
-
-    <div class="ace-settings-container" id="ace-settings-container">
-        <div class="btn btn-app btn-xs btn-warning ace-settings-btn" id="ace-settings-btn">
-            <i class="icon-cog bigger-150"></i>
-        </div>
-
-        <div class="ace-settings-box" id="ace-settings-box">
-            <div>
-                <div class="pull-left">
-                    <select id="skin-colorpicker" class="hide">
-                        <option data-skin="default" value="#438EB9">#438EB9</option>
-                        <option data-skin="skin-1" value="#222A2D">#222A2D</option>
-                        <option data-skin="skin-2" value="#C6487E">#C6487E</option>
-                        <option data-skin="skin-3" value="#D0D0D0">#D0D0D0</option>
-                    </select>
+            <div class="page-content">
+                <div class="page-header">
+                    <h1>
+                        资讯列表
+                        <small>
+                            <i class="fa fa-angle-double-right"></i>
+                            请先选中目标资讯再点击编辑，预览或者删除按钮
+                        </small>
+                    </h1>
                 </div>
-                <span>&nbsp; Choose Skin</span>
+                <!-- /.page-header -->
+
+                <div class="row">
+                    <div class="col-xs-12">
+                        <!-- PAGE CONTENT BEGINS -->
+                        <table id="grid-table"></table>
+                        <div id="grid-pager"></div>
+                    </div>
+                    <!-- /.col -->
+                </div>
+                <!-- /.row -->
+
+                <div id="dialog-message-preview" class="hide">
+                </div><!-- #dialog-message -->
+
+            </div>
+            <!-- /.page-content -->
+        </div>
+        <!-- /.main-content -->
+
+        <div class="ace-settings-container" id="ace-settings-container">
+            <div class="btn btn-app btn-xs btn-warning ace-settings-btn" id="ace-settings-btn">
+                <i class="fa fa-cog bigger-150"></i>
             </div>
 
-            <div>
-                <input type="checkbox" class="ace ace-checkbox-2" id="ace-settings-navbar"/>
-                <label class="lbl" for="ace-settings-navbar"> Fixed Navbar</label>
-            </div>
+            <div class="ace-settings-box" id="ace-settings-box">
+                <div>
+                    <div class="pull-left">
+                        <select id="skin-colorpicker" class="hide">
+                            <option data-skin="default" value="#438EB9">#438EB9</option>
+                            <option data-skin="skin-1" value="#222A2D">#222A2D</option>
+                            <option data-skin="skin-2" value="#C6487E">#C6487E</option>
+                            <option data-skin="skin-3" value="#D0D0D0">#D0D0D0</option>
+                        </select>
+                    </div>
+                    <span>&nbsp; Choose Skin</span>
+                </div>
 
-            <div>
-                <input type="checkbox" class="ace ace-checkbox-2" id="ace-settings-sidebar"/>
-                <label class="lbl" for="ace-settings-sidebar"> Fixed Sidebar</label>
-            </div>
+                <div>
+                    <input type="checkbox" class="ace ace-checkbox-2" id="ace-settings-navbar"/>
+                    <label class="lbl" for="ace-settings-navbar"> Fixed Navbar</label>
+                </div>
 
-            <div>
-                <input type="checkbox" class="ace ace-checkbox-2" id="ace-settings-breadcrumbs"/>
-                <label class="lbl" for="ace-settings-breadcrumbs"> Fixed Breadcrumbs</label>
-            </div>
+                <div>
+                    <input type="checkbox" class="ace ace-checkbox-2" id="ace-settings-sidebar"/>
+                    <label class="lbl" for="ace-settings-sidebar"> Fixed Sidebar</label>
+                </div>
 
-            <div>
-                <input type="checkbox" class="ace ace-checkbox-2" id="ace-settings-rtl"/>
-                <label class="lbl" for="ace-settings-rtl"> Right To Left (rtl)</label>
-            </div>
+                <div>
+                    <input type="checkbox" class="ace ace-checkbox-2" id="ace-settings-breadcrumbs"/>
+                    <label class="lbl" for="ace-settings-breadcrumbs"> Fixed Breadcrumbs</label>
+                </div>
 
-            <div>
-                <input type="checkbox" class="ace ace-checkbox-2" id="ace-settings-add-container"/>
-                <label class="lbl" for="ace-settings-add-container">
-                    Inside
-                    <b>.container</b>
-                </label>
+                <div>
+                    <input type="checkbox" class="ace ace-checkbox-2" id="ace-settings-rtl"/>
+                    <label class="lbl" for="ace-settings-rtl"> Right To Left (rtl)</label>
+                </div>
+
+                <div>
+                    <input type="checkbox" class="ace ace-checkbox-2" id="ace-settings-add-container"/>
+                    <label class="lbl" for="ace-settings-add-container">
+                        Inside
+                        <b>.container</b>
+                    </label>
+                </div>
             </div>
         </div>
+        <!-- /#ace-settings-container -->
     </div>
-    <!-- /#ace-settings-container -->
-</div>
-<!-- /.main-container-inner -->
+    <!-- /.main-container-inner -->
 
-<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
-    <i class="icon-double-angle-up icon-only bigger-110"></i>
-</a>
+    <a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
+        <i class="fa fa-angle-double-up icon-only bigger-110"></i>
+    </a>
 </div>
 <!-- /.main-container -->
 
@@ -387,16 +373,18 @@ $.widget("ui.dialog", $.extend({}, $.ui.dialog.prototype, {
 
 jQuery(function ($) {
 <#if isSuper>
-    $("#sidebar-shortcuts-navlist").load("/sidebar_super.html",function(){$("#nav_list_2_1").addClass("active open");$("#nav_list_2").addClass("active");});
+    $("#sidebar-shortcuts-navlist").load("/sidebar_super.html",function(){$("#nav_list_2_1").addClass("active open");$("#nav_list_2").addClass("active");
+        $("#nav_list_2_1 i").css({"position":"absolute","left":"10px","top":"11px","font-size":"12px","width":"18px","text-align":"center","color":"#c86139","display":"inline"});});
 <#else>
-    $("#sidebar-shortcuts-navlist").load("/sidebar_admin.html",function(){$("#nav_list_2_1").addClass("active open");$("#nav_list_2").addClass("active");});
+    $("#sidebar-shortcuts-navlist").load("/sidebar_admin.html",function(){$("#nav_list_2_1").addClass("active open");$("#nav_list_2").addClass("active");
+        $("#nav_list_2_1 i").css({"position":"absolute","left":"10px","top":"11px","font-size":"12px","width":"18px","text-align":"center","color":"#c86139","display":"inline"});});
 </#if>
     var colorbox_params = {
         reposition: true,
         scalePhotos: true,
         scrolling: false,
-        previous: '<i class="icon-arrow-left"></i>',
-        next: '<i class="icon-arrow-right"></i>',
+        previous: '<i class="fa fa-arrow-left"></i>',
+        next: '<i class="fa fa-arrow-right"></i>',
         close: '&times;',
         current: '{current} of {total}',
         maxWidth: '100%',
@@ -413,7 +401,7 @@ jQuery(function ($) {
     };
 
     $('.ace-thumbnails [data-rel="colorbox"]').colorbox(colorbox_params);
-    $("#cboxLoadingGraphic").append("<i class='icon-spinner orange'></i>");//let's add a custom loading icon
+    $("#cboxLoadingGraphic").append("<i class='fa fa-spinner orange'></i>");//let's add a custom loading icon
 
     /**$(window).on('resize.colorbox', function() {
 					try {
@@ -451,7 +439,7 @@ function parseArtData(data){
 
         data[i].addTime = nowStr;
 
-        data[i].content = data[i].overview;
+        //data[i].content = data[i].overview;
     }
     return data;
 }
@@ -467,10 +455,10 @@ function updateActionIcons(table) {
 function updatePagerIcons(table) {
     var replacement =
     {
-        'ui-icon-seek-first' : 'icon-double-angle-left bigger-140',
-        'ui-icon-seek-prev' : 'icon-angle-left bigger-140',
-        'ui-icon-seek-next' : 'icon-angle-right bigger-140',
-        'ui-icon-seek-end' : 'icon-double-angle-right bigger-140'
+        'ui-icon-seek-first' : 'fa fa-angle-double-left bigger-140',
+        'ui-icon-seek-prev' : 'fa fa-angle-left bigger-140',
+        'ui-icon-seek-next' : 'fa fa-angle-right bigger-140',
+        'ui-icon-seek-end' : 'fa fa-angle-double-right bigger-140'
     };
     $('.ui-pg-table:not(.navtable) > tbody > tr > .ui-pg-button > .ui-icon').each(function(){
         var icon = $(this);
@@ -507,16 +495,17 @@ jQuery(function($) {
         data: grid_data,
         datatype: "local",
         height: 490,
-        colNames:['_id','协会','资讯标题','资讯类型', '资讯内容', '添加日期', '图片数量', '点赞数量'],
+        colNames:['_id','协会','资讯标题','资讯类型', '资讯内容', '添加日期', '图片数量', '点赞数量','资讯内容html'],
         colModel:[
             {name:"_id",index:"_id",width:10,editable:false,hidden:true},
             {name:"associationId",index:"associationId",width:40,editable:false<#if isSuper><#else>,hidden:true</#if>},
             {name:"title",index:"title",width:"100",editable:false},
             {name:"type",index:"type",width:"45",editable:false},
-            {name:"content",index:"content",width:"330",editable:false},
+            {name:"overview",index:"overview",width:"330",editable:false},
             {name:"addTime",index:"addTime",width:"120",editable:false,sorttype:"date"},
             {name:"imagesCount",index:"imagesCount",width:"40",editable:false},
-            {name:"appreciateCount",index:"appreciateCount",width:"40",editable:false}
+            {name:"appreciateCount",index:"appreciateCount",width:"40",editable:false},
+            {name:"content",index:"content",width:"4000",hidden:true}
         ],
         viewrecords : true,
         rowNum:15,
@@ -546,11 +535,11 @@ jQuery(function($) {
     jQuery(grid_selector).jqGrid('navGrid',pager_selector,
             { 	//navbar options
                 add: true,
-                addicon : 'icon-plus-sign purple',
+                addicon : 'fa fa-plus-circle purple',
                 addfunc : (function(){window.location.href="/rest/bnews/new";/*alert("添加操作!");*/return false;}),
 
                 edit: true,
-                editicon : 'icon-pencil blue',
+                editicon : 'fa fa-pencil blue',
                 editfunc : (function(){
                     var id = $("#grid-table").getGridParam("selrow");
                     if (id) id=$("#grid-table > tbody > tr").eq(id).find("td").eq(1).attr("title");
@@ -559,7 +548,7 @@ jQuery(function($) {
                 }),
 
                 del: true,
-                delicon : 'icon-trash red',
+                delicon : 'fa fa-trash-o red',
                 delfunc : (function(){/*alert("删除操作!");*/
                     var id = $("#grid-table").getGridParam("selrow");
                     if (id) id=$("#grid-table > tbody > tr").eq(id).find("td").eq(1).attr("title");
@@ -581,7 +570,7 @@ jQuery(function($) {
                 }),
 
                 search: true,
-                searchicon : 'icon-search orange',
+                searchicon : 'fa fa-search orange',
                 searchfunc: (function(){
                     var id = $("#grid-table").getGridParam("selrow");
                     if (id) id=$("#grid-table > tbody > tr").eq(id).find("td").eq(1).attr("title");
@@ -592,11 +581,12 @@ jQuery(function($) {
                 refresh: false,
 
                 view: true,
-                viewicon : 'icon-zoom-in grey',
+                viewicon : 'fa fa-search-plus grey',
                 viewfunc: (function(){previewThisArticle();/*alert("预览操作!");*/return false;})
             }
     );
 
+    $("#grid-pager_left .ui-state-disabled").remove();
 
     $(".ui-jqgrid-htable").css("font-family","微软雅黑");
 

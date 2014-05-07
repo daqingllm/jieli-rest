@@ -2,7 +2,11 @@
 <html lang="zh">
 <head>
     <meta charset="utf-8"/>
+<#if ctype=="news">
     <title>接力 资讯管理</title>
+<#elseif ctype=="activity">
+    <title>接力 活动管理</title>
+</#if>
     <meta name="description" content="接力"/>
     <!-- basic styles -->
 
@@ -81,22 +85,6 @@
                     </a>
 
                     <ul class="user-menu pull-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
-                        <!--<li>
-                            <a href="#">
-                                <i class="icon-cog"></i>
-                                设置
-                            </a>
-                        </li>
-
-                        <li>
-                            <a href="#">
-                                <i class="icon-user"></i>
-                                个人资料
-                            </a>
-                        </li>
-
-                        <li class="divider"></li>-->
-
                         <li>
                             <a href="#" onclick="document.cookie='u=;path=/';window.location.href='/rest/baccount/login'">
                                 <i class="icon-off"></i>
@@ -191,11 +179,17 @@
                         <a href="index.html">首页</a>
                     </li>
 
+                <#if ctype=="news">
+                    <li>
+                        <a href="#"> 资讯管理 </a>
+                    </li>
+                <#elseif ctype=="activity">
                     <li>
                         <a href="#"> 活动管理 </a>
                     </li>
+                </#if>
 
-                    <li class="active"> 活动列表 </li>
+                    <li class="active"> 评论列表 </li>
                 </ul>
                 <!-- .breadcrumb -->
 
@@ -214,11 +208,14 @@
             <div class="page-content">
                 <div class="page-header">
                     <h1>
-                        活动列表
+                        评论列表
+                        <#if topicTitle?length==0>
+                        <#else>
                         <small>
-                            <i class="icon-double-angle-right"></i>
-                            请先选中目标资讯再点击编辑或者删除按钮
+                            <i class="icon-double-angle-right" style="margin-left:10px;margin-right:10px;"></i>
+                            "${topicTitle}" 的评论
                         </small>
+                        </#if>
                     </h1>
                 </div>
                 <!-- /.page-header -->
@@ -330,7 +327,7 @@
 <script src="/assets/js/jquery.colorbox-min.js"></script>
 <script src="/assets/js/date-time/bootstrap-datepicker.min.js"></script>
 <script src="/assets/js/jqGrid/jquery.jqGrid.min.js"></script>
-<script src="/assets/js/jqGrid/i18n/grid.locale-zh-act.js"></script>
+<script src="/assets/js/jqGrid/i18n/grid.locale-zh-art-cmt.js"></script>
 
 
 <!--[if lte IE 8]>
@@ -356,6 +353,8 @@
 <script src="/assets/js/bootbox.min.js"></script>
 -->
 
+<script src="/assets/js/bootbox.min.js"></script>
+
 <!-- ace scripts -->
 
 <script src="/assets/js/ace-elements.min.js"></script>
@@ -365,11 +364,25 @@
 
 <script type="text/javascript">
 jQuery(function ($) {
-    <#if isSuper>
-        $("#sidebar-shortcuts-navlist").load("/sidebar_super.html",function(){$("#nav_list_3_1").addClass("active open");$("#nav_list_3").addClass("active");});
-    <#else>
-        $("#sidebar-shortcuts-navlist").load("/sidebar_admin.html",function(){$("#nav_list_3_1").addClass("active open");$("#nav_list_3").addClass("active");});
-    </#if>
+
+<#if isSuper>
+    $("#sidebar-shortcuts-navlist").load("/sidebar_super.html",function(){
+        <#if ctype=="news">
+            $("#nav_list_2").addClass("active");
+        <#elseif ctype=="activity">
+            $("#nav_list_3").addClass("active");
+        </#if>
+    });
+<#else>
+    $("#sidebar-shortcuts-navlist").load("/sidebar_admin.html",function(){
+        <#if ctype=="news">
+            $("#nav_list_2").addClass("active");
+        <#elseif ctype=="activity">
+            $("#nav_list_3").addClass("active");
+        </#if>
+    });
+</#if>
+
     var colorbox_params = {
         reposition: true,
         scalePhotos: true,
@@ -417,6 +430,25 @@ Date.prototype.Format = function (fmt) { //author: meizz
         if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
     return fmt;
 }
+
+function parseArtData(data){
+    for (var i = 0 ; i < data.length; i++){
+        //data[i].state = states[data[i].state];
+        if (data[i].commentUserInfo) data[i].commentUserId_Name = data[i].commentUserInfo.name || "无名";
+        else data[i].commentUserId_Name = "无名";
+
+        if (data[i].commentedUserInfo) data[i].commentedUserId_Name = data[i].commentedUserInfo.name || "无名";
+        else data[i].commentedUserId_Name = "无被评论人";
+
+        var adt = data[i].addTime;
+        var now = new Date();now.setTime(adt);
+        var nowStr = now.Format("yyyy-MM-dd hh:mm:ss");
+
+        data[i].addTime = nowStr;
+    }
+    return data;
+}
+
 
 //it causes some flicker when reloading or navigating grid
 //it may be possible to have some custom formatter to do this as the grid is being created to prevent this
@@ -471,69 +503,47 @@ function updatePagerIcons(table) {
     })
 }
 
-function parseActData(data){
-    var types = {"OFFICIAL":"官方活动","RECOMMEND":"推荐活动"};
-    for (var i = 0 ; i < data.length; i++){
-        data[i].tag = types[data[i].tag];
-        if (data[i].beginDate == "" ||data[i].beginDate == null){
-            data[i].beginDate = "";
-        }else {
-            data[i].beginDate = data[i].beginDate.substr(0,10);
-        }
-        //data[i].content = data[i].overview;
-        //data[i].content = data[i].content.substr(0,30);
-
-        //var re = new  RegExp("\\u0022","g");
-        //data[i].content = data[i].content.replace(re,"\"");
-        //re = new RegExp("\\u0027","g");
-        //data[i].content = data[i].content.replace(re,"'");
-    }
-    return data;
-}
-
 function enableTooltips(table) {
     $('.navtable .ui-pg-button').tooltip({container:'body'});
     $(table).find('.ui-pg-div').tooltip({container:'body'});
 }
 
-var total = "??";
-var records = ${ti};
-var page = ${cp};
-
 jQuery(function($) {
-    var raw_data_test = [
-        {_id:1,associationId:"sh",title:"测试1",type:"读书会",tag:"OFFICIAL",description:"测试内容1",beginDate:"20140203T12:13:14.443GMT0+800"},
-        {_id:2,associationId:"bj",title:"测试2",type:"运动",tag:"RECOMMEND",description:"测试内容2",beginDate:"20140203T12:13:14.443GMT0+800"}
-    ];
+    var raw_data = [];
 
-    /* init page data !*/
-    var raw_data = ${activityList};
+    //raw_data.empty();
+    raw_data = ${jsonCommentList};
+    var artid = "${topicId}";
 
-    var grid_data = parseActData(raw_data);
+    var grid_data = parseArtData(raw_data);
+    //var grid_data = raw_data;
 
     var grid_selector = "#grid-table";
     var pager_selector = "#grid-pager";
 
+    var h = 810-160;
+    if (grid_data.length < 20) h = 160/5*grid_data.length+10;
+    if (h < 330) h = 330;
+
     jQuery(grid_selector).jqGrid({
         data: grid_data,
         datatype: "local",
-        height: 490,
-        colNames:['_id','协会','活动名称','活动种类','活动类型', '活动简介', '报名截止日期'],
+        height: h,
+        colNames:['_id','评论人','被评论人','评论时间','评论内容'],
         colModel:[
-            {name:"_id",index:"_id",width:10,editable:false,hidden:true},
-            {name:"associationId",index:"associationId",width:40,editable:false<#if isSuper><#else>,hidden:true</#if>},
-            {name:"title",index:"title",width:"100",editable:false},
-            {name:"tag",index:"tag",width:"45",editable:false},
-            {name:"type",index:"type",width:"45",editable:false},
-            {name:"description",index:"description",width:"330",editable:false},
-            {name:"beginDate",index:"beginDate",width:"120",editable:false,sorttype:"date"}
+            {name:"_id",index:"_id",width:"10",editable:false,hidden:true},
+            {name:"commentUserId_Name",index:"commentUserId_Name",width:"60",editable:false},
+            {name:"commentedUserId_Name",index:"commentedUserId_Name",width:"60",editable:false},
+            {name:"addTime",index:"addTime",width:"60",editable:false},
+            {name:"content",index:"content",width:"260",editable:false}
         ],
         viewrecords : true,
-        rowNum: 15,
+        rowNum:20,
         pager : pager_selector,
         altRows: true,
         multiselect: true,
         multiboxonly: true,
+
         loadComplete : function() {
             var table = this;
             setTimeout(function(){
@@ -545,130 +555,86 @@ jQuery(function($) {
             }, 0);
         },
 
-        caption: "在这里编辑或删除活动",
-        autowidth: true,
-        onPaging: function(pgButton){item_select('',pgButton);}
+        caption: "如果想要删除评论，请选中后点击下方删除按钮（垃圾箱）",
+        autowidth: true
     });
-
 
     jQuery(grid_selector).jqGrid('navGrid',pager_selector,
             { 	//navbar options
                 add: true,
                 addicon : 'icon-plus-sign purple',
-                addfunc : (function(){window.location.href="/rest/bactivity/new";/*alert("添加操作!");*/return false;}),
+                addfunc : (function(){
+                    var uname = "";
+                    var assid = "";
+                    var cmt = {};
+                    bootbox.prompt("请输入评论内容：", function(result) {
+                        // 这里不改状态
+                        if (result !== null) {
+                            if (result.length == 0) ;
+                            else{
+                                cmt.commentedUserId = "";
+                                cmt.content = result;
+                                cmt.topicId = artid;
 
-                edit: true,
-                editicon : 'icon-pencil blue',
-                editfunc : (function(){
-                    var id = $("#grid-table").getGridParam("selrow");
-                    id=$("#grid-table > tbody > tr").eq(id).find("td").eq(1).attr("title");
+                                var id = $("#grid-table").getGridParam("selrow");
+                                if (id) id=$("#grid-table > tbody > tr").eq(id).find("td").eq(1).attr("title");
+                                if (!id || id.length == 0) ;
+                                else cmt.commentedUserId = id;
 
-                    if (!id || id.length == 0) alert("请先选择一个活动");
-                    else window.location.href = '/rest/bactivity/edit?actid='+id;
+                                $.ajax({
+                                    type:"POST",
+                                <#if ctype=="news">
+                                    url:"/rest/news/comment",
+                                <#elseif ctype=="activity">
+                                    url:"/rest/activity/comment",
+                                </#if>
+                                    async:false,
+                                    data:JSON.stringify(cmt),
+                                    contentType:"application/json; charset=utf-8",
+                                    success:function(jsn){
+                                        if (jsn.code==200) {alert("已添加评论");window.location.reload();}
+                                        else alert("添加评论失败："+jsn.msg);
+                                    }
+                                });
+                            }
+                        }
+                    });
                 }),
+
+                edit: false,
 
                 del: true,
                 delicon : 'icon-trash red',
-                delfunc : (function(){/*alert("删除操作!");*/
-                    if (!confirm("确认删除选中的活动?")){
-                        return false;
-                    }
+                delfunc : (function(){
 
-                    var id = $("#grid-table").getGridParam("selrow");
-                    id=$("#grid-table > tbody > tr").eq(id).find("td").eq(1).attr("title");
-
-                    if (!id || id.length == 0) alert("请先选择一个活动");
-                    else
-                    $.ajax({
-                        url:"/rest/bactivity/del?actid="+id,
-                        type:"POST",
-                        success:function(data){
-                            alert(data.msg);
-                            window.location.reload();
-                        }
-                    });
-                    return false;
-                }),
-
-                search: true,
-                searchicon : 'icon-search orange',
-                searchfunc: (function(){
                     var id = $("#grid-table").getGridParam("selrow");
                     if (id) id=$("#grid-table > tbody > tr").eq(id).find("td").eq(1).attr("title");
-                    if (!id || id.length == 0) alert("请先选择一个活动");
-                    else window.location.href = '/rest/bactivity/comment?actid='+id;
+                    if (!id || id.length == 0) return;
+
+                    if(confirm("确认删除选中的评论？")){
+                        $.ajax({
+                            type:"GET",
+                            url:"/rest/comment/delete?commentId="+id,
+                            async:true,
+                            contentType:"application/json; charset=utf-8",
+                            success:function(jsn){
+                                if(jsn.code==200) {alert("删除成功");window.location.reload();}
+                                else alert("删除失败："+jsn.msg);
+                            }
+                        });
+                    }
                 }),
 
+                search: false,
                 refresh: false,
 
-                view: true,
-                viewicon : 'icon-zoom-in grey',
-                viewfunc: (function(){
-                    var id = $("#grid-table").getGridParam("selrow");
-                    if (id) id=$("#grid-table > tbody > tr").eq(id).find("td").eq(1).attr("title");
-                    if (!id || id.length == 0) alert("请先选择一个活动");
-                    else window.location.href = '/rest/bactivity/view?actid='+id;
-                })
+                view: false
             }
     );
 
+
     $(".ui-jqgrid-htable").css("font-family","微软雅黑");
-
-    $("#grid-pager_left .ui-state-disabled").remove();
-
-    $(".ui-paging-info").html("共有"+records+"条记录");
-    $("#sp_1_grid-pager").html(total);
-    $(".ui-pg-input").val(page);
-    $(".ui-pg-input").bind('keypress',function(event){
-        if (event.keyCode=='13'){
-            var v_input = $(".ui-pg-input").val();
-            try{
-                if (parseInt(v_input) > 0 && parseInt(v_input) <= total) {
-                    var str = "rowNum=${rowNum}&";
-                    str += "page="+parseInt(v_input);
-                    window.location.href = "/rest/bactivity/list?rowNum="+str;
-                }
-            }catch (e){
-                alert("请输入有效的页数！");
-            }
-        }
-    });
-
-    $("#first_grid-pager").removeClass("ui-state-disabled");
-    $("#last_grid-pager").removeClass("ui-state-disabled");
-    $("#prev_grid-pager").removeClass("ui-state-disabled");
-    $("#next_grid-pager").removeClass("ui-state-disabled");
 });
-
-function item_select(o,pgButton){
-    switch (pgButton) {
-        case 'first_grid-pager' :
-            page = 1;
-            break;
-        case 'last_grid-pager' :
-            page = total;
-            break;
-        case 'prev_grid-pager' :
-            page = page - 1;
-            break;
-        case 'next_grid-pager' :
-            page = page + 1;
-            break;
-        default  :
-            break;
-    }
-
-    if (pgButton == 'next_grid-pager' && records < 15)
-    {page = page - 1;return false;}
-
-    if (page == 0)
-    {page = 1; return false;}
-
-    var str = "rowNum=${rowNum}&";
-    str += "page="+page;
-
-    window.location.href = "/rest/bactivity/list?" + str;
-}
 
 jQuery(function ($) {
     $('[data-rel=tooltip]').tooltip({container: 'body'});
@@ -680,9 +646,7 @@ jQuery(function ($) {
     $('.date-picker').datepicker({autoclose: true}).next().on(ace.click_event, function () {
         $(this).prev().focus();
     });
-    /*$('input[name=date-range-picker]').daterangepicker().prev().on(ace.click_event, function () {
-        $(this).next().focus();
-    });*/
+
 
     //chosen plugin inside a modal will have a zero width because the select element is originally hidden
     //and its width cannot be determined.
