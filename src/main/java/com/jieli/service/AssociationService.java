@@ -16,7 +16,7 @@ import org.codehaus.jettison.json.JSONObject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -163,7 +163,7 @@ public class AssociationService {
         }
 
         Iterable<Identify> identifies = identifyDAO.loadAll(associationId);
-        Map<String, Iterable<User>> result = new HashMap<String, Iterable<User>>();
+        Map<String, Iterable<User>> result = new LinkedHashMap<String, Iterable<User>>();
         for (Identify identify : identifies) {
             Iterable<User> users = userDAO.loadByIdentify(associationId, identify.name);
             result.put(identify.name, users);

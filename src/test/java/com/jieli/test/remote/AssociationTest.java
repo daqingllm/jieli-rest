@@ -48,4 +48,13 @@ public class AssociationTest {
 
         System.out.println(response.returnContent().asString());
     }
+
+    @Test
+    public void testOrg() throws IOException {
+        Response response = Request.Get("http://162.243.151.219:8080/rest/association/organization")
+                .addHeader("Cookie", "u=5348210be4b00b2ae52d3f5c")
+                .execute();
+
+        System.out.println(response.returnContent().asString());
+    }
 }

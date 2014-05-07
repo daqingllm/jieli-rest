@@ -38,4 +38,13 @@ public class AssociationTest {
         association.name = "上海";
         System.out.println(new ObjectMapper().writeValueAsString(association));
     }
+
+    @Test
+    public void testOrg() throws IOException {
+        Response response = Request.Get("http://localhost:8080/rest/association/organization")
+                .addHeader("Cookie", "u=533c07a1ef86c7014c36fa31")
+                .execute();
+
+        System.out.println(response.returnContent().asString());
+    }
 }
