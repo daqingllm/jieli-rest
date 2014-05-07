@@ -1,5 +1,6 @@
 package com.jieli.test.http.yolanda;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jieli.feature.help.entity.HelpInfo;
 import com.jieli.feature.vote.entity.Vote;
@@ -7,6 +8,7 @@ import com.jieli.feature.vote.entity.VoteInfo;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.client.fluent.Response;
 import org.apache.http.entity.ContentType;
+import org.bson.types.ObjectId;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -42,14 +44,14 @@ public class FeatureTest {
     public void addHelpInfo() throws IOException {
         HelpInfo helpInfo = new HelpInfo();
         helpInfo.setAssociationId("5337af643004e0056052bd5a");
-        helpInfo.setTitle("求陪吃饭");
-        helpInfo.setContent("我想去吃西贝，有木有人一起，今天晚饭");
+        helpInfo.setTitle("学车");
+        helpInfo.setContent("请大家推荐我学车的驾校，靠谱的！");
         helpInfo.setAddTime(new Date());
         helpInfo.setType(0);
         helpInfo.isEmergency = true;
         ObjectMapper mapper = new ObjectMapper();
         Response response = Request.Post("http://localhost:8080/rest/feature/help/add")
-                .setHeader("Cookie", "u=5336bbe13004cc09f49432e7")
+                .setHeader("Cookie", "u=536751123004959582a675e0")
                 .bodyString(mapper.writeValueAsString(helpInfo), ContentType.APPLICATION_JSON)
                 .execute();
         System.out.println(response.returnContent().asString());
@@ -177,5 +179,28 @@ public class FeatureTest {
                 .addHeader("Cookie", "u=536751603004959582a675e2")
                 .execute();
         System.out.println(response.returnContent().asString());
+    }
+
+    @Test
+    public void updateHelp() throws IOException {
+        HelpInfo helpInfo = new HelpInfo();
+        helpInfo.setContent("有人一起吃晚饭么");
+        //helpInfo.set_id(new ObjectId("534f9b8f3004055aeb46f7b3"));
+        ObjectMapper mapper = new ObjectMapper();
+        String tmp = mapper.writeValueAsString(helpInfo);
+        System.out.println(tmp);
+        Response response = Request.Post("http://localhost:8080/rest/feature/help/update?helpId=534f9b8f3004055aeb46f7b3")
+                .addHeader("Cookie", "u=5368362b300489f533d2a77d")
+                .bodyString(tmp, ContentType.APPLICATION_JSON)
+                .execute();
+        System.out.println(response.returnContent().asString());
+    }
+
+    @Test
+    public void findHelpDynamic() throws IOException {
+        Response response = Request.Get("http://localhost:8080/rest/feature/help/self?page=1&size=10")
+                .addHeader("Cookie", "u=536751123004959582a675e0")
+                .execute();
+        System.out.println(response.returnContent());
     }
 }

@@ -1,5 +1,7 @@
 package com.jieli.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jieli.activity.ActivityInfo;
 import com.jieli.activity.RelatedActivity;
 import com.jieli.activity.RelatedType;
@@ -190,19 +192,19 @@ public class FeatureService {
     @Path("/help/update")
     @POST
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-    public Response updateHelpInfo(@CookieParam("u") String sessionId, HelpInfo newHelp) {
+    public Response updateHelpInfo(@CookieParam("u") String sessionId, @QueryParam("helpId")String helpId, HelpInfo newHelp) {
         if(!IdentifyUtils.isValidate(sessionId)) {
             return Response.status(403).build();
         }
         ResponseEntity responseEntity = new ResponseEntity();
-        if(newHelp == null) {
+        if(newHelp == null || helpId == null) {
             responseEntity.code = 1101;
             responseEntity.msg = "缺少参数";
             return Response.status(200).entity(responseEntity).build();
         }
         String userId = IdentifyUtils.getUserId(sessionId);
-        HelpInfo oldHelp = helpDAO.loadById(newHelp.get_id().toString());
-        if(!oldHelp.getUserId().equals(userId) || !IdentifyUtils.isAdmin(sessionId)) {
+        HelpInfo oldHelp = helpDAO.loadById(helpId);
+        if(!oldHelp.getUserId().equals(userId) && !IdentifyUtils.isAdmin(sessionId)) {
             responseEntity.code = 1403;
             responseEntity.msg = "非自己互帮互助帖，不能修改";
             return Response.status(200).entity(responseEntity).build();
@@ -218,7 +220,7 @@ public class FeatureService {
         }
         helpDAO.save(oldHelp);
         responseEntity.code = 200;
-        responseEntity.body = oldHelp.get_id();
+        responseEntity.body = "{\"_id\":\"" + oldHelp.get_id() + "\"}";
         return Response.status(200).entity(responseEntity).build();
     }
 
