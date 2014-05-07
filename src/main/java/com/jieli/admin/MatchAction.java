@@ -200,6 +200,7 @@ public class MatchAction {
             display.userFace2 = user2.userFace;
             display.score = match.score;
             display.infos = match.matchInfos;
+            display.infos.add("test");
             results.add(display);
         }
         params.put("displayList", results);
