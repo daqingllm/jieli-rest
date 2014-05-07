@@ -565,9 +565,9 @@
 
     jQuery(function ($) {
         <#if isSuper>
-            $("#sidebar-shortcuts-navlist").load("/sidebar_super.html",function(){$("#nav_list_2_3").addClass("active open");$("#nav_list_2").addClass("active");});
+            $("#sidebar-shortcuts-navlist").load("/sidebar_super.html",function(){/*$("#nav_list_2_3").addClass("active open");*/$("#nav_list_2").addClass("active");});
         <#else>
-            $("#sidebar-shortcuts-navlist").load("/sidebar_admin.html",function(){$("#nav_list_2_3").addClass("active open");$("#nav_list_2").addClass("active");});
+            $("#sidebar-shortcuts-navlist").load("/sidebar_admin.html",function(){/*$("#nav_list_2_3").addClass("active open");*/$("#nav_list_2").addClass("active");});
         </#if>
 
         $('#selectAssociationIds').multiselect({

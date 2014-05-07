@@ -66,7 +66,7 @@
             deltext: "",
             deltitle: "删除选中资讯",
             searchtext: "",
-            searchtitle: "Find records",
+            searchtitle: "评论列表",
             refreshtext: "",
             refreshtitle: "Reload Grid",
             alertcap: "警告",

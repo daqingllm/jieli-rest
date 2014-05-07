@@ -217,14 +217,15 @@ public class News {
         String interestOptionList = "";
         String professionOptionList = "";
 
-        boolean b1 = associationId.equals("undefined");
-        boolean b2 = PasswordGenerator.md5Encode(AccountState.SUPPER+"").equals(role);
+        //boolean b1 = associationId.equals("undefined");
+        //boolean b2 = PasswordGenerator.md5Encode(AccountState.SUPPER+"").equals(role);
 
-        if (b1 && b2) {
+        //if (b1 && b2) {
+        if (IdentifyUtils.isSuper(sessionId)){
             isSuper = true;
             assIdOptionList = CommonUtil.MakeAssociationOptionListForSelect("");
         }else {
-            assIdOptionList = CommonUtil.MakeAssociationOptionListForSelect(associationId);
+            assIdOptionList = CommonUtil.MakeAssociationOptionListForSelect(IdentifyUtils.getAssociationId(sessionId));
         }
         interestOptionList = CommonUtil.MakeInterestOptionList();
         professionOptionList = CommonUtil.MakeProfessionOptionList();
@@ -399,8 +400,8 @@ public class News {
             if (n.type.compareTo(NewsType.newsType) == 0) got = "您无权修改新闻类型的资讯";
             if (!(n.associationId .equals( account.associationId))) got = "您无权修改其他协会的资讯";
 
-            Association association = associationDAO.loadById(associationId);
-            assIdOptionList += "<option value='"+associationId+"' selected>"+association.name+"</option>";
+            Association association = associationDAO.loadById(IdentifyUtils.getAssociationId(sessionId));
+            assIdOptionList += "<option value='"+IdentifyUtils.getAssociationId(sessionId)+"' selected>"+association.name+"</option>";
         }
         interestOptionList = CommonUtil.MakeInterestOptionList();
         professionOptionList = CommonUtil.MakeProfessionOptionList();
@@ -463,9 +464,16 @@ public class News {
             params.put("username",account.username);
             params.put("isSuper",IdentifyUtils.isSuper(sessionId));
             params.put("jsonCommentList",commentListString);
-            params.put("articleId",newsId);
+            params.put("topicId",newsId);
+            params.put("ctype","news");
 
-            return FTLrender.getResult("article_comment_list.ftl",params);
+
+            if (newsId == null || newsDAO.loadById(newsId) == null || newsDAO.loadById(newsId).title == null)
+                params.put("topicTitle","");
+            else
+                params.put("topicTitle",newsDAO.loadById(newsId).title);
+
+            return FTLrender.getResult("comment_list.ftl",params);
         }else{
             return CommonUtil.errorReturn;
         }

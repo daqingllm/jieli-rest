@@ -253,9 +253,9 @@
                             <td>${display.name2}</td>
 
                             <td class="hidden-480">
-                                <List ${display.infos} as info>
-                                    <#if info_has_next>${info}</#if>
-                                </List>
+                                <#list display.infos as info>
+                                    ${info}£»
+                                </#list>
                             </td>
                             <td>${display.score}</td>
                         </tr>

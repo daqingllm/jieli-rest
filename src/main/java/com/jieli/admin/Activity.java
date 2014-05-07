@@ -5,9 +5,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jieli.activity.AcivityTag;
 import com.jieli.activity.ActivityDAO;
 import com.jieli.association.*;
+import com.jieli.comment.*;
 import com.jieli.common.dao.AccountDAO;
 import com.jieli.common.entity.*;
 import com.jieli.common.entity.Account;
+import com.jieli.mongo.BaseDAO;
 import com.jieli.util.FTLrender;
 import com.jieli.util.IdentifyUtils;
 import com.sun.jersey.spi.resource.Singleton;
@@ -26,6 +28,7 @@ public class Activity {
     private AccountDAO accountDAO = new AccountDAO();
     private ActivityDAO activityDAO = new ActivityDAO();
     private AssociationDAO associationDAO = new AssociationDAO();
+    private BaseDAO<com.jieli.comment.Comment> commentDAO = new BaseDAO<com.jieli.comment.Comment>(com.jieli.mongo.Collections.Comment, com.jieli.comment.Comment.class);
 
     @GET
     @Produces(MediaType.TEXT_HTML)
@@ -218,7 +221,7 @@ public class Activity {
             params.put("got","无此活动！");
         else if(activity.actDate != null
          && activity.actDate.compareTo(new Date()) < 0)
-            params.put("got","该活动已成历史了！");
+            params.put("got","old");
         else {
             params.put("got", "");
 
@@ -245,5 +248,93 @@ public class Activity {
         params.put("associationList",associationList);
 
         return FTLrender.getResult("edit_activity.ftl",params);
+    }
+
+
+    @GET
+    @Path("/view")
+    @Produces(MediaType.TEXT_HTML)
+    public String viewActivity(@CookieParam("u")String sessionId,@QueryParam("actid") String actid) {
+
+        com.jieli.activity.Activity activity = activityDAO.loadById(actid);
+        Account account = accountDAO.loadById(sessionId);
+
+        Map<String, Object> params = new HashMap<String, Object>();
+        String activity_data = "";
+        String associationList = "";
+
+        if (activity == null)
+            params.put("got","无此活动！");
+        else if(activity.actDate != null
+                && activity.actDate.compareTo(new Date()) < 0)
+            params.put("got","old");
+        else {
+            params.put("got", "");
+
+            // 判断用户是否已经登录
+            if (account == null ||
+                    (!IdentifyUtils.isSuper(sessionId) && !activity.associationId.equals(account.associationId)) ||
+                    !IdentifyUtils.isValidate(sessionId) ||
+                    !IdentifyUtils.isAdmin(sessionId)
+                    ) {
+                return CommonUtil.errorReturn;
+            }
+
+            activity_data = CommonUtil.ReplaceObjectId(activity);
+
+            if (IdentifyUtils.isSuper(sessionId)) {
+                associationList = CommonUtil.MakeAssociationOptionListForSelect("");
+            } else {
+                associationList = CommonUtil.MakeAssociationOptionListForSelect(IdentifyUtils.getAssociationId(sessionId));
+            }
+        }
+        params.put("username",account.username);
+        params.put("isSuper",IdentifyUtils.isSuper(sessionId));
+        params.put("act_data",activity_data);
+        params.put("associationList",associationList);
+        return FTLrender.getResult("view_activity.ftl",params);
+    }
+
+    @GET
+    @Path("/comment")
+    @Produces(MediaType.TEXT_HTML)
+    public String GetNewsCommentList(@CookieParam("u")String sessionId,@QueryParam("actid") String activityId){
+        String response = CommonUtil.RoleCheckString(sessionId);
+        if (response != null) return  response;
+
+        ResponseEntity responseEntity = new ResponseEntity();
+        List<com.jieli.comment.Comment> commentList = new LinkedList<com.jieli.comment.Comment>();
+        String commentListString = "[";
+        if (activityId != null){
+            commentList = commentDAO.find("{topicId:#, isDeleted:#}", activityId, false);
+            if (commentList != null) {
+                for (com.jieli.comment.Comment comment : commentList) {
+                    comment.commentUserInfo = CommentUserInfoUtil.generate(comment.commentUserId);
+                    comment.commentedUserInfo = CommentUserInfoUtil.generate(comment.commentedUserId);
+                    commentListString += CommonUtil.ReplaceObjectId(comment) + ",";
+                }
+            }
+            if (commentListString.endsWith(",")){
+                commentListString = commentListString.substring(0,commentListString.length()-1);
+            }
+            commentListString += "]";
+
+            com.jieli.common.entity.Account account = accountDAO.loadById(sessionId);
+            Map<String, Object> params = new HashMap<String, Object>();
+            params.put("username",account.username);
+            params.put("isSuper",IdentifyUtils.isSuper(sessionId));
+            params.put("jsonCommentList",commentListString);
+            params.put("topicId",activityId);
+            params.put("ctype","activity");
+
+            if (activityId == null || activityDAO.loadById(activityId) == null || activityDAO.loadById(activityId).title == null)
+                params.put("topicTitle","");
+            else
+                params.put("topicTitle",activityDAO.loadById(activityId).title);
+
+            return FTLrender.getResult("comment_list.ftl",params);
+        }else{
+            return CommonUtil.errorReturn;
+        }
     }
 }
