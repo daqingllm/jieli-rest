@@ -57,4 +57,14 @@ public class UserServiceTest {
 
         System.out.println(response.returnContent().asString());
     }
+
+    @Test
+    public void testFeedback() throws IOException {
+        Response response = Request.Post("http://localhost:8080/rest/sys/feedback")
+                .addHeader("Cookie", "u=5343fb74ef866635e8416889")
+                .bodyString("ssss", ContentType.APPLICATION_JSON)
+                .execute();
+
+        System.out.println(response.returnContent().asString());
+    }
 }

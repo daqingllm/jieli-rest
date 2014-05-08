@@ -40,7 +40,7 @@ public class SystemService {
         ResponseEntity responseEntity = new ResponseEntity();
         Feedback feedback = new Feedback();
         feedback.userId = IdentifyUtils.getUserId(sessionId);
-        feedback.name = IdentifyUtils.getUserName(sessionId);
+        feedback.name = IdentifyUtils.getUserName(feedback.userId);
         feedback.associationId = IdentifyUtils.getAssociationId(sessionId);
         feedback.associationName = associationDAO.loadById(feedback.associationId).name;
         feedbackDAO.save(feedback);

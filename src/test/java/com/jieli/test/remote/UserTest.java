@@ -75,8 +75,8 @@ public class UserTest {
 
     @Test
     public void loadSelf() throws IOException {
-        Response response = Request.Get("http://162.243.151.219:8080/rest/user/self")
-                .addHeader("Cookie", "u=534a2256e4b0038297fb2136")
+        Response response = Request.Get("http://114.215.185.140:8080/rest/user/self")
+                .addHeader("Cookie", "u=5348210be4b00b2ae52d3f5c")
                 .execute();
 
         System.out.println(response.returnContent().asString());
@@ -84,8 +84,8 @@ public class UserTest {
 
     @Test
     public void loadDirectory() throws IOException {
-        Response response = Request.Get("http://162.243.151.219:8080/jieli-1.0-SNAPSHOT/rest/user/directory")
-                .addHeader("Cookie", "u=533c09e5e4b05bd824aeda58")
+        Response response = Request.Get("http://114.215.185.140:8080/rest/user/directory")
+                .addHeader("Cookie", "u=5348210be4b00b2ae52d3f5c")
                 .execute();
 
         System.out.println(response.returnContent().asString());
