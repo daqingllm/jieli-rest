@@ -133,7 +133,7 @@
                     </button>
 
                     <button class="btn btn-warning">
-                        <i class="fa fa-group" style="display: none"></i>
+                        <i class="fa fa-users" style="display: none"></i>
                     </button>
 
                     <button class="btn btn-danger">

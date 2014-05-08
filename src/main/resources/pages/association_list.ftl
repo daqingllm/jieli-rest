@@ -7,11 +7,13 @@
     <!-- basic styles -->
 
     <link href="/assets/css/bootstrap.min.css" rel="stylesheet"/>
-    <link rel="stylesheet" href="/assets/css/font-awesome.min.css"/>
+    <#--<link rel="stylesheet" href="/assets/css/font-awesome.min.css"/>-->
 
     <!--[if IE 7]>
-    <link rel="stylesheet" href="/assets/css/font-awesome-ie7.min.css"/>
-    <![endif]-->
+    <!--<link rel="stylesheet" href="/assets/css/font-awesome-ie7.min.css"/>-->
+    <#--<![endif]&ndash;&gt;-->
+
+    <link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
 
     <!-- page specific plugin styles -->
 
@@ -60,7 +62,7 @@
         <div class="navbar-header pull-left">
             <a href="index.html" class="navbar-brand">
                 <small>
-                    <i class="icon-leaf"></i>
+                    <i class="fa fa-leaf"></i>
                     接力 后台管理系统
                 </small>
             </a><!-- /.brand -->
@@ -77,29 +79,13 @@
                                 ${username}
 								</span>
 
-                        <i class="icon-caret-down"></i>
+                        <i class="fa fa-caret-down"></i>
                     </a>
 
                     <ul class="user-menu pull-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
-                        <!--<li>
-                            <a href="#">
-                                <i class="icon-cog"></i>
-                                设置
-                            </a>
-                        </li>
-
-                        <li>
-                            <a href="#">
-                                <i class="icon-user"></i>
-                                个人资料
-                            </a>
-                        </li>
-
-                        <li class="divider"></li>-->
-
                         <li>
                             <a href="#" onclick="document.cookie='u=;path=/';window.location.href='/rest/baccount/login'">
-                                <i class="icon-off"></i>
+                                <i class="fa fa-power-off"></i>
                                 退出
                             </a>
                         </li>
@@ -139,19 +125,19 @@
             <div class="sidebar-shortcuts">
                 <div class="sidebar-shortcuts-large" id="sidebar-shortcuts-large">
                     <button class="btn btn-success">
-                        <i class="icon-signal" style="display: none"></i>
+                        <i class="fa fa-signal" style="display: none"></i>
                     </button>
 
                     <button class="btn btn-info">
-                        <i class="icon-pencil" style="display: none"></i>
+                        <i class="fa fa-pencil" style="display: none"></i>
                     </button>
 
                     <button class="btn btn-warning">
-                        <i class="icon-group" style="display: none"></i>
+                        <i class="fa fa-users" style="display: none"></i>
                     </button>
 
                     <button class="btn btn-danger">
-                        <i class="icon-cogs" style="display: none"></i>
+                        <i class="fa fa-cogs" style="display: none"></i>
                     </button>
                 </div>
 
@@ -172,7 +158,7 @@
             </ul>
 
             <div class="sidebar-collapse" id="sidebar-collapse">
-                <i class="icon-double-angle-left" data-icon1="icon-double-angle-left" data-icon2="icon-double-angle-right"></i>
+                <i class="fa fa-angle-double-left" data-icon1="fa fa-angle-double-left" data-icon2="fa fa-angle-double-right"></i>
             </div>
         </div>
 
@@ -187,7 +173,7 @@
 
                 <ul class="breadcrumb">
                     <li>
-                        <i class="icon-home home-icon"></i>
+                        <i class="fa fa-home home-icon"></i>
                         <a href="index.html">首页</a>
                     </li>
 
@@ -204,7 +190,7 @@
 								<span class="input-icon">
 									<input type="text" placeholder="搜索 ..." class="nav-search-input"
                                            id="nav-search-input" autocomplete="off"/>
-									<i class="icon-search nav-search-icon"></i>
+									<i class="fa fa-search nav-search-icon"></i>
 								</span>
                     </form>
                 </div>
@@ -235,7 +221,7 @@
 
         <div class="ace-settings-container" id="ace-settings-container">
             <div class="btn btn-app btn-xs btn-warning ace-settings-btn" id="ace-settings-btn">
-                <i class="icon-cog bigger-150"></i>
+                <i class="fa fa-cog bigger-150"></i>
             </div>
 
             <div class="ace-settings-box" id="ace-settings-box">
@@ -285,7 +271,7 @@
     <!-- /.main-container-inner -->
 
     <a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
-        <i class="icon-double-angle-up icon-only bigger-110"></i>
+        <i class="fa fa-angle-double-up icon-only bigger-110"></i>
     </a>
 </div>
 <!-- /.main-container -->
@@ -377,18 +363,19 @@
 
 <script type="text/javascript">
 jQuery(function ($) {
-    <#if isSuper>
-        $("#sidebar-shortcuts-navlist").load("/sidebar_super.html",function(){$("#nav_list_6_1").addClass("active open");$("#nav_list_6").addClass("active");});
-    <#else>
-        $("#sidebar-shortcuts-navlist").load("/sidebar_admin.html",function(){$("#nav_list_6_1").addClass("active open");$("#nav_list_6").addClass("active");});
-    </#if>
-
+<#if isSuper>
+    $("#sidebar-shortcuts-navlist").load("/sidebar_super.html",function(){$("#nav_list_6_1").addClass("active open");$("#nav_list_6").addClass("active");
+        $("#nav_list_6_1 i").css({"position":"absolute","left":"10px","top":"11px","font-size":"12px","width":"18px","text-align":"center","color":"#c86139","display":"inline"});});
+<#else>
+    $("#sidebar-shortcuts-navlist").load("/sidebar_admin.html",function(){$("#nav_list_6_1").addClass("active open");$("#nav_list_6").addClass("active");
+        $("#nav_list_6_1 i").css({"position":"absolute","left":"10px","top":"11px","font-size":"12px","width":"18px","text-align":"center","color":"#c86139","display":"inline"});});
+</#if>
     var colorbox_params = {
         reposition: true,
         scalePhotos: true,
         scrolling: false,
-        previous: '<i class="icon-arrow-left"></i>',
-        next: '<i class="icon-arrow-right"></i>',
+        previous: '<i class="fa fa-arrow-left"></i>',
+        next: '<i class="fa fa-arrow-right"></i>',
         close: '&times;',
         current: '{current} of {total}',
         maxWidth: '100%',
@@ -405,7 +392,7 @@ jQuery(function ($) {
     };
 
     $('.ace-thumbnails [data-rel="colorbox"]').colorbox(colorbox_params);
-    $("#cboxLoadingGraphic").append("<i class='icon-spinner orange'></i>");//let's add a custom loading icon
+    $("#cboxLoadingGraphic").append("<i class='fa fa-spinner orange'></i>");//let's add a custom loading icon
 
     /**$(window).on('resize.colorbox', function() {
 					try {
@@ -464,10 +451,10 @@ function updateActionIcons(table) {
     /**
      var replacement =
      {
-         'ui-icon-pencil' : 'icon-pencil blue',
-         'ui-icon-trash' : 'icon-trash red',
-         'ui-icon-disk' : 'icon-ok green',
-         'ui-icon-cancel' : 'icon-remove red'
+         'ui-icon-pencil' : 'fa fa-pencil blue',
+         'ui-icon-trash' : 'fa fa-trash-o red',
+         'ui-icon-disk' : 'fa fa-ok green',
+         'ui-icon-cancel' : 'fa fa-remove red'
      };
      $(table).find('.ui-pg-div span.ui-icon').each(function(){
 		var icon = $(this);
@@ -481,10 +468,10 @@ function updateActionIcons(table) {
 function updatePagerIcons(table) {
     var replacement =
     {
-        'ui-icon-seek-first' : 'icon-double-angle-left bigger-140',
-        'ui-icon-seek-prev' : 'icon-angle-left bigger-140',
-        'ui-icon-seek-next' : 'icon-angle-right bigger-140',
-        'ui-icon-seek-end' : 'icon-double-angle-right bigger-140'
+        'ui-icon-seek-first' : 'fa fa-angle-double-left bigger-140',
+        'ui-icon-seek-prev' : 'fa fa-angle-left bigger-140',
+        'ui-icon-seek-next' : 'fa fa-angle-right bigger-140',
+        'ui-icon-seek-end' : 'fa fa-angle-double-right bigger-140'
     };
     $('.ui-pg-table:not(.navtable) > tbody > tr > .ui-pg-button > .ui-icon').each(function(){
         var icon = $(this);
