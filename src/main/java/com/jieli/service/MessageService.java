@@ -3,7 +3,7 @@ package com.jieli.service;
 import com.jieli.common.entity.ResponseEntity;
 import com.jieli.message.Message;
 import com.jieli.message.MessageDAO;
-import com.jieli.util.IdentifyUtils;
+import com.jieli.util.IdentityUtils;
 import com.sun.jersey.spi.resource.Singleton;
 
 import javax.ws.rs.*;
@@ -27,12 +27,12 @@ public class MessageService {
     @GET
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     public Response getMessage(@CookieParam("u")String sessionId, @QueryParam("force")boolean force) {
-        if (!IdentifyUtils.isValidate(sessionId)) {
+        if (!IdentityUtils.isValidate(sessionId)) {
             return Response.status(403).build();
         }
 
         ResponseEntity responseEntity = new ResponseEntity();
-        String userId = IdentifyUtils.getUserId(sessionId);
+        String userId = IdentityUtils.getUserId(sessionId);
         if (force) {
             Iterable<Message> messages = messageDAO.getForceMessages(userId);
             responseEntity.code = 200;

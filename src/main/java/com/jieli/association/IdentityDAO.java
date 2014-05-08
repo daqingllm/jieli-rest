@@ -9,9 +9,9 @@ import com.jieli.mongo.GenericDAO;
  * Time: 下午8:18
  * To change this template use File | Settings | File Templates.
  */
-public class IdentifyDAO extends GenericDAO<Identify> {
+public class IdentityDAO extends GenericDAO<Identity> {
 
-    public Iterable<Identify> loadAll(String associationId) {
-        return col.find("{associationId:#}", associationId).as(Identify.class);
+    public Iterable<Identity> loadAll(String associationId) {
+        return col.find("{associationId:#}", associationId).as(Identity.class);
     }
 }

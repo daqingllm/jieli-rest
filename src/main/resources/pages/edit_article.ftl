@@ -19,6 +19,7 @@
     <link rel="stylesheet" href="/assets/css/colorbox.css"/>
 
     <link rel="stylesheet" href="/assets/css/jquery.gritter.css" />
+    <link rel="stylesheet" href="/assets/css/datepicker.css" />
 
     <link rel="stylesheet" href="/assets/css/bootstrap-multiselect.css" type="text/css"/>
 
@@ -248,16 +249,33 @@
 
                         <div class="col-sm-9">
                             <select class="col-xs-10 col-sm-7" id="form-field-select-type"
-                                    style="padding: 5px 4px;font-size: 14px;">
+                                    style="padding: 5px 4px;font-size: 14px;" onchange="toggleShowTime();">
                                 <#if isSuper>
                                     <option value="news" selected="selected">新闻</option>
                                     <option value="association">资讯</option>
                                     <option value="enterprise">企业动态</option>
+                                    <option value="benefit">公益活动</option>
                                 <#else>
                                     <option value="association" selected>资讯</option>
                                     <option value="enterprise">企业动态</option>
+                                    <option value="history">协会纪事</option>
+                                    <option value="benefit">公益活动</option>
                                 </#if>
                             </select>
+                        </div>
+                    </div>
+
+                    <div class="space-4"></div>
+
+                    <div class="form-group" id="form-field-occDate-parent" style="display: none;">
+                        <label class="col-sm-3 control-label no-padding-right" for="form-field-occDate"> 时&nbsp;间 </label>
+                        <div class="col-sm-3">
+                            <div class="input-group">
+                                <input type="text" id="form-field-occDate" class="form-control hasDatepicker"/>
+                        		<span class="input-group-addon">
+                        			<i class="icon-calendar"></i>
+                        		</span>
+                            </div>
                         </div>
                     </div>
 
@@ -525,6 +543,11 @@
         $("#form-field-select-type").val(data["type"]);
         $("#form-field-textarea").val(data["content"]);
 
+        if (data.time && data.time.length >= 10)
+            $("#form-field-occDate").val(new Date(data.time.substr(0,10)).Format("yyyy-MM-dd"));
+        else
+            $("#form-field-occDate").val(GetDate10(new Date(),0));
+
         var cont = data["content"];
         var idx=cont.indexOf("<center><img src='");
         while(idx > -1){
@@ -562,6 +585,15 @@
             else title.text($title);
         }
     }));
+
+    function toggleShowTime(){
+        if ($("#form-field-select-type").val() == "history")
+            $("#form-field-occDate-parent").fadeIn();
+        else if ($("#form-field-occDate-parent").css("display")!="none"){
+            $("#form-field-occDate-parent").stop();
+            $("#form-field-occDate-parent").fadeOut();
+        }
+    }
 
     jQuery(function ($) {
         <#if isSuper>

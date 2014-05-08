@@ -1,6 +1,5 @@
 package com.jieli.admin;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jieli.association.*;
 import com.jieli.association.Association;
@@ -12,13 +11,12 @@ import com.jieli.common.entity.Account;
 import com.jieli.feature.vote.dao.VoteDAO;
 import com.jieli.feature.vote.dao.VoteResultDAO;
 import com.jieli.feature.vote.entity.SimpleVoteInfo;
-import com.jieli.feature.vote.entity.VoteInfo;
 import com.jieli.mongo.BaseDAO;
 import com.jieli.mongo.Collections;
 import com.jieli.user.dao.UserDAO;
 import com.jieli.util.CollectionUtils;
 import com.jieli.util.FTLrender;
-import com.jieli.util.IdentifyUtils;
+import com.jieli.util.IdentityUtils;
 import com.jieli.util.MongoUtils;
 import com.sun.jersey.spi.resource.Singleton;
 
@@ -82,17 +80,17 @@ public class VoteAction {
     @Produces(MediaType.TEXT_HTML)
     @Path("/new")
     public String createVote(@CookieParam("u")String sessionId) {
-        if (!IdentifyUtils.isValidate(sessionId)) {
+        if (!IdentityUtils.isValidate(sessionId)) {
             return errorReturn;
         }
-        if(!IdentifyUtils.isAdmin(sessionId)) {
+        if(!IdentityUtils.isAdmin(sessionId)) {
             return errorReturn;
         }
         Account account = accountDAO.loadById(sessionId);
         if (account == null || account.username == null || account.username == ""){
             return errorReturn;
         }
-        boolean isSuper = IdentifyUtils.isSuper(sessionId);
+        boolean isSuper = IdentityUtils.isSuper(sessionId);
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("username",account.username);
         params.put("isSuper", isSuper);
@@ -105,10 +103,10 @@ public class VoteAction {
     @Produces(MediaType.TEXT_HTML)
     @Path("/view")
     public String viewVote(@CookieParam("u") String sessionId, @QueryParam("v")String voteId) {
-        if(!IdentifyUtils.isValidate(sessionId)) {
+        if(!IdentityUtils.isValidate(sessionId)) {
             return errorReturn;
         }
-        if(!IdentifyUtils.isAdmin(sessionId)) {
+        if(!IdentityUtils.isAdmin(sessionId)) {
             return errorReturn;
         }
         Account account = accountDAO.loadById(sessionId);
@@ -119,7 +117,7 @@ public class VoteAction {
             return errorReturn;
         }
 
-        boolean isSuper = IdentifyUtils.isSuper(sessionId);
+        boolean isSuper = IdentityUtils.isSuper(sessionId);
         List<Comment> commentList = commentDAO.find("{topicId:#, topicType:#, isDeleted:#}",
                 voteId, TopicType.Vote, false);
         if( !CollectionUtils.isEmpty(commentList) ){
@@ -154,17 +152,17 @@ public class VoteAction {
     @Produces(MediaType.TEXT_HTML)
     @Path("/edit")
     public String modifyVote(@CookieParam("u")String sessionId, @QueryParam("voteId")String voteId) {
-        if(!IdentifyUtils.isValidate(sessionId)) {
+        if(!IdentityUtils.isValidate(sessionId)) {
             return errorReturn;
         }
-        if(!IdentifyUtils.isAdmin(sessionId)) {
+        if(!IdentityUtils.isAdmin(sessionId)) {
             return errorReturn;
         }
         Account account = accountDAO.loadById(sessionId);
         if (account == null || account.username == null || account.username == ""){
             return errorReturn;
         }
-        boolean isSuper = IdentifyUtils.isSuper(sessionId);
+        boolean isSuper = IdentityUtils.isSuper(sessionId);
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("username", account.username);
         params.put("isSuper", isSuper);
@@ -181,17 +179,17 @@ public class VoteAction {
     @Produces(MediaType.TEXT_HTML)
     @Path("/list")
     public String getVoteList(@CookieParam("u")String sessionId) {
-        if(!IdentifyUtils.isValidate(sessionId)) {
+        if(!IdentityUtils.isValidate(sessionId)) {
             return errorReturn;
         }
-        if(!IdentifyUtils.isAdmin(sessionId)) {
+        if(!IdentityUtils.isAdmin(sessionId)) {
             return errorReturn;
         }
         Account account = accountDAO.loadById(sessionId);
         if (account == null || account.username == null || account.username == ""){
             return errorReturn;
         }
-        String associationId = IdentifyUtils.getAssociationId(sessionId);
+        String associationId = IdentityUtils.getAssociationId(sessionId);
         boolean isSuper = false;
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("username", account.username);
@@ -199,7 +197,7 @@ public class VoteAction {
         List<Association> associationList = new ArrayList<Association>();
         Integer pageNo = 1;
         Integer pageSize = 20;
-        if(IdentifyUtils.isSuper(sessionId)) {
+        if(IdentityUtils.isSuper(sessionId)) {
             isSuper = true;
             Iterable<com.jieli.association.Association> associations = associationDAO.loadAll();
             for(Association a : associations) {

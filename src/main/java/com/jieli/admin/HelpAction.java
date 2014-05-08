@@ -13,12 +13,10 @@ import com.jieli.feature.help.entity.SimpleHelpInfo;
 import com.jieli.mongo.BaseDAO;
 import com.jieli.mongo.Collections;
 import com.jieli.user.dao.UserDAO;
-import com.jieli.user.entity.*;
 import com.jieli.util.CollectionUtils;
 import com.jieli.util.FTLrender;
-import com.jieli.util.IdentifyUtils;
+import com.jieli.util.IdentityUtils;
 import com.jieli.util.MongoUtils;
-import com.mongodb.Mongo;
 import com.sun.jersey.spi.resource.Singleton;
 
 import javax.ws.rs.*;
@@ -78,10 +76,10 @@ public class HelpAction {
     @Path("/list")
     @Produces(MediaType.TEXT_HTML)
     public String getHelpList(@CookieParam("u")String sessionId) {
-        if(!IdentifyUtils.isValidate(sessionId)) {
+        if(!IdentityUtils.isValidate(sessionId)) {
             return errorReturn;
         }
-        if(!IdentifyUtils.isAdmin(sessionId)) {
+        if(!IdentityUtils.isAdmin(sessionId)) {
             return errorReturn;
         }
         com.jieli.common.entity.Account account = accountDAO.loadById(sessionId);
@@ -90,10 +88,10 @@ public class HelpAction {
         }
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("username", account.username);
-        //String associationId = IdentifyUtils.getAssociationId(sessionId);
+        //String associationId = IdentityUtils.getAssociationId(sessionId);
         boolean isSuper = false;
         String associationId = "";
-        if(IdentifyUtils.isSuper(sessionId))
+        if(IdentityUtils.isSuper(sessionId))
             isSuper = true;
         if(isSuper) {
             List<com.jieli.association.Association> associationList = new ArrayList<com.jieli.association.Association>();
@@ -106,7 +104,7 @@ public class HelpAction {
             params.put("isSuper", true);
         }
         else {
-            associationId = IdentifyUtils.getAssociationId(sessionId);
+            associationId = IdentityUtils.getAssociationId(sessionId);
             params.put("isSuper", false);
             if(!MongoUtils.isValidObjectId(associationId)) {
                 return FTLrender.getResult("error.ftl", params);
@@ -146,10 +144,10 @@ public class HelpAction {
     @Path("/view")
     @Produces(MediaType.TEXT_HTML)
     public String viewHelp(@CookieParam("u")String sessionId, @QueryParam("h")String helpId) {
-        if(!IdentifyUtils.isValidate(sessionId)) {
+        if(!IdentityUtils.isValidate(sessionId)) {
             return errorReturn;
         }
-        if(!IdentifyUtils.isAdmin(sessionId)) {
+        if(!IdentityUtils.isAdmin(sessionId)) {
             return errorReturn;
         }
         com.jieli.common.entity.Account account = accountDAO.loadById(sessionId);
@@ -184,7 +182,7 @@ public class HelpAction {
         if(help == null) {
             return FTLrender.getResult("error.ftl", params);
         }
-        boolean isSuper = IdentifyUtils.isSuper(sessionId);
+        boolean isSuper = IdentityUtils.isSuper(sessionId);
         boolean canDelete = false;
         if(!isSuper) {
             canDelete = true;

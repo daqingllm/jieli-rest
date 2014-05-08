@@ -6,7 +6,7 @@ import com.jieli.common.entity.ResponseEntity;
 import com.jieli.user.dao.UserDAO;
 import com.jieli.user.entity.User;
 import com.jieli.common.dao.AccountDAO;
-import com.jieli.util.IdentifyUtils;
+import com.jieli.util.IdentityUtils;
 import com.jieli.util.PasswordGenerator;
 import com.sun.jersey.spi.resource.Singleton;
 import org.apache.commons.lang.StringUtils;
@@ -80,12 +80,12 @@ public class AccountService {
     @POST
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     public Response register(@CookieParam("u")String sessionId, Map<String, String> registerInfo) throws JSONException {
-        if (!IdentifyUtils.isAdmin(sessionId)) {
+        if (!IdentityUtils.isAdmin(sessionId)) {
             return Response.status(403).build();
         }
         String associationId = null;
         ResponseEntity responseEntity = new ResponseEntity();
-        if (IdentifyUtils.isSuper(sessionId)) {
+        if (IdentityUtils.isSuper(sessionId)) {
             associationId = registerInfo.get("associationId");
             if (StringUtils.isEmpty(associationId)) {
                 responseEntity.code = 1016;
@@ -93,7 +93,7 @@ public class AccountService {
                 return Response.status(200).entity(responseEntity).build();
             }
         }
-        associationId = IdentifyUtils.getAssociationId(sessionId);
+        associationId = IdentityUtils.getAssociationId(sessionId);
         String username = registerInfo.get("username");
         if (StringUtils.isEmpty(username) || username.length() < 5) {
             responseEntity.code = 1015;
@@ -132,7 +132,7 @@ public class AccountService {
     @Path("/auth")
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     public Response authorize(@CookieParam("u")String sessionId, Map<String, String> registerInfo) throws JSONException {
-        if (!IdentifyUtils.isSuper(sessionId)) {
+        if (!IdentityUtils.isSuper(sessionId)) {
             return Response.status(403).build();
         }
         ResponseEntity responseEntity = new ResponseEntity();
@@ -182,14 +182,14 @@ public class AccountService {
             responseEntity.msg = "用户名不存在";
             return Response.status(200).entity(responseEntity).build();
         }
-        if (current.state.value() <= AccountState.ADMIN.value() && !IdentifyUtils.isSuper(sessionId)) {
+        if (current.state.value() <= AccountState.ADMIN.value() && !IdentityUtils.isSuper(sessionId)) {
             //协会管理员
-//            if (!IdentifyUtils.isAdmin(sessionId) || account.state.equals(AccountState.SUPPER)
+//            if (!IdentityUtils.isAdmin(sessionId) || account.state.equals(AccountState.SUPPER)
 //                    || !account.associationId.equals(current.associationId)
 //                    || !account.userId.equals(account.userId)) {
 //                return Response.status(403).build();
 //            }
-            if (!IdentifyUtils.isAdmin(sessionId) || account.state.equals(AccountState.SUPPER) || !(current.associationId.equals(IdentifyUtils.getAssociationId(sessionId)))) {
+            if (!IdentityUtils.isAdmin(sessionId) || account.state.equals(AccountState.SUPPER) || !(current.associationId.equals(IdentityUtils.getAssociationId(sessionId)))) {
                 return Response.status(403).build();
             }
             if (StringUtils.isNotEmpty(account.password)) {
@@ -197,7 +197,7 @@ public class AccountService {
             }
             current.state = account.state;
             accountDAO.save(current);
-        } else if (IdentifyUtils.isSuper(sessionId)){
+        } else if (IdentityUtils.isSuper(sessionId)){
 //            account.set_id(current.get_id());
 //            account.password = PasswordGenerator.md5Encode(account.password);
             User user = userDAO.loadById(account.userId);

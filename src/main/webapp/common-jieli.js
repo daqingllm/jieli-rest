@@ -110,6 +110,14 @@ function postThisArticle(){
     if (p_type == null || p_type == "") {alert("请选择类型");return;}
     json["type"] = p_type;
 
+    if (p_type == "history"){
+        var p_otime = $("#form-field-occDate").val();
+        if (p_otime == null || p_otime == "") {alert("请输入时间");return;}
+        json["time"] = p_otime;
+    }else{
+        json["time"] = null;
+    }
+
     p_content = $("#form-field-textarea").val();
     if (p_content == null || p_content == "") {alert("请填写内容！");return;}
     json["content"] = p_content;

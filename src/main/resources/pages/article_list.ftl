@@ -428,7 +428,7 @@ Date.prototype.Format = function (fmt) { //author: meizz
 }
 
 function parseArtData(data){
-    var types = {"news":"新闻","association":"协会资讯","enterprise":"企业动态"};
+    var types = {"news":"新闻","association":"协会资讯","enterprise":"企业动态","history":"协会纪事","benefit":"公益活动"};
     for (var i = 0 ; i < data.length; i++){
         data[i].type = types[data[i].type];
         var adt = data[i].addTime;

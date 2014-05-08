@@ -4,7 +4,7 @@ import com.jieli.association.AssociationDAO;
 import com.jieli.common.dao.FeedbackDAO;
 import com.jieli.common.entity.Feedback;
 import com.jieli.common.entity.ResponseEntity;
-import com.jieli.util.IdentifyUtils;
+import com.jieli.util.IdentityUtils;
 import com.sun.jersey.spi.resource.Singleton;
 
 import javax.ws.rs.CookieParam;
@@ -33,15 +33,15 @@ public class SystemService {
     @Path("/feedback")
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     public Response postFeedback(@CookieParam("u")String sessionId, String content) {
-        if (!IdentifyUtils.isValidate(sessionId)) {
+        if (!IdentityUtils.isValidate(sessionId)) {
             return Response.status(403).build();
         }
 
         ResponseEntity responseEntity = new ResponseEntity();
         Feedback feedback = new Feedback();
-        feedback.userId = IdentifyUtils.getUserId(sessionId);
-        feedback.name = IdentifyUtils.getUserName(feedback.userId);
-        feedback.associationId = IdentifyUtils.getAssociationId(sessionId);
+        feedback.userId = IdentityUtils.getUserId(sessionId);
+        feedback.name = IdentityUtils.getUserName(feedback.userId);
+        feedback.associationId = IdentityUtils.getAssociationId(sessionId);
         feedback.associationName = associationDAO.loadById(feedback.associationId).name;
         feedbackDAO.save(feedback);
 
