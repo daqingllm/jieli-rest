@@ -45,10 +45,10 @@ public class CommentService {
 //                        @QueryParam("commentedUserId")String commentedUserId,
 //                        @QueryParam("content")String content){
 //
-//        if (!IdentifyUtils.isValidate(sessionId)) {
+//        if (!IdentityUtils.isValidate(sessionId)) {
 //            return Response.status(403).build();
 //        }
-//        String userId = IdentifyUtils.getUserId(sessionId);
+//        String userId = IdentityUtils.getUserId(sessionId);
 //
 //        Comment comment = new Comment();
 //        comment.topicId = topicId;

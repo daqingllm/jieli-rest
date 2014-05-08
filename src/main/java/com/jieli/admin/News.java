@@ -13,10 +13,8 @@ import com.jieli.news.NewsDAO;
 import com.jieli.news.NewsType;
 import com.jieli.user.dao.UserDAO;
 import com.jieli.util.FTLrender;
-import com.jieli.util.IdentifyUtils;
-import com.jieli.util.PasswordGenerator;
+import com.jieli.util.IdentityUtils;
 import com.sun.jersey.spi.resource.Singleton;
-import org.bson.types.ObjectId;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -60,12 +58,16 @@ public class News {
 
         String newsList = "";
         List<com.jieli.news.News> newses = new LinkedList<com.jieli.news.News>();
-        if (IdentifyUtils.isSuper(sessionId)){
+        if (IdentityUtils.isSuper(sessionId)){
             params.put("isSuper",true);
-            newses = newsDAO.paginateInOrder(_page, _rowNum,"{addTime:-1}", "{type: {$in: [\""+NewsType.newsType+"\",\""+NewsType.associationType+"\",\""+NewsType.enterpriseType+"\"]}}");
+            newses = newsDAO.paginateInOrder(_page, _rowNum,"{addTime:-1}", "{type: {$in: " +
+                    "[\""+NewsType.newsType+"\",\""+NewsType.associationType+"\",\""+NewsType.enterpriseType+"\",\"" +NewsType.benefitType+"\""+
+                    "]}}");
         }else{
             params.put("isSuper",false);
-            newses = newsDAO.paginateInOrder(_page, _rowNum,"{addTime:-1}", "{type: {$in: [\""+NewsType.associationType+"\",\""+NewsType.enterpriseType+"\"]}}");
+            newses = newsDAO.paginateInOrder(_page, _rowNum,"{addTime:-1}", "{type: {$in: " +
+                    "[\""+NewsType.associationType+"\",\""+NewsType.enterpriseType+"\",\""+NewsType.benefitType+"\",\"" + "history" + "\"" +
+                    "]}}");
         }
 
         Map<String , String> associationNames = new HashMap<String, String>();
@@ -94,12 +96,12 @@ public class News {
 //        if (preload != "y") preload = "n";
 //
 //        // 判断用户是否已经登录
-//        if (!IdentifyUtils.isValidate(sessionId)) {
+//        if (!IdentityUtils.isValidate(sessionId)) {
 //            return CommonUtil.errorReturn;
 //        }
 //
 //        // 载入用户
-//        //String userId = IdentifyUtils.getUserId(sessionId);
+//        //String userId = IdentityUtils.getUserId(sessionId);
 //        //com.jieli.user.entity.User user = userDAO.loadById(userId);
 //
 //        //com.jieli.common.entity.Account account = accountDAO.getCollection().findOne("{username:#}",userId).as(com.jieli.common.entity.Account.class);
@@ -183,12 +185,12 @@ public class News {
     public String CreateNews(@CookieParam("u")String sessionId,@CookieParam("a")String associationId,@CookieParam("r")String role) {
 
         // 判断用户是否已经登录
-        if (!IdentifyUtils.isValidate(sessionId)) {
+        if (!IdentityUtils.isValidate(sessionId)) {
             return CommonUtil.errorReturn;
         }
 
         // 载入用户
-        //String userId = IdentifyUtils.getUserId(sessionId);
+        //String userId = IdentityUtils.getUserId(sessionId);
         //com.jieli.user.entity.User user = userDAO.loadById(userId);
 
         //com.jieli.common.entity.Account account = accountDAO.getCollection().findOne("{username:#}",userId).as(com.jieli.common.entity.Account.class);
@@ -221,11 +223,11 @@ public class News {
         //boolean b2 = PasswordGenerator.md5Encode(AccountState.SUPPER+"").equals(role);
 
         //if (b1 && b2) {
-        if (IdentifyUtils.isSuper(sessionId)){
+        if (IdentityUtils.isSuper(sessionId)){
             isSuper = true;
             assIdOptionList = CommonUtil.MakeAssociationOptionListForSelect("");
         }else {
-            assIdOptionList = CommonUtil.MakeAssociationOptionListForSelect(IdentifyUtils.getAssociationId(sessionId));
+            assIdOptionList = CommonUtil.MakeAssociationOptionListForSelect(IdentityUtils.getAssociationId(sessionId));
         }
         interestOptionList = CommonUtil.MakeInterestOptionList();
         professionOptionList = CommonUtil.MakeProfessionOptionList();
@@ -244,7 +246,7 @@ public class News {
 //    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
 //    public Response addNews(@CookieParam("u")String sessionId, com.jieli.news.News news){
 //
-//        if (!IdentifyUtils.isValidate(sessionId)) {
+//        if (!IdentityUtils.isValidate(sessionId)) {
 //            return Response.status(403).build();
 //        }
 //
@@ -325,7 +327,7 @@ public class News {
             return Response.status(200).entity(responseEntity).build();
         }
 
-        if (!IdentifyUtils.isSuper(sessionId) && !news.associationId.equals(IdentifyUtils.getAssociationId(sessionId))){
+        if (!IdentityUtils.isSuper(sessionId) && !news.associationId.equals(IdentityUtils.getAssociationId(sessionId))){
             responseEntity.code = 9001;
             responseEntity.msg = "无权限";
             return Response.status(200).entity(responseEntity).build();
@@ -343,12 +345,12 @@ public class News {
     public String editNews(@CookieParam("u")String sessionId,@CookieParam("a")String associationId,@CookieParam("r")String role,@QueryParam("artid") String artid) {
 
         // 判断用户是否已经登录
-        if (!IdentifyUtils.isValidate(sessionId)) {
+        if (!IdentityUtils.isValidate(sessionId)) {
             return CommonUtil.errorReturn;
         }
 
         // 载入用户
-        //String userId = IdentifyUtils.getUserId(sessionId);
+        //String userId = IdentityUtils.getUserId(sessionId);
         //com.jieli.user.entity.User user = userDAO.loadById(userId);
 
         //com.jieli.common.entity.Account account = accountDAO.getCollection().findOne("{username:#}",userId).as(com.jieli.common.entity.Account.class);
@@ -387,7 +389,7 @@ public class News {
         if (n == null || n.addTime == null) got = "此文章已经不存在了。";
 
         //if (b1 && b2) {
-        if (IdentifyUtils.isSuper(sessionId)){
+        if (IdentityUtils.isSuper(sessionId)){
             isSuper = true;
             Iterable<Association> associations = associationDAO.loadAll();
             for (Association association : associations) {
@@ -400,8 +402,8 @@ public class News {
             if (n.type.compareTo(NewsType.newsType) == 0) got = "您无权修改新闻类型的资讯";
             if (!(n.associationId .equals( account.associationId))) got = "您无权修改其他协会的资讯";
 
-            Association association = associationDAO.loadById(IdentifyUtils.getAssociationId(sessionId));
-            assIdOptionList += "<option value='"+IdentifyUtils.getAssociationId(sessionId)+"' selected>"+association.name+"</option>";
+            Association association = associationDAO.loadById(IdentityUtils.getAssociationId(sessionId));
+            assIdOptionList += "<option value='"+ IdentityUtils.getAssociationId(sessionId)+"' selected>"+association.name+"</option>";
         }
         interestOptionList = CommonUtil.MakeInterestOptionList();
         professionOptionList = CommonUtil.MakeProfessionOptionList();
@@ -462,7 +464,7 @@ public class News {
             com.jieli.common.entity.Account account = accountDAO.loadById(sessionId);
             Map<String, Object> params = new HashMap<String, Object>();
             params.put("username",account.username);
-            params.put("isSuper",IdentifyUtils.isSuper(sessionId));
+            params.put("isSuper", IdentityUtils.isSuper(sessionId));
             params.put("jsonCommentList",commentListString);
             params.put("topicId",newsId);
             params.put("ctype","news");

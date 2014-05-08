@@ -13,7 +13,7 @@ import com.jieli.feature.match.MatchDisplay;
 import com.jieli.user.dao.UserDAO;
 import com.jieli.user.entity.User;
 import com.jieli.util.FTLrender;
-import com.jieli.util.IdentifyUtils;
+import com.jieli.util.IdentityUtils;
 import com.sun.jersey.spi.resource.Singleton;
 
 import javax.ws.rs.*;
@@ -76,7 +76,7 @@ public class MatchAction {
     @Path("/list")
     @Produces(MediaType.TEXT_HTML)
     public String getAccountList(@CookieParam("u")String sessionId) throws JsonProcessingException {
-        if (!IdentifyUtils.isAdmin(sessionId) || IdentifyUtils.isSuper(sessionId)) {
+        if (!IdentityUtils.isAdmin(sessionId) || IdentityUtils.isSuper(sessionId)) {
             return CommonUtil.errorReturn;
         }
         ResponseEntity responseEntity = new ResponseEntity();
@@ -84,7 +84,7 @@ public class MatchAction {
         String associationId = null;
         List<Account> accountList = new ArrayList<Account>();
         //List<com.jieli.common.entity.Account> accounts = new ArrayList<com.jieli.common.entity.Account>();
-        if (IdentifyUtils.getState(sessionId) == AccountState.SUPPER) {
+        if (IdentityUtils.getState(sessionId) == AccountState.SUPPER) {
             Iterable<com.jieli.association.Association> associations = associationDAO.loadAll();
             for (com.jieli.association.Association association : associations) {
                 Iterable<Account> accountAdmin = accountDAO.loadByAssociationId(association.get_id().toString(),
@@ -106,7 +106,7 @@ public class MatchAction {
             }
 
         } else {
-            associationId = IdentifyUtils.getAssociationId(sessionId);
+            associationId = IdentityUtils.getAssociationId(sessionId);
             com.jieli.association.Association association = associationDAO.loadById(associationId);
             if (association == null) {
                 responseEntity.code = 2102;
@@ -156,7 +156,7 @@ public class MatchAction {
             jsonAccountList = "[]";
         }
         Map<String, Object> params = new HashMap<String, Object>();
-        params.put("isSuper",IdentifyUtils.getState(sessionId) == AccountState.SUPPER);
+        params.put("isSuper", IdentityUtils.getState(sessionId) == AccountState.SUPPER);
         params.put("jsonAccList",jsonAccountList);
         params.put("username",accountDAO.loadById(sessionId).username);
 
@@ -168,21 +168,21 @@ public class MatchAction {
     @Produces(MediaType.TEXT_HTML)
     public String viewTopMatch(@CookieParam("u")String sessionId, @QueryParam("c")String center, @QueryParam("count")int count) {
         Map<String, Object> params = new HashMap<String, Object>();
-        if(!IdentifyUtils.isValidate(sessionId)) {
+        if(!IdentityUtils.isValidate(sessionId)) {
             return errorReturn;
         }
-        if(!IdentifyUtils.isAdmin(sessionId)) {
+        if(!IdentityUtils.isAdmin(sessionId)) {
             return errorReturn;
         }
-        boolean isSuper = IdentifyUtils.isSuper(sessionId);
+        boolean isSuper = IdentityUtils.isSuper(sessionId);
         params.put("isSuper", isSuper);
         Account self = accountDAO.loadById(sessionId);
         params.put("username", self.username);
         params.put("isHistory", false);
-        if (!IdentifyUtils.isValidate(center)){
+        if (!IdentityUtils.isValidate(center)){
             return FTLrender.getResult("error.ftl", params);
         }
-        String  userId = IdentifyUtils.getUserId(center);
+        String  userId = IdentityUtils.getUserId(center);
         if(count <= 0) {
             count = 5;
         }
@@ -212,13 +212,13 @@ public class MatchAction {
     @Produces(MediaType.TEXT_HTML)
     public String viewMatchHistory(@CookieParam("u")String sessionId) {
         Map<String, Object> params = new HashMap<String, Object>();
-        if(!IdentifyUtils.isValidate(sessionId)) {
+        if(!IdentityUtils.isValidate(sessionId)) {
             return errorReturn;
         }
-        if(!IdentifyUtils.isAdmin(sessionId)) {
+        if(!IdentityUtils.isAdmin(sessionId)) {
             return errorReturn;
         }
-        boolean isSuper = IdentifyUtils.isSuper(sessionId);
+        boolean isSuper = IdentityUtils.isSuper(sessionId);
         params.put("isSuper", isSuper);
         Account self = accountDAO.loadById(sessionId);
         params.put("username", self.username);

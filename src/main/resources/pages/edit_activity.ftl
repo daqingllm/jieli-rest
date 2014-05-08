@@ -741,8 +741,12 @@
             <#if isSuper>$("form-field-associations").val(data.associationId);</#if>
 
     <#else>
+        <#if got=="old">
+            if (confirm("不允许编辑历史活动！"));
+        <#else>
+            if(confirm("${got}"));
+        </#if>
 
-        if(confirm("${got}"));
         window.location.href = "/rest/bactivity/list";
     </#if>
     }

@@ -17,7 +17,7 @@ import com.jieli.user.entity.Friend;
 import com.jieli.user.entity.User;
 import com.jieli.user.entity.UserBasicInfo;
 import com.jieli.util.CollectionUtils;
-import com.jieli.util.IdentifyUtils;
+import com.jieli.util.IdentityUtils;
 import com.jieli.util.MongoUtils;
 import com.sun.jersey.spi.resource.Singleton;
 import org.apache.commons.lang.StringUtils;
@@ -49,7 +49,7 @@ public class UserService {
     @GET
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     public Response loadUser(@CookieParam("u")String sessionId, @QueryParam("userId")String userId) {
-        if (!IdentifyUtils.isValidate(sessionId)) {
+        if (!IdentityUtils.isValidate(sessionId)) {
             return Response.status(403).build();
         }
         ResponseEntity responseEntity = new ResponseEntity();
@@ -79,7 +79,7 @@ public class UserService {
     @POST
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     public Response editUser(@CookieParam("u")String sessionId, @QueryParam("userId")String userId, User user) {
-        if (!IdentifyUtils.isAdmin(sessionId)) {
+        if (!IdentityUtils.isAdmin(sessionId)) {
             return Response.status(403).build();
         }
         Account account = accountDAO.getCollection().findOne("{username:#}",userId).as(Account.class);
@@ -89,7 +89,7 @@ public class UserService {
             responseEntity.msg = "账户出错";
             return Response.status(200).entity(responseEntity).build();
         }
-        if (account.state.value() >= IdentifyUtils.getState(sessionId).value()) {
+        if (account.state.value() >= IdentityUtils.getState(sessionId).value()) {
             return Response.status(403).build();
         }
 
@@ -103,12 +103,12 @@ public class UserService {
     @Path("/self")
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     public Response loadSelf(@CookieParam("u")String sessionId) {
-        if (!IdentifyUtils.isValidate(sessionId)) {
+        if (!IdentityUtils.isValidate(sessionId)) {
             return Response.status(403).build();
         }
 
         ResponseEntity responseEntity = new ResponseEntity();
-        String userId = IdentifyUtils.getUserId(sessionId);
+        String userId = IdentityUtils.getUserId(sessionId);
         if (StringUtils.isEmpty(userId)) {
             responseEntity.code = 1103;
             responseEntity.msg = "账户出错";
@@ -131,17 +131,17 @@ public class UserService {
     @Path("/self")
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     public Response editSelf(@CookieParam("u")String sessionId, @QueryParam("first")boolean first, User user) {
-        if (!IdentifyUtils.isValidate(sessionId)) {
+        if (!IdentityUtils.isValidate(sessionId)) {
             return Response.status(403).build();
         }
 
         ResponseEntity responseEntity = new ResponseEntity();
-        String userId = IdentifyUtils.getUserId(sessionId);
+        String userId = IdentityUtils.getUserId(sessionId);
         user.set_id(new ObjectId(userId));
         userDAO.update(user);
 
         if (first) {
-            String name = IdentifyUtils.getUserName(userId);
+            String name = IdentityUtils.getUserName(userId);
             MatchTask matchTask = new MatchTask(5, user);
             List<Match> result = matchTask.getResult();
             for (Match match : result) {
@@ -182,12 +182,12 @@ public class UserService {
     @Path("/directory")
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     public Response loadDirectory(@CookieParam("u")String sessionId) {
-        if (!IdentifyUtils.isValidate(sessionId)) {
+        if (!IdentityUtils.isValidate(sessionId)) {
             return Response.status(403).build();
         }
 
         ResponseEntity responseEntity = new ResponseEntity();
-        String userId = IdentifyUtils.getUserId(sessionId);
+        String userId = IdentityUtils.getUserId(sessionId);
         Directory directory = directoryDAO.loadByUserId(userId);
         List<UserBasicInfo> baseUsers = new ArrayList<UserBasicInfo>();
         List<String> friendIds = new ArrayList<String>();
@@ -214,7 +214,7 @@ public class UserService {
             }
         }
 
-        Iterable<User> allUsers = userDAO.loadAll(IdentifyUtils.getAssociationId(sessionId));
+        Iterable<User> allUsers = userDAO.loadAll(IdentityUtils.getAssociationId(sessionId));
         for (User user : allUsers) {
             if (friendIds.contains(user.get_id().toString())) {
                 continue;
@@ -241,12 +241,12 @@ public class UserService {
     @Path("/directory")
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     public Response upsertFriend(@CookieParam("u")String sessionId, Friend friend) {
-        if (!IdentifyUtils.isValidate(sessionId)) {
+        if (!IdentityUtils.isValidate(sessionId)) {
             return Response.status(403).build();
         }
 
         ResponseEntity responseEntity = new ResponseEntity();
-        String userId = IdentifyUtils.getUserId(sessionId);
+        String userId = IdentityUtils.getUserId(sessionId);
         if (friend.userId.equals(userId)) {
             responseEntity.code = 1107;
             responseEntity.msg = "不能添加自己";
@@ -274,7 +274,7 @@ public class UserService {
     @Path("/directory/delete")
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     public Response deleteFriend(@CookieParam("u")String sessionId, @QueryParam("friendId")String friendId) {
-        if (!IdentifyUtils.isValidate(sessionId)) {
+        if (!IdentityUtils.isValidate(sessionId)) {
             return Response.status(403).build();
         }
         ResponseEntity responseEntity = new ResponseEntity();
@@ -289,7 +289,7 @@ public class UserService {
             return Response.status(200).entity(responseEntity).build();
         }
 
-        String uid = IdentifyUtils.getUserId(sessionId);
+        String uid = IdentityUtils.getUserId(sessionId);
         directoryDAO.deleteFriend(uid, friendId);
         responseEntity.code = 200;
         return Response.status(200).entity(responseEntity).build();

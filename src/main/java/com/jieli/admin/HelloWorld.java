@@ -3,7 +3,7 @@ package com.jieli.admin;
 import com.jieli.common.dao.AccountDAO;
 import com.jieli.common.entity.AccountState;
 import com.jieli.util.FTLrender;
-import com.jieli.util.IdentifyUtils;
+import com.jieli.util.IdentityUtils;
 import com.sun.jersey.spi.resource.Singleton;
 
 import javax.ws.rs.CookieParam;
@@ -29,7 +29,7 @@ public class HelloWorld {
     @GET
     @Produces(MediaType.TEXT_HTML)
     public String Index(@CookieParam("u") String sessionId){
-        if (!IdentifyUtils.isValidate(sessionId)) {
+        if (!IdentityUtils.isValidate(sessionId)) {
             return CommonUtil.errorReturn;
         }
 

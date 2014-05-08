@@ -9,7 +9,7 @@ import com.jieli.mongo.Model;
  * Time: 下午8:17
  * To change this template use File | Settings | File Templates.
  */
-public class Identify extends Model {
+public class Identity extends Model {
 
     public String name;
 

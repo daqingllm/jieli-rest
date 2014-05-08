@@ -2,7 +2,7 @@
 <html lang="zh">
 <head>
     <meta charset="utf-8"/>
-    <title>接力 分组管理</title>
+    <title>接力 组织架构设置</title>
     <meta name="description" content="接力"/>
     <!-- basic styles -->
 
@@ -192,10 +192,10 @@
             </li>
 
             <li>
-                <a href="#"> 分组管理 </a>
+                <a href="#"> 组织架构 </a>
             </li>
 
-            <li class="active"> 分组列表 </li>
+            <li class="active"> 职位列表 </li>
         </ul>
         <!-- .breadcrumb -->
 
@@ -214,7 +214,7 @@
     <div class="page-content">
         <div class="page-header" style="display: none;">
             <h1>
-                分组列表
+                职位列表
             </h1>
         </div>
         <!-- /.page-header -->
@@ -270,7 +270,7 @@
 
         <h3 class="header blue lighter smaller">
             <i class="icon-list smaller-90"></i>
-            分组列表
+            职位列表
         </h3>
 
         <div id="accordion" class="accordion-style2">
@@ -438,9 +438,9 @@
 jQuery(function ($) {
     /* sidebar */
 <#if isSuper>
-    $("#sidebar-shortcuts-navlist").load("/sidebar_super.html",function(){$("#nav_list_8_1").addClass("active open");$("#nav_list_8").addClass("active");});
+    $("#sidebar-shortcuts-navlist").load("/sidebar_super.html",function(){$("#nav_list_10_1").addClass("active open");$("#nav_list_10").addClass("active");});
 <#else>
-    $("#sidebar-shortcuts-navlist").load("/sidebar_admin.html",function(){$("#nav_list_8_1").addClass("active open");$("#nav_list_8").addClass("active");});
+    $("#sidebar-shortcuts-navlist").load("/sidebar_admin.html",function(){$("#nav_list_10_1").addClass("active open");$("#nav_list_10").addClass("active");});
 </#if>
     var colorbox_params = {
         reposition: true,
@@ -586,8 +586,8 @@ function loadThisGroup(name,refresh){
 
     $.ajax({
         type:"GET",
-        url:"/rest/association/group",
-        data:{"group":name},
+        url:"/rest/association/identity",
+        data:{"identity":name},
         success:function(jsn){
             if (jsn.code == 200){
 
@@ -693,7 +693,7 @@ function removeAUser(){
             //alert(oh);
             $.ajax({
                 type:"POST",
-                url:"/rest/baccount/dfgroup?uname="+oh+"&group="+cg,
+                url:"/rest/baccount/dfidentity?uname="+oh+"&group="+cg,
                 success:function(data){
                     if (data.code == 200){
                         alert("已成功移除用户"+name);
@@ -715,7 +715,7 @@ function deleteCurrentGroup(){
     if (cg.length > 0 && confirm("确认删除分组"+cg+"?")){
         $.ajax({
             type:"POST",
-            url:"/rest/bgroup/del?group="+cg,
+            url:"/rest/bidentity/del?group="+cg,
             success:function(data){
                 if (data.code == 200) alert("已成功删除分组"+cg);
                 else alert(data.msg);
@@ -760,7 +760,7 @@ function addAUser(){
                     //alert($("#add-user-name").val());
                     $.ajax({
                         type:"POST",
-                        url:"/rest/baccount/atgroup?uname="+uname+"&group="+cg,
+                        url:"/rest/baccount/atidentity?uname="+uname+"&group="+cg,
                         async:true,
                         success:function(jsn){
                             if (jsn.code == 200){
@@ -808,7 +808,7 @@ function addAGroup(){
                     </#if>
 
                         $.ajax({
-                        url:"/rest/association/group"<#if isSuper>+"?id="+$("#add-group-assoc").val()</#if>,
+                        url:"/rest/association/identity"<#if isSuper>+"?id="+$("#add-group-assoc").val()</#if>,
                             type:"POST",
                             data:JSON.stringify(group),
                             contentType : "application/json; charset=utf-8",

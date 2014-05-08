@@ -1,8 +1,6 @@
 package com.jieli.admin;
 
-import com.jieli.association.Association;
-import com.jieli.association.AssociationDAO;
-import com.jieli.association.GroupDAO;
+import com.jieli.association.*;
 import com.jieli.common.dao.AccountDAO;
 import com.jieli.common.entity.AccountState;
 import com.jieli.common.entity.ResponseEntity;
@@ -24,11 +22,11 @@ import java.util.Map;
  * Created by 95 on 2014/4/19.
  */
 @Singleton
-@Path("/bgroup")
-public class Group {
+@Path("/bidentity")
+public class Identity {
     private AccountDAO accountDAO = new AccountDAO();
     private AssociationDAO associationDAO = new AssociationDAO();
-    private GroupDAO groupDAO = new GroupDAO();
+    private IdentityDAO identityDAO = new IdentityDAO();
     private UserDAO userDAO = new UserDAO();
 
     @POST
@@ -44,12 +42,12 @@ public class Group {
             return Response.status(200).entity(responseEntity).build();
         }
 
-        Iterable<com.jieli.association.Group> groups = groupDAO.loadAll(IdentityUtils.getAssociationId(sessionId));
-        for (com.jieli.association.Group g : groups){
-            if (g.name.equals(group)){
-                groupDAO.deleteById(g.get_id().toString());
+        Iterable<com.jieli.association.Identity> identifies = identityDAO.loadAll(IdentityUtils.getAssociationId(sessionId));
+        for (com.jieli.association.Identity identity : identifies){
+            if (identity.name.equals(group)){
+                identityDAO.deleteById(identity.get_id().toString());
                 {
-                    Iterable<com.jieli.user.entity.User> users = userDAO.loadByGroup(IdentityUtils.getAssociationId(sessionId), group);
+                    Iterable<com.jieli.user.entity.User> users = userDAO.loadByIdentity(IdentityUtils.getAssociationId(sessionId), group);
                     for (User user : users) { user.group = ""; userDAO.save(user);}
 
                     responseEntity.code = 200;
@@ -58,7 +56,7 @@ public class Group {
             }
         }
         responseEntity.code = 9004;
-        responseEntity.msg = "无此分组";
+        responseEntity.msg = "无此职位";
         return  Response.status(200).entity(responseEntity).build();
     }
 
@@ -81,29 +79,29 @@ public class Group {
             params.put("isSuper", true);
             List<com.jieli.association.Association> associationList = new ArrayList<com.jieli.association.Association>();
             Iterable<com.jieli.association.Association> iterable = associationDAO.loadAll();
-            for (Association association : iterable)
+            for (com.jieli.association.Association association : iterable)
                 associationOps += "<option value='" + association.get_id() + "'>" + association.name + "</option>";
         }
         params.put("associationOps",associationOps);
 
         String groupList = "[";
-        Iterable<com.jieli.association.Group> groups = groupDAO.loadAll(account.associationId);
-        List<com.jieli.association.Group> groupListRet = new ArrayList<com.jieli.association.Group>();
+        Iterable<com.jieli.association.Identity> identifies = identityDAO.loadAll(account.associationId);
+        List<com.jieli.association.Identity> identityListRet = new ArrayList<com.jieli.association.Identity>();
         com.jieli.association.Association association = associationDAO.loadById(account.associationId);
         String firstGroupName = "";
-        for (com.jieli.association.Group group : groups){
-            groupListRet.add(group);
-            if (groupList.equals("[")) firstGroupName = group.name;
-            groupList += CommonUtil.ReplaceObjectId(group).replace("\"associationId\":\"" + account.associationId + "\"", "\"associationId\":\"" + association.name + "\"") +",";
+        for (com.jieli.association.Identity identity : identifies){
+            identityListRet.add(identity);
+            if (groupList.equals("[")) firstGroupName = identity.name;
+            groupList += CommonUtil.ReplaceObjectId(identity).replace("\"associationId\":\"" + account.associationId + "\"", "\"associationId\":\"" + association.name + "\"") +",";
         }
         if (groupList.endsWith(",")) groupList = groupList.substring(0,groupList.length()-1);
         groupList += "]";
 
         params.put("groupList",groupList);
 
-        params.put("groups",groupListRet);
+        params.put("groups", identityListRet);
         params.put("firstGroupName",firstGroupName);
 
-        return FTLrender.getResult("group_list.ftl",params);
+        return FTLrender.getResult("identity_list.ftl",params);
     }
 }

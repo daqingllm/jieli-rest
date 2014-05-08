@@ -9,7 +9,7 @@ import com.jieli.association.Association;
 import com.jieli.common.entity.InterestTag;
 import com.jieli.common.entity.ProfessionTag;
 import com.jieli.mongo.Model;
-import com.jieli.util.IdentifyUtils;
+import com.jieli.util.IdentityUtils;
 
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
@@ -128,11 +128,11 @@ public class CommonUtil {
     /* Accounts */
     public static String RoleCheckString(String sessionId){
         // is user ?
-        if (!IdentifyUtils.isValidate(sessionId)){
+        if (!IdentityUtils.isValidate(sessionId)){
             return errorReturn;
         }
 
-        if (!IdentifyUtils.isSuper(sessionId) && !IdentifyUtils.isAdmin(sessionId)){
+        if (!IdentityUtils.isSuper(sessionId) && !IdentityUtils.isAdmin(sessionId)){
             return errorReturn;
         }
 
@@ -142,11 +142,11 @@ public class CommonUtil {
     /* common */
     public static Response RoleCheckResponse(String sessionId){
         // is user ?
-        if (!IdentifyUtils.isValidate(sessionId)){
+        if (!IdentityUtils.isValidate(sessionId)){
             return Response.status(403).build();
         }
 
-        if (!IdentifyUtils.isSuper(sessionId) && !IdentifyUtils.isAdmin(sessionId)){
+        if (!IdentityUtils.isSuper(sessionId) && !IdentityUtils.isAdmin(sessionId)){
             return Response.status(403).build();
         }
 

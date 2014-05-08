@@ -9,7 +9,7 @@ import com.jieli.news.Image;
 import com.jieli.news.News;
 import com.jieli.news.NewsDAO;
 import com.jieli.util.CollectionUtils;
-import com.jieli.util.IdentifyUtils;
+import com.jieli.util.IdentityUtils;
 import com.jieli.util.MongoUtils;
 import com.sun.jersey.spi.resource.Singleton;
 import org.apache.commons.lang.StringUtils;
@@ -52,11 +52,11 @@ public class NewsService {
     @Produces(MediaType.APPLICATION_JSON+ ";charset=utf-8")
     public Response findNews(@CookieParam("u")String sessionId, @QueryParam("type") String type, @QueryParam("page") int page, @QueryParam("count") int pagesize){
 
-        if (!IdentifyUtils.isValidate(sessionId)) {
+        if (!IdentityUtils.isValidate(sessionId)) {
             return Response.status(403).build();
         }
 
-        String associationId = IdentifyUtils.getAssociationId(sessionId);
+        String associationId = IdentityUtils.getAssociationId(sessionId);
         List<News> newses = newsDAO.paginate(page, pagesize, "{associationId:#, type:#}", associationId, type);
 
 
@@ -98,7 +98,7 @@ public class NewsService {
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     public Response addNews(@CookieParam("u")String sessionId, News news){
 
-        if (!IdentifyUtils.isValidate(sessionId)) {
+        if (!IdentityUtils.isValidate(sessionId)) {
             return Response.status(403).build();
         }
 
@@ -122,12 +122,12 @@ public class NewsService {
     @Path("/appreciate")
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     public Response appreciate(@CookieParam("u")String sessionId, @QueryParam("news_id")String _id) {
-        if (!IdentifyUtils.isValidate(sessionId)) {
+        if (!IdentityUtils.isValidate(sessionId)) {
             return Response.status(403).build();
         }
 
         ResponseEntity responseEntity = new ResponseEntity();
-        String userId = IdentifyUtils.getUserId(sessionId);
+        String userId = IdentityUtils.getUserId(sessionId);
         if (StringUtils.isEmpty(_id) || !MongoUtils.isValidObjectId(_id)) {
             responseEntity.code = 4002;
             responseEntity.msg = "参数id无效";
@@ -164,13 +164,13 @@ public class NewsService {
     @Produces(MediaType.APPLICATION_JSON+ ";charset=utf-8")
     public Response loadCoverImages(@CookieParam("u")String sessionId, @QueryParam("type") String type, @QueryParam("count") int count){
 
-        if (!IdentifyUtils.isValidate(sessionId)) {
+        if (!IdentityUtils.isValidate(sessionId)) {
             return Response.status(403).build();
         }
 
         if(count<=0) count = 3;
 
-        String associationId = IdentifyUtils.getAssociationId(sessionId);
+        String associationId = IdentityUtils.getAssociationId(sessionId);
         List<News> newses = newsDAO.findWithLimit(count, "{associationId:#, type:#, imagesCount:{$gt: 0}}", associationId, type);
 
         List<Image> images = null;
@@ -195,7 +195,7 @@ public class NewsService {
     public Response comment(@CookieParam("u")String sessionId, Map<String, String> commentInfo) {
         //commentInfo内字段：content topicId commentedUserId(回复评论)
 
-        if (!IdentifyUtils.isValidate(sessionId)) {
+        if (!IdentityUtils.isValidate(sessionId)) {
             return Response.status(403).build();
         }
         String content = commentInfo.get("content");
@@ -224,7 +224,7 @@ public class NewsService {
         comment.topicId = newsId;
         comment.topicType = TopicType.News;
         comment.topicTitle = news.title;
-        comment.commentUserId = IdentifyUtils.getUserId(sessionId);
+        comment.commentUserId = IdentityUtils.getUserId(sessionId);
         comment.commentedUserId = commentInfo.get("commentedUserId");
         comment.content = content;
         comment.addTime = new Date();

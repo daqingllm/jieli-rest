@@ -2,7 +2,7 @@ package com.jieli.admin;
 
 import com.jieli.common.entity.ResponseEntity;
 import com.jieli.user.dao.UserDAO;
-import com.jieli.util.IdentifyUtils;
+import com.jieli.util.IdentityUtils;
 import com.sun.jersey.spi.resource.Singleton;
 
 import javax.ws.rs.CookieParam;
@@ -33,8 +33,8 @@ public class User {
 
         ResponseEntity responseEntity = new ResponseEntity();
         responseEntity.code = 9001;
-        if (IdentifyUtils.isAdmin(sessionId) && !IdentifyUtils.isSuper(sessionId)) {
-            Iterable<com.jieli.user.entity.User> users = userDAO.loadAll(IdentifyUtils.getAssociationId(sessionId));
+        if (IdentityUtils.isAdmin(sessionId) && !IdentityUtils.isSuper(sessionId)) {
+            Iterable<com.jieli.user.entity.User> users = userDAO.loadAll(IdentityUtils.getAssociationId(sessionId));
             responseEntity.code = 200;
             responseEntity.body = users;
         }
