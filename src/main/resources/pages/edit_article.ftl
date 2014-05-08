@@ -543,8 +543,8 @@
         $("#form-field-select-type").val(data["type"]);
         $("#form-field-textarea").val(data["content"]);
 
-        if (data.actDate && data.actDate.length >= 10)
-            $("#form-field-occDate").val(new Date(data.actDate.substr(0,10)).Format("yyyy-MM-dd"));
+        if (data.time && data.time.length >= 10)
+            $("#form-field-occDate").val(new Date(data.time.substr(0,10)).Format("yyyy-MM-dd"));
         else
             $("#form-field-occDate").val(GetDate10(new Date(),0));
 

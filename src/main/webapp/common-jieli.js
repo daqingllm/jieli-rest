@@ -113,9 +113,9 @@ function postThisArticle(){
     if (p_type == "history"){
         var p_otime = $("#form-field-occDate").val();
         if (p_otime == null || p_otime == "") {alert("请输入时间");return;}
-        json["occDate"] = p_otime;
+        json["time"] = p_otime;
     }else{
-        json["occDate"] = null;
+        json["time"] = null;
     }
 
     p_content = $("#form-field-textarea").val();

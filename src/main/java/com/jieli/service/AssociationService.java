@@ -16,7 +16,7 @@ import org.codehaus.jettison.json.JSONObject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -163,7 +163,7 @@ public class AssociationService {
         }
 
         Iterable<Identity> identifies = identityDAO.loadAll(associationId);
-        Map<String, Iterable<User>> result = new HashMap<String, Iterable<User>>();
+        Map<String, Iterable<User>> result = new LinkedHashMap<String, Iterable<User>>();
         for (Identity identity : identifies) {
             Iterable<User> users = userDAO.loadByIdentity(associationId, identity.name);
             result.put(identity.name, users);
@@ -279,7 +279,7 @@ public class AssociationService {
     @GET
     @Path("/identity")
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-    public Response getIdentity(@CookieParam("u")String sessionId, @QueryParam("id")String id, @QueryParam("identity")String identity) {
+    public Response getidentity(@CookieParam("u")String sessionId, @QueryParam("id")String id, @QueryParam("identity")String identity) {
         if (!IdentityUtils.isAdmin(sessionId)) {
             return Response.status(403).build();
         }

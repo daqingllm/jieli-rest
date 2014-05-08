@@ -692,14 +692,22 @@
                 arrangementDetail.children('.arrangement-detail-time').val(dtl.title);
                 arrangementDetail.children('.arrangement-detail-content').val(dtl.content);
 			}*/
+            var drItems = [true,true,true,true];
             if ($(".service-info") && $(".service-info").length > 0) {
-                $(".service-info").eq(0).children("input").eq(0).val("停车指引");
-                $(".service-info").eq(1).children("input").eq(0).val("住宿安排");
-                $(".service-info").eq(2).children("input").eq(0).val("其他信息");
-                $(".service-info").eq(3).children("input").eq(0).val("联系工作人员");
-                $(".service-info:lt(4)").each(function(){
-                    $(this).children("input").eq(0).attr("disabled", true);
-                    $(this).children(".icon-remove").remove();
+                if ($(".service-info").eq(0).children("input").length > 0 && $(".service-info").eq(0).children("input").eq(0).val().length > 0 && $(".service-info").eq(0).children("input").eq(0).val() != "停车指引") drItems[0] = false;
+                else $(".service-info").eq(0).children("input").eq(0).val("停车指引");
+                if ($(".service-info").eq(1).children("input").length > 0 && $(".service-info").eq(1).children("input").eq(0).val().length > 0 && $(".service-info").eq(1).children("input").eq(0).val() != "住宿安排") drItems[1] = false;
+                else $(".service-info").eq(1).children("input").eq(0).val("住宿安排");
+                if ($(".service-info").eq(2).children("input").length > 0 && $(".service-info").eq(2).children("input").eq(0).val().length > 0 && $(".service-info").eq(2).children("input").eq(0).val() != "其他信息") drItems[2] = false;
+                else $(".service-info").eq(2).children("input").eq(0).val("其他信息");
+                if ($(".service-info").eq(3).children("input").length > 0 && $(".service-info").eq(3).children("input").eq(0).val().length > 0 && $(".service-info").eq(3).children("input").eq(0).val() != "联系工作人员") drItems[3] = false;
+                else $(".service-info").eq(3).children("input").eq(0).val("联系工作人员");
+
+                $(".service-info:lt(4)").each(function(index){
+                    if (drItems[index]) {
+                        $(this).children("input").eq(0).attr("disabled", true);
+                        $(this).children(".icon-remove").remove();
+                    }
                 });
             }
         }else{

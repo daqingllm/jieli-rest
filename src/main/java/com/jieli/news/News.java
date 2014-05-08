@@ -20,6 +20,8 @@ public class News extends Model {
 
     public String title;
 
+    public Date time;
+
     public String overview;  // 资讯预览内容
 
     public String content; // 资讯实体内容
@@ -33,7 +35,6 @@ public class News extends Model {
     public Date addTime;
 
     public int commentCount;
-
 
     public String professionTag;
     public List<String> interestTags = new ArrayList<String>();

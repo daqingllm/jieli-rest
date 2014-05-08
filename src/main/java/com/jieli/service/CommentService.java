@@ -95,7 +95,7 @@ public class CommentService {
     public Response load(@QueryParam("commentId")String commentId, @QueryParam("topicId")String topicId, @QueryParam("topicType")String topicType, @QueryParam("page")int page, @QueryParam("count")int count){
         ResponseEntity responseEntity = new ResponseEntity();
 
-        List<Comment> comments = commentDAO.find("{topicId:#, topicType:#, isDeleted:#}", topicId, topicType, false);
+        List<Comment> comments = commentDAO.paginate(page, count, "{topicId:#, topicType:#, isDeleted:#}", topicId, topicType, false);
 
         if( !CollectionUtils.isEmpty(comments) ){
             for(Comment comment : comments){
