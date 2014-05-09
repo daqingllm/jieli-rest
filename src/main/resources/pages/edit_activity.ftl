@@ -692,8 +692,46 @@
                 arrangementDetail.children('.arrangement-detail-time').val(dtl.title);
                 arrangementDetail.children('.arrangement-detail-content').val(dtl.content);
 			}*/
+            var drItems = [true,true,true,true];
+            if ($(".service-info") && $(".service-info").length > 0) {
+                if ($(".service-info").eq(0).children("input").length > 0 && $(".service-info").eq(0).children("input").eq(0).val().length > 0 && $(".service-info").eq(0).children("input").eq(0).val() != "停车指引") drItems[0] = false;
+                else $(".service-info").eq(0).children("input").eq(0).val("停车指引");
+                if ($(".service-info").eq(1).children("input").length > 0 && $(".service-info").eq(1).children("input").eq(0).val().length > 0 && $(".service-info").eq(1).children("input").eq(0).val() != "住宿安排") drItems[1] = false;
+                else $(".service-info").eq(1).children("input").eq(0).val("住宿安排");
+                if ($(".service-info").eq(2).children("input").length > 0 && $(".service-info").eq(2).children("input").eq(0).val().length > 0 && $(".service-info").eq(2).children("input").eq(0).val() != "其他信息") drItems[2] = false;
+                else $(".service-info").eq(2).children("input").eq(0).val("其他信息");
+                if ($(".service-info").eq(3).children("input").length > 0 && $(".service-info").eq(3).children("input").eq(0).val().length > 0 && $(".service-info").eq(3).children("input").eq(0).val() != "联系工作人员") drItems[3] = false;
+                else $(".service-info").eq(3).children("input").eq(0).val("联系工作人员");
+
+                $(".service-info:lt(4)").each(function(index){
+                    if (drItems[index]) {
+                        $(this).children("input").eq(0).attr("disabled", true);
+                        $(this).children(".icon-remove").remove();
+                    }
+                });
+            }
         }else{
             addServiceInfo();
+            /*No1.  2014年5月7日22:04:35 初始化4种类型 - 应该不会运行到这里*/
+            $(".service-info").last().children("input").eq(0).val("停车");
+            $(".service-info").last().children("input").eq(0).attr("disabled",true);
+            $(".service-info").last().children(".icon-remove").remove();
+
+            addServiceInfo();
+            $(".service-info").last().children("input").eq(0).val("住宿");
+            $(".service-info").last().children("input").eq(0).attr("disabled",true);
+            $(".service-info").last().children(".icon-remove").remove();
+
+            addServiceInfo();
+            $(".service-info").last().children("input").eq(0).val("其他");
+            $(".service-info").last().children("input").eq(0).attr("disabled",true);
+            $(".service-info").last().children(".icon-remove").remove();
+
+            addServiceInfo();
+            $(".service-info").last().children("input").eq(0).val("联系人");
+            $(".service-info").last().children("input").eq(0).attr("disabled",true);
+            $(".service-info").last().children(".icon-remove").remove();
+            /*No.1  */
             $('#icon-plus-si').click(addServiceInfo);
         }
 
@@ -711,8 +749,12 @@
             <#if isSuper>$("form-field-associations").val(data.associationId);</#if>
 
     <#else>
+        <#if got=="old">
+            if (confirm("不允许编辑历史活动！"));
+        <#else>
+            if(confirm("${got}"));
+        </#if>
 
-        if(confirm("${got}"));
         window.location.href = "/rest/bactivity/list";
     </#if>
     }

@@ -5,7 +5,7 @@ import com.jieli.common.dao.AccountDAO;
 import com.jieli.common.entity.*;
 import com.jieli.common.entity.Account;
 import com.jieli.util.FTLrender;
-import com.jieli.util.IdentifyUtils;
+import com.jieli.util.IdentityUtils;
 import com.sun.jersey.spi.resource.Singleton;
 
 import javax.ws.rs.*;
@@ -26,7 +26,7 @@ public class Association {
     @Path("/new")
     @Produces(MediaType.TEXT_HTML)
     public String CreateAssociation(@CookieParam("u")String sessionId,@QueryParam("name")String name){
-        if (!IdentifyUtils.isSuper(sessionId)){
+        if (!IdentityUtils.isSuper(sessionId)){
             return CommonUtil.errorReturn;
         }
 
@@ -40,7 +40,7 @@ public class Association {
     @Path("/list")
     @Produces(MediaType.TEXT_HTML)
     public String GetAssociations(@CookieParam("u")String sessionId){
-        if (!IdentifyUtils.isSuper(sessionId))
+        if (!IdentityUtils.isSuper(sessionId))
             return CommonUtil.errorReturn;
 
         com.jieli.common.entity.Account account = accountDAO.loadById(sessionId);

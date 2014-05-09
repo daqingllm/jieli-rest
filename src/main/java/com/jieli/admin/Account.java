@@ -10,7 +10,7 @@ import com.jieli.common.entity.ResponseEntity;
 import com.jieli.user.dao.UserDAO;
 import com.jieli.user.entity.User;
 import com.jieli.util.FTLrender;
-import com.jieli.util.IdentifyUtils;
+import com.jieli.util.IdentityUtils;
 import com.jieli.util.PasswordGenerator;
 import com.sun.jersey.spi.resource.Singleton;
 import org.codehaus.jettison.json.JSONException;
@@ -49,7 +49,7 @@ public class Account {
     @Path("/register")
     @Produces(MediaType.TEXT_HTML)
     public String editNews(@CookieParam("u")String sessionId,@CookieParam("a")String associationId,@CookieParam("r")String role){
-        if (!IdentifyUtils.isValidate(sessionId)) {
+        if (!IdentityUtils.isValidate(sessionId)) {
             return CommonUtil.errorReturn;
         }
 
@@ -61,7 +61,7 @@ public class Account {
 
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("username",account.username);
-        boolean isSuper = IdentifyUtils.isSuper(sessionId);
+        boolean isSuper = IdentityUtils.isSuper(sessionId);
         params.put("isSuper",isSuper);
         String associationOps = "";
         List<Association> associationList = new ArrayList<Association>();
@@ -116,7 +116,7 @@ public class Account {
     @Path("/list")
     @Produces(MediaType.TEXT_HTML)
     public String loadUsers(@CookieParam("u")String sessionId,@QueryParam("id")String id /*,@QueryParam("state")int state*/) throws JsonProcessingException {
-        if (!IdentifyUtils.isAdmin(sessionId) || IdentifyUtils.isSuper(sessionId)) {
+        if (!IdentityUtils.isAdmin(sessionId) || IdentityUtils.isSuper(sessionId)) {
             return CommonUtil.errorReturn;
         }
         ResponseEntity responseEntity = new ResponseEntity();
@@ -124,7 +124,7 @@ public class Account {
         String associationId = null;
         //List<com.jieli.common.entity.Account> accounts = new ArrayList<com.jieli.common.entity.Account>();
         String accountList = "[";
-        if (IdentifyUtils.getState(sessionId) == AccountState.SUPPER) {
+        if (IdentityUtils.getState(sessionId) == AccountState.SUPPER) {
             Iterable<Association> associations = associationDAO.loadAll();
             for (Association association : associations) {
                 Iterable<com.jieli.common.entity.Account> accountAdmin = accountDAO.loadByAssociationId(association.get_id().toString(), AccountState.ADMIN);
@@ -146,7 +146,7 @@ public class Account {
                 }
             }
         } else {
-            associationId = IdentifyUtils.getAssociationId(sessionId);
+            associationId = IdentityUtils.getAssociationId(sessionId);
             Association association = associationDAO.loadById(associationId);
             if (association == null) {
                 responseEntity.code = 2102;
@@ -165,7 +165,7 @@ public class Account {
         accountList = CommonUtil.RemoveLast(accountList, ",") + "]";
 
         Map<String, Object> params = new HashMap<String, Object>();
-        params.put("isSuper",IdentifyUtils.getState(sessionId) == AccountState.SUPPER);
+        params.put("isSuper", IdentityUtils.getState(sessionId) == AccountState.SUPPER);
         params.put("jsonAccList",accountList);
         params.put("username",accountDAO.loadById(sessionId).username);
 
@@ -202,9 +202,9 @@ public class Account {
         User user = userDAO.loadById(userId);
 
         ResponseEntity responseEntity = new ResponseEntity();
-        if (CommonUtil.RoleCheckResponse(sessionId) != null || user == null || (!IdentifyUtils.isSuper(sessionId) && !user.associationId.equals(IdentifyUtils.getAssociationId(sessionId)))) {
+        if (CommonUtil.RoleCheckResponse(sessionId) != null || user == null || (!IdentityUtils.isSuper(sessionId) && !user.associationId.equals(IdentityUtils.getAssociationId(sessionId)))) {
             responseEntity.code = 9001;
-            responseEntity.msg = "no access !";
+            responseEntity.msg = "无权限!";
             return Response.status(200).entity(responseEntity).build();
         }
 
@@ -229,10 +229,60 @@ public class Account {
 
         if (user == null) {responseEntity.code=9001;responseEntity.msg="无此用户";return Response.status(200).entity(responseEntity).build();}
 
-        if (!IdentifyUtils.isSuper(sessionId) && !user.associationId.equals(IdentifyUtils.getAssociationId(sessionId))){responseEntity.code=9001;responseEntity.msg="无权限修改此用户的信息";return Response.status(200).entity(responseEntity).build();}
+        if (!IdentityUtils.isSuper(sessionId) && !user.associationId.equals(IdentityUtils.getAssociationId(sessionId))){responseEntity.code=9001;responseEntity.msg="无权限修改此用户的信息";return Response.status(200).entity(responseEntity).build();}
 
         if (user.group.equals(group)){
             user.group = "";
+            userDAO.save(user);
+            responseEntity.code = 200;
+            return Response.status(200).entity(responseEntity).build();
+        }else{
+            responseEntity.code = 9003;
+            responseEntity.msg = "此用户不属于改组";
+            return Response.status(200).entity(responseEntity).build();
+        }
+    }
+
+
+    @POST
+    @Path("/atidentity")
+    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+    public Response addToIdentity (@CookieParam("u") String sessionId, @QueryParam("uname") String userId, @QueryParam("group") String group) {
+
+        User user = userDAO.loadById(userId);
+
+        ResponseEntity responseEntity = new ResponseEntity();
+        if (CommonUtil.RoleCheckResponse(sessionId) != null || user == null || (!IdentityUtils.isSuper(sessionId) && !user.associationId.equals(IdentityUtils.getAssociationId(sessionId)))) {
+            responseEntity.code = 9001;
+            responseEntity.msg = "无权限!";
+            return Response.status(200).entity(responseEntity).build();
+        }
+
+        if (user != null && user.identity != null && !user.identity.isEmpty()) responseEntity.msg = user.identity;
+        user.identity = group;
+        userDAO.update(user);
+
+        responseEntity.code = 200;
+        responseEntity.body = user.name;
+        return Response.status(200).entity(responseEntity).build();
+    }
+
+    @POST
+    @Path("/dfidentity")
+    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+    public Response deleteFromIdentity(@CookieParam("u") String sessionId, @QueryParam("uname") String userId, @QueryParam("group") String group){
+        Response response = CommonUtil.RoleCheckResponse(sessionId);
+        if (response != null) return response;
+
+        User user = userDAO.loadById(userId);
+        ResponseEntity responseEntity = new ResponseEntity();
+
+        if (user == null) {responseEntity.code=9001;responseEntity.msg="无此用户";return Response.status(200).entity(responseEntity).build();}
+
+        if (!IdentityUtils.isSuper(sessionId) && !user.associationId.equals(IdentityUtils.getAssociationId(sessionId))){responseEntity.code=9001;responseEntity.msg="无权限修改此用户的信息";return Response.status(200).entity(responseEntity).build();}
+
+        if (user.identity.equals(group)){
+            user.identity = "";
             userDAO.save(user);
             responseEntity.code = 200;
             return Response.status(200).entity(responseEntity).build();

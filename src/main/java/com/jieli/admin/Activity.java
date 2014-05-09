@@ -11,7 +11,7 @@ import com.jieli.common.entity.*;
 import com.jieli.common.entity.Account;
 import com.jieli.mongo.BaseDAO;
 import com.jieli.util.FTLrender;
-import com.jieli.util.IdentifyUtils;
+import com.jieli.util.IdentityUtils;
 import com.sun.jersey.spi.resource.Singleton;
 
 import javax.ws.rs.*;
@@ -34,23 +34,23 @@ public class Activity {
     @Produces(MediaType.TEXT_HTML)
     @Path("/new")
     public String newActivity(@CookieParam("u") String sessionId) {
-        if(!IdentifyUtils.isValidate(sessionId)) {
+        if(!IdentityUtils.isValidate(sessionId)) {
             return CommonUtil.errorReturn;
         }
 
-        if (!IdentifyUtils.isSuper(sessionId) && !IdentifyUtils.isAdmin(sessionId)){
+        if (!IdentityUtils.isSuper(sessionId) && !IdentityUtils.isAdmin(sessionId)){
             return CommonUtil.errorReturn;
         }
 
         boolean isSuper = false;
         String associationList = "";
 
-        if (IdentifyUtils.isSuper(sessionId)) {
+        if (IdentityUtils.isSuper(sessionId)) {
             isSuper = true;
             associationList = CommonUtil.MakeAssociationOptionListForSelect("");
         } else {
             isSuper = false;
-            associationList = CommonUtil.MakeAssociationOptionListForSelect(IdentifyUtils.getAssociationId(sessionId));
+            associationList = CommonUtil.MakeAssociationOptionListForSelect(IdentityUtils.getAssociationId(sessionId));
         }
 
         String username = accountDAO.loadById(sessionId).username;
@@ -77,7 +77,7 @@ public class Activity {
 
         int numSucc = 0;
         boolean isSuper = false;
-        if (IdentifyUtils.isSuper(sessionId)){
+        if (IdentityUtils.isSuper(sessionId)){
             isSuper = true;
             activity.tag = AcivityTag.RECOMMEND;
             String []associations = activity.associationId.split(",");
@@ -92,7 +92,7 @@ public class Activity {
             }
         }else {
             activity.tag = AcivityTag.OFFICIAL;
-            activity.associationId = IdentifyUtils.getAssociationId(sessionId);
+            activity.associationId = IdentityUtils.getAssociationId(sessionId);
 
             activityDAO.save(activity);
             numSucc ++;
@@ -136,7 +136,7 @@ public class Activity {
         // List<com.jieli.activity.Activity> activityListHistory = new ArrayList<com.jieli.activity.Activity>();
         String activityList = "";
 
-        if (IdentifyUtils.isSuper(sessionId)){
+        if (IdentityUtils.isSuper(sessionId)){
             params.put("isSuper",true);
         }
         else {
@@ -191,7 +191,7 @@ public class Activity {
         responseEntity.code = 200;
         responseEntity.msg = "已成功删除";
 
-        if (IdentifyUtils.isAdmin(sessionId)){
+        if (IdentityUtils.isAdmin(sessionId)){
             com.jieli.activity.Activity activity = activityDAO.loadById(activityId);
             if (activity == null)
                 responseEntity.msg = "该活动已不存在";
@@ -199,7 +199,7 @@ public class Activity {
                 responseEntity.msg += "“"+activity.title+"”";
                 activityDAO.deleteById(activityId);
             }
-        } else if (IdentifyUtils.isSuper(sessionId)){
+        } else if (IdentityUtils.isSuper(sessionId)){
             ;
         }
         return Response.status(200).entity(responseEntity).build();
@@ -219,31 +219,31 @@ public class Activity {
 
         if (activity == null)
             params.put("got","无此活动！");
-        else if(activity.actDate != null
-         && activity.actDate.compareTo(new Date()) < 0)
+        else if(activity.beginDate != null
+         && activity.beginDate.compareTo(new Date()) < 0)
             params.put("got","old");
         else {
             params.put("got", "");
 
             // 判断用户是否已经登录
             if (account == null ||
-                    (!IdentifyUtils.isSuper(sessionId) && !activity.associationId.equals(account.associationId)) ||
-                    !IdentifyUtils.isValidate(sessionId) ||
-                    !IdentifyUtils.isAdmin(sessionId)
+                    (!IdentityUtils.isSuper(sessionId) && !activity.associationId.equals(account.associationId)) ||
+                    !IdentityUtils.isValidate(sessionId) ||
+                    !IdentityUtils.isAdmin(sessionId)
                     ) {
                 return CommonUtil.errorReturn;
             }
 
             activity_data = CommonUtil.ReplaceObjectId(activity);
 
-            if (IdentifyUtils.isSuper(sessionId)) {
+            if (IdentityUtils.isSuper(sessionId)) {
                 associationList = CommonUtil.MakeAssociationOptionListForSelect("");
             } else {
-                associationList = CommonUtil.MakeAssociationOptionListForSelect(IdentifyUtils.getAssociationId(sessionId));
+                associationList = CommonUtil.MakeAssociationOptionListForSelect(IdentityUtils.getAssociationId(sessionId));
             }
         }
         params.put("username",account.username);
-        params.put("isSuper",IdentifyUtils.isSuper(sessionId));
+        params.put("isSuper", IdentityUtils.isSuper(sessionId));
         params.put("act_data",activity_data);
         params.put("associationList",associationList);
 
@@ -265,31 +265,31 @@ public class Activity {
 
         if (activity == null)
             params.put("got","无此活动！");
-        else if(activity.actDate != null
-                && activity.actDate.compareTo(new Date()) < 0)
+        else if(activity.beginDate != null
+                && activity.beginDate.compareTo(new Date()) < 0)
             params.put("got","old");
         else {
             params.put("got", "");
 
             // 判断用户是否已经登录
             if (account == null ||
-                    (!IdentifyUtils.isSuper(sessionId) && !activity.associationId.equals(account.associationId)) ||
-                    !IdentifyUtils.isValidate(sessionId) ||
-                    !IdentifyUtils.isAdmin(sessionId)
+                    (!IdentityUtils.isSuper(sessionId) && !activity.associationId.equals(account.associationId)) ||
+                    !IdentityUtils.isValidate(sessionId) ||
+                    !IdentityUtils.isAdmin(sessionId)
                     ) {
                 return CommonUtil.errorReturn;
             }
 
             activity_data = CommonUtil.ReplaceObjectId(activity);
 
-            if (IdentifyUtils.isSuper(sessionId)) {
+            if (IdentityUtils.isSuper(sessionId)) {
                 associationList = CommonUtil.MakeAssociationOptionListForSelect("");
             } else {
-                associationList = CommonUtil.MakeAssociationOptionListForSelect(IdentifyUtils.getAssociationId(sessionId));
+                associationList = CommonUtil.MakeAssociationOptionListForSelect(IdentityUtils.getAssociationId(sessionId));
             }
         }
         params.put("username",account.username);
-        params.put("isSuper",IdentifyUtils.isSuper(sessionId));
+        params.put("isSuper", IdentityUtils.isSuper(sessionId));
         params.put("act_data",activity_data);
         params.put("associationList",associationList);
         return FTLrender.getResult("view_activity.ftl",params);
@@ -322,7 +322,7 @@ public class Activity {
             com.jieli.common.entity.Account account = accountDAO.loadById(sessionId);
             Map<String, Object> params = new HashMap<String, Object>();
             params.put("username",account.username);
-            params.put("isSuper",IdentifyUtils.isSuper(sessionId));
+            params.put("isSuper", IdentityUtils.isSuper(sessionId));
             params.put("jsonCommentList",commentListString);
             params.put("topicId",activityId);
             params.put("ctype","activity");

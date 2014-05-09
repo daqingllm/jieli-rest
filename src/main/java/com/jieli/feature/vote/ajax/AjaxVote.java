@@ -4,13 +4,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jieli.association.Association;
 import com.jieli.association.AssociationDAO;
 import com.jieli.common.entity.ResponseEntity;
-import com.jieli.feature.help.entity.SimpleHelpInfo;
 import com.jieli.feature.vote.dao.VoteDAO;
 import com.jieli.feature.vote.dao.VoteResultDAO;
 import com.jieli.feature.vote.entity.SimpleVoteInfo;
 import com.jieli.user.dao.UserDAO;
 import com.jieli.user.entity.User;
-import com.jieli.util.IdentifyUtils;
+import com.jieli.util.IdentityUtils;
 import org.apache.commons.lang.StringUtils;
 
 import javax.ws.rs.*;
@@ -34,10 +33,10 @@ public class AjaxVote {
     @GET
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     public Response getVoteList(@CookieParam("u")String sessionId, @QueryParam("a")String associationId, @QueryParam("page")int page, @QueryParam("size")int size) {
-        if (!IdentifyUtils.isValidate(sessionId)) {
+        if (!IdentityUtils.isValidate(sessionId)) {
             return Response.status(403).build();
         }
-        String userId = IdentifyUtils.getUserId(sessionId);
+        String userId = IdentityUtils.getUserId(sessionId);
         ResponseEntity responseEntity = new ResponseEntity();
         if (StringUtils.isEmpty(userId)) {
             responseEntity.code = 1103;
@@ -50,10 +49,10 @@ public class AjaxVote {
             responseEntity.msg = "账户已被删除";
             return Response.status(200).entity(responseEntity).build();
         }
-        boolean isSuper = IdentifyUtils.isSuper(sessionId);
-        boolean isAdmin = IdentifyUtils.isAdmin(sessionId);
+        boolean isSuper = IdentityUtils.isSuper(sessionId);
+        boolean isAdmin = IdentityUtils.isAdmin(sessionId);
         if (!isSuper && isAdmin) {
-            associationId = IdentifyUtils.getAssociationId(sessionId);
+            associationId = IdentityUtils.getAssociationId(sessionId);
         } else if (isSuper) {
             if (StringUtils.isEmpty(associationId)) {
                 responseEntity.code = 1101;

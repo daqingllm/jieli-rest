@@ -698,6 +698,26 @@
         $("#form-field-actDate").val(GetDate10(new Date(),0));
         addArrangementDetail();
         addServiceInfo();
+        /*No1.  2014年5月7日22:04:35 初始化4种类型*/
+        $(".service-info").last().children("input").eq(0).val("停车指引");
+        $(".service-info").last().children("input").eq(0).attr("disabled",true);
+        $(".service-info").last().children(".icon-remove").remove();
+
+        addServiceInfo();
+        $(".service-info").last().children("input").eq(0).val("住宿安排");
+        $(".service-info").last().children("input").eq(0).attr("disabled",true);
+        $(".service-info").last().children(".icon-remove").remove();
+
+        addServiceInfo();
+        $(".service-info").last().children("input").eq(0).val("其他信息");
+        $(".service-info").last().children("input").eq(0).attr("disabled",true);
+        $(".service-info").last().children(".icon-remove").remove();
+
+        addServiceInfo();
+        $(".service-info").last().children("input").eq(0).val("联系工作人员");
+        $(".service-info").last().children("input").eq(0).attr("disabled",true);
+        $(".service-info").last().children(".icon-remove").remove();
+        /*No.1  */
 
         $('#icon-plus-ad').click(addArrangementDetail);
         $('#icon-plus-si').click(addServiceInfo);

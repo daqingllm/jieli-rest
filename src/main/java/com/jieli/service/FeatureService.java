@@ -1,10 +1,5 @@
 package com.jieli.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jieli.activity.ActivityInfo;
-import com.jieli.activity.RelatedActivity;
-import com.jieli.activity.RelatedType;
 import com.jieli.comment.Comment;
 import com.jieli.comment.CommentUserInfoUtil;
 import com.jieli.comment.TopicType;
@@ -23,7 +18,7 @@ import com.jieli.user.dao.UserDAO;
 import com.jieli.user.entity.FriendMsg;
 import com.jieli.user.entity.User;
 import com.jieli.util.CollectionUtils;
-import com.jieli.util.IdentifyUtils;
+import com.jieli.util.IdentityUtils;
 import com.jieli.util.MongoUtils;
 import com.sun.jersey.spi.resource.Singleton;
 import org.apache.commons.lang.StringUtils;
@@ -63,10 +58,10 @@ public class FeatureService {
     @GET
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     public Response getHelpList(@CookieParam("u")String sessionId, @QueryParam("page")int page, @QueryParam("size")int size, @QueryParam("type")int type) {
-        if(!IdentifyUtils.isValidate(sessionId)) {
+        if(!IdentityUtils.isValidate(sessionId)) {
             return Response.status(403).build();
         }
-        String userId = IdentifyUtils.getUserId(sessionId);
+        String userId = IdentityUtils.getUserId(sessionId);
         ResponseEntity responseEntity = new ResponseEntity();
         if (StringUtils.isEmpty(userId)) {
             responseEntity.code = 1103;
@@ -79,7 +74,7 @@ public class FeatureService {
             responseEntity.msg = "账户已被删除";
             return  Response.status(200).entity(responseEntity).build();
         }
-        String associationId = IdentifyUtils.getAssociationId(sessionId);
+        String associationId = IdentityUtils.getAssociationId(sessionId);
         if(StringUtils.isEmpty(associationId)) {
             responseEntity.code = 1105;
             responseEntity.msg = "未加入协会";
@@ -107,7 +102,7 @@ public class FeatureService {
     @GET
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     public Response getDetailHelpInfo(@CookieParam("u")String sessionId, @QueryParam("helpId")String helpId) {
-        if(!IdentifyUtils.isValidate(sessionId)) {
+        if(!IdentityUtils.isValidate(sessionId)) {
             return Response.status(403).build();
         }
         ResponseEntity responseEntity = new ResponseEntity();
@@ -131,7 +126,7 @@ public class FeatureService {
     @POST
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     public Response addHelpInfo(@CookieParam("u") String sessionId, HelpInfo help) {
-        if(!IdentifyUtils.isValidate(sessionId)) {
+        if(!IdentityUtils.isValidate(sessionId)) {
             return Response.status(403).build();
         }
         ResponseEntity responseEntity = new ResponseEntity();
@@ -140,8 +135,8 @@ public class FeatureService {
             responseEntity.msg = "缺少参数";
             return Response.status(200).entity(responseEntity).build();
         }
-        String associationId = IdentifyUtils.getAssociationId(sessionId);
-        String userId = IdentifyUtils.getUserId(sessionId);
+        String associationId = IdentityUtils.getAssociationId(sessionId);
+        String userId = IdentityUtils.getUserId(sessionId);
         help.setAssociationId(associationId);
         help.setAddTime(new Date());
         help.setAttentionNum(0);
@@ -161,7 +156,7 @@ public class FeatureService {
         }
         insertHelpDynamic(userId, result.get_id().toString(), HelpDynamicType.SPONSER);
 
-        List<String> concernedUserIds = IdentifyUtils.getConcerned(userId);
+        List<String> concernedUserIds = IdentityUtils.getConcerned(userId);
         for (String concernedUserId : concernedUserIds) {
             Message message = new Message();
             message.messageType = MessageType.FRIEND;
@@ -171,9 +166,9 @@ public class FeatureService {
             friendMsg.topicType = TopicType.Help;
             friendMsg.topicId = help.get_id().toString();
             if (help.getType() == 0) {
-                friendMsg.msg = "您关注的 " + IdentifyUtils.getUserName(userId) + " 发起了一条需求 " + help.getTitle();
+                friendMsg.msg = "您关注的 " + IdentityUtils.getUserName(userId) + " 发起了一条需求 " + help.getTitle();
             } else {
-                friendMsg.msg = "您关注的 " + IdentifyUtils.getUserName(userId) + " 参加了一条供给 " + help.getTitle();
+                friendMsg.msg = "您关注的 " + IdentityUtils.getUserName(userId) + " 参加了一条供给 " + help.getTitle();
             }
             message.content = friendMsg;
             message.addTime = new Date();
@@ -194,7 +189,7 @@ public class FeatureService {
     @POST
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     public Response updateHelpInfo(@CookieParam("u") String sessionId, @QueryParam("helpId")String helpId, HelpInfo newHelp) {
-        if(!IdentifyUtils.isValidate(sessionId)) {
+        if(!IdentityUtils.isValidate(sessionId)) {
             return Response.status(403).build();
         }
         ResponseEntity responseEntity = new ResponseEntity();
@@ -203,9 +198,9 @@ public class FeatureService {
             responseEntity.msg = "缺少参数";
             return Response.status(200).entity(responseEntity).build();
         }
-        String userId = IdentifyUtils.getUserId(sessionId);
+        String userId = IdentityUtils.getUserId(sessionId);
         HelpInfo oldHelp = helpDAO.loadById(helpId);
-        if(!oldHelp.getUserId().equals(userId) && !IdentifyUtils.isAdmin(sessionId)) {
+        if(!oldHelp.getUserId().equals(userId) && !IdentityUtils.isAdmin(sessionId)) {
             responseEntity.code = 1403;
             responseEntity.msg = "非自己互帮互助帖，不能修改";
             return Response.status(200).entity(responseEntity).build();
@@ -229,10 +224,10 @@ public class FeatureService {
     @GET
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     public Response deleteHelpInfo(@CookieParam("u") String sessionId, @QueryParam("helpId")String helpId) {
-        if(!IdentifyUtils.isValidate(sessionId)) {
+        if(!IdentityUtils.isValidate(sessionId)) {
             return Response.status(403).build();
         }
-        if(!IdentifyUtils.isAdmin(sessionId)) {
+        if(!IdentityUtils.isAdmin(sessionId)) {
             return Response.status(403).build();
         }
         ResponseEntity responseEntity = new ResponseEntity();
@@ -241,7 +236,7 @@ public class FeatureService {
             responseEntity.msg = "缺少参数";
             return Response.status(200).entity(responseEntity).build();
         }
-        String userId = IdentifyUtils.getUserId(sessionId);
+        String userId = IdentityUtils.getUserId(sessionId);
         if(StringUtils.isEmpty(userId)) {
             responseEntity.code = 1103;
             responseEntity.msg = "账户出错";
@@ -274,7 +269,7 @@ public class FeatureService {
     @GET
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     public Response getHelpComment(@CookieParam("u")String sessionId, @QueryParam("helpId")String helpId) {
-        if(!IdentifyUtils.isValidate(sessionId)) {
+        if(!IdentityUtils.isValidate(sessionId)) {
             return Response.status(403).build();
         }
         ResponseEntity responseEntity = new ResponseEntity();
@@ -304,10 +299,10 @@ public class FeatureService {
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     public Response addHelpComment(@CookieParam("u")String sessionId, Map<String, String> commentInfo) {
         //commentInfo内字段：content topicId commentedUserId(回复评论)
-        if(!IdentifyUtils.isValidate(sessionId)) {
+        if(!IdentityUtils.isValidate(sessionId)) {
             return Response.status(403).build();
         }
-        String userId = IdentifyUtils.getUserId(sessionId);
+        String userId = IdentityUtils.getUserId(sessionId);
         ResponseEntity responseEntity = new ResponseEntity();
         User user = userDAO.loadById(userId);
         if (StringUtils.isEmpty(userId) ) {
@@ -369,11 +364,11 @@ public class FeatureService {
     @GET
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     public Response deleteComment(@CookieParam("u")String sessionId, @QueryParam("helpId")String helpId, @QueryParam("commentIndex")Integer commentIndex){
-        if(!IdentifyUtils.isValidate(sessionId)) {
+        if(!IdentityUtils.isValidate(sessionId)) {
             return Response.status(403).build();
         }
         // 网络延迟、多线程问题 index
-        String userId = IdentifyUtils.getUserId(sessionId);
+        String userId = IdentityUtils.getUserId(sessionId);
         ResponseEntity responseEntity = new ResponseEntity();
         if (StringUtils.isEmpty(userId)) {
             responseEntity.code = 1103;
@@ -396,7 +391,7 @@ public class FeatureService {
             responseEntity.msg = "参数错误";
             return Response.status(200).entity(responseEntity).build();
         }
-        if(!help.getUserId().equals(userId) || !IdentifyUtils.isAdmin(sessionId)) {
+        if(!help.getUserId().equals(userId) || !IdentityUtils.isAdmin(sessionId)) {
             responseEntity.code = 1403;
             responseEntity.msg = "权限不足";
             return Response.status(403).entity(responseEntity).build();
@@ -415,10 +410,10 @@ public class FeatureService {
     @POST
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     public Response addFocus(@CookieParam("u")String sessionId, @QueryParam("helpId")String helpId){
-        if(!IdentifyUtils.isValidate(sessionId)) {
+        if(!IdentityUtils.isValidate(sessionId)) {
             return Response.status(403).build();
         }
-        String userId = IdentifyUtils.getUserId(sessionId);
+        String userId = IdentityUtils.getUserId(sessionId);
         ResponseEntity responseEntity = new ResponseEntity();
         if (StringUtils.isEmpty(userId)) {
             responseEntity.code = 1103;
@@ -481,10 +476,10 @@ public class FeatureService {
     @POST
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     public Response addTop(@CookieParam("u")String sessionId, @QueryParam("helpId")String helpId, @QueryParam("commentId")String commentId) {
-        if(!IdentifyUtils.isValidate(sessionId)) {
+        if(!IdentityUtils.isValidate(sessionId)) {
             return Response.status(403).build();
         }
-        String userId = IdentifyUtils.getUserId(sessionId);
+        String userId = IdentityUtils.getUserId(sessionId);
         ResponseEntity responseEntity = new ResponseEntity();
         if (StringUtils.isEmpty(userId)) {
             responseEntity.code = 1103;
@@ -502,7 +497,7 @@ public class FeatureService {
             responseEntity.msg = "参数错误";
             return Response.status(200).entity(responseEntity).build();
         }
-        if(!help.getUserId().equals(userId) && !IdentifyUtils.isAdmin(sessionId)) {
+        if(!help.getUserId().equals(userId) && !IdentityUtils.isAdmin(sessionId)) {
             responseEntity.code = 1403;
             responseEntity.msg = "权限不足";
             return Response.status(403).entity(responseEntity).build();
@@ -560,10 +555,10 @@ public class FeatureService {
     @GET
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     public Response getVoteList(@CookieParam("u")String sessionId, @QueryParam("page")int page, @QueryParam("size")int size) {
-        if(!IdentifyUtils.isValidate(sessionId)) {
+        if(!IdentityUtils.isValidate(sessionId)) {
             return Response.status(403).build();
         }
-        String userId = IdentifyUtils.getUserId(sessionId);
+        String userId = IdentityUtils.getUserId(sessionId);
         ResponseEntity responseEntity = new ResponseEntity();
         if (StringUtils.isEmpty(userId)) {
             responseEntity.code = 1103;
@@ -576,7 +571,7 @@ public class FeatureService {
             responseEntity.msg = "账户已被删除";
             return  Response.status(200).entity(responseEntity).build();
         }
-        String associationId = IdentifyUtils.getAssociationId(sessionId);
+        String associationId = IdentityUtils.getAssociationId(sessionId);
         if(StringUtils.isEmpty(associationId)) {
             responseEntity.code = 1105;
             responseEntity.msg = "未加入协会";
@@ -604,7 +599,7 @@ public class FeatureService {
     @GET
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     public Response getVoteInfo(@CookieParam("u")String sessionId, @QueryParam("voteId")String voteId) {
-        if(!IdentifyUtils.isValidate(sessionId)) {
+        if(!IdentityUtils.isValidate(sessionId)) {
             return Response.status(403).build();
         }
         ResponseEntity responseEntity = new ResponseEntity();
@@ -634,11 +629,11 @@ public class FeatureService {
     @POST
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     public Response addVote(@CookieParam("u")String sessionId, VoteInfo voteInfo) {
-        if(!IdentifyUtils.isValidate(sessionId)) {
+        if(!IdentityUtils.isValidate(sessionId)) {
             return Response.status(403).build();
         }
         ResponseEntity responseEntity = new ResponseEntity();
-        if(!IdentifyUtils.isAdmin(sessionId)) {
+        if(!IdentityUtils.isAdmin(sessionId)) {
             responseEntity.code = 1403;
             responseEntity.msg = "权限不足";
             return Response.status(200).entity(responseEntity).build();
@@ -648,8 +643,8 @@ public class FeatureService {
             responseEntity.msg = "缺少参数";
             return Response.status(200).entity(responseEntity).build();
         }
-        String associationId = IdentifyUtils.getAssociationId(sessionId);
-        String userId = IdentifyUtils.getUserId(sessionId);
+        String associationId = IdentityUtils.getAssociationId(sessionId);
+        String userId = IdentityUtils.getUserId(sessionId);
         if(voteInfo.getOptions() == null || voteInfo.getOptions().isEmpty()) {
             responseEntity.code = 1205;
             responseEntity.msg = "参数错误";
@@ -697,14 +692,14 @@ public class FeatureService {
     @POST
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     public Response modifyVote(@CookieParam("u")String sessionId, @QueryParam("voteId")String voteId, VoteInfo newVote) {
-        if(!IdentifyUtils.isValidate(sessionId)) {
+        if(!IdentityUtils.isValidate(sessionId)) {
             return Response.status(403).build();
         }
-        if(!IdentifyUtils.isAdmin(sessionId)) {
+        if(!IdentityUtils.isAdmin(sessionId)) {
             return Response.status(403).build();
         }
         ResponseEntity responseEntity = new ResponseEntity();
-        String userId = IdentifyUtils.getUserId(sessionId);
+        String userId = IdentityUtils.getUserId(sessionId);
         User user = userDAO.loadById(userId);
         if(user == null) {
             responseEntity.code = 1104;
@@ -746,10 +741,10 @@ public class FeatureService {
     @POST
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     public Response deleteVote(@CookieParam("u")String sessionId, List<String> voteIdList) {
-        if(!IdentifyUtils.isValidate(sessionId)) {
+        if(!IdentityUtils.isValidate(sessionId)) {
             return Response.status(403).build();
         }
-        if(!IdentifyUtils.isAdmin(sessionId)) {
+        if(!IdentityUtils.isAdmin(sessionId)) {
             return Response.status(403).build();
         }
         ResponseEntity responseEntity = new ResponseEntity();
@@ -766,7 +761,7 @@ public class FeatureService {
             }
         }
 
-        String userId = IdentifyUtils.getUserId(sessionId);
+        String userId = IdentityUtils.getUserId(sessionId);
         if(StringUtils.isEmpty(userId)) {
             responseEntity.code = 1103;
             responseEntity.msg = "账户出错";
@@ -797,7 +792,7 @@ public class FeatureService {
     @POST
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     public Response vote(@CookieParam("u")String sessionId, Vote vote, @QueryParam("voteId")String voteId) {
-        if(!IdentifyUtils.isValidate(sessionId)) {
+        if(!IdentityUtils.isValidate(sessionId)) {
             return Response.status(403).build();
         }
         ResponseEntity responseEntity = new ResponseEntity();
@@ -811,7 +806,7 @@ public class FeatureService {
             responseEntity.msg = "参数Id无效";
             return Response.status(200).entity(responseEntity).build();
         }
-        String userId = IdentifyUtils.getUserId(sessionId);
+        String userId = IdentityUtils.getUserId(sessionId);
         if(userId == null || StringUtils.isEmpty(userId)) {
             responseEntity.code = 1103;
             responseEntity.msg = "账户出错";
@@ -876,7 +871,7 @@ public class FeatureService {
     @GET
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     public Response getVoteResult(@CookieParam("u")String sessionId, @QueryParam("voteId")String voteId) {
-        if(!IdentifyUtils.isValidate(sessionId)) {
+        if(!IdentityUtils.isValidate(sessionId)) {
             return Response.status(403).build();
         }
         ResponseEntity responseEntity = new ResponseEntity();
@@ -905,11 +900,11 @@ public class FeatureService {
     @POST
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     public Response addVoteComment(@CookieParam("u")String sessionId, Map<String, String> commentInfo) {
-        if(!IdentifyUtils.isValidate(sessionId)) {
+        if(!IdentityUtils.isValidate(sessionId)) {
             return Response.status(403).build();
         }
         ResponseEntity responseEntity = new ResponseEntity();
-        String userId = IdentifyUtils.getUserId(sessionId);
+        String userId = IdentityUtils.getUserId(sessionId);
         String content  = commentInfo.get("content");
         if(content == null) {
             responseEntity.code = 3104;
@@ -950,11 +945,11 @@ public class FeatureService {
     @GET
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     public Response deleteVoteComment(@CookieParam("u")String sessionId, @QueryParam("voteId")String voteId, @QueryParam("commentIndex")String commentIndex) {
-        if(!IdentifyUtils.isValidate(sessionId)) {
+        if(!IdentityUtils.isValidate(sessionId)) {
             return Response.status(403).build();
         }
         ResponseEntity responseEntity = new ResponseEntity();
-        if(!IdentifyUtils.isAdmin(sessionId)) {
+        if(!IdentityUtils.isAdmin(sessionId)) {
             responseEntity.code = 1403;
             responseEntity.msg = "权限不足";
             return Response.status(200).entity(responseEntity).build();
@@ -983,16 +978,16 @@ public class FeatureService {
     @GET
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     public Response getOrientedMatch(@CookieParam("u")String sessionId, @QueryParam("userId")String userId, @QueryParam("count")int count) {
-        if(!IdentifyUtils.isValidate(sessionId)) {
+        if(!IdentityUtils.isValidate(sessionId)) {
             return Response.status(403).build();
         }
         if (count == 0) {
             count = 5;
         }
         ResponseEntity responseEntity = new ResponseEntity();
-        User self = userDAO.loadById(IdentifyUtils.getUserId(sessionId));
+        User self = userDAO.loadById(IdentityUtils.getUserId(sessionId));
         if (!StringUtils.isEmpty(userId) && MongoUtils.isValidObjectId(userId)) {
-            if (IdentifyUtils.getUserId(sessionId).equals(userId)) {
+            if (IdentityUtils.getUserId(sessionId).equals(userId)) {
                 responseEntity.code = 6102;
                 responseEntity.msg = "不能与自己匹配";
                 return  Response.status(200).entity(responseEntity).build();
@@ -1029,7 +1024,7 @@ public class FeatureService {
     @POST
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     public Response getOrientedMatchs(@CookieParam("u")String sessionId, List<String> userIds) {
-        if(!IdentifyUtils.isValidate(sessionId)) {
+        if(!IdentityUtils.isValidate(sessionId)) {
             return Response.status(403).build();
         }
         ResponseEntity responseEntity = new ResponseEntity();
@@ -1038,11 +1033,11 @@ public class FeatureService {
             responseEntity.msg = "用户列表为空";
             return Response.status(200).entity(responseEntity).build();
         }
-        User self = userDAO.loadById(IdentifyUtils.getUserId(sessionId));
+        User self = userDAO.loadById(IdentityUtils.getUserId(sessionId));
         List<MatchDisplay> results = new ArrayList<MatchDisplay>();
         for (String userId : userIds) {
             if (!StringUtils.isEmpty(userId) && MongoUtils.isValidObjectId(userId)) {
-                if (IdentifyUtils.getUserId(sessionId).equals(userId)) {
+                if (IdentityUtils.getUserId(sessionId).equals(userId)) {
                     responseEntity.code = 6102;
                     responseEntity.msg = "不能与自己匹配";
                     return  Response.status(200).entity(responseEntity).build();
@@ -1068,7 +1063,7 @@ public class FeatureService {
     @GET
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     public Response getTopMatch(@CookieParam("u")String sessionId, @QueryParam("count")int count) {
-        if(!IdentifyUtils.isValidate(sessionId)) {
+        if(!IdentityUtils.isValidate(sessionId)) {
             return Response.status(403).build();
         }
         if (count == 0) {
@@ -1091,7 +1086,7 @@ public class FeatureService {
     @GET
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     public Response getTopMatchByUserId(@CookieParam("u")String sessionId, @QueryParam("userId")String userId, @QueryParam("count")int count) {
-        if(!IdentifyUtils.isAdmin(sessionId)) {
+        if(!IdentityUtils.isAdmin(sessionId)) {
             return Response.status(403).build();
         }
         ResponseEntity responseEntity = new ResponseEntity();
@@ -1111,7 +1106,7 @@ public class FeatureService {
     @Path("/help/self")
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     public Response findHelpDynamics(@CookieParam("u")String sessionId, @QueryParam("page")int page, @QueryParam("size")int count) {
-        if (!IdentifyUtils.isValidate(sessionId)) {
+        if (!IdentityUtils.isValidate(sessionId)) {
             return Response.status(403).build();
         }
         if (count <= 0) {
@@ -1122,7 +1117,7 @@ public class FeatureService {
         }
         ResponseEntity responseEntity = new ResponseEntity();
         List<HelpDynamicShow> result = new ArrayList<HelpDynamicShow>();
-        String userId = IdentifyUtils.getUserId(sessionId);
+        String userId = IdentityUtils.getUserId(sessionId);
         List<HelpDynamicShow> infos = helpDynamicDAO.findUserHelp(userId);
         if (page*count <= infos.size()) {
             result = infos.subList((page-1)*count, page*count);
@@ -1143,7 +1138,7 @@ public class FeatureService {
     @Path("/help/user")
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     public Response findHelpDynamicsByUserId(@CookieParam("u")String sessionId,@QueryParam("userId")String userId, @QueryParam("page")int page, @QueryParam("size")int count) {
-        if (!IdentifyUtils.isValidate(sessionId)) {
+        if (!IdentityUtils.isValidate(sessionId)) {
             return Response.status(403).build();
         }
         if (count <= 0) {
@@ -1179,7 +1174,7 @@ public class FeatureService {
     @Path("/vote/self")
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     public Response findVoteDynamics(@CookieParam("u")String sessionId, @QueryParam("page")int page, @QueryParam("size")int count) {
-        if (!IdentifyUtils.isValidate(sessionId)) {
+        if (!IdentityUtils.isValidate(sessionId)) {
             return Response.status(403).build();
         }
         if (count <= 0) {
@@ -1190,7 +1185,7 @@ public class FeatureService {
         }
         ResponseEntity responseEntity = new ResponseEntity();
         List<VoteDynamicShow> result = new ArrayList<VoteDynamicShow>();
-        String userId = IdentifyUtils.getUserId(sessionId);
+        String userId = IdentityUtils.getUserId(sessionId);
         List<VoteDynamicShow> infos = voteDynamicDAO.findUserVote(userId);
         if (page*count <= infos.size()) {
             result = infos.subList((page-1)*count, page*count);
@@ -1211,7 +1206,7 @@ public class FeatureService {
     @Path("/vote/user")
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     public Response findVoteDynamicsByUserId(@CookieParam("u")String sessionId,@QueryParam("userId")String userId, @QueryParam("page")int page, @QueryParam("size")int count) {
-        if (!IdentifyUtils.isValidate(sessionId)) {
+        if (!IdentityUtils.isValidate(sessionId)) {
             return Response.status(403).build();
         }
         if (count <= 0) {

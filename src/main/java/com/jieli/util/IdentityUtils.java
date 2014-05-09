@@ -19,7 +19,7 @@ import java.util.List;
  * Time: 上午10:35
  * To change this template use File | Settings | File Templates.
  */
-public abstract class IdentifyUtils {
+public abstract class IdentityUtils {
 
     public static boolean isValidate(String sessionId) {
 

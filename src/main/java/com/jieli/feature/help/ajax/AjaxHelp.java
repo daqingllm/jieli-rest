@@ -6,10 +6,9 @@ import com.jieli.association.AssociationDAO;
 import com.jieli.common.entity.ResponseEntity;
 import com.jieli.feature.help.dao.HelpDAO;
 import com.jieli.feature.help.entity.SimpleHelpInfo;
-import com.jieli.feature.vote.entity.SimpleVoteInfo;
 import com.jieli.user.dao.UserDAO;
 import com.jieli.user.entity.User;
-import com.jieli.util.IdentifyUtils;
+import com.jieli.util.IdentityUtils;
 import org.apache.commons.lang.StringUtils;
 
 import javax.ws.rs.*;
@@ -32,10 +31,10 @@ public class AjaxHelp {
     @GET
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     public Response getHelpList(@CookieParam("u")String sessionId, @QueryParam("a")String associationId, @QueryParam("page")int page, @QueryParam("size")int size, @QueryParam("t")String helpType) {
-        if (!IdentifyUtils.isValidate(sessionId)) {
+        if (!IdentityUtils.isValidate(sessionId)) {
             return Response.status(403).build();
         }
-        String userId = IdentifyUtils.getUserId(sessionId);
+        String userId = IdentityUtils.getUserId(sessionId);
         ResponseEntity responseEntity = new ResponseEntity();
         if (StringUtils.isEmpty(userId)) {
             responseEntity.code = 1103;
@@ -48,10 +47,10 @@ public class AjaxHelp {
             responseEntity.msg = "账户已被删除";
             return Response.status(200).entity(responseEntity).build();
         }
-        boolean isSuper = IdentifyUtils.isSuper(sessionId);
-        boolean isAdmin = IdentifyUtils.isAdmin(sessionId);
+        boolean isSuper = IdentityUtils.isSuper(sessionId);
+        boolean isAdmin = IdentityUtils.isAdmin(sessionId);
         if (!isSuper && isAdmin) {
-            associationId = IdentifyUtils.getAssociationId(sessionId);
+            associationId = IdentityUtils.getAssociationId(sessionId);
         } else if (isSuper) {
             if (StringUtils.isEmpty(associationId)) {
                 responseEntity.code = 1101;

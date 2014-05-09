@@ -8,7 +8,7 @@ import com.jieli.message.*;
 import com.jieli.mongo.BaseDAO;
 import com.jieli.user.entity.FriendMsg;
 import com.jieli.util.CollectionUtils;
-import com.jieli.util.IdentifyUtils;
+import com.jieli.util.IdentityUtils;
 import com.jieli.util.MongoUtils;
 import com.sun.jersey.spi.resource.Singleton;
 import org.apache.commons.lang.StringUtils;
@@ -39,10 +39,10 @@ public class ActivityService {
     @Path("/ongoing")
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     public Response findOngoingActivity(@CookieParam("u")String sessionId) {
-        if (!IdentifyUtils.isValidate(sessionId)) {
+        if (!IdentityUtils.isValidate(sessionId)) {
             return Response.status(403).build();
         }
-        String associationId = IdentifyUtils.getAssociationId(sessionId);
+        String associationId = IdentityUtils.getAssociationId(sessionId);
         List<Activity> activities = new ArrayList<Activity>();
         Iterable<Activity> officials = activityDAO.findOngoingOfficial(associationId);
         Iterable<Activity> recommends = activityDAO.findOngoingRecommend(associationId);
@@ -69,7 +69,7 @@ public class ActivityService {
     @Path("/history")
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     public Response findHistoryActivity(@CookieParam("u")String sessionId, @QueryParam("page")int page, @QueryParam("size")int count, @QueryParam("tag")String tag) {
-        if (!IdentifyUtils.isValidate(sessionId)) {
+        if (!IdentityUtils.isValidate(sessionId)) {
             return Response.status(403).build();
         }
         ResponseEntity responseEntity = new ResponseEntity();
@@ -85,7 +85,7 @@ public class ActivityService {
             count = 15;
         }
 
-        String associationId = IdentifyUtils.getAssociationId(sessionId);
+        String associationId = IdentityUtils.getAssociationId(sessionId);
         Iterable<Activity> activities = activityDAO.findHistory(associationId, page-1, count, tag);
         responseEntity.code = 200;
         responseEntity.body = activities;
@@ -96,7 +96,7 @@ public class ActivityService {
     @GET
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     public Response loadActivity(@CookieParam("u")String sessionId,@QueryParam("activityId") String activityId) {
-        if (!IdentifyUtils.isValidate(sessionId)) {
+        if (!IdentityUtils.isValidate(sessionId)) {
             return Response.status(403).build();
         }
         ResponseEntity responseEntity = new ResponseEntity();
@@ -114,21 +114,21 @@ public class ActivityService {
     @POST
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     public Response upsertActivity(@CookieParam("u")String sessionId, @QueryParam("activityId")String activityId, @QueryParam("force")boolean force, Activity activity) {
-        if (!IdentifyUtils.isValidate(sessionId)) {
+        if (!IdentityUtils.isValidate(sessionId)) {
             return Response.status(403).build();
         }
         if (activity.tag == AcivityTag.RECOMMEND) {
-            if (!IdentifyUtils.isSuper(sessionId)) {
+            if (!IdentityUtils.isSuper(sessionId)) {
                 return Response.status(403).build();
             }
         }
         if (activity.tag == AcivityTag.OFFICIAL) {
-            if (!IdentifyUtils.isAdmin(sessionId)) {
+            if (!IdentityUtils.isAdmin(sessionId)) {
                 return Response.status(403).build();
             }
         }
         ResponseEntity responseEntity = new ResponseEntity();
-        String associationId = IdentifyUtils.getAssociationId(sessionId);
+        String associationId = IdentityUtils.getAssociationId(sessionId);
         if (StringUtils.isEmpty(activity.associationId)) {
             if (StringUtils.isEmpty(associationId)) {
                 responseEntity.code = 3101;
@@ -144,7 +144,7 @@ public class ActivityService {
         if (!StringUtils.isEmpty(activityId) && MongoUtils.isValidObjectId(activity.get_id().toString())) {
             Activity oldActivity = activityDAO.loadById(activity.get_id().toString());
             if (oldActivity != null) {
-                if (oldActivity.sponsorUserId.equals(IdentifyUtils.getUserId(sessionId))) {
+                if (oldActivity.sponsorUserId.equals(IdentityUtils.getUserId(sessionId))) {
                     activity.set_id(new ObjectId(activityId));
                     exist = true;
                     oldActivityInvitees = oldActivity.invitees;
@@ -153,7 +153,7 @@ public class ActivityService {
                 }
             }
         }
-        activity.sponsorUserId = IdentifyUtils.getUserId(sessionId);
+        activity.sponsorUserId = IdentityUtils.getUserId(sessionId);
         if (exist) {
             for (String userId : activity.joinMembers.keySet()) {
                 Message message = new Message();
@@ -202,14 +202,14 @@ public class ActivityService {
 
             ActivityMsg activityMsg = new ActivityMsg();
             activityMsg.activityId = activityId;
-            activityMsg.msg = IdentifyUtils.getUserName(activity.sponsorUserId) + "邀请你参加" + activity.title;
+            activityMsg.msg = IdentityUtils.getUserName(activity.sponsorUserId) + "邀请你参加" + activity.title;
 
             message.content = activityMsg;
             messageDAO.save(message);
         }
 
         activityDAO.save(activity);
-        insertRelated(IdentifyUtils.getUserId(sessionId), activity.get_id().toString(), RelatedType.SPONSER);
+        insertRelated(IdentityUtils.getUserId(sessionId), activity.get_id().toString(), RelatedType.SPONSER);
 
         responseEntity.body = "{\"_id\":\"" + activity.get_id() + "\"}";
         responseEntity.code=200;
@@ -220,7 +220,7 @@ public class ActivityService {
     @Path("/self")
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     public Response findRelatedActivities(@CookieParam("u")String sessionId, @QueryParam("page")int page, @QueryParam("size")int count) {
-        if (!IdentifyUtils.isValidate(sessionId)) {
+        if (!IdentityUtils.isValidate(sessionId)) {
             return Response.status(403).build();
         }
         if (count <= 0) {
@@ -231,7 +231,7 @@ public class ActivityService {
         }
         ResponseEntity responseEntity = new ResponseEntity();
         List<ActivityInfo> result = new ArrayList<ActivityInfo>();
-        String userId = IdentifyUtils.getUserId(sessionId);
+        String userId = IdentityUtils.getUserId(sessionId);
         List<ActivityInfo> infos = relatedDAO.findUserActivities(userId);
         if (page*count <= infos.size()) {
             result = infos.subList((page-1)*count, page*count);
@@ -252,7 +252,7 @@ public class ActivityService {
     @Path("/user")
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     public Response findRelatedActivitiesByUserId(@CookieParam("u")String sessionId,@QueryParam("userId")String userId, @QueryParam("page")int page, @QueryParam("size")int count) {
-        if (!IdentifyUtils.isValidate(sessionId)) {
+        if (!IdentityUtils.isValidate(sessionId)) {
             return Response.status(403).build();
         }
         if (count <= 0) {
@@ -320,7 +320,7 @@ public class ActivityService {
     @Path("/concern")
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     public Response concern(@CookieParam("u")String sessionId, @QueryParam("activityId")String activityId) {
-        if (!IdentifyUtils.isValidate(sessionId)) {
+        if (!IdentityUtils.isValidate(sessionId)) {
             return Response.status(403).build();
         }
         ResponseEntity responseEntity = new ResponseEntity();
@@ -335,7 +335,7 @@ public class ActivityService {
             return Response.status(200).entity(responseEntity).build();
         }
 
-        String userId = IdentifyUtils.getUserId(sessionId);
+        String userId = IdentityUtils.getUserId(sessionId);
         Activity activity = activityDAO.loadById(activityId);
         if (activity == null) {
             responseEntity.code = 3103;
@@ -363,7 +363,7 @@ public class ActivityService {
     @Path("/join")
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     public Response join(@CookieParam("u")String sessionId, @QueryParam("activityId")String activityId, @QueryParam("part")String part) {
-        if (!IdentifyUtils.isValidate(sessionId)) {
+        if (!IdentityUtils.isValidate(sessionId)) {
             return Response.status(403).build();
         }
         ResponseEntity responseEntity = new ResponseEntity();
@@ -381,7 +381,7 @@ public class ActivityService {
         if (StringUtils.isEmpty(part)) {
             part = "all";
         }
-        String userId = IdentifyUtils.getUserId(sessionId);
+        String userId = IdentityUtils.getUserId(sessionId);
         Activity activity = activityDAO.loadById(activityId);
         if (activity == null) {
             responseEntity.code = 3103;
@@ -394,7 +394,7 @@ public class ActivityService {
             responseEntity.msg = "已参加";
             responseEntity.body = "{\"count\":"+activity.joinMembers.size()+",\"join\":"+0+"}";
             insertRelated(userId, activityId, RelatedType.JOIN);
-            List<String> concernedUserIds = IdentifyUtils.getConcerned(userId);
+            List<String> concernedUserIds = IdentityUtils.getConcerned(userId);
 
             for (String concernedUserId : concernedUserIds) {
                 Message message = new Message();
@@ -403,7 +403,7 @@ public class ActivityService {
                 message.addTime = new Date();
 
                 FriendMsg friendMsg = new FriendMsg();
-                friendMsg.msg = "您关注的 " + IdentifyUtils.getUserName(userId) + " 参加了活动 " + activity.title;
+                friendMsg.msg = "您关注的 " + IdentityUtils.getUserName(userId) + " 参加了活动 " + activity.title;
                 friendMsg.topicId = activityId;
                 friendMsg.topicType = TopicType.Activity;
                 message.content = friendMsg;
@@ -454,7 +454,7 @@ public class ActivityService {
     public Response comment(@CookieParam("u")String sessionId, Map<String, String> commentInfo) {
         //commentInfo内字段：content topicId commentedUserId(回复评论)
 
-        if (!IdentifyUtils.isValidate(sessionId)) {
+        if (!IdentityUtils.isValidate(sessionId)) {
             return Response.status(403).build();
         }
         String content = commentInfo.get("content");
@@ -481,7 +481,7 @@ public class ActivityService {
         comment.topicId = activityId;
         comment.topicType = TopicType.Activity;
         comment.topicTitle = activity.title;
-        comment.commentUserId = IdentifyUtils.getUserId(sessionId);
+        comment.commentUserId = IdentityUtils.getUserId(sessionId);
         comment.commentedUserId = commentInfo.get("commentedUserId");
         comment.content = content;
         comment.addTime = new Date();
@@ -489,7 +489,7 @@ public class ActivityService {
         //message
         CommentMessageUtil.addCommentMessage(comment);
 
-        if (activity.tag == AcivityTag.PRIVATE && !activity.sponsorUserId.equals(IdentifyUtils.getUserId(sessionId))) {
+        if (activity.tag == AcivityTag.PRIVATE && !activity.sponsorUserId.equals(IdentityUtils.getUserId(sessionId))) {
             CommentMessageUtil.addCommentAuthorMessage(comment, activity.sponsorUserId);
         }
 
@@ -503,7 +503,7 @@ public class ActivityService {
     @Path("/upload")
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     public Response uploadPics(@CookieParam("u")String sessionId, @QueryParam("activityId")String activityId, List<String> pics) {
-        if (!IdentifyUtils.isValidate(sessionId)) {
+        if (!IdentityUtils.isValidate(sessionId)) {
             return Response.status(403).build();
         }
 
@@ -519,7 +519,7 @@ public class ActivityService {
             return Response.status(200).entity(responseEntity).build();
         }
 
-        String userId = IdentifyUtils.getUserId(sessionId);
+        String userId = IdentityUtils.getUserId(sessionId);
         Activity activity = activityDAO.loadById(activityId);
         if (activity == null) {
             responseEntity.code = 3103;
@@ -545,7 +545,7 @@ public class ActivityService {
     @Path("/invite")
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     public Response invite(@CookieParam("u")String sessionId, @QueryParam("activityId")String activityId, List<String> friendIds) {
-        if (!IdentifyUtils.isValidate(sessionId)) {
+        if (!IdentityUtils.isValidate(sessionId)) {
             return Response.status(403).build();
         }
 
@@ -561,7 +561,7 @@ public class ActivityService {
             return Response.status(200).entity(responseEntity).build();
         }
 
-        String userId = IdentifyUtils.getUserId(sessionId);
+        String userId = IdentityUtils.getUserId(sessionId);
         Activity activity = activityDAO.loadById(activityId);
         if (activity == null) {
             responseEntity.code = 3103;
@@ -579,7 +579,7 @@ public class ActivityService {
 
             ActivityMsg activityMsg = new ActivityMsg();
             activityMsg.activityId = activityId;
-            activityMsg.msg = IdentifyUtils.getUserName(userId) + "邀请你参加" + activity.title;
+            activityMsg.msg = IdentityUtils.getUserName(userId) + "邀请你参加" + activity.title;
 
             message.content = activityMsg;
             messageDAO.save(message);

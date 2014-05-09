@@ -45,10 +45,10 @@ public class CommentService {
 //                        @QueryParam("commentedUserId")String commentedUserId,
 //                        @QueryParam("content")String content){
 //
-//        if (!IdentifyUtils.isValidate(sessionId)) {
+//        if (!IdentityUtils.isValidate(sessionId)) {
 //            return Response.status(403).build();
 //        }
-//        String userId = IdentifyUtils.getUserId(sessionId);
+//        String userId = IdentityUtils.getUserId(sessionId);
 //
 //        Comment comment = new Comment();
 //        comment.topicId = topicId;
@@ -95,7 +95,7 @@ public class CommentService {
     public Response load(@QueryParam("commentId")String commentId, @QueryParam("topicId")String topicId, @QueryParam("topicType")String topicType, @QueryParam("page")int page, @QueryParam("count")int count){
         ResponseEntity responseEntity = new ResponseEntity();
 
-        List<Comment> comments = commentDAO.find("{topicId:#, topicType:#, isDeleted:#}", topicId, topicType, false);
+        List<Comment> comments = commentDAO.paginate(page, count, "{topicId:#, topicType:#, isDeleted:#}", topicId, topicType, false);
 
         if( !CollectionUtils.isEmpty(comments) ){
             for(Comment comment : comments){
