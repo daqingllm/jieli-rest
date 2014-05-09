@@ -62,7 +62,7 @@
         <div class="navbar-header pull-left">
             <a href="index.html" class="navbar-brand">
                 <small>
-                    <i class="icon-leaf"></i>
+                    <i class="fa fa-leaf"></i>
                     接力 后台管理系统
                 </small>
             </a><!-- /.brand -->
@@ -561,7 +561,7 @@ jQuery(function($) {
     jQuery(grid_selector).jqGrid('navGrid',pager_selector,
             { 	//navbar options
                 add: true,
-                addicon : 'icon-plus-sign purple',
+                addicon : 'fa fa-plus-sign purple',
                 addfunc : (function(){window.location.href="/rest/bvote/new";/*alert("添加操作!");*/return false;}),
 
                 edit: true,

@@ -60,7 +60,7 @@
         <div class="navbar-header pull-left">
             <a href="index.html" class="navbar-brand">
                 <small>
-                    <i class="icon-leaf"></i>
+                    <i class="fa fa-leaf"></i>
                     接力 后台管理系统
                 </small>
             </a><!-- /.brand -->
@@ -77,7 +77,7 @@
                                 ${username}
 								</span>
 
-                        <i class="icon-caret-down"></i>
+                        <i class="fa fa-caret-down"></i>
                     </a>
 
                     <ul class="user-menu pull-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
@@ -139,11 +139,11 @@
             <div class="sidebar-shortcuts">
                 <div class="sidebar-shortcuts-large" id="sidebar-shortcuts-large">
                     <button class="btn btn-success">
-                        <i class="icon-signal" style="display: none"></i>
+                        <i class="fa fa-signal" style="display: none"></i>
                     </button>
 
                     <button class="btn btn-info">
-                        <i class="icon-pencil" style="display: none"></i>
+                        <i class="fa fa-pencil" style="display: none"></i>
                     </button>
 
                     <button class="btn btn-warning">
@@ -151,7 +151,7 @@
                     </button>
 
                     <button class="btn btn-danger">
-                        <i class="icon-cogs" style="display: none"></i>
+                        <i class="fa fa-cogs" style="display: none"></i>
                     </button>
                 </div>
 
@@ -172,7 +172,7 @@
             </ul>
 
             <div class="sidebar-collapse" id="sidebar-collapse">
-                <i class="icon-double-angle-left" data-icon1="icon-double-angle-left" data-icon2="icon-double-angle-right"></i>
+                <i class="fa fa-double-angle-left" data-icon1="fa fa-double-angle-left" data-icon2="fa fa-double-angle-right"></i>
             </div>
         </div>
 
@@ -285,7 +285,7 @@
     <!-- /.main-container-inner -->
 
     <a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
-        <i class="icon-double-angle-up icon-only bigger-110"></i>
+        <i class="fa fa-double-angle-up icon-only bigger-110"></i>
     </a>
 </div>
 <!-- /.main-container -->
@@ -479,7 +479,7 @@ function updateActionIcons(table) {
     /**
      var replacement =
      {
-         'ui-icon-pencil' : 'icon-pencil blue',
+         'ui-fa fa-pencil' : 'fa fa-pencil blue',
          'ui-icon-trash' : 'icon-trash red',
          'ui-icon-disk' : 'icon-ok green',
          'ui-icon-cancel' : 'icon-remove red'
@@ -496,10 +496,10 @@ function updateActionIcons(table) {
 function updatePagerIcons(table) {
     var replacement =
     {
-        'ui-icon-seek-first' : 'icon-double-angle-left bigger-140',
+        'ui-icon-seek-first' : 'fa fa-double-angle-left bigger-140',
         'ui-icon-seek-prev' : 'icon-angle-left bigger-140',
         'ui-icon-seek-next' : 'icon-angle-right bigger-140',
-        'ui-icon-seek-end' : 'icon-double-angle-right bigger-140'
+        'ui-icon-seek-end' : 'fa fa-double-angle-right bigger-140'
     };
     $('.ui-pg-table:not(.navtable) > tbody > tr > .ui-pg-button > .ui-icon').each(function(){
         var icon = $(this);
@@ -587,7 +587,7 @@ jQuery(function($) {
     jQuery(grid_selector).jqGrid('navGrid',pager_selector,
             { 	//navbar options
                 add: false,
-                addicon : 'icon-pencil purple',
+                addicon : 'fa fa-pencil purple',
                 addfunc : (function(){
                     var uname = "";
                     var assid = "";
