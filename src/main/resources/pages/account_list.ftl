@@ -189,7 +189,7 @@
 								<span class="input-icon">
 									<input type="text" placeholder="ËÑË÷ ..." class="nav-search-input"
                                            id="nav-search-input" autocomplete="off"/>
-									<i class="fa fa-search nav-search-icon"></i>
+									<i class="fa fa-search nav-search-icon" style="position: absolute;top: 1px;bottom: 1px;left: 3px;"></i>
 								</span>
                     </form>
                 </div>

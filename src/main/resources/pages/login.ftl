@@ -10,11 +10,13 @@
     <!-- basic styles -->
 
     <link href="/assets/css/bootstrap.min.css" rel="stylesheet" />
-    <link rel="stylesheet" href="/assets/css/font-awesome.min.css" />
+    <#--<link rel="stylesheet" href="/assets/css/font-awesome.min.css" />-->
 
     <!--[if IE 7]>
-    <link rel="stylesheet" href="/assets/css/font-awesome-ie7.min.css" />
-    <![endif]-->
+    <!--<link rel="stylesheet" href="/assets/css/font-awesome-ie7.min.css" />-->
+    <#--<![endif]&ndash;&gt;-->
+
+    <link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
 
     <!-- page specific plugin styles -->
 
@@ -57,7 +59,7 @@
             <div class="col-sm-10 col-sm-offset-1">
                 <div class="login-container">
                     <div class="center" style="margin-top: 40px;margin-bottom: 20px;">
-                        <h1><i class="icon-leaf green"></i><span class="red">接力</span><span class="white">后台管理系统</span></h1>
+                        <h1><i class="fa fa-leaf green"></i><span class="red">接力</span><span class="white">后台管理系统</span></h1>
                         <h4 class="blue">&copy; Company Name</h4>
                     </div>
 
@@ -67,7 +69,7 @@
                         <div id="login-box" class="login-box visible widget-box no-border">
                             <div class="widget-body">
                                 <div class="widget-main">
-                                    <h4 class="header blue lighter bigger"><i class="icon-coffee green"></i> 用户登录 </h4>
+                                    <h4 class="header blue lighter bigger"><i class="fa fa-coffee green"></i> 用户登录 </h4>
 
                                     <div class="space-6"></div>
 
@@ -75,11 +77,11 @@
                                         <fieldset>
                                             <label class="block clearfix"> <span class="block input-icon input-icon-right">
 															<input type="text" class="form-control" placeholder="用户名" id="login-username" />
-															<i class="icon-user"></i> </span> </label>
+															<i class="fa fa-user"></i> </span> </label>
 
                                             <label class="block clearfix"> <span class="block input-icon input-icon-right">
 															<input type="password" class="form-control" placeholder="密码" id="login-password" />
-															<i class="icon-lock"></i> </span> </label>
+															<i class="fa fa-lock"></i> </span> </label>
 
                                             <div class="space"></div>
 
@@ -89,7 +91,7 @@
                                                 <span class="lbl"> 记住我</span> </label>-->
 
                                                 <button type="button" class="width-35 pull-right btn btn-sm btn-primary" onclick="login()">
-                                                    <i class="icon-key"></i>
+                                                    <i class="fa fa-key"></i>
                                                     登录
                                                 </button>
                                             </div>
@@ -103,7 +105,7 @@
                                 <div class="toolbar clearfix">
                                     <!--<div>
                                         <a href="#" onclick="show_box('forgot-box'); return false;" class="forgot-password-link">
-                                            <i class="icon-arrow-left"></i>
+                                            <i class="fa fa-arrow-left"></i>
                                             忘记密码
                                         </a>
                                     </div>
@@ -111,7 +113,7 @@
                                     <div>
                                         <a href="#" onclick="show_box('signup-box'); return false;" class="user-signup-link">
                                             注册账号
-                                            <i class="icon-arrow-right"></i>
+                                            <i class="fa fa-arrow-right"></i>
                                         </a>
                                     </div>-->
                                 </div>
@@ -121,7 +123,7 @@
                         <div id="forgot-box" class="forgot-box widget-box no-border">
                             <div class="widget-body">
                                 <div class="widget-main">
-                                    <h4 class="header red lighter bigger"><i class="icon-key"></i> 找回密码 </h4>
+                                    <h4 class="header red lighter bigger"><i class="fa fa-key"></i> 找回密码 </h4>
 
                                     <div class="space-6"></div>
                                     <p>
@@ -147,7 +149,7 @@
                                 <div class="toolbar center">
                                     <a href="#" onclick="show_box('login-box'); return false;" class="back-to-login-link">
                                         回去登录
-                                        <i class="icon-arrow-right"></i>
+                                        <i class="fa fa-arrow-right"></i>
                                     </a>
                                 </div>
                             </div><!-- /widget-body -->
@@ -156,7 +158,7 @@
                         <div id="signup-box" class="signup-box widget-box no-border">
                             <div class="widget-body">
                                 <div class="widget-main">
-                                    <h4 class="header green lighter bigger"><i class="icon-group blue"></i> 新用户注册 </h4>
+                                    <h4 class="header green lighter bigger"><i class="fa fa-users blue"></i> 新用户注册 </h4>
 
                                     <div class="space-6"></div>
                                     <p>
@@ -171,27 +173,27 @@
 
                                             <label class="block clearfix"> <span class="block input-icon input-icon-right">
 															<input type="text" class="form-control" placeholder="用户名" id="register-username" />
-															<i class="icon-user"></i> </span> </label>
+															<i class="fa fa-user"></i> </span> </label>
 
                                             <label class="block clearfix"> <span class="block input-icon input-icon-right">
 															<input type="password" class="form-control" placeholder="密码" id="register-password" />
-															<i class="icon-lock"></i> </span> </label>
+															<i class="fa fa-lock"></i> </span> </label>
 
                                             <label class="block clearfix"> <span class="block input-icon input-icon-right">
 															<input type="password" class="form-control" placeholder="确认密码" id="repeat-password" />
-															<i class="icon-retweet"></i> </span> </label>
+															<i class="fa fa-retweet"></i> </span> </label>
 
                                             <div class="space-24"></div>
 
                                             <div class="clearfix">
                                                 <button type="reset" class="width-30 pull-left btn btn-sm" style="">
-                                                    <i class="icon-refresh"></i>
+                                                    <i class="fa fa-refresh"></i>
                                                     重填
                                                 </button>
 
                                                 <button type="button" class="width-65 pull-right btn btn-sm btn-success">
                                                     注册
-                                                    <i class="icon-arrow-right icon-on-right"></i>
+                                                    <i class="fa fa-arrow-right icon-on-right"></i>
                                                 </button>
                                             </div>
                                         </fieldset>
@@ -200,7 +202,7 @@
 
                                 <div class="toolbar center">
                                     <a href="#" onclick="show_box('login-box'); return false;" class="back-to-login-link">
-                                        <i class="icon-arrow-left"></i>
+                                        <i class="fa fa-arrow-left"></i>
                                         回去登录
                                     </a>
                                 </div>

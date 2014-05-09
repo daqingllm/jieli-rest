@@ -62,7 +62,7 @@
         <div class="navbar-header pull-left">
             <a href="index.html" class="navbar-brand">
                 <small>
-                    <i class="icon-leaf"></i>
+                    <i class="fa fa-leaf"></i>
                     接力 后台管理系统
                 </small>
             </a><!-- /.brand -->
@@ -79,13 +79,13 @@
                                 ${username}
 								</span>
 
-                        <i class="icon-caret-down"></i>
+                        <i class="fa fa-caret-down"></i>
                     </a>
 
                     <ul class="user-menu pull-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
                         <!--<li>
                             <a href="#">
-                                <i class="icon-cog"></i>
+                                <i class="fa fa-cog"></i>
                                 设置
                             </a>
                         </li>
@@ -101,7 +101,7 @@
 
                         <li>
                             <a href="#">
-                                <i class="icon-off"></i>
+                                <i class="fa fa-power-off"></i>
                                 退出
                             </a>
                         </li>
@@ -141,19 +141,19 @@
     <div class="sidebar-shortcuts">
         <div class="sidebar-shortcuts-large" id="sidebar-shortcuts-large">
             <button class="btn btn-success">
-                <i class="icon-signal" style="display: none"></i>
+                <i class="fa fa-signal" style="display: none"></i>
             </button>
 
             <button class="btn btn-info">
-                <i class="icon-pencil" style="display: none"></i>
+                <i class="fa fa-pencil" style="display: none"></i>
             </button>
 
             <button class="btn btn-warning">
-                <i class="icon-group" style="display: none"></i>
+                <i class="fa fa-users" style="display: none"></i>
             </button>
 
             <button class="btn btn-danger">
-                <i class="icon-cogs" style="display: none"></i>
+                <i class="fa fa-cogs" style="display: none"></i>
             </button>
         </div>
 
@@ -174,7 +174,7 @@
     </ul>
 
     <div class="sidebar-collapse" id="sidebar-collapse">
-        <i class="icon-double-angle-left" data-icon1="icon-double-angle-left" data-icon2="icon-double-angle-right"></i>
+        <i class="fa fa-angle-double-left" data-icon1="fa fa-angle-double-left" data-icon2="fa fa-angle-double-right"></i>
     </div>
 </div>
 
@@ -189,7 +189,7 @@
 
         <ul class="breadcrumb">
             <li>
-                <i class="icon-home home-icon"></i>
+                <i class="fa fa-home home-icon"></i>
                 <a href="index.html">首页</a>
             </li>
 
@@ -214,7 +214,7 @@
 								<span class="input-icon">
 									<input type="text" placeholder="搜索 ..." class="nav-search-input"
                                            id="nav-search-input" autocomplete="off"/>
-									<i class="icon-search nav-search-icon"></i>
+									<i class="fa fa-search nav-search-icon"></i>
 								</span>
             </form>
         </div>
@@ -437,7 +437,7 @@
 
 <div class="ace-settings-container" id="ace-settings-container">
     <div class="btn btn-app btn-xs btn-warning ace-settings-btn" id="ace-settings-btn">
-        <i class="icon-cog bigger-150"></i>
+        <i class="fa fa-cog bigger-150"></i>
     </div>
 
     <div class="ace-settings-box" id="ace-settings-box">
@@ -460,7 +460,7 @@
 <!-- /.main-container-inner -->
 
 <a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
-    <i class="icon-double-angle-up icon-only bigger-110"></i>
+    <i class="fa fa-angle-double-up icon-only bigger-110"></i>
 </a>
 </div>
 <!-- /.main-container -->
@@ -557,7 +557,7 @@
         return $("#form-field-textarea").getCursorPosition();
     }
     function uploadImgBox() {
-        var spin_img = "<div id='upload-loading-img' style='margin-left:30px;margin-top:10px;display: none;'><i class='icon-spinner icon-spin orange bigger-125'></i></div>";
+        var spin_img = "<div id='upload-loading-img' style='margin-left:30px;margin-top:10px;display: none;'><i class='fa fa-spinner icon-spin orange bigger-125'></i></div>";
         spin_img = "";
         bootbox.dialog({
             //message: "<input type='file' id='upload-image-files' name='upload-image-files' >",
@@ -616,7 +616,7 @@
                                     $("#img-list-invisible").attr("style","border-width:0;display:none");
 
                                     $('.ace-thumbnails [data-rel="colorbox"]').colorbox(colorbox_params);
-                                    $("#cboxLoadingGraphic").append("<i class='icon-spinner orange'></i>");//let's add a custom loading icon
+                                    $("#cboxLoadingGraphic").append("<i class='fa fa-spinner orange'></i>");//let's add a custom loading icon
 
                                 } else {
                                     alert("上传失败！");
@@ -674,8 +674,8 @@ jQuery(function ($) {
         reposition: true,
         scalePhotos: true,
         scrolling: false,
-        previous: '<i class="icon-arrow-left"></i>',
-        next: '<i class="icon-arrow-right"></i>',
+        previous: '<i class="fa fa-arrow-left"></i>',
+        next: '<i class="fa fa-arrow-right"></i>',
         close: '&times;',
         current: '{current} of {total}',
         maxWidth: '100%',
@@ -692,7 +692,7 @@ jQuery(function ($) {
     };
 
     $('.ace-thumbnails [data-rel="colorbox"]').colorbox(colorbox_params);
-    $("#cboxLoadingGraphic").append("<i class='icon-spinner orange'></i>");//let's add a custom loading icon
+    $("#cboxLoadingGraphic").append("<i class='fa fa-spinner orange'></i>");//let's add a custom loading icon
 
     /**$(window).on('resize.colorbox', function() {
 					try {
@@ -899,7 +899,7 @@ jQuery(function ($) {
             .on('change', function () {
                 //alert(this.value)
             });
-    $('#spinner2').ace_spinner({value: 0, min: 0, max: 10000, step: 100, touch_spinner: true, icon_up: 'icon-caret-up', icon_down: 'icon-caret-down'});
+    $('#spinner2').ace_spinner({value: 0, min: 0, max: 10000, step: 100, touch_spinner: true, icon_up: 'icon-caret-up', icon_down: 'fa fa-caret-down'});
     $('#spinner3').ace_spinner({value: 0, min: -100, max: 100, step: 10, on_sides: true, icon_up: 'icon-plus smaller-75', icon_down: 'icon-minus smaller-75', btn_up_class: 'btn-success', btn_down_class: 'btn-danger'});
 
 
@@ -1003,7 +1003,7 @@ function voteOptionDeleteImg(ph){
 }
 
 function voteOptionUploadImg(voteOption) {
-    var spin_img = "<div id='upload-loading-img' style='margin-left:30px;margin-top:10px;display: none;'><i class='icon-spinner icon-spin orange bigger-125'></i></div>";
+    var spin_img = "<div id='upload-loading-img' style='margin-left:30px;margin-top:10px;display: none;'><i class='fa fa-spinner icon-spin orange bigger-125'></i></div>";
     spin_img = "";
     bootbox.dialog({
         //message: "<input type='file' id='upload-image-files' name='upload-image-files' >",

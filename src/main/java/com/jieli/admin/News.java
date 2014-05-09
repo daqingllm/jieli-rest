@@ -66,7 +66,7 @@ public class News {
         }else{
             params.put("isSuper",false);
             newses = newsDAO.paginateInOrder(_page, _rowNum,"{addTime:-1}", "{type: {$in: " +
-                    "[\""+NewsType.associationType+"\",\""+NewsType.enterpriseType+"\",\""+NewsType.benefitType+"\",\"" + "history" + "\"" +
+                    "[\""+NewsType.associationType+"\",\""+NewsType.enterpriseType+"\",\""+NewsType.benefitType+"\",\"" + NewsType.historyType + "\"" +
                     "]}}");
         }
 

@@ -10,11 +10,13 @@
     <!-- basic styles -->
 
     <link href="/assets/css/bootstrap.min.css" rel="stylesheet" />
-    <link rel="stylesheet" href="/assets/css/font-awesome.min.css" />
+    <#--<link rel="stylesheet" href="/assets/css/font-awesome.min.css" />-->
 
     <!--[if IE 7]>
-    <link rel="stylesheet" href="/assets/css/font-awesome-ie7.min.css" />
-    <![endif]-->
+    <!--<link rel="stylesheet" href="/assets/css/font-awesome-ie7.min.css" />-->
+    <#--<![endif]&ndash;&gt;-->
+
+    <link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
 
     <!-- page specific plugin styles -->
 
@@ -57,7 +59,7 @@
             <div class="col-sm-10 col-sm-offset-1">
                 <div class="login-container">
                     <div class="center" style="margin-top: 40px;margin-bottom: 20px;">
-                        <h1><i class="icon-leaf green"></i><span class="red">接力</span><span class="white">后台管理系统</span></h1>
+                        <h1><i class="fa fa-leaf green"></i><span class="red">接力</span><span class="white">后台管理系统</span></h1>
                         <h4 class="blue">&copy; Company Name</h4>
                     </div>
 
@@ -67,7 +69,7 @@
                         <div id="login-box" class="login-box widget-box no-border">
                             <div class="widget-body">
                                 <div class="widget-main">
-                                    <h4 class="header blue lighter bigger"><i class="icon-coffee green"></i><!-- Please Enter Your Information --></h4>
+                                    <h4 class="header blue lighter bigger"><i class="fa fa-coffee green"></i><!-- Please Enter Your Information --></h4>
 
                                     <div class="space-6"></div>
 
@@ -75,11 +77,11 @@
                                         <fieldset>
                                             <label class="block clearfix"> <span class="block input-icon input-icon-right">
 															<input type="text" class="form-control" placeholder="用户名" id="login-username" />
-															<i class="icon-user"></i> </span> </label>
+															<i class="fa fa-user"></i> </span> </label>
 
                                             <label class="block clearfix"> <span class="block input-icon input-icon-right">
 															<input type="password" class="form-control" placeholder="密码" id="login-password" />
-															<i class="icon-lock"></i> </span> </label>
+															<i class="fa fa-lock"></i> </span> </label>
 
                                             <div class="space"></div>
 
@@ -89,7 +91,7 @@
                                                 <span class="lbl"> 记住我</span> </label>-->
 
                                                 <button type="button" class="width-35 pull-right btn btn-sm btn-primary" onclick="login()">
-                                                    <i class="icon-key"></i>
+                                                    <i class="fa fa-key"></i>
                                                     登录
                                                 </button>
                                             </div>
@@ -103,7 +105,7 @@
                                 <div class="toolbar clearfix">
                                     <!--<div>
                                     <a href="#" onclick="show_box('forgot-box'); return false;" class="forgot-password-link">
-                                    <i class="icon-arrow-left"></i>
+                                    <i class="fa fa-arrow-left"></i>
                                     忘记密码
                                     </a>
                                     </div>
@@ -111,7 +113,7 @@
                                     <div>
                                     <a href="#" onclick="show_box('signup-box'); return false;" class="user-signup-link">
                                     注册账号
-                                    <i class="icon-arrow-right"></i>
+                                    <i class="fa fa-arrow-right"></i>
                                     </a>
                                     </div>-->
                                 </div>
@@ -121,7 +123,7 @@
                         <div id="forgot-box" class="forgot-box widget-box no-border">
                             <div class="widget-body">
                                 <div class="widget-main">
-                                    <h4 class="header red lighter bigger"><i class="icon-key"></i> 找回密码 </h4>
+                                    <h4 class="header red lighter bigger"><i class="fa fa-key"></i> 找回密码 </h4>
 
                                     <div class="space-6"></div>
                                     <p>
@@ -132,11 +134,11 @@
                                         <fieldset>
                                             <label class="block clearfix"> <span class="block input-icon input-icon-right">
 															<input type="email" class="form-control" placeholder="Email" />
-															<i class="icon-envelope"></i> </span> </label>
+															<i class="fa fa-envelope"></i> </span> </label>
 
                                             <div class="clearfix">
                                                 <button type="button" class="width-35 pull-right btn btn-sm btn-danger">
-                                                    <i class="icon-lightbulb"></i>
+                                                    <i class="fa fa-lightbulb-o"></i>
                                                     发送
                                                 </button>
                                             </div>
@@ -147,7 +149,7 @@
                                 <div class="toolbar center">
                                     <a href="#" onclick="show_box('login-box'); return false;" class="back-to-login-link">
                                         回去登录
-                                        <i class="icon-arrow-right"></i>
+                                        <i class="fa fa-arrow-right"></i>
                                     </a>
                                 </div>
                             </div><!-- /widget-body -->
@@ -156,7 +158,7 @@
                         <div id="signup-box" class="signup-box visible widget-box no-border">
                             <div class="widget-body">
                                 <div class="widget-main">
-                                    <h4 class="header green lighter bigger"><i class="icon-group blue"></i> 新用户注册 </h4>
+                                    <h4 class="header green lighter bigger"><i class="fa fa-users blue"></i> 新用户注册 </h4>
 
                                     <div class="space-6"></div>
 
@@ -164,7 +166,7 @@
                                         <fieldset>
                                             <!--<label class="block clearfix"> <span class="block input-icon input-icon-right">
                                             <input type="email" class="form-control" placeholder="Email" />
-                                            <i class="icon-envelope"></i> </span> </label>-->
+                                            <i class="fa fa-envelope"></i> </span> </label>-->
 
                                             <label class="block clearfix"> <span class="block input-icon input-icon-right">
 															<input type="text" class="form-control" placeholder="用户名" id="register-username" />
@@ -199,7 +201,7 @@
 												<!--			<input type="text" class="form-control" placeholder="生日" id="register-u-birthday" /> -->
                                                 <!--<input type="text" id="register-u-birthday" class="form-control hasDatepicker"/>
                                                 <span class="input-group-addon">
-                                                    <i class="icon-calendar"></i>
+                                                    <i class="fa fa-calendar"></i>
                                                 </span>-->
 															<i class=""></i> </span> </label>
 
@@ -222,7 +224,7 @@
                                             <div class="clearfix">
                                                 <button type="button" class="width-65 pull-right btn btn-sm btn-success" onclick="register();">
                                                     注册
-                                                    <i class="icon-arrow-right icon-on-right"></i>
+                                                    <i class="fa fa-arrow-right icon-on-right"></i>
                                                 </button>
                                             </div>
 
@@ -233,7 +235,7 @@
                                 <!--
                                 <div class="toolbar center">
                                 <a href="#" onclick="show_box('login-box'); return false;" class="back-to-login-link">
-                                <i class="icon-arrow-left"></i>
+                                <i class="fa fa-arrow-left"></i>
                                 回去登录
                                 </a>
                                 </div>
@@ -325,48 +327,51 @@
         var _d = {"username":$("#register-username").val()<#if isSuper>,"associationId":$("#register-assoc").val()</#if>};
         var _sd = JSON.stringify(_d);
 
-        $.ajax({
-            type:"POST",
-        <#if isSuper>
-            url:"/rest/account/auth",
-        <#else>
-            url:"/rest/account/register",
-        </#if>
-            async:false,
-            data:_sd,
-            contentType:"application/json; charset=utf-8",
-            dataType:'json',
-            success:function(jsn){
-                var jsn_body = "";
-                if (jsn.code == 200){
-                    eval("jsn_body="+jsn.body);
+        var user= checkInput();
 
-                    var user= checkInput();
+        if (user != null) {
+            $.ajax({
+                type: "POST",
+            <#if isSuper>
+                url: "/rest/account/auth",
+            <#else>
+                url: "/rest/account/register",
+            </#if>
+                async: false,
+                data: _sd,
+                contentType: "application/json; charset=utf-8",
+                dataType: 'json',
+                success: function (jsn) {
+                    var jsn_body = "";
+                    if (jsn.code == 200) {
+                        eval("jsn_body=" + jsn.body);
 
-                    if (user != null) {
-                        user._id = jsn_body.userId;
-                        $.ajax({
-                            type:"POST",
-                            url: '/rest/baccount/reuser',
-                            data:JSON.stringify(user),
-                            contentType : "application/json; charset=utf-8",
-                            dataType : 'json',
-                            success:function(ret){
-                                if (ret.code == 200)
-                                    showMsg("注册成功", "用户"+_d.username+"的密码是："+jsn_body.password);
-                                else
-                                    showMsg("注册失败", ret.msg || "");
-                            }
-                        });
-                    }
 
-                } else
-                    showMsg("注册失败", jsn.msg);
-            },
-            error : function() {
-                showMsg("注册失败", "连接失败，请重试");
-            }
-        });
+                        if (user != null) {
+                            user._id = jsn_body.userId;
+                            $.ajax({
+                                type: "POST",
+                                url: '/rest/baccount/reuser',
+                                data: JSON.stringify(user),
+                                contentType: "application/json; charset=utf-8",
+                                dataType: 'json',
+                                success: function (ret) {
+                                    if (ret.code == 200)
+                                        showMsg("注册成功", "用户" + _d.username + "的密码是：" + jsn_body.password);
+                                    else
+                                        showMsg("注册失败", ret.msg || "");
+                                }
+                            });
+                        }
+
+                    } else
+                        showMsg("注册失败", jsn.msg);
+                },
+                error: function () {
+                    showMsg("注册失败", "连接失败，请重试");
+                }
+            });
+        }
     }
 
     function checkInput(){
@@ -382,6 +387,8 @@
         m = (m < 10 ? "0":"") + m;
         var d = parseInt($("#register-u-birthday-d").val());
         d = (d < 10 ? "0":"") + d;
+        if (isNaN(y) || isNaN(m) || isNaN(d)) {alert("必须输入生日！");return null;}
+
         u.birthday = y + "-" + m + "-" + d;
         u.constellation = "";
         u.identity = $("#register-u-identity").val() || "";

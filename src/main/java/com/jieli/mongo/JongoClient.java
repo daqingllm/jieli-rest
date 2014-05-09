@@ -11,7 +11,9 @@ import org.jongo.Jongo;
  */
 public class JongoClient {
 
+    private static Jongo jongo = new Jongo(MongoFactory.getMongo().getDB("jieli"));
+
     public static Jongo getInstance() {
-        return new Jongo(MongoFactory.getMongo().getDB("jieli"));
+        return jongo;
     }
 }

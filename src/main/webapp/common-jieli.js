@@ -42,7 +42,7 @@ function previewThisArticle() {
     var dialog = $("#dialog-message-preview").removeClass('hide').dialog({
         modal: true,
         width: 500,
-        title: "<div class='widget-header widget-header-small'><h5 class='smaller'><i class='icon-ok'></i> 预览 </h5></div>",
+        title: "<div class='widget-header widget-header-small'><h5 class='smaller'><i class='fa fa-check'></i> 预览 </h5></div>",
         title_html: true,
         buttons: [
             {
@@ -267,14 +267,14 @@ var uploadArticleImageOptions = {
             newImgHtml += "<div class='tools tools-right' style='height:30px;'>";
             // must be " , ' no use
             var re = new RegExp("\'", "g");
-            newImgHtml += "<a href='#' onclick='deletePic(\"" + uploadImgSrc.replace(re, "") + "\")'><i class='icon-remove red'></i></a></div></li>";
+            newImgHtml += "<a href='#' onclick='deletePic(\"" + uploadImgSrc.replace(re, "") + "\")'><i class='fa fa-times red'></i></a></div></li>";
 
             $("#upload-img-list > li").eq(0).after(newImgHtml);
 
             $("#img-list-invisible").attr("style", "border-width:0;display:none");
 
             $('.ace-thumbnails [data-rel="colorbox"]').colorbox(colorbox_params);
-            $("#cboxLoadingGraphic").append("<i class='icon-spinner orange'></i>");//let's add a custom loading icon
+            $("#cboxLoadingGraphic").append("<i class='fa fa-spinner orange'></i>");//let's add a custom loading icon
         } else {
             alert("上传失败");
         }
@@ -464,10 +464,10 @@ function addServiceInfo(){
         '<input type="text" placeholder="服务名称" class="col-xs-10 col-sm-2 service-info-name" style="padding-left: 7px;" >' +
         '<span style="padding:10px;float: left;"></span>' +
         '<input type="text" placeholder="服务内容" class="col-xs-10 col-sm-5 service-info-content" style="padding-left: 7px;">' +
-        '<div class="icon-remove"></div>' +
+        '<div class="fa fa-times"></div>' +
         '</div>');
     serviceInfo.insertBefore($('#icon-plus-si').parent());
-    serviceInfo.children(".icon-remove").click(deleteServiceInfo);
+    serviceInfo.children(".fa-times").click(deleteServiceInfo);
 }
 
 function addArrangementDetail() {
@@ -482,10 +482,10 @@ function addArrangementDetail() {
         '<input type="text"  placeholder="日程安排时间" class="col-xs-10 col-sm-2 arrangement-detail-time" style="padding-left: 7px;" >' +
         '<span style="padding:10px;float: left;"></span>' +
         '<input type="text"  placeholder="日程安排，不填即为此时间段无活动内容" class="col-xs-10 col-sm-5 arrangement-detail-content" style="padding-left: 7px;">' +
-        '<div class="icon-remove"></div>' +
+        '<div class="fa fa-times"></div>' +
         '</div>');
     arrangementDetail.insertBefore($('#icon-plus-ad').parent());
-    arrangementDetail.children('.icon-remove').click(deleteArrangementDetail);
+    arrangementDetail.children('.fa-times').click(deleteArrangementDetail);
     if (lastArrangementDetail[1] == "上午"){
         arrangementDetail.children('.arrangement-detail-time').val(lastArrangementDetail[0]+" 下午");
     }else{
@@ -507,16 +507,35 @@ function GetDate10(dateStr,offsetDay) {
     return year+"-"+month+"-"+day;
 }
 
+var uploadActivityImageOptions = {
+    url: '/rest/upload',
+    type:'post',
+    dataType:'json',
+    contentType:'text/plain',
+    success:function( jsn ) {
+        var msg = jsn.msg;
+        if (jsn.code == 200) {
+            var uploadImgSrc = jsn.body + "";
 
+            $("#form-field-imgurl").attr("src",uploadImgSrc);
+            $("#form-field-imgurl").css("display","block");
+            $("#delTitleImage").css("display","block");
+
+        } else {
+            alert("上传失败");
+        }
+    }
+}
+/*活动中上传图片*/
 function uploadImgBox() {
-    var spin_img = "<div id='upload-loading-img' style='margin-left:30px;margin-top:10px;display: none;'><i class='icon-spinner icon-spin orange bigger-125'></i></div>";
+    var spin_img = "<div id='upload-loading-img' style='margin-left:30px;margin-top:10px;display: none;'><i class='fa fa-spinner icon-spin orange bigger-125'></i></div>";
     spin_img = "";
     bootbox.dialog({
         //message: "<input type='file' id='upload-image-files' name='upload-image-files' >",
         message: "<form id='rest-upload-form' action='/rest/upload' method='post' enctype='multipart/form-data' acceptcharset='UTF-8'>\n<input id='rest-upload-file' type='file' name='file' size='50' />"+spin_img+"</form>",
         buttons: {
             "upload": {
-                "label": "<i class='icon-ok'></i> 上传 ",
+                "label": "<i class='fa fa-check'></i> 上传 ",
                 "className": "btn-sm btn-success",
                 "callback": function () {
                     // show loading image first
@@ -524,6 +543,9 @@ function uploadImgBox() {
 
                     //Example.show("great success");
                     // upload Image !
+                    $('#rest-upload-form').ajaxSubmit(uploadActivityImageOptions);
+
+                    /*
                     var d = new FormData(document.getElementById('rest-upload-form'));
                     $.ajax({
                         url: '/rest/upload',
@@ -551,10 +573,11 @@ function uploadImgBox() {
                     });
 
                     //$("#upload-loading-img").attr("style","display: none");
+                    */
                 }
             },
             "cancel": {
-                "label": "<i class='icon-remove'></i> 取消",
+                "label": "<i class='fa fa-times'></i> 取消",
                 "className": "btn-sm",
                 "callback": function () {
                     //Example.show("uh oh, look out!");

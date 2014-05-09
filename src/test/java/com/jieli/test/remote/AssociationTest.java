@@ -51,7 +51,7 @@ public class AssociationTest {
 
     @Test
     public void testOrg() throws IOException {
-        Response response = Request.Get("http://162.243.151.219:8080/rest/association/organization")
+        Response response = Request.Get("http://114.215.185.140:8080/rest/association/organization")
                 .addHeader("Cookie", "u=5348210be4b00b2ae52d3f5c")
                 .execute();
 

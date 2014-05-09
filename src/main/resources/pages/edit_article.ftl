@@ -7,11 +7,13 @@
     <!-- basic styles -->
 
     <link href="/assets/css/bootstrap.min.css" rel="stylesheet"/>
-    <link rel="stylesheet" href="/assets/css/font-awesome.min.css"/>
+    <#--<link rel="stylesheet" href="/assets/css/font-awesome.min.css"/>-->
 
     <!--[if IE 7]>
-    <link rel="stylesheet" href="/assets/css/font-awesome-ie7.min.css"/>
-    <![endif]-->
+    <!--<link rel="stylesheet" href="/assets/css/font-awesome-ie7.min.css"/>-->
+    <#--<![endif]&ndash;&gt;-->
+
+    <link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
 
     <!-- page specific plugin styles -->
 
@@ -64,7 +66,7 @@
         <div class="navbar-header pull-left">
             <a href="index.html" class="navbar-brand">
                 <small>
-                    <i class="icon-leaf"></i>
+                    <i class="fa fa-leaf"></i>
                     接力 后台管理系统
                 </small>
             </a><!-- /.brand -->
@@ -81,29 +83,13 @@
                                 ${username}
 								</span>
 
-                        <i class="icon-caret-down"></i>
+                        <i class="fa fa-caret-down"></i>
                     </a>
 
                     <ul class="user-menu pull-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
-                        <!--<li>
-                            <a href="#">
-                                <i class="icon-cog"></i>
-                                设置
-                            </a>
-                        </li>
-
-                        <li>
-                            <a href="#">
-                                <i class="icon-user"></i>
-                                个人资料
-                            </a>
-                        </li>
-
-                        <li class="divider"></li>-->
-
                         <li>
                             <a href="#" onclick="document.cookie='u=;path=/';window.location.href='/rest/baccount/login'">
-                                <i class="icon-off"></i>
+                                <i class="fa fa-power-off"></i>
                                 退出
                             </a>
                         </li>
@@ -143,19 +129,19 @@
     <div class="sidebar-shortcuts">
         <div class="sidebar-shortcuts-large" id="sidebar-shortcuts-large">
             <button class="btn btn-success">
-                <i class="icon-signal" style="display: none"></i>
+                <i class="fa fa-signal" style="display: none"></i>
             </button>
 
             <button class="btn btn-info">
-                <i class="icon-pencil" style="display: none"></i>
+                <i class="fa fa-pencil" style="display: none"></i>
             </button>
 
             <button class="btn btn-warning">
-                <i class="icon-group" style="display: none"></i>
+                <i class="fa fa-users" style="display: none"></i>
             </button>
 
             <button class="btn btn-danger">
-                <i class="icon-cogs" style="display: none"></i>
+                <i class="fa fa-cogs" style="display: none"></i>
             </button>
         </div>
 
@@ -176,7 +162,7 @@
     </ul>
 
     <div class="sidebar-collapse" id="sidebar-collapse">
-        <i class="icon-double-angle-left" data-icon1="icon-double-angle-left" data-icon2="icon-double-angle-right"></i>
+        <i class="fa fa-angle-double-left" data-icon1="fa fa-angle-double-left" data-icon2="fa fa-angle-double-right"></i>
     </div>
 </div>
 
@@ -191,7 +177,7 @@
 
         <ul class="breadcrumb">
             <li>
-                <i class="icon-home home-icon"></i>
+                <i class="fa fa-home home-icon"></i>
                 <a href="index.html">首页</a>
             </li>
 
@@ -208,7 +194,7 @@
 								<span class="input-icon">
 									<input type="text" placeholder="搜索 ..." class="nav-search-input"
                                            id="nav-search-input" autocomplete="off"/>
-									<i class="icon-search nav-search-icon"></i>
+									<i class="fa fa-search nav-search-icon" style="position: absolute;top: 1px;bottom: 1px;left: 3px;"></i>
 								</span>
             </form>
         </div>
@@ -220,7 +206,7 @@
             <h1>
                 编辑新闻、资讯或者企业动态
                 <small>
-                    <i class="icon-double-angle-right"></i>
+                    <i class="fa fa-angle-double-right"></i>
                     上传图片后文本框内会产生&lt;img src='...'&gt;标签，您可以通过移动该标签调整图片位置
                 </small>
             </h1>
@@ -273,7 +259,7 @@
                             <div class="input-group">
                                 <input type="text" id="form-field-occDate" class="form-control hasDatepicker"/>
                         		<span class="input-group-addon">
-                        			<i class="icon-calendar"></i>
+                        			<i class="fa fa-calendar"></i>
                         		</span>
                             </div>
                         </div>
@@ -369,25 +355,25 @@
                     <div class="col-md-offset-3 col-md-9">
                         <button class="btn btn-success btn-purple" id="bootbox-upload-image"
                                 style="font-weight:bold">
-                            <i class="icon-cloud-upload bigger-110"></i>
+                            <i class="fa fa-cloud-upload bigger-110"></i>
                             上传图片
                         </button>
 
                         &nbsp; &nbsp; &nbsp;
                         <button class="btn btn-success" type="button" style="font-weight:bold" onclick="previewThisArticle()">
-                            <i class="icon-question bigger-110"></i>
+                            <i class="fa fa-question bigger-110"></i>
                             预览
                         </button>
 
                         &nbsp; &nbsp; &nbsp;
                         <button class="btn btn-info" type="button" style="font-weight:bold" onclick="postThisArticle()">
-                            <i class="icon-ok bigger-110"></i>
+                            <i class="fa fa-check bigger-110"></i>
                             完成
                         </button>
 
                         &nbsp; &nbsp; &nbsp;
                         <button class="btn" type="reset" style="font-weight:bold" onclick="clearImgList();return true;">
-                            <i class="icon-undo bigger-110"></i>
+                            <i class="fa fa-undo bigger-110"></i>
                             清空
                         </button>
                     </div>
@@ -403,7 +389,7 @@
 
 <div class="ace-settings-container" id="ace-settings-container">
     <div class="btn btn-app btn-xs btn-warning ace-settings-btn" id="ace-settings-btn">
-        <i class="icon-cog bigger-150"></i>
+        <i class="fa fa-cog bigger-150"></i>
     </div>
 
     <div class="ace-settings-box" id="ace-settings-box">
@@ -453,7 +439,7 @@
 <!-- /.main-container-inner -->
 
 <a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
-    <i class="icon-double-angle-up icon-only bigger-110"></i>
+    <i class="fa fa-angle-double-up icon-only bigger-110"></i>
 </a>
 </div>
 <!-- /.main-container -->
@@ -563,7 +549,7 @@
             newImgHtml += "<div class='tools tools-right' style='height:30px;'>";
             // must be " , ' no use
             var re = new RegExp("\'","g");
-            newImgHtml += "<a href='#' onclick='deletePic(\""+uploadImgSrc.replace(re,"")+"\")'><i class='icon-remove red'></i></a></div></li>";
+            newImgHtml += "<a href='#' onclick='deletePic(\""+uploadImgSrc.replace(re,"")+"\")'><i class='fa fa-times red'></i></a></div></li>";
             $("#upload-img-list > li").last().before(newImgHtml);
             $("#img-list-invisible").attr("style","border-width:0;display:none");
             idx = cont.indexOf("<center><img src='",ed);
@@ -596,11 +582,11 @@
     }
 
     jQuery(function ($) {
-        <#if isSuper>
-            $("#sidebar-shortcuts-navlist").load("/sidebar_super.html",function(){/*$("#nav_list_2_3").addClass("active open");*/$("#nav_list_2").addClass("active");});
-        <#else>
-            $("#sidebar-shortcuts-navlist").load("/sidebar_admin.html",function(){/*$("#nav_list_2_3").addClass("active open");*/$("#nav_list_2").addClass("active");});
-        </#if>
+    <#if isSuper>
+        $("#sidebar-shortcuts-navlist").load("/sidebar_super.html",function(){$("#nav_list_2").addClass("active");});
+    <#else>
+        $("#sidebar-shortcuts-navlist").load("/sidebar_admin.html",function(){$("#nav_list_2").addClass("active");});
+    </#if>
 
         $('#selectAssociationIds').multiselect({
             numberDisplayed:10,
@@ -621,21 +607,21 @@
             maxHeight:400
         });
         $("#bootbox-upload-image").on("click", function () {
-            var spin_img = "<div id='upload-loading-img' style='margin-left:30px;margin-top:10px;display: none;'><i class='icon-spinner icon-spin orange bigger-125'></i></div>";
+            var spin_img = "<div id='upload-loading-img' style='margin-left:30px;margin-top:10px;display: none;'><i class='fa fa-spinner icon-spin orange bigger-125'></i></div>";
             spin_img = "";
             bootbox.dialog({
                 //message: "<input type='file' id='upload-image-files' name='upload-image-files' >",
                 message: "<form id='rest-upload-form' action='/rest/upload' method='post' enctype='multipart/form-data' acceptcharset='UTF-8'>\n<input id='rest-upload-file' type='file' name='file' size='50' />"+spin_img+"</form>",
                 buttons: {
                     "upload": {
-                        "label": "<i class='icon-ok'></i> 上传 ",
+                        "label": "<i class='fa fa-check'></i> 上传 ",
                         "className": "btn-sm btn-success",
                         "callback": function () {
                             $('#rest-upload-form').ajaxSubmit(uploadArticleImageOptions);
                         }
                     },
                     "cancel": {
-                        "label": "<i class='icon-remove'></i> 取消",
+                        "label": "<i class='fa fa-times'></i> 取消",
                         "className": "btn-sm",
                         "callback": function () {
                             var objFile = document.getElementById('rest-upload-file');
@@ -650,8 +636,8 @@
             reposition: true,
             scalePhotos: true,
             scrolling: false,
-            previous: '<i class="icon-arrow-left"></i>',
-            next: '<i class="icon-arrow-right"></i>',
+            previous: '<i class="fa fa-arrow-left"></i>',
+            next: '<i class="fa fa-arrow-right"></i>',
             close: '&times;',
             current: '{current} of {total}',
             maxWidth: '100%',
@@ -668,7 +654,7 @@
         };
 
         $('.ace-thumbnails [data-rel="colorbox"]').colorbox(colorbox_params);
-        $("#cboxLoadingGraphic").append("<i class='icon-spinner orange'></i>");//let's add a custom loading icon
+        $("#cboxLoadingGraphic").append("<i class='fa fa-spinner orange'></i>");//let's add a custom loading icon
 
         /**$(window).on('resize.colorbox', function() {
 					try {
