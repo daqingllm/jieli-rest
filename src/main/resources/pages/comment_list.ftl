@@ -64,7 +64,7 @@
         <div class="navbar-header pull-left">
             <a href="index.html" class="navbar-brand">
                 <small>
-                    <i class="icon-leaf"></i>
+                    <i class="fa fa-leaf"></i>
                     接力 后台管理系统
                 </small>
             </a><!-- /.brand -->

@@ -85,7 +85,7 @@
                     <ul class="user-menu pull-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
                         <!--<li>
                             <a href="#">
-                                <i class="icon-cog"></i>
+                                <i class="fa fa-cog"></i>
                                 ÉèÖÃ
                             </a>
                         </li>
@@ -101,7 +101,7 @@
 
                         <li>
                             <a href="#">
-                                <i class="icon-off"></i>
+                                <i class="fa fa-power-off"></i>
                                 ÍË³ö
                             </a>
                         </li>
@@ -141,19 +141,19 @@
             <div class="sidebar-shortcuts">
                 <div class="sidebar-shortcuts-large" id="sidebar-shortcuts-large">
                     <button class="btn btn-success">
-                        <i class="icon-signal" style="display: none"></i>
+                        <i class="fa fa-signal" style="display: none"></i>
                     </button>
 
                     <button class="btn btn-info">
-                        <i class="icon-pencil" style="display: none"></i>
+                        <i class="fa fa-pencil" style="display: none"></i>
                     </button>
 
                     <button class="btn btn-warning">
-                        <i class="icon-group" style="display: none"></i>
+                        <i class="fa fa-users" style="display: none"></i>
                     </button>
 
                     <button class="btn btn-danger">
-                        <i class="icon-cogs" style="display: none"></i>
+                        <i class="fa fa-cogs" style="display: none"></i>
                     </button>
                 </div>
 
@@ -174,7 +174,7 @@
             </ul>
 
             <div class="sidebar-collapse" id="sidebar-collapse">
-                <i class="icon-double-angle-left" data-icon1="icon-double-angle-left" data-icon2="icon-double-angle-right"></i>
+                <i class="fa fa-angle-double-left" data-icon1="fa fa-angle-double-left" data-icon2="fa fa-angle-double-right"></i>
             </div>
         </div>
 
@@ -189,7 +189,7 @@
 
                 <ul class="breadcrumb">
                     <li>
-                        <i class="icon-home home-icon"></i>
+                        <i class="fa fa-home home-icon"></i>
                         <a href="index.html">Ê×Ò³</a>
                     </li>
 
@@ -210,7 +210,7 @@
 								<span class="input-icon">
 									<input type="text" placeholder="ËÑË÷ ..." class="nav-search-input"
                                            id="nav-search-input" autocomplete="off"/>
-									<i class="icon-search nav-search-icon"></i>
+									<i class="fa fa-search nav-search-icon"></i>
 								</span>
                     </form>
                 </div>
@@ -275,7 +275,7 @@
 
     <div class="ace-settings-container" id="ace-settings-container">
         <div class="btn btn-app btn-xs btn-warning ace-settings-btn" id="ace-settings-btn">
-            <i class="icon-cog bigger-150"></i>
+            <i class="fa fa-cog bigger-150"></i>
         </div>
 
         <div class="ace-settings-box" id="ace-settings-box">
@@ -298,7 +298,7 @@
 <!-- /.main-container-inner -->
 
 <a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
-    <i class="icon-double-angle-up icon-only bigger-110"></i>
+    <i class="fa fa-angle-double-up icon-only bigger-110"></i>
 </a>
 </div>
 <!-- /.main-container -->
@@ -409,8 +409,8 @@ jQuery(function ($) {
         reposition: true,
         scalePhotos: true,
         scrolling: false,
-        previous: '<i class="icon-arrow-left"></i>',
-        next: '<i class="icon-arrow-right"></i>',
+        previous: '<i class="fa fa-arrow-left"></i>',
+        next: '<i class="fa fa-arrow-right"></i>',
         close: '&times;',
         current: '{current} of {total}',
         maxWidth: '100%',
@@ -427,7 +427,7 @@ jQuery(function ($) {
     };
 
     $('.ace-thumbnails [data-rel="colorbox"]').colorbox(colorbox_params);
-    $("#cboxLoadingGraphic").append("<i class='icon-spinner orange'></i>");//let's add a custom loading icon
+    $("#cboxLoadingGraphic").append("<i class='fa fa-spinner orange'></i>");//let's add a custom loading icon
 
     /**$(window).on('resize.colorbox', function() {
 					try {
