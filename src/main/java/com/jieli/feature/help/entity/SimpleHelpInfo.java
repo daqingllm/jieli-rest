@@ -122,4 +122,35 @@ public class SimpleHelpInfo extends Model{
         this.id = id;
     }
 
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getUserFace() {
+        return userFace;
+    }
+
+    public void setUserFace(String userFace) {
+        this.userFace = userFace;
+    }
+
+    public int getTypeDetail() {
+        return typeDetail;
+    }
+
+    public void setTypeDetail(int typeDetail) {
+        this.typeDetail = typeDetail;
+    }
+
+    public int getCommentCount() {
+        return commentCount;
+    }
+
+    public void setCommentCount(int commentCount) {
+        this.commentCount = commentCount;
+    }
 }
