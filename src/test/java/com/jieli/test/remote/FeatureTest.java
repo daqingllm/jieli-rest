@@ -25,10 +25,11 @@ public class FeatureTest {
         helpInfo.setTitle("求帮忙搬家");
         helpInfo.setContent("求大神帮忙搬行李！！！无报酬，请吃饭。。");
         helpInfo.setAddTime(new Date());
+        helpInfo.setType(1);
         helpInfo.setTypeDetail(1);
         helpInfo.isEmergency = true;
         ObjectMapper mapper = new ObjectMapper();
-        Response response = Request.Post("http://162.243.151.219:8080/rest/feature/help/add")
+        Response response = Request.Post("http://114.215.185.140:8080/rest/feature/help/add")
                 .setHeader("Cookie", "u=5348210be4b00b2ae52d3f5c")
                 .bodyString(mapper.writeValueAsString(helpInfo), ContentType.APPLICATION_JSON)
                 .execute();

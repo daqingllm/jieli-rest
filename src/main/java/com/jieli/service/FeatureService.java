@@ -145,7 +145,7 @@ public class FeatureService {
         help.setUserName(user.name);
         help.setUserFace(user.userFace);
 
-        if(help.getType() != 0 || help.getType() != 1) {
+        if(help.getType() != 0 && help.getType() != 1) {
             help.setType(0);
         }
         HelpInfo result = helpDAO.addHelp(help);
