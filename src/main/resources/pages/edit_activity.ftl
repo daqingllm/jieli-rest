@@ -444,6 +444,19 @@
 
 <div class="space-4"></div>
 
+<div class="form-group">
+    <label class="col-sm-3 control-label no-padding-right" for="form-input-readonly"> 用户上传的活动图片 </label>
+
+    <div class="col-sm-9">
+        <div class="row-fluid">
+            <ul class="ace-thumbnails" id="upload-img-list">
+                <li id="img-list-invisible" style="border-width:0;display: block">暂无</li>
+            </ul>
+        </div>
+    </div>
+</div>
+<div class="space-4"></div>
+
 </form>
 
 <div class="clearfix form-actions">
@@ -607,6 +620,23 @@
 </script>
 <script>
 
+    function deleteActivityPic(aid,uid,pid){
+        if (confirm("确认删除图片？")){
+            $.ajax({
+                type:"GET",
+                url:"/app/activity/deletepic?activityId="+aid+"&userId="+uid+"&pic="+pid,
+                success:function(ret){
+                    if (ret.code == 200){
+                        alert("已经删除该图片");
+                        window.location.href = window.location.href.replace("#","");
+                    }else{
+                        alert("删除失败。"+ret.msg);
+                    }
+                }
+            });
+        }
+    }
+
     function loadThisActivity(){
     <#if got?length==0>
         data = ${act_data};
@@ -723,6 +753,48 @@
             $('#icon-plus-si').click(addServiceInfo);
         }
 
+        var album = data.album;
+        var album_len = 0;
+        if (album){
+            var uids = [];
+            var unames = [];
+            for (var o in album){
+                uids.push(o);
+            }
+            $.ajax({
+                type:"POST",
+                url:"/app/user/load",
+                data:JSON.stringify(uids),
+                contentType: "application/json; charset=utf-8",
+                dataType: 'json',
+                success:function(ret){
+                    for (var ii = 0; ii < ret.body.length; ii++){
+                        unames.push(ret.body[ii].name);
+                    }
+
+                    var count = -1;
+                    for (var o in album){
+                        count ++;
+                        for (var ii = 0; ii < album[o].length; ii ++) {
+                            var uploadImgSrc = album[o][ii];
+                            var newImgHtml = "<li>";
+                            newImgHtml += "<a href='" + uploadImgSrc + "' data-rel='colorbox'>";
+                            newImgHtml += "<img alt='150x150' width='150' height='150' src='" + uploadImgSrc + "' />";
+                            newImgHtml += "<div class='text'><div class='inner'>"+unames[count]+"</div></div>";
+                            newImgHtml += "</a>";
+                            newImgHtml += "<div class='tools tools-right' style='height:30px;'>";
+                            // must be " , ' no use
+                            var re = new RegExp("\'", "g");
+                            newImgHtml += "<a href='javascript:void(0);return false;' onclick='deleteActivityPic(\"" +data["_id"] + "\",\"" + o +"\",\"" + uploadImgSrc + "\")'><i class='fa fa-times red'></i></a></div></li>";
+                            $("#upload-img-list > li").last().before(newImgHtml);
+                        }
+                    }
+                    window.scrollTo(0,0);
+                }
+            });
+        }
+        if (album_len == 0)
+            $("#img-list-invisible").attr("style","border-width:0;display:none");
         //$("#form-field-textarea-service").val(data.serviceInfo);
 
         $("#form-field-textarea-sponsor").val(data.sponsorInfo);
@@ -734,7 +806,9 @@
             $("#form-field-imgurl").css("display","block");
             $("#delTitleImage").css("display","block");
         }
-            <#if isSuper>$("form-field-associations").val(data.associationId);</#if>
+
+        <#if isSuper>$("form-field-associations").val(data.associationId);</#if>
+
 
     <#else>
         <#if got=="old">

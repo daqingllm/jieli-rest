@@ -78,6 +78,7 @@ function postThisArticle(){
         if (json["_id"].indexOf("&") > -1) {
             json["_id"] = json["_id"].substr(0, json["_id"].indexOf("&"));
         }
+        json["_id"] = json["_id"].replace("#","");
         isEdit = true;
     }
 
@@ -274,7 +275,8 @@ var uploadArticleImageOptions = {
 
             $("#img-list-invisible").attr("style", "border-width:0;display:none");
 
-            $('.ace-thumbnails [data-rel="colorbox"]').colorbox(colorbox_params);
+            /*$('.ace-thumbnails [data-rel="colorbox"]').colorbox(colorbox_params);*/
+
             $("#cboxLoadingGraphic").append("<i class='fa fa-spinner orange'></i>");//let's add a custom loading icon
         } else {
             alert("上传失败");
@@ -293,6 +295,7 @@ function finishActivity(type){
         act["_id"] = window.location.href.substr(p_id + "actid=".length);
         if (act["_id"].indexOf("&") > -1)
             act["_id"] = act["_id"].substr(0, act["_id"].indexOf("&"));
+        act["_id"] = act["_id"].replace("#","");
         isEdit = true;
     }
 

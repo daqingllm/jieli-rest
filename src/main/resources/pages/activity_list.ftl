@@ -339,10 +339,11 @@
 <script src="/assets/js/jquery.maskedinput.min.js"></script>
 <script src="/assets/js/bootstrap-tag.min.js"></script>
 <script src="/assets/js/jquery.gritter.min.js"></script>
-<script src="/assets/js/bootbox.min.js"></script>
 -->
 
 <!-- ace scripts -->
+
+<script src="/assets/js/bootbox.min.js"></script>
 
 <script src="/assets/js/ace-elements.min.js"></script>
 <script src="/assets/js/ace.min.js"></script>
@@ -468,6 +469,26 @@ function parseActData(data){
         }else {
             data[i].beginDate = data[i].beginDate.substr(0,10);
         }
+
+        if (data[i].joinMembers) {
+            var joinMembers_ = [];
+            for ( var o in data[i].joinMembers){
+                if (joinMembers_.indexOf(o) < 0)
+                    joinMembers_.push(o);
+            }
+            data[i].joinMembers_ = joinMembers_.join(",");
+        }else{
+            data[i].joinMembers_ = "";
+        }
+
+        if (data[i].followMembers) {
+            if (data[i].followMembers.length > 0)
+                data[i].followMembers_ = data[i].followMembers.join(",");
+            else
+                data[i].followMembers_ = "";
+        }else{
+            data[i].followMembers_ = "";
+        }
         //data[i].content = data[i].overview;
         //data[i].content = data[i].content.substr(0,30);
 
@@ -506,7 +527,7 @@ jQuery(function($) {
         data: grid_data,
         datatype: "local",
         height: 490,
-        colNames:['_id','协会','活动名称','活动种类','活动类型', '活动简介', '报名截止日期'],
+        colNames:['_id','协会','活动名称','活动种类','活动类型', '活动简介', '报名截止日期','','','活动地点'],
         colModel:[
             {name:"_id",index:"_id",width:10,editable:false,hidden:true},
             {name:"associationId",index:"associationId",width:40,editable:false<#if isSuper><#else>,hidden:true</#if>},
@@ -514,7 +535,10 @@ jQuery(function($) {
             {name:"tag",index:"tag",width:"45",editable:false},
             {name:"type",index:"type",width:"45",editable:false},
             {name:"description",index:"description",width:"330",editable:false},
-            {name:"beginDate",index:"beginDate",width:"120",editable:false,sorttype:"date"}
+            {name:"beginDate",index:"beginDate",width:"120",editable:false,sorttype:"date"},
+            {name:"joinMembers_",index:"joinMembers_",width:"120",editable:false,hidden:true},
+            {name:"followMembers_",index:"followMembers_",width:"120",editable:false,hidden:true},
+            {name:"location",index:"location",width:"120",editable:false}
         ],
         viewrecords : true,
         rowNum: 15,
@@ -579,7 +603,7 @@ jQuery(function($) {
                 }),
 
                 search: true,
-                searchicon : 'fa fa-search orange',
+                searchicon : 'fa fa-list orange',
                 searchfunc: (function(){
                     var id = $("#grid-table").getGridParam("selrow");
                     if (id) id=$("#grid-table > tbody > tr").eq(id).find("td").eq(1).attr("title");
@@ -597,8 +621,89 @@ jQuery(function($) {
                     if (!id || id.length == 0) alert("请先选择一个活动");
                     else window.location.href = '/app/bactivity/view?actid='+id;
                 })
-            }
-    );
+            }).jqGrid('navButtonAdd',pager_selector,{
+                caption:"",
+                title:"报名名单",
+                buttonicon:"fa fa-list",
+                onClickButton:function(){
+                    var id = $("#grid-table").getGridParam("selrow");
+                    var title = $("#grid-table > tbody > tr").eq(id).find("td").eq(3).attr("title");
+                    var uids = $("#grid-table > tbody > tr").eq(id).find("td").eq(8).attr("title") || "";
+                    var uidsJSON = uids.split(",");
+
+                    id=$("#grid-table > tbody > tr").eq(id).find("td").eq(1).attr("title");
+
+                    if (!id || id.length == 0) {alert("请先选择一个活动");return;}
+
+                    $.ajax({
+                        type:"POST",
+                        url:"/app/user/load",
+                        data:JSON.stringify(uidsJSON),
+                        contentType: "application/json; charset=utf-8",
+                        dataType: 'json',
+                        success:function(ret){
+                            var lis = "";
+                            for (var ii = 0; ii < ret.body.length; ii++){
+                                lis += "<li style='float:left;min-width:150px;'>"+ret.body[ii].name+"</li>";
+                            }
+                            var message = "<span class='bigger-110'>“"+title+"”的报名名单</span><br /><div class='ui-accordion-content'><ul>"+lis+"</ul></div>";
+                            bootbox.dialog({
+                                message: message,
+                                buttons:
+                                {
+                                    "success" :
+                                    {
+                                        "label" : "<i class='fa fa-check'></i> 确定",
+                                        "className" : "btn-sm btn-success",
+                                        "callback": function() {}
+                                    }
+                                }
+                            });
+                        }
+                    });
+                }
+            }).jqGrid('navButtonAdd',pager_selector,{
+                caption:"",
+                title:"关注名单",
+                buttonicon:"fa fa-list red",
+                onClickButton:function(){
+                    var id = $("#grid-table").getGridParam("selrow");
+                    var title = $("#grid-table > tbody > tr").eq(id).find("td").eq(3).attr("title");
+                    var uids = $("#grid-table > tbody > tr").eq(id).find("td").eq(9).attr("title") || "";
+                    var uidsJSON = uids.split(",");
+
+                    id=$("#grid-table > tbody > tr").eq(id).find("td").eq(1).attr("title");
+
+                    if (!id || id.length == 0) {alert("请先选择一个活动");return;}
+
+                    $.ajax({
+                        type:"POST",
+                        url:"/app/user/load",
+                        data:JSON.stringify(uidsJSON),
+                        contentType: "application/json; charset=utf-8",
+                        dataType: 'json',
+                        success:function(ret){
+                            var lis = "";
+                            for (var ii = 0; ii < ret.body.length; ii++){
+                                lis += "<li style='float:left;min-width:150px;'>"+ret.body[ii].name+"</li>";
+                            }
+                            var message = "<span class='bigger-110'>“"+title+"”的关注名单</span><br /><div class='ui-accordion-content'><ul>"+lis+"</ul></div>";
+                            bootbox.dialog({
+                                message: message,
+                                buttons:
+                                {
+                                    "success" :
+                                    {
+                                        "label" : "<i class='fa fa-check'></i> 确定",
+                                        "className" : "btn-sm btn-success",
+                                        "callback": function() {}
+                                    }
+                                }
+                            });
+                        }
+                    });
+                }
+            });
 
     $(".ui-jqgrid-htable").css("font-family","微软雅黑");
 

@@ -626,7 +626,7 @@ jQuery(function($) {
                 delicon : 'fa fa-trash-o red',
                 delfunc : (function(){
                     var acc=makeAccount();
-                    if (acc.state != 0) return;
+                    /*if (acc.state != 0) return;*/
                     acc.password="";//donot change password
                     acc.associationId="";//donot change association
                     acc.state=0;
@@ -638,7 +638,7 @@ jQuery(function($) {
                             data:JSON.stringify(acc),
                             contentType:"application/json; charset=utf-8",
                             success:function(jsn){
-                                if(jsn.code==200) alert("用户"+acc.username+"已被删除");
+                                if(jsn.code==200) {alert("用户"+acc.username+"已被删除");window.location.reload();}
                                 else alert("操作失败，"+jsn.msg);
                             }
                         });
