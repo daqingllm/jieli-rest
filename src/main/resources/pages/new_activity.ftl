@@ -352,7 +352,7 @@
 
     <div id="arrangement-details" class="col-sm-9">
         <div>
-            <div class="fa-plus-bigger" id="icon-plus-ad"></div>
+            <div class="fa fa-plus fa-plus-bigger" id="icon-plus-ad"></div>
         </div>
     </div>
 </div>
@@ -366,7 +366,7 @@
     <div class="col-sm-9" id="service-info">
         <!--<textarea id="form-field-textarea-service" class="autosize-transition col-xs-10 col-sm-7"
                   style="min-height: 140px;" placeholder="请用冒号和回车分隔服务信息"></textarea>-->
-        <div><div class="fa-plus-bigger" id="icon-plus-si"></div></div>
+        <div><div class="fa fa-plus fa-plus-bigger" id="icon-plus-si"></div></div>
     </div>
 </div>
 <div class="space-4"></div>

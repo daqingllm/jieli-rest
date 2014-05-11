@@ -77,11 +77,11 @@
                                         <fieldset>
                                             <label class="block clearfix"> <span class="block input-icon input-icon-right">
 															<input type="text" class="form-control" placeholder="ÓÃ»§Ãû" id="login-username" />
-															<i class="fa fa-user"></i> </span> </label>
+															<i class="fa fa-user" style="position: absolute;left:auto;right: 8px;top:11px;"></i> </span> </label>
 
                                             <label class="block clearfix"> <span class="block input-icon input-icon-right">
 															<input type="password" class="form-control" placeholder="ÃÜÂë" id="login-password" />
-															<i class="fa fa-lock"></i> </span> </label>
+															<i class="fa fa-lock" style="position: absolute;left:auto;right: 8px;top:11px;"></i> </span> </label>
 
                                             <div class="space"></div>
 
@@ -241,7 +241,6 @@
 <script src="/assets/js/bootbox.min.js"></script>
 <script src="/assets/js/jquery.easy-pie-chart.min.js"></script>
 <script src="/assets/js/jquery.gritter.min.js"></script>
-<script src="/assets/js/spin.min.js"></script>
 
 <!-- ace scripts -->
 
