@@ -84,7 +84,7 @@
 
                     <ul class="user-menu pull-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
                         <li>
-                            <a href="#" onclick="document.cookie='u=;path=/';window.location.href='/rest/baccount/login'">
+                            <a href="#" onclick="document.cookie='u=;path=/';window.location.href='/app/baccount/login'">
                                 <i class="fa fa-power-off"></i>
                                 退出
                             </a>
@@ -536,7 +536,7 @@ jQuery(function($) {
             { 	//navbar options
                 add: true,
                 addicon : 'fa fa-plus-circle purple',
-                addfunc : (function(){window.location.href="/rest/bnews/new";/*alert("添加操作!");*/return false;}),
+                addfunc : (function(){window.location.href="/app/bnews/new";/*alert("添加操作!");*/return false;}),
 
                 edit: true,
                 editicon : 'fa fa-pencil blue',
@@ -544,7 +544,7 @@ jQuery(function($) {
                     var id = $("#grid-table").getGridParam("selrow");
                     if (id) id=$("#grid-table > tbody > tr").eq(id).find("td").eq(1).attr("title");
                     if (!id || id.length == 0) alert("请先选择一则资讯");
-                    else window.location.href = '/rest/bnews/edit?artid='+id;
+                    else window.location.href = '/app/bnews/edit?artid='+id;
                 }),
 
                 del: true,
@@ -556,7 +556,7 @@ jQuery(function($) {
                     if (confirm("确认删除选中的资讯？")) {
                         $.ajax({
                             type: "POST",
-                            url: "/rest/bnews/del?artid=" + id,
+                            url: "/app/bnews/del?artid=" + id,
                             success: function (jsn) {
                                 if (jsn.code == 200) {
                                     alert("已删除该资讯");
@@ -575,7 +575,7 @@ jQuery(function($) {
                     var id = $("#grid-table").getGridParam("selrow");
                     if (id) id=$("#grid-table > tbody > tr").eq(id).find("td").eq(1).attr("title");
                     if (!id || id.length == 0) alert("请先选择一则资讯");
-                    else window.location.href = '/rest/bnews/comment?artid='+id;
+                    else window.location.href = '/app/bnews/comment?artid='+id;
                 }),
 
                 refresh: false,
@@ -604,7 +604,7 @@ jQuery(function($) {
                     else{
                         var str = "rowNum=${rowNum}&";
                         str += "page="+parseInt(v_input);
-                        window.location.href = "/rest/bnews/list?rowNum="+str;
+                        window.location.href = "/app/bnews/list?rowNum="+str;
                     }
                 }
             }catch (e){
@@ -647,7 +647,7 @@ function item_select(o,pgButton){
     var str = "rowNum=${rowNum}&";
     str += "page="+page;
 
-    window.location.href = "/rest/bnews/list?" + str;
+    window.location.href = "/app/bnews/list?" + str;
 }
 
 jQuery(function ($) {

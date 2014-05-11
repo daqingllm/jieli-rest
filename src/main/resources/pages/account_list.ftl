@@ -83,7 +83,7 @@
 
                     <ul class="user-menu pull-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
                         <li>
-                            <a href="#" onclick="document.cookie='u=;path=/';window.location.href='/rest/baccount/login'">
+                            <a href="#" onclick="document.cookie='u=;path=/';window.location.href='/app/baccount/login'">
                                 <i class="fa fa-power-off"></i>
                                 退出
                             </a>
@@ -352,7 +352,7 @@
 
         $.ajax({
             type:"GET",
-            url:"/rest/news/load?new_id="+artid,
+            url:"/app/news/load?new_id="+artid,
             async:true,
             success:function(data){
                 alert(data);
@@ -365,7 +365,7 @@
         var d = {"id":sid,"state":state};
         $.ajax({
             type:"GET",
-            url:"/rest/association/user",
+            url:"/app/association/user",
             async:ture,
             data:d,
             success:function(jsn){
@@ -581,7 +581,7 @@ jQuery(function($) {
                                 acc.password=result;
                                 $.ajax({
                                     type:"POST",
-                                    url:"/rest/account/",
+                                    url:"/app/account/",
                                     async:false,
                                     data:JSON.stringify(acc),
                                     contentType:"application/json; charset=utf-8",
@@ -607,7 +607,7 @@ jQuery(function($) {
                     if(confirm("确认升级账户"+acc.username+"为管理员？")){
                         $.ajax({
                             type:"POST",
-                            url:"/rest/account/",
+                            url:"/app/account/",
                             async:true,
                             data:JSON.stringify(acc),
                             contentType:"application/json; charset=utf-8",
@@ -633,7 +633,7 @@ jQuery(function($) {
                     if(confirm("确认删除账号"+acc.username+"？")){
                         $.ajax({
                             type:"POST",
-                            url:"/rest/account/",
+                            url:"/app/account/",
                             async:true,
                             data:JSON.stringify(acc),
                             contentType:"application/json; charset=utf-8",

@@ -84,7 +84,7 @@
 
                     <ul class="user-menu pull-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
                         <li>
-                            <a href="#" onclick="document.cookie='u=;path=/';window.location.href='/rest/baccount/login'">
+                            <a href="#" onclick="document.cookie='u=;path=/';window.location.href='/app/baccount/login'">
                                 <i class="fa fa-power-off"></i>
                                 退出
                             </a>
@@ -574,7 +574,7 @@ function loadThisGroup(name,refresh){
 
     $.ajax({
         type:"GET",
-        url:"/rest/association/identity",
+        url:"/app/association/identity",
         data:{"identity":name},
         success:function(jsn){
             if (jsn.code == 200){
@@ -651,7 +651,7 @@ function getCurrentGroupName(){
 function InitUserList(){
     $.ajax({
         type:"get",
-        url:"/rest/buser/all",
+        url:"/app/buser/all",
         success:function(data){
             var html = "";
             for (var i = 0; i < data.body.length; i ++){
@@ -681,7 +681,7 @@ function removeAUser(){
             //alert(oh);
             $.ajax({
                 type:"POST",
-                url:"/rest/baccount/dfidentity?uname="+oh+"&group="+cg,
+                url:"/app/baccount/dfidentity?uname="+oh+"&group="+cg,
                 success:function(data){
                     if (data.code == 200){
                         alert("已成功移除用户"+name);
@@ -703,7 +703,7 @@ function deleteCurrentGroup(){
     if (cg.length > 0 && confirm("确认删除分组"+cg+"?")){
         $.ajax({
             type:"POST",
-            url:"/rest/bidentity/del?group="+cg,
+            url:"/app/bidentity/del?group="+cg,
             success:function(data){
                 if (data.code == 200) alert("已成功删除分组"+cg);
                 else alert(data.msg);
@@ -748,7 +748,7 @@ function addAUser(){
                     //alert($("#add-user-name").val());
                     $.ajax({
                         type:"POST",
-                        url:"/rest/baccount/atidentity?uname="+uname+"&group="+cg,
+                        url:"/app/baccount/atidentity?uname="+uname+"&group="+cg,
                         async:true,
                         success:function(jsn){
                             if (jsn.code == 200){
@@ -796,7 +796,7 @@ function addAGroup(){
                     </#if>
 
                         $.ajax({
-                        url:"/rest/association/identity"<#if isSuper>+"?id="+$("#add-group-assoc").val()</#if>,
+                        url:"/app/association/identity"<#if isSuper>+"?id="+$("#add-group-assoc").val()</#if>,
                             type:"POST",
                             data:JSON.stringify(group),
                             contentType : "application/json; charset=utf-8",
@@ -910,7 +910,7 @@ jQuery(function($) {
                                         </#if>
 
                                         $.ajax({
-                                            url:"/rest/association/group"<#if isSuper>+"?id="+$("#add-group-assoc").val()</#if>,
+                                            url:"/app/association/group"<#if isSuper>+"?id="+$("#add-group-assoc").val()</#if>,
                                             type:"POST",
 									        data:JSON.stringify(group),
 									        contentType : "application/json; charset=utf-8",
@@ -941,7 +941,7 @@ jQuery(function($) {
                 editfunc : (function(){
                     var id = $("#grid-table").getGridParam("selrow");
                     id=$("#grid-table > tbody > tr").eq(id).find("td").eq(1).attr("title");
-                    window.location.href = '/rest/bactivity/edit?actid='+id;
+                    window.location.href = '/app/bactivity/edit?actid='+id;
                 }),
 
                 del: true,
@@ -955,7 +955,7 @@ jQuery(function($) {
                     id=$("#grid-table > tbody > tr").eq(id).find("td").eq(1).attr("title");
 
                     $.ajax({
-                        url:"/rest/bactivity/del?actid="+id,
+                        url:"/app/bactivity/del?actid="+id,
                         type:"POST",
                         success:function(data){
                             alert(data.msg);

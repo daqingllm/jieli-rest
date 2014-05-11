@@ -88,7 +88,7 @@
 
                     <ul class="user-menu pull-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
                         <li>
-                            <a href="#" onclick="document.cookie='u=;path=/';window.location.href='/rest/baccount/login'">
+                            <a href="#" onclick="document.cookie='u=;path=/';window.location.href='/app/baccount/login'">
                                 <i class="fa fa-power-off"></i>
                                 ÍË³ö
                             </a>
@@ -556,7 +556,7 @@
         }
     <#else>
         if(confirm("${got}"));
-        window.location.href = "/rest/bnews/list";
+        window.location.href = "/app/bnews/list";
     </#if>
     }
 </script>
@@ -611,7 +611,7 @@
             spin_img = "";
             bootbox.dialog({
                 //message: "<input type='file' id='upload-image-files' name='upload-image-files' >",
-                message: "<form id='rest-upload-form' action='/rest/upload' method='post' enctype='multipart/form-data' acceptcharset='UTF-8'>\n<input id='rest-upload-file' type='file' name='file' size='50' />"+spin_img+"</form>",
+                message: "<form id='rest-upload-form' action='/app/upload' method='post' enctype='multipart/form-data' acceptcharset='UTF-8'>\n<input id='rest-upload-file' type='file' name='file' size='50' />"+spin_img+"</form>",
                 buttons: {
                     "upload": {
                         "label": "<i class='fa fa-check'></i> ÉÏ´« ",

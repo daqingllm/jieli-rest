@@ -574,7 +574,7 @@
                         // upload Image !
                         var d = new FormData(document.getElementById('rest-upload-form'));
                         $.ajax({
-                            url: '/rest/upload',
+                            url: '/app/upload',
                             type: 'POST',
                             contentType: false,
                             data: d,
@@ -1020,7 +1020,7 @@ function voteOptionUploadImg(voteOption) {
                     // upload Image !
                     var d = new FormData(document.getElementById('rest-upload-form'));
                     $.ajax({
-                        url: '/rest/upload',
+                        url: '/app/upload',
                         type: 'POST',
                         contentType: false,
                         data: d,
@@ -1105,7 +1105,7 @@ function check(request) {
 
 function voteInfo(voteId, callback) {
     $.ajax({
-        url: '/rest/feature/vote/detail?voteId=' + voteId,
+        url: '/app/feature/vote/detail?voteId=' + voteId,
         type: 'GET',
         success: function (response) {
             if (response.code == 200) {
@@ -1118,7 +1118,7 @@ function voteInfo(voteId, callback) {
                 $('#force-type').val(response.body.force ? 'Y' : 'N');
                 var options = response.body.options;
                 $.ajax({
-                    url: '/rest/feature/vote/result?voteId=' + voteId,
+                    url: '/app/feature/vote/result?voteId=' + voteId,
                     type: 'GET',
                     success: function (response2) {
                         if (response2.code == 200) {
@@ -1237,13 +1237,13 @@ function postNewVote() {
         return;
     }
     $.ajax({
-        url : '/rest/feature/vote/addvote',
+        url : '/app/feature/vote/addvote',
         data : JSON.stringify(request),
         type: 'POST',
         contentType: "application/json",
         success:function(json) {
             if(json.code == 200) {
-                window.location.href = '/rest/bvote/list';
+                window.location.href = '/app/bvote/list';
             }
         }
     });
@@ -1267,13 +1267,13 @@ function postEditVote(voteId) {
         return;
     }
     $.ajax({
-        url : '/rest/feature/vote/modify?voteId='+voteId,
+        url : '/app/feature/vote/modify?voteId='+voteId,
         data : JSON.stringify(request),
         type: 'POST',
         contentType: "application/json",
         success:function(json) {
             if(json.code == 200 && json.entity.code == 200) {
-                window.location.href = '/rest/bvote/list';
+                window.location.href = '/app/bvote/list';
             }
             else if(json.entity.code == 1115) {
                 alert("投票已过期，不可编辑！");

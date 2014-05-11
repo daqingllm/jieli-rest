@@ -88,7 +88,7 @@
 
                     <ul class="user-menu pull-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
                         <li>
-                            <a href="#" onclick="document.cookie='u=;path=/';window.location.href='/rest/baccount/login'">
+                            <a href="#" onclick="document.cookie='u=;path=/';window.location.href='/add/baccount/login'">
                                 <i class="fa fa-power-off"></i>
                                 退出
                             </a>
@@ -586,9 +586,9 @@ jQuery(function($) {
                                 $.ajax({
                                     type:"POST",
                                 <#if ctype=="news">
-                                    url:"/rest/news/comment",
+                                    url:"/add/news/comment",
                                 <#elseif ctype=="activity">
-                                    url:"/rest/activity/comment",
+                                    url:"/add/activity/comment",
                                 </#if>
                                     async:false,
                                     data:JSON.stringify(cmt),
@@ -616,7 +616,7 @@ jQuery(function($) {
                     if(confirm("确认删除选中的评论？")){
                         $.ajax({
                             type:"GET",
-                            url:"/rest/comment/delete?commentId="+id,
+                            url:"/add/comment/delete?commentId="+id,
                             async:true,
                             contentType:"application/json; charset=utf-8",
                             success:function(jsn){

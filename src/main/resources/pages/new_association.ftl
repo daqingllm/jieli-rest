@@ -165,7 +165,7 @@
                 text: "&nbsp;&nbsp;" + msg,
                 class_name: 'gritter-info gritter-light ' + pos,
                 after_close:function(){
-                    window.location.href="/rest/bassociation/list";
+                    window.location.href="/app/bassociation/list";
                 }
             });
         }else{
@@ -184,7 +184,7 @@
 			var _sd = JSON.stringify(_d);
 			$.ajax({
 				type:"POST",
-				url:"/rest/association/",
+				url:"/app/association/",
 				data:_sd,
                 contentType:"application/json; charset=utf-8",
 				dataType:"json",
@@ -196,7 +196,7 @@
 					}
 				},
 				error:function(){
-					window.location.href="/rest/baccount/login";
+					window.location.href="/app/baccount/login";
 				}
 			});
 		}
