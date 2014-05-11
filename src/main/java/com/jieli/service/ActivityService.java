@@ -141,11 +141,16 @@ public class ActivityService {
 
         List<String> oldActivityInvitees = new ArrayList<String>();
         boolean exist = false;
-        if (!StringUtils.isEmpty(activityId) && MongoUtils.isValidObjectId(activity.get_id().toString())) {
-            Activity oldActivity = activityDAO.loadById(activity.get_id().toString());
+        if (!StringUtils.isEmpty(activityId) && MongoUtils.isValidObjectId(activityId)) {
+            Activity oldActivity = activityDAO.loadById(activityId);
             if (oldActivity != null) {
                 if (oldActivity.sponsorUserId.equals(IdentityUtils.getUserId(sessionId))) {
                     activity.set_id(new ObjectId(activityId));
+                    activity.addTime = oldActivity.addTime;
+                    activity.album = oldActivity.album;
+                    activity.followMembers = oldActivity.followMembers;
+                    activity.joinMembers = oldActivity.joinMembers;
+                    activity.invitees = oldActivity.invitees;
                     exist = true;
                     oldActivityInvitees = oldActivity.invitees;
                 }  else {

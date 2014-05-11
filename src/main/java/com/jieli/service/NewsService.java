@@ -8,11 +8,13 @@ import com.jieli.mongo.BaseDAO;
 import com.jieli.news.Image;
 import com.jieli.news.News;
 import com.jieli.news.NewsDAO;
+import com.jieli.news.NewsType;
 import com.jieli.util.CollectionUtils;
 import com.jieli.util.IdentityUtils;
 import com.jieli.util.MongoUtils;
 import com.sun.jersey.spi.resource.Singleton;
 import org.apache.commons.lang.StringUtils;
+import org.bson.types.ObjectId;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -94,12 +96,27 @@ public class NewsService {
      * @return
      */
     @POST
-    @Path("/add")
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-    public Response addNews(@CookieParam("u")String sessionId, News news){
+    public Response upsertNews(@CookieParam("u")String sessionId, @QueryParam("newsId")String newsId, @QueryParam("force")boolean force, News news){
 
-        if (!IdentityUtils.isValidate(sessionId)) {
+        if (!IdentityUtils.isAdmin(sessionId)) {
             return Response.status(403).build();
+        }
+        if (NewsType.newsType.equals(news.type)) {
+            if (!IdentityUtils.isSuper(sessionId)) {
+                return Response.status(403).build();
+            }
+        }
+
+        ResponseEntity responseEntity = new ResponseEntity();
+        String associationId = IdentityUtils.getAssociationId(sessionId);
+        if (StringUtils.isEmpty(news.associationId)) {
+            if (StringUtils.isEmpty(associationId)) {
+                responseEntity.code = 3101;
+                responseEntity.msg = "缺少协会id信息";
+                return Response.status(200).entity(responseEntity).build();
+            }
+            news.associationId = associationId;
         }
 
         if(news!=null){
@@ -108,10 +125,20 @@ public class NewsService {
             }
             news.addTime = new Date();
 
+            if (!StringUtils.isEmpty(newsId) && MongoUtils.isValidObjectId(newsId)) {
+                News oldNews = newsDAO.loadById(newsId);
+                if (oldNews != null) {
+                    news.set_id(new ObjectId(newsId));
+                    news.addTime = oldNews.addTime;
+                    news.appreciateCount = oldNews.appreciateCount;
+                    news.appreciateUserIds = oldNews.appreciateUserIds;
+                    news.commentCount = oldNews.commentCount;
+                }
+            }
+
             newsDAO.save(news);
         }
 
-        ResponseEntity responseEntity = new ResponseEntity();
         responseEntity.code = 200;
         responseEntity.body = "{\"_id\":\"" + news.get_id().toString() + "\"}";;
         return  Response.status(200).entity(responseEntity).build();
