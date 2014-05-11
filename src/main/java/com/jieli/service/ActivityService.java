@@ -546,6 +546,45 @@ public class ActivityService {
         return Response.status(200).entity(responseEntity).build();
     }
 
+    @GET
+    @Path("/deletepic")
+    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+    public Response deletePics(@CookieParam("u")String sessionId, @QueryParam("activityId")String activityId,
+                               @QueryParam("userId")String userId, @QueryParam("pic")String pic) {
+        if (!IdentityUtils.isAdmin(sessionId)) {
+            return Response.status(403).build();
+        }
+
+        ResponseEntity responseEntity = new ResponseEntity();
+        if (StringUtils.isEmpty(activityId) || StringUtils.isEmpty(userId) || StringUtils.isEmpty(pic)) {
+            responseEntity.code = 3101;
+            responseEntity.msg = "缺少参数";
+            return Response.status(200).entity(responseEntity).build();
+        }
+        if (!MongoUtils.isValidObjectId(activityId)) {
+            responseEntity.code = 3102;
+            responseEntity.msg = "参数Id无效";
+            return Response.status(200).entity(responseEntity).build();
+        }
+        Activity activity = activityDAO.loadById(activityId);
+        if (activity == null) {
+            responseEntity.code = 3103;
+            responseEntity.msg = "活动不存在";
+            return Response.status(200).entity(responseEntity).build();
+        }
+
+        if (activity.album == null || activity.album.get(userId) == null || !activity.album.get(userId).contains(pic)) {
+            responseEntity.code = 3108;
+            responseEntity.msg = "图片不存在";
+            return Response.status(200).entity(responseEntity).build();
+        } else {
+            activity.album.get(userId).remove(pic);
+            activityDAO.save(activity);
+            responseEntity.code = 200;
+            return Response.status(200).entity(responseEntity).build();
+        }
+    }
+
     @POST
     @Path("/invite")
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
