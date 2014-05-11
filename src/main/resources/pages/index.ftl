@@ -2,7 +2,7 @@
 <html lang="zh">
 <head>
     <meta charset="utf-8"/>
-    <title>接力 协会管理</title>
+    <title>接力 首页</title>
     <meta name="description" content="接力"/>
     <!-- basic styles -->
 
@@ -175,7 +175,6 @@
                         <i class="fa fa-home home-icon"></i>
                         <a href="#">首页</a>
                     </li>
-                    <li class="active"> 协会列表 </li>
                 </ul>
                 <!-- .breadcrumb -->
 
@@ -212,7 +211,7 @@
 							欢迎使用
 							<strong class="green">
 								接力后台管理系统
-								<small>(v1.2)</small>
+								<small>(v1.0)</small>
 							</strong>
 						</div>
                     </div>

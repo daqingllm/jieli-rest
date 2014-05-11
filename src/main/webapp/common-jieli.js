@@ -339,7 +339,7 @@ function finishActivity(type){
     $(".service-info").each(function(){
         var head = $(this).children("input").eq(0).val();
         var tail = $(this).children("input").eq(1).val();
-        if (head != '' && tail != ''){
+        if (head != ''){
             try {
                 eval("act.serviceInfo." + head + "='" + tail + "'");
             }catch (err){;}
@@ -416,7 +416,7 @@ function check(act) {
         return "必须填简介";
     if (act.fee == '')
         return "必须填费用";
-    if (act.maxNumbers == '')
+    if (act.maxMembers == '')
         return "必须填最大人数";
 
     if (isNaN(act.actDate.getDate()))
@@ -464,7 +464,7 @@ function addServiceInfo(){
         '<input type="text" placeholder="服务名称" class="col-xs-10 col-sm-2 service-info-name" style="padding-left: 7px;" >' +
         '<span style="padding:10px;float: left;"></span>' +
         '<input type="text" placeholder="服务内容" class="col-xs-10 col-sm-5 service-info-content" style="padding-left: 7px;">' +
-        '<div class="fa fa-times"></div>' +
+        '<div class="fa fa-times fa-times-bigger"></div>' +
         '</div>');
     serviceInfo.insertBefore($('#icon-plus-si').parent());
     serviceInfo.children(".fa-times").click(deleteServiceInfo);
@@ -482,7 +482,7 @@ function addArrangementDetail() {
         '<input type="text"  placeholder="日程安排时间" class="col-xs-10 col-sm-2 arrangement-detail-time" style="padding-left: 7px;" >' +
         '<span style="padding:10px;float: left;"></span>' +
         '<input type="text"  placeholder="日程安排，不填即为此时间段无活动内容" class="col-xs-10 col-sm-5 arrangement-detail-content" style="padding-left: 7px;">' +
-        '<div class="fa fa-times"></div>' +
+        '<div class="fa fa-times fa-times-bigger"></div>' +
         '</div>');
     arrangementDetail.insertBefore($('#icon-plus-ad').parent());
     arrangementDetail.children('.fa-times').click(deleteArrangementDetail);
