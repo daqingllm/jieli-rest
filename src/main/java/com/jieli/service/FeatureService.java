@@ -492,7 +492,7 @@ public class FeatureService {
             return Response.status(200).entity(responseEntity).build();
         }
         HelpInfo help = helpDAO.loadById(helpId);
-        if(help == null) {
+        if(help == null || MongoUtils.isValidObjectId(commentId)) {
             responseEntity.code = 1205;
             responseEntity.msg = "参数错误";
             return Response.status(200).entity(responseEntity).build();
@@ -796,7 +796,7 @@ public class FeatureService {
             return Response.status(403).build();
         }
         ResponseEntity responseEntity = new ResponseEntity();
-        if(vote == null || voteId == null || StringUtils.isEmpty(voteId)) {
+        if(vote == null || voteId == null || StringUtils.isEmpty(voteId) || CollectionUtils.isEmpty(vote.getVoteIndex())) {
             responseEntity.code = 1101;
             responseEntity.msg = "缺少参数";
             return Response.status(200).entity(responseEntity).build();
@@ -825,6 +825,7 @@ public class FeatureService {
             responseEntity.msg = "投票信息不存在";
             return  Response.status(200).entity(responseEntity).build();
         }
+        vote.setUserId(IdentityUtils.getUserId(sessionId));
         VoteResult voteResult = voteResultDAO.loadByVoteId(voteId);
         List<Vote> voteList = voteResult.getVoteList();
         VoteResult afterVote = null;
