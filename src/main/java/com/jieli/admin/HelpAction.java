@@ -198,9 +198,11 @@ public class HelpAction {
     private List<Comment> sortComment(List<Comment> commentList, List<Comment> topComments) {
         List<Comment> topOnes = new ArrayList<Comment>();
         List<Comment> normalOnes = new ArrayList<Comment>();
-        if(commentList == null) { //mock data
+        if(commentList == null) {
             commentList = new ArrayList<Comment>();
             topComments = new ArrayList<Comment>();
+            /*
+            *mock data
             Comment comment = new Comment();
             comment.addTime = new Date();
             comment.content = "testtest";
@@ -212,7 +214,7 @@ public class HelpAction {
             comment.commentUserInfo = userInfo;
             comment.topicId = "534f9b8f3004055aeb46f7b3";
             commentList.add(comment);
-            topComments.add(comment);
+            topComments.add(comment);*/
         }
 
         for(Comment c : commentList) {
