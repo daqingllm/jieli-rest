@@ -18,6 +18,7 @@ public class SimpleVoteInfo extends Model{
     private Date addTime;
     private Integer participants;
     private Integer totalVote; //总票数
+    public String picture;
 
     public String getAssociationId() {
         return associationId;

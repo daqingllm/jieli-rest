@@ -867,7 +867,7 @@ public class FeatureService {
      * @param voteId
      * @return
      */
-    @Path("vote/result")
+    @Path("/vote/result")
     @GET
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     public Response getVoteResult(@CookieParam("u")String sessionId, @QueryParam("voteId")String voteId) {

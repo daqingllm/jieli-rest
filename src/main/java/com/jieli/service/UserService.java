@@ -128,6 +128,32 @@ public class UserService {
     }
 
     @POST
+    @Path("/load")
+    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+    public Response loadUsers(@CookieParam("u")String sessionId, List<String> userIds) {
+        if (!IdentityUtils.isValidate(sessionId)) {
+            return Response.status(403).build();
+        }
+        ResponseEntity responseEntity = new ResponseEntity();
+        if (CollectionUtils.isEmpty(userIds)) {
+            responseEntity.code = 7001;
+            responseEntity.msg = "请求内容为空";
+            return  Response.status(200).entity(responseEntity).build();
+        }
+        List<User> users = new ArrayList<User>();
+        for (String userId : userIds) {
+            if (StringUtils.isNotEmpty(userId) && MongoUtils.isValidObjectId(userId)) {
+                User user = userDAO.loadById(userId);
+                users.add(user);
+            }
+        }
+
+        responseEntity.code = 200;
+        responseEntity.body = users;
+        return  Response.status(200).entity(responseEntity).build();
+    }
+
+    @POST
     @Path("/self")
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     public Response editSelf(@CookieParam("u")String sessionId, @QueryParam("first")boolean first, User user) {
