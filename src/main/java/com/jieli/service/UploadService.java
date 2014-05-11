@@ -107,7 +107,7 @@ public class UploadService {
                 "    <title></title>\n" +
                 "</head>\n" +
                 "<body>\n" +
-                "<form action=\"/rest/file/upload\" method=\"post\" enctype=\"multipart/form-data\" acceptcharset=\"UTF-8\">\n" +
+                "<form action=\"/app/file/upload\" method=\"post\" enctype=\"multipart/form-data\" acceptcharset=\"UTF-8\">\n" +
                 "    <input type=\"file\" name=\"file\" size=\"500\" />\n" +
                 "    <input type=\"submit\" value=\"Upload\" />\n" +
                 "</form>\n" +

@@ -60,7 +60,7 @@ public class MatchAction {
             "\t\tfunction redirect()\n" +
             "\t\t{\n" +
             "\t\t\tif (second < 0)\n" +
-            "\t\t\t\tlocation.href = '/rest/baccount/login';\n" +
+            "\t\t\t\tlocation.href = '/app/baccount/login';\n" +
             "\t\t\telse {\n" +
             "\t\t\t\tif (navigator.appName.indexOf(\"Explorer\") > -1)\n" +
             "\t\t\t\t\tdocument.getElementById('totalSecond').innerText = second--;\n" +

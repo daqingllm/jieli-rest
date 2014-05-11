@@ -279,7 +279,7 @@
                 time:500,
                 class_name: 'gritter-info gritter-light ' + pos,
                 after_close:function(){
-                    window.location.href="/rest/bindex";
+                    window.location.href="/app/bindex";
                 }
             });
         }else{
@@ -304,7 +304,7 @@
 
         $.ajax({
             type : "POST",
-            url : "/rest/baccount/login",
+            url : "/app/baccount/login",
             async : false,
             data : _sd,
             contentType : "application/json; charset=utf-8",

@@ -98,7 +98,7 @@
                         <li class="divider"></li>-->
 
                         <li>
-                            <a href="#" onclick="document.cookie='u=;path=/';window.location.href='/rest/baccount/login'">
+                            <a href="#" onclick="document.cookie='u=;path=/';window.location.href='/app/baccount/login'">
                                 <i class="fa fa-power-off"></i>
                                 退出
                             </a>
@@ -367,7 +367,7 @@
 
         $.ajax({
             type:"GET",
-            url:"/rest/news/load?new_id="+artid,
+            url:"/app/news/load?new_id="+artid,
             async:true,
             success:function(data){
                 alert(data);
@@ -380,7 +380,7 @@
         var d = {"id":sid,"state":state};
         $.ajax({
             type:"GET",
-            url:"/rest/association/user",
+            url:"/app/association/user",
             async:ture,
             data:d,
             success:function(jsn){
@@ -542,8 +542,8 @@ jQuery(function($) {
             {name:"state",index:"state",width:"50",editable:false},
             {name:"match",index:"match",width:"75",editable:false, formatter:
                     function(cellValue, options, rowObject) {
-                        var url = "<a href=\"/rest/bmatch/view?c=" + rowObject.password + "&count=5\">" + "查看前五匹配</br></a>"
-                                /*+ "<a href=\"/rest/bmatch/history?c=" + rowObject.password + "\">" + "查看历史匹配</a>"*/;
+                        var url = "<a href=\"/app/bmatch/view?c=" + rowObject.password + "&count=5\">" + "查看前五匹配</br></a>"
+                                /*+ "<a href=\"/app/bmatch/history?c=" + rowObject.password + "\">" + "查看历史匹配</a>"*/;
                         return url;
             }}
         ],
@@ -601,7 +601,7 @@ jQuery(function($) {
                                 acc.password=result;
                                 $.ajax({
                                     type:"POST",
-                                    url:"/rest/account/",
+                                    url:"/app/account/",
                                     async:false,
                                     data:JSON.stringify(acc),
                                     contentType:"application/json; charset=utf-8",
@@ -627,7 +627,7 @@ jQuery(function($) {
                     if(confirm("确认升级账户"+acc.username+"为管理员？")){
                         $.ajax({
                             type:"POST",
-                            url:"/rest/account/",
+                            url:"/app/account/",
                             async:true,
                             data:JSON.stringify(acc),
                             contentType:"application/json; charset=utf-8",
@@ -653,7 +653,7 @@ jQuery(function($) {
                     if(confirm("确认删除账号"+acc.username+"？")){
                         $.ajax({
                             type:"POST",
-                            url:"/rest/account/",
+                            url:"/app/account/",
                             async:true,
                             data:JSON.stringify(acc),
                             contentType:"application/json; charset=utf-8",

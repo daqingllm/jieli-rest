@@ -98,7 +98,7 @@
                         <li class="divider"></li>-->
 
                         <li>
-                            <a href="#" onclick="document.cookie='u=;path=/';window.location.href='/rest/baccount/login'">
+                            <a href="#" onclick="document.cookie='u=;path=/';window.location.href='/app/baccount/login'">
                                 <i class="fa fa-power-off"></i>
                                 退出
                             </a>
@@ -473,7 +473,7 @@ function enableTooltips(table) {
 
 function updateGrid(associationId, page, size) {
     $.ajax({
-        url: "/rest/feature/ajaxvote/list?a="+associationId+"&page="+page+"&size="+size,
+        url: "/app/feature/ajaxvote/list?a="+associationId+"&page="+page+"&size="+size,
         type : 'GET',
         contentType: "application/json",
         success: function(response) {
@@ -510,7 +510,7 @@ jQuery(function($) {
             //{name:"associationId",index:"associationId",width:40,editable:false, hidden:true},
             <#if isSuper>{name:"associationName",index:"associationName",width:40,editable:false},</#if>
             {name:"title",index:"title",width:"100",editable:false, formatter:function getUrl(cellValue, options, rowObject) {
-                var url = "<a href=\"/rest/bvote/view?v=" + rowObject.id + "\">" + cellValue + "</a>";
+                var url = "<a href=\"/app/bvote/view?v=" + rowObject.id + "\">" + cellValue + "</a>";
                 return url;
             }},
             {name:"type",index:"type",width:"45",editable:false},
@@ -550,14 +550,14 @@ jQuery(function($) {
             { 	//navbar options
                 add: true,
                 addicon : 'fa fa-plus-sign purple',
-                addfunc : (function(){window.location.href="/rest/bvote/new";/*alert("添加操作!");*/return false;}),
+                addfunc : (function(){window.location.href="/app/bvote/new";/*alert("添加操作!");*/return false;}),
 
                 edit: true,
                 editicon : 'fa fa-pencil blue',
                 editfunc : (function(){
                     var index = $("#grid-table").getGridParam("selrow");
                     //var id=$("#grid-table > tbody > tr").eq(index).find("td").eq(1).attr("id");
-                    window.location.href = '/rest/bvote/edit?voteId='+index;}),
+                    window.location.href = '/app/bvote/edit?voteId='+index;}),
 
                 <#if isSuper>del: false,
                 <#else>del: true,
@@ -568,7 +568,7 @@ jQuery(function($) {
                     if(flag) {
                         var selectedIds = $("#grid-table").getGridParam("selarrrow");
                         $.ajax({
-                            url: '/rest/feature/vote/deletevote',
+                            url: '/app/feature/vote/deletevote',
                             data: JSON.stringify(selectedIds),
                             type: 'POST',
                             contentType: 'application/json',

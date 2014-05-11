@@ -84,7 +84,7 @@
 
                     <ul class="user-menu pull-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
                         <li>
-                            <a href="#" onclick="document.cookie='u=;path=/';window.location.href='/rest/baccount/login'">
+                            <a href="#" onclick="document.cookie='u=;path=/';window.location.href='/app/baccount/login'">
                                 <i class="fa fa-power-off"></i>
                                 ÍË³ö
                             </a>
@@ -351,7 +351,7 @@
         var d = {"id":sid,"state":state};
         $.ajax({
             type:"GET",
-            url:"/rest/association/user",
+            url:"/app/association/user",
             async:ture,
             data:d,
             success:function(jsn){

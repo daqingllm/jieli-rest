@@ -112,7 +112,7 @@
 
                     <ul class="user-menu pull-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
                         <li>
-                            <a href="#"  onclick="document.cookie='u=;path=/';window.location.href='/rest/baccount/login'">
+                            <a href="#"  onclick="document.cookie='u=;path=/';window.location.href='/app/baccount/login'">
                                 <i class="fa fa-power-off"></i>
                                 ÍË³ö
                             </a>
@@ -743,7 +743,7 @@
             if(confirm("${got}"));
         </#if>
 
-        window.location.href = "/rest/bactivity/list";
+        window.location.href = "/app/bactivity/list";
     </#if>
     }
 

@@ -159,13 +159,14 @@ function postThisArticle(){
         json["addTime"] = data["addTime"];
     }
 
+    var p_addurl = "/app/news/?newsId="+(isEdit?json["_id"]:"")+"&force="+$("#form-field-checkbox").is(':checked');
     var suc = true;
     // if edit , there is only one element in p_assid
     for (var i = 0; i <p_assid.length;i++) {
         json["associationId"] = p_assid[i];
         $.ajax({
             type: "POST",
-            url: "/rest/news/add?force="+$("#form-field-checkbox").is(':checked'),
+            url: p_addurl,
             data: JSON.stringify(json),
             contentType: "application/json; charset=utf-8",
             dataType: 'json',
@@ -177,8 +178,8 @@ function postThisArticle(){
     }
 
     if (suc) {
-        if (p_id > -1) {alert("已经成功编辑此资讯");window.location.href = "/rest/bnews/list";}
-        else {alert("已经成功添加此资讯");window.location.href = "/rest/bnews/list";}
+        if (p_id > -1) {alert("已经成功编辑此资讯");window.location.href = "/app/bnews/list";}
+        else {alert("已经成功添加此资讯");window.location.href = "/app/bnews/list";}
     }
     else  alert("添加资讯失败");
 }
@@ -236,7 +237,7 @@ function getTextAreaCursorPosition() {
 
 // 资讯中上传图片
 var uploadArticleImageOptions = {
-    url: '/rest/upload',
+    url: '/app/upload',
     type:'post',
     dataType:'json',
     contentType:'text/plain',
@@ -379,7 +380,7 @@ function finishActivity(type){
     if (chk != null) {alert(chk);return;}
 
     var suc = true;
-    var url = "/rest/activity/?activityId="+(isEdit?act["_id"]:"")+"&force="+$("#form-field-checkbox").is(':checked');
+    var url = "/app/activity/?activityId="+(isEdit?act["_id"]:"")+"&force="+$("#form-field-checkbox").is(':checked');
     for (var i = 0; i <p_assid.length;i++) {
         act.associationId = p_assid[i];
         $.ajax({
@@ -399,8 +400,8 @@ function finishActivity(type){
     }
 
     if (suc) {
-        if (p_id > -1) {alert("已经成功编辑此活动");window.location.href = "/rest/bactivity/list";}
-        else {alert("已经成功添加此活动");window.location.href = "/rest/bactivity/list";}
+        if (p_id > -1) {alert("已经成功编辑此活动");window.location.href = "/app/bactivity/list";}
+        else {alert("已经成功添加此活动");window.location.href = "/app/bactivity/list";}
     }
     else  alert("添加活动失败");
 }
@@ -508,7 +509,7 @@ function GetDate10(dateStr,offsetDay) {
 }
 
 var uploadActivityImageOptions = {
-    url: '/rest/upload',
+    url: '/app/upload',
     type:'post',
     dataType:'json',
     contentType:'text/plain',
@@ -532,7 +533,7 @@ function uploadImgBox() {
     spin_img = "";
     bootbox.dialog({
         //message: "<input type='file' id='upload-image-files' name='upload-image-files' >",
-        message: "<form id='rest-upload-form' action='/rest/upload' method='post' enctype='multipart/form-data' acceptcharset='UTF-8'>\n<input id='rest-upload-file' type='file' name='file' size='50' />"+spin_img+"</form>",
+        message: "<form id='rest-upload-form' action='/app/upload' method='post' enctype='multipart/form-data' acceptcharset='UTF-8'>\n<input id='rest-upload-file' type='file' name='file' size='50' />"+spin_img+"</form>",
         buttons: {
             "upload": {
                 "label": "<i class='fa fa-check'></i> 上传 ",
@@ -548,7 +549,7 @@ function uploadImgBox() {
                     /*
                     var d = new FormData(document.getElementById('rest-upload-form'));
                     $.ajax({
-                        url: '/rest/upload',
+                        url: '/app/upload',
                         type: 'POST',
                         contentType: false,
                         data: d,

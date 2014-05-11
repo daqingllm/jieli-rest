@@ -100,7 +100,7 @@
                         <li class="divider"></li>-->
 
                         <li>
-                            <a href="#" onclick="document.cookie='u=;path=/';window.location.href='/rest/baccount/login'">
+                            <a href="#" onclick="document.cookie='u=;path=/';window.location.href='/app/baccount/login'">
                                 <i class="fa fa-power-off"></i>
                                 退出
                             </a>
@@ -349,7 +349,7 @@
 
         $.ajax({
             type:"GET",
-            url:"/rest/feature/vote/detail?voteId="+voteid,
+            url:"/app/feature/vote/detail?voteId="+voteid,
             async:true,
             success:function(data){
                 alert(data);
@@ -525,7 +525,7 @@ jQuery(function($) {
             //{name:"associationId",index:"associationId",width:40,editable:false, hidden:true},
             <#if isSuper>{name:"associationName",index:"associationName",width:40,editable:false,hidden:true},</#if>
             {name:"title",index:"title",width:"100",editable:false, formatter:function getUrl(cellValue, options, rowObject) {
-                var url = "<a href=\"/rest/bhelp/view?h=" + rowObject.id + "\">" + cellValue + "</a>";
+                var url = "<a href=\"/app/bhelp/view?h=" + rowObject.id + "\">" + cellValue + "</a>";
                 return url;
             }},
             {name:"type",index:"type",width:"45",editable:false},
@@ -562,11 +562,11 @@ jQuery(function($) {
             { 	//navbar options
                 add: true,
                 addicon : 'fa fa-plus-sign purple',
-                addfunc : (function(){window.location.href="/rest/bvote/new";/*alert("添加操作!");*/return false;}),
+                addfunc : (function(){window.location.href="/app/bvote/new";/*alert("添加操作!");*/return false;}),
 
                 edit: true,
                 editicon : 'fa fa-pencil blue',
-                editfunc : (function(){var id = $("#grid-table").getGridParam("selrow");id=$("#grid-table > tbody > tr").eq(id).find("td").eq(1).attr("title");window.location.href = '/rest/bnews/edit?voteId='+id;}),
+                editfunc : (function(){var id = $("#grid-table").getGridParam("selrow");id=$("#grid-table > tbody > tr").eq(id).find("td").eq(1).attr("title");window.location.href = '/app/bnews/edit?voteId='+id;}),
 
                 del: false,
                 delicon : 'fa fa-trash-o red',
@@ -628,7 +628,7 @@ jQuery(function ($) {
         var association = $("#association-select").val();
         var helpType = $("#help-select").val();
         $.ajax({
-            url : '/rest/feature/ajaxhelp/list?a=' + association + '&t=' + helpType + '&page=1&size=20',
+            url : '/app/feature/ajaxhelp/list?a=' + association + '&t=' + helpType + '&page=1&size=20',
             type : 'GET',
             contentType: "application/json",
             success: function(data) {

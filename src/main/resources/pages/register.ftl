@@ -311,7 +311,7 @@
                 time:'',
                 text: "&nbsp;&nbsp;" + msg,
                 class_name: 'gritter-info gritter-center',
-                after_close:function(){window.location.href="/rest/baccount/list";}
+                after_close:function(){window.location.href="/app/baccount/list";}
             });
         } else {
             $.gritter.add({
@@ -333,9 +333,9 @@
             $.ajax({
                 type: "POST",
             <#if isSuper>
-                url: "/rest/account/auth",
+                url: "/app/account/auth",
             <#else>
-                url: "/rest/account/register",
+                url: "/app/account/register",
             </#if>
                 async: false,
                 data: _sd,
@@ -351,7 +351,7 @@
                             user._id = jsn_body.userId;
                             $.ajax({
                                 type: "POST",
-                                url: '/rest/baccount/reuser',
+                                url: '/app/baccount/reuser',
                                 data: JSON.stringify(user),
                                 contentType: "application/json; charset=utf-8",
                                 dataType: 'json',

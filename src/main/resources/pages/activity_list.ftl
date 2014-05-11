@@ -84,7 +84,7 @@
 
                     <ul class="user-menu pull-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
                         <li>
-                            <a href="#" onclick="document.cookie='u=;path=/';window.location.href='/rest/baccount/login'">
+                            <a href="#" onclick="document.cookie='u=;path=/';window.location.href='/app/baccount/login'">
                                 <i class="fa fa-power-off"></i>
                                 退出
                             </a>
@@ -543,7 +543,7 @@ jQuery(function($) {
             { 	//navbar options
                 add: true,
                 addicon : 'fa fa-plus-circle purple',
-                addfunc : (function(){window.location.href="/rest/bactivity/new";/*alert("添加操作!");*/return false;}),
+                addfunc : (function(){window.location.href="/app/bactivity/new";/*alert("添加操作!");*/return false;}),
 
                 edit: true,
                 editicon : 'fa fa-pencil blue',
@@ -552,7 +552,7 @@ jQuery(function($) {
                     id=$("#grid-table > tbody > tr").eq(id).find("td").eq(1).attr("title");
 
                     if (!id || id.length == 0) alert("请先选择一个活动");
-                    else window.location.href = '/rest/bactivity/edit?actid='+id;
+                    else window.location.href = '/app/bactivity/edit?actid='+id;
                 }),
 
                 del: true,
@@ -568,7 +568,7 @@ jQuery(function($) {
                     if (!id || id.length == 0) alert("请先选择一个活动");
                     else
                     $.ajax({
-                        url:"/rest/bactivity/del?actid="+id,
+                        url:"/app/bactivity/del?actid="+id,
                         type:"POST",
                         success:function(data){
                             alert(data.msg);
@@ -584,7 +584,7 @@ jQuery(function($) {
                     var id = $("#grid-table").getGridParam("selrow");
                     if (id) id=$("#grid-table > tbody > tr").eq(id).find("td").eq(1).attr("title");
                     if (!id || id.length == 0) alert("请先选择一个活动");
-                    else window.location.href = '/rest/bactivity/comment?actid='+id;
+                    else window.location.href = '/app/bactivity/comment?actid='+id;
                 }),
 
                 refresh: false,
@@ -595,7 +595,7 @@ jQuery(function($) {
                     var id = $("#grid-table").getGridParam("selrow");
                     if (id) id=$("#grid-table > tbody > tr").eq(id).find("td").eq(1).attr("title");
                     if (!id || id.length == 0) alert("请先选择一个活动");
-                    else window.location.href = '/rest/bactivity/view?actid='+id;
+                    else window.location.href = '/app/bactivity/view?actid='+id;
                 })
             }
     );
@@ -614,7 +614,7 @@ jQuery(function($) {
                 if (parseInt(v_input) > 0 && parseInt(v_input) <= total) {
                     var str = "rowNum=${rowNum}&";
                     str += "page="+parseInt(v_input);
-                    window.location.href = "/rest/bactivity/list?rowNum="+str;
+                    window.location.href = "/app/bactivity/list?rowNum="+str;
                 }
             }catch (e){
                 alert("请输入有效的页数！");
@@ -655,7 +655,7 @@ function item_select(o,pgButton){
     var str = "rowNum=${rowNum}&";
     str += "page="+page;
 
-    window.location.href = "/rest/bactivity/list?" + str;
+    window.location.href = "/app/bactivity/list?" + str;
 }
 
 jQuery(function ($) {
