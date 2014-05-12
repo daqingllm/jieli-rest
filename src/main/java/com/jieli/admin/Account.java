@@ -2,8 +2,7 @@ package com.jieli.admin;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jieli.association.Association;
-import com.jieli.association.AssociationDAO;
+import com.jieli.association.*;
 import com.jieli.common.dao.AccountDAO;
 import com.jieli.common.entity.AccountState;
 import com.jieli.common.entity.ResponseEntity;
@@ -64,13 +63,19 @@ public class Account {
         boolean isSuper = IdentityUtils.isSuper(sessionId);
         params.put("isSuper",isSuper);
         String associationOps = "";
+        String identityOps = "<option value='' selected='selected'>协会身份为空</option>";
         List<Association> associationList = new ArrayList<Association>();
         if (isSuper) {
-            Iterable<Association> iterable = associationDAO.loadAll();
-            for(Association association : iterable)
+            Iterable<com.jieli.association.Association> iterable = associationDAO.loadAll();
+            for(com.jieli.association.Association association : iterable)
                 associationOps += "<option value='"+association.get_id() + "'>"+association.name +"</option>";
+        } else {
+            Iterable<com.jieli.association.Identity> identities = new IdentityDAO().loadAll(IdentityUtils.getAssociationId(sessionId));
+            for (com.jieli.association.Identity identity : identities)
+                identityOps += "<option value='"+identity.name + "'>"+identity.name + "</option>";
         }
         params.put("associationOps",associationOps);
+        params.put("identityOps",identityOps);
 
         return FTLrender.getResult("register.ftl", params);
     }
@@ -125,8 +130,8 @@ public class Account {
         //List<com.jieli.common.entity.Account> accounts = new ArrayList<com.jieli.common.entity.Account>();
         String accountList = "[";
         if (IdentityUtils.getState(sessionId) == AccountState.SUPPER) {
-            Iterable<Association> associations = associationDAO.loadAll();
-            for (Association association : associations) {
+            Iterable<com.jieli.association.Association> associations = associationDAO.loadAll();
+            for (com.jieli.association.Association association : associations) {
                 Iterable<com.jieli.common.entity.Account> accountAdmin = accountDAO.loadByAssociationId(association.get_id().toString(), AccountState.ADMIN);
                 for (com.jieli.common.entity.Account account : accountAdmin) {
                     String tmp = om.writeValueAsString(account);
@@ -147,7 +152,7 @@ public class Account {
             }
         } else {
             associationId = IdentityUtils.getAssociationId(sessionId);
-            Association association = associationDAO.loadById(associationId);
+            com.jieli.association.Association association = associationDAO.loadById(associationId);
             if (association == null) {
                 responseEntity.code = 2102;
                 responseEntity.msg = "协会不存在";

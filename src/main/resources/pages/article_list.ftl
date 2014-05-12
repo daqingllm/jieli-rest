@@ -570,7 +570,7 @@ jQuery(function($) {
                 }),
 
                 search: true,
-                searchicon : 'fa fa-search orange',
+                searchicon : 'fa fa-list orange',
                 searchfunc: (function(){
                     var id = $("#grid-table").getGridParam("selrow");
                     if (id) id=$("#grid-table > tbody > tr").eq(id).find("td").eq(1).attr("title");

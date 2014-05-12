@@ -194,32 +194,46 @@
                                                 </select>
 															<i class=""></i> </span> </label>
 
-                                            <label class="block clearfix"> <span class="block input-icon input-icon-right">
-                                                            <input type="text" class="form-control" style="width: 40%;float: left;" placeholder="生日 年" id="register-u-birthday-y" />
-                                                            <input type="text" class="form-control" style="width: 25%;float: left; margin-left: 5%;" placeholder="月" id="register-u-birthday-m" />
-                                                            <input type="text" class="form-control" style="width: 25%;float: left; margin-left: 5%;" placeholder="日" id="register-u-birthday-d" />
-												<!--			<input type="text" class="form-control" placeholder="生日" id="register-u-birthday" /> -->
-                                                <!--<input type="text" id="register-u-birthday" class="form-control hasDatepicker"/>
-                                                <span class="input-group-addon">
-                                                    <i class="fa fa-calendar"></i>
-                                                </span>-->
-															<i class=""></i> </span> </label>
+                                            <#--<label class="block clearfix" style="display: none;"> <span class="block input-icon input-icon-right">-->
+                                                            <#--<input type="text" class="form-control" style="width: 40%;float: left;" placeholder="生日 年" id="register-u-birthday-y" />-->
+                                                            <#--<input type="text" class="form-control" style="width: 25%;float: left; margin-left: 5%;" placeholder="月" id="register-u-birthday-m" />-->
+                                                            <#--<input type="text" class="form-control" style="width: 25%;float: left; margin-left: 5%;" placeholder="日" id="register-u-birthday-d" />-->
+												<#--<!--			<input type="text" class="form-control" placeholder="生日" id="register-u-birthday" /> &ndash;&gt;-->
+                                                <#--<!--<input type="text" id="register-u-birthday" class="form-control hasDatepicker"/>-->
+                                                <#--<span class="input-group-addon">-->
+                                                    <#--<i class="fa fa-calendar"></i>-->
+                                                <#--</span>&ndash;&gt;-->
+															<#--<i class=""></i> </span> </label>-->
 
                                             <label class="block clearfix"> <span class="block input-icon input-icon-right">
 															<input type="text" class="form-control" placeholder="手机" id="register-u-phone" />
 															<i class=""></i> </span> </label>
 
-                                            <label class="block clearfix"> <span class="block input-icon input-icon-right">
-															<input type="text" class="form-control" placeholder="行业" id="register-u-profession" />
-															<i class=""></i> </span> </label>
+                                            <#--<label class="block clearfix" style="display: none;"> <span class="block input-icon input-icon-right">-->
+															<#--<input type="text" class="form-control" placeholder="行业" id="register-u-profession" />-->
+															<#--<i class=""></i> </span> </label>-->
 
-                                            <label class="block clearfix"> <span class="block input-icon input-icon-right">
-															<input type="text" class="form-control" placeholder="公司" id="register-u-enterprise" />
-															<i class=""></i> </span> </label>
+                                            <#--<label class="block clearfix" style="display: none;"> <span class="block input-icon input-icon-right">-->
+															<#--<input type="text" class="form-control" placeholder="公司" id="register-u-enterprise" />-->
+															<#--<i class=""></i> </span> </label>-->
 
+                                            <#--<label class="block clearfix" style="display: none;">-->
+
+                                                <#--<span class="block input-icon input-icon-right">-->
+															<#--<input type="text" class="form-control" placeholder="协会身份" id="register-u-identity" />-->
+															<#--<i class=""></i> </span>-->
+                                            <#--</label>-->
+
+                                        <#if isSuper>
+                                        <#else>
                                             <label class="block clearfix"> <span class="block input-icon input-icon-right">
-															<input type="text" class="form-control" placeholder="职务" id="register-u-identity" />
-															<i class=""></i> </span> </label>
+
+							                            <select class="form-control" id="register-identi">
+                                                        ${identityOps}
+                                                        </select>
+						                            </span>
+                                            </label>
+                                        </#if>
 
                                             <div class="clearfix">
                                                 <button type="button" class="width-65 pull-right btn btn-sm btn-success" onclick="register();">
@@ -382,6 +396,7 @@
         }
         u.name = $("#register-u-name").val();
         u.sex = parseInt($("#register-u-sex").val());
+        /*
         var y = parseInt($("#register-u-birthday-y").val());
         var m = parseInt($("#register-u-birthday-m").val());
         m = (m < 10 ? "0":"") + m;
@@ -390,13 +405,27 @@
         if (isNaN(y) || isNaN(m) || isNaN(d)) {alert("必须输入生日！");return null;}
 
         u.birthday = y + "-" + m + "-" + d;
+        */
+        u.birthday = null;
         u.constellation = "";
-        u.identity = $("#register-u-identity").val() || "";
+        u.identity = $("#register-identi").val() || "";
         u.score = 0;
         u.school = "";
         u.degree = 3;
         u.profession = $("#register-u-profession").val() || "";
-        u.phone = $("#register-u-phone").val() || "";
+        var pphone;
+        try{
+            pphone = parseInt($("#register-u-phone").val());
+        }catch (err){
+            alert("请确认手机号码格式正确！");
+            return null;
+        }
+        if (pphone != "" && !isNaN(pphone)) {
+            u.phone = pphone;
+        }else{
+            alert("请输入手机号码！");
+            return null;
+        }
         u.mail = "";
         u.weixin = "";
         u.interests = [];
