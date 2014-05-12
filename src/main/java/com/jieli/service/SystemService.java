@@ -65,6 +65,9 @@ public class SystemService {
             return Response.status(200).entity(responseEntity).build();
         }
         SystemInfo info = systemDAO.findOne("{}");
+        if (info == null) {
+            info = new SystemInfo();
+        }
         info.aboutSystem = content;
         systemDAO.save(info);
 
@@ -82,7 +85,7 @@ public class SystemService {
         ResponseEntity responseEntity = new ResponseEntity();
         String content = "尚无系统信息";
         SystemInfo info = systemDAO.findOne("{}");
-        if (StringUtils.isNotEmpty(info.aboutSystem)) {
+        if (info != null && StringUtils.isNotEmpty(info.aboutSystem)) {
             content = info.aboutSystem;
         }
         responseEntity.code = 200;
@@ -104,6 +107,9 @@ public class SystemService {
             return Response.status(200).entity(responseEntity).build();
         }
         SystemInfo info = systemDAO.findOne("{}");
+        if (info == null) {
+            info = new SystemInfo();
+        }
         info.aboutJieli = content;
         systemDAO.save(info);
 
@@ -121,7 +127,7 @@ public class SystemService {
         ResponseEntity responseEntity = new ResponseEntity();
         String content = "尚无系统信息";
         SystemInfo info = systemDAO.findOne("{}");
-        if (StringUtils.isNotEmpty(info.aboutJieli)) {
+        if (info != null && StringUtils.isNotEmpty(info.aboutJieli)) {
             content = info.aboutJieli;
         }
         responseEntity.code = 200;
