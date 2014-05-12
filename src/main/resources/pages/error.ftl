@@ -188,7 +188,7 @@
                 <ul class="breadcrumb">
                     <li>
                         <i class="icon-home home-icon"></i>
-                        <a href="index.html">Ê×Ò³</a>
+                        <a href="/index.html">Ê×Ò³</a>
                     </li>
 
                     <li>
