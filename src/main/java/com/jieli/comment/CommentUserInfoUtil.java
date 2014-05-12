@@ -22,6 +22,7 @@ public abstract class CommentUserInfoUtil {
         commentUserInfo.userId = userId;
         commentUserInfo.userFace = user.userFace;
         commentUserInfo.name = user.name;
+        commentUserInfo.phone = user.phone;
 
         return commentUserInfo;
     }
