@@ -15,6 +15,8 @@ public class CommentUserInfo {
 
     public String name;
 
+    public String phone;
+
     public String getUserId() {
         return userId;
     }
