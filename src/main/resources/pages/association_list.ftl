@@ -174,7 +174,7 @@
                 <ul class="breadcrumb">
                     <li>
                         <i class="fa fa-home home-icon"></i>
-                        <a href="index.html">Ê×Ò³</a>
+                        <a href="/index.html">Ê×Ò³</a>
                     </li>
 
                     <li>
@@ -364,11 +364,11 @@
 <script type="text/javascript">
 jQuery(function ($) {
 <#if isSuper>
-    $("#sidebar-shortcuts-navlist").load("/sidebar_super.html",function(){$("#nav_list_6_1").addClass("active open");$("#nav_list_6").addClass("active");
-        $("#nav_list_6_1 i").css({"position":"absolute","left":"10px","top":"11px","font-size":"12px","width":"18px","text-align":"center","color":"#c86139","display":"inline"});});
+    $("#sidebar-shortcuts-navlist").load("/sidebar_super.html",function(){$("#nav_list_9_1").addClass("active open");$("#nav_list_9").addClass("active");
+        $("#nav_list_9_1 i").css({"position":"absolute","left":"10px","top":"11px","font-size":"12px","width":"18px","text-align":"center","color":"#c86139","display":"inline"});});
 <#else>
-    $("#sidebar-shortcuts-navlist").load("/sidebar_admin.html",function(){$("#nav_list_6_1").addClass("active open");$("#nav_list_6").addClass("active");
-        $("#nav_list_6_1 i").css({"position":"absolute","left":"10px","top":"11px","font-size":"12px","width":"18px","text-align":"center","color":"#c86139","display":"inline"});});
+    $("#sidebar-shortcuts-navlist").load("/sidebar_admin.html",function(){$("#nav_list_9_1").addClass("active open");$("#nav_list_9").addClass("active");
+        $("#nav_list_9_1 i").css({"position":"absolute","left":"10px","top":"11px","font-size":"12px","width":"18px","text-align":"center","color":"#c86139","display":"inline"});});
 </#if>
     var colorbox_params = {
         reposition: true,

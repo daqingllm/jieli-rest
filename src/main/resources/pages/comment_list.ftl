@@ -178,7 +178,7 @@
                 <ul class="breadcrumb">
                     <li>
                         <i class="fa fa-home home-icon"></i>
-                        <a href="index.html">Ê×Ò³</a>
+                        <a href="/index.html">Ê×Ò³</a>
                     </li>
 
                 <#if ctype=="news">
