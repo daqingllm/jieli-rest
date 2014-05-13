@@ -46,12 +46,53 @@ public class AccountService {
         }
     }
 
+    @Path("/applogin")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+    public Response appLogin(@HeaderParam("app")String appInfo, Map<String, String> loginInfo) throws JSONException {
+        ResponseEntity responseEntity = new ResponseEntity();
+        String name = loginInfo.get("name");
+        String phone = loginInfo.get("phone");
+        String password = loginInfo.get("password");
+        if (StringUtils.isEmpty(name) || StringUtils.isEmpty(phone) || StringUtils.isEmpty(password)) {
+            responseEntity.code = 1009;
+            responseEntity.msg = "缺少参数";
+            return Response.status(200).entity(responseEntity).build();
+        }
+        User user = userDAO.findLoginUser(name, phone);
+        if (user == null) {
+            responseEntity.code = 1001;
+            responseEntity.msg = "用户不存在";
+            return Response.status(200).entity(responseEntity).build();
+        }
+        Account account = accountDAO.loadByUserId(user.get_id().toString());
+        if (account == null) {
+            responseEntity.code = 1001;
+            responseEntity.msg = "用户不存在";
+            return Response.status(200).entity(responseEntity).build();
+        }
+        if (!password.equals(account.password)) {
+            responseEntity.code = 1002;
+            responseEntity.msg = "密码不正确";
+            return Response.status(200).entity(responseEntity).build();
+        }
+        responseEntity.code = 200;
+        responseEntity.msg = "登陆成功";
+        JSONObject json = new JSONObject();
+        json.put("sessionId", account.get_id().toString());
+        json.put("associationId", account.associationId);
+        json.put("role",account.state);
+        json.put("userId", account.userId);
+        responseEntity.body = json.toString();
+        return Response.status(200).entity(responseEntity).build();
+    }
+
     @Path("/login")
     @POST
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-    public Response login(@HeaderParam("app")String appInfo, Map<String, String> loginInfo) throws JSONException {
+    public Response login(Map<String, String> loginInfo) throws JSONException {
         ResponseEntity responseEntity = new ResponseEntity();
-        String username = loginInfo.get("username");
+        String username = loginInfo.get("name");
         Account account = accountDAO.loadByUsername(username);
         if (account == null) {
             responseEntity.code = 1001;
@@ -59,7 +100,7 @@ public class AccountService {
             return Response.status(200).entity(responseEntity).build();
         }
         String password = loginInfo.get("password");
-        if (!account.password.equals(PasswordGenerator.md5Encode(password))) {
+        if (!account.password.equals(password)) {
             responseEntity.code = 1002;
             responseEntity.msg = "密码不正确";
             return Response.status(200).entity(responseEntity).build();
@@ -112,7 +153,7 @@ public class AccountService {
             String userId = userDAO.save(user).get_id().toString();
             Account newAccount = new Account();
             newAccount.username = username;
-            newAccount.password = PasswordGenerator.md5Encode(password);
+            newAccount.password = password;
             newAccount.userId = userId;
             newAccount.state = AccountState.ENABLE;
             newAccount.associationId = associationId;
@@ -156,7 +197,7 @@ public class AccountService {
             String userId = userDAO.save(user).get_id().toString();
             Account newAccount = new Account();
             newAccount.username = username;
-            newAccount.password = PasswordGenerator.md5Encode(password);
+            newAccount.password = password;
             newAccount.userId = userId;
             newAccount.state = AccountState.ADMIN;
             newAccount.associationId = associationId;
@@ -193,7 +234,7 @@ public class AccountService {
                 return Response.status(403).build();
             }
             if (StringUtils.isNotEmpty(account.password)) {
-                current.password = PasswordGenerator.md5Encode(account.password);
+                current.password = account.password;
             }
             current.state = account.state;
             accountDAO.save(current);
@@ -202,7 +243,7 @@ public class AccountService {
 //            account.password = PasswordGenerator.md5Encode(account.password);
             User user = userDAO.loadById(account.userId);
             if (StringUtils.isNotEmpty(account.password)) {
-                current.password = PasswordGenerator.md5Encode(account.password);
+                current.password = account.password;
             }
             if (StringUtils.isNotEmpty(account.associationId)) {
                 current.associationId = account.associationId;

@@ -12,6 +12,10 @@ import com.jieli.user.entity.User;
  */
 public class UserDAO extends GenericDAO<User> {
 
+    public User findLoginUser(String name, String phone) {
+        return col.findOne("{name:#, phone:#}", name, phone).as(User.class);
+    }
+
     public Iterable<User> loadAll(String associationId) {
         return col.find("{associationId:#}", associationId).as(User.class);
     }

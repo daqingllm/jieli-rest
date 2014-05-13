@@ -60,6 +60,12 @@ public abstract class IdentityUtils {
         return user.name;
     }
 
+    public static String getUserFace(String userId) {
+        UserDAO userDAO = new UserDAO();
+        User user = userDAO.loadById(userId);
+        return user.userFace;
+    }
+
     public static List<String> getConcerned(String userId) {
         DirectoryDAO directoryDAO = new DirectoryDAO();
         Directory directory = directoryDAO.loadByUserId(userId);

@@ -17,6 +17,10 @@ public class AccountDAO extends GenericDAO<Account> {
         return col.findOne("{username:#}", username).as(Account.class);
     }
 
+    public Account loadByUserId(String userId) {
+        return col.findOne("{userId:#}", userId).as(Account.class);
+    }
+
     public Iterable<Account> loadByAssociationId(String associationId, AccountState state) {
         return col.find("{associationId:#, state:#}", associationId, state).sort("{_id:-1}").as(Account.class);
     }

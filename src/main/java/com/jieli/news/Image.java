@@ -15,4 +15,6 @@ public class Image {
 
     public String description;
 
+    public String newsId;
+
 }

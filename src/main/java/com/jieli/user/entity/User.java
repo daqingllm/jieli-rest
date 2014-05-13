@@ -41,7 +41,7 @@ public class User extends Model {
 
     public String school;
 
-    //学位 0：学士，1：硕士，2：博士，3：其他
+    //学位 0：EMBA，1：MBA，2：学士，3：硕士，4：博士，5：其他
     public int degree;
 
     //行业、专业
