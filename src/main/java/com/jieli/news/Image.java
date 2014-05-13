@@ -1,5 +1,7 @@
 package com.jieli.news;
 
+import com.jieli.mongo.Model;
+
 /**
  * Created with IntelliJ IDEA.
  * Author: liangjun.zhong
@@ -7,7 +9,7 @@ package com.jieli.news;
  * Time: PM8:11
  * To change this template use File | Settings | File Templates.
  */
-public class Image {
+public class Image extends Model {
 
     public String placeholder;  // 图片在文章中占位符
 

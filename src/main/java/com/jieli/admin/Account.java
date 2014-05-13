@@ -93,7 +93,7 @@ public class Account {
             return Response.status(200).entity(responseEntity).build();
         }
         String password = loginInfo.get("password");
-        if (!account.password.equals(password)) {
+        if (!account.password.equals(PasswordGenerator.md5Encode(password))) {
             responseEntity.code = 1002;
             responseEntity.msg = "密码不正确";
             return Response.status(200).entity(responseEntity).build();

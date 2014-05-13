@@ -17,7 +17,7 @@ public class PasswordTest {
 
     @Test
     public void generatePassword() {
-        System.out.println(PasswordGenerator.md5Encode("super"));
+        System.out.println(PasswordGenerator.md5Encode("admin"));
     }
 
     @Test

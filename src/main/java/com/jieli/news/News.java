@@ -39,4 +39,5 @@ public class News extends Model {
     public String professionTag;
     public List<String> interestTags = new ArrayList<String>();
 
+    public boolean topPic = false;
 }

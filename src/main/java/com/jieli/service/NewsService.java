@@ -5,10 +5,7 @@ import com.jieli.comment.TopicType;
 import com.jieli.common.entity.ResponseEntity;
 import com.jieli.message.CommentMessageUtil;
 import com.jieli.mongo.BaseDAO;
-import com.jieli.news.Image;
-import com.jieli.news.News;
-import com.jieli.news.NewsDAO;
-import com.jieli.news.NewsType;
+import com.jieli.news.*;
 import com.jieli.util.CollectionUtils;
 import com.jieli.util.IdentityUtils;
 import com.jieli.util.MongoUtils;
@@ -38,6 +35,8 @@ public class NewsService {
 
 
     private final NewsDAO newsDAO = new NewsDAO();
+
+    private final ImageDAO imageDAO = new ImageDAO();
 
     BaseDAO<Comment> commentDAO = new BaseDAO<Comment>(com.jieli.mongo.Collections.Comment, Comment.class);
 
@@ -189,30 +188,49 @@ public class NewsService {
     @GET
     @Path("/cover")
     @Produces(MediaType.APPLICATION_JSON+ ";charset=utf-8")
-    public Response loadCoverImages(@CookieParam("u")String sessionId, @QueryParam("type") String type, @QueryParam("count") int count){
-
+    public Response loadCoverImages(@CookieParam("u")String sessionId){
         if (!IdentityUtils.isValidate(sessionId)) {
             return Response.status(403).build();
         }
 
-        if(count<=0) count = 3;
-
-        String associationId = IdentityUtils.getAssociationId(sessionId);
-        List<News> newses = newsDAO.findWithLimit(count, "{associationId:#, type:#, imagesCount:{$gt: 0}}", associationId, type);
-
-        List<Image> images = null;
-        if(newses!=null && newses.size()>0){
-            images = new ArrayList<Image>(newses.size());
-            for(News news : newses){
-                images.add(news.images.get(0));
-            }
-        }
-
+        Iterable<Image> images = imageDAO.loadCoverImages();
 
         ResponseEntity responseEntity = new ResponseEntity();
         responseEntity.code = 200;
         responseEntity.body = images;
 
+        return  Response.status(200).entity(responseEntity).build();
+    }
+
+    @POST
+    @Path("/cover")
+    @Produces(MediaType.APPLICATION_JSON+ ";charset=utf-8")
+    public Response setCoverImage(@CookieParam("u")String sessionId, News news) {
+        if (!IdentityUtils.isAdmin(sessionId)) {
+            return Response.status(403).build();
+        }
+
+        ResponseEntity responseEntity = new ResponseEntity();
+        if (news == null) {
+            responseEntity.code = 4008;
+            responseEntity.msg = "缺少参数";
+            return Response.status(200).entity(responseEntity).build();
+        }
+        if (!"association".equals(news.type) && !"enterprise".equals(news.type)) {
+            responseEntity.code = 4009;
+            responseEntity.msg = "类型错误";
+            return Response.status(200).entity(responseEntity).build();
+        }
+        if (CollectionUtils.isEmpty(news.images)) {
+            responseEntity.code = 4010;
+            responseEntity.msg = "缺少图片";
+            return Response.status(200).entity(responseEntity).build();
+        }
+        Image image = news.images.get(0);
+        image.newsId = news.get_id().toString();
+        imageDAO.save(image);
+
+        responseEntity.code = 200;
         return  Response.status(200).entity(responseEntity).build();
     }
 
@@ -264,4 +282,5 @@ public class NewsService {
         responseEntity.body = comment;
         return Response.status(200).entity(responseEntity).build();
     }
+
 }
