@@ -227,9 +227,6 @@ public class FeatureService {
         if(!IdentityUtils.isValidate(sessionId)) {
             return Response.status(403).build();
         }
-        if(!IdentityUtils.isAdmin(sessionId)) {
-            return Response.status(403).build();
-        }
         ResponseEntity responseEntity = new ResponseEntity();
         if (helpIdList  == null) {
             responseEntity.code = 1101;
@@ -255,8 +252,14 @@ public class FeatureService {
                 responseEntity.msg = "互帮互助信息不存在, id=" + helpId;
                 return  Response.status(200).entity(responseEntity).build();
             }
-            removeHelpDynamic(userId, helpId, HelpDynamicType.SPONSER);
-            helpDAO.deleteById(helpId);
+            if (IdentityUtils.isAdmin(sessionId) || IdentityUtils.getUserId(sessionId).equals(help.getUserId())) {
+                removeHelpDynamic(userId, helpId, HelpDynamicType.SPONSER);
+                helpDAO.deleteById(helpId);
+            } else {
+                responseEntity.code = 1203;
+                responseEntity.msg = "权限不足, id=" + helpId;
+                return  Response.status(200).entity(responseEntity).build();
+            }
         }
 
         responseEntity.code = 200;
