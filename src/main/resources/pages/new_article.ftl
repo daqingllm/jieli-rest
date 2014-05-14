@@ -237,15 +237,15 @@
                             <select class="col-xs-10 col-sm-7" id="form-field-select-type"
                                     style="padding: 5px 4px;font-size: 14px;" onchange="toggleShowTime();">
                                 <#if isSuper>
-                                    <option value="news" selected>新闻</option>
-                                    <option value="association">资讯</option>
-                                    <option value="enterprise">企业动态</option>
-                                    <option value="benefit">公益活动</option>
+                                    <option value="news" selected>每日头条</option>
+                                    <option value="association">协会动态</option>
+                                    <option value="enterprise">合作展示</option>
+                                    <option value="benefit">慈善公益</option>
                                 <#else>
-                                    <option value="association" selected>资讯</option>
-                                    <option value="enterprise">企业动态</option>
+                                    <option value="association" selected>协会动态</option>
+                                    <option value="enterprise">合作展示</option>
                                     <option value="history">协会纪事</option>
-                                    <option value="benefit">公益活动</option>
+                                    <option value="benefit">慈善公益</option>
                                 </#if>
                             </select>
                         </div>
@@ -299,6 +299,17 @@
                     <div class="space-4"></div>
 
 
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right" for="form-input-readonly">  </label>
+
+                        <div class="col-sm-9">
+                            <div class="btn btn-success btn-purple" onclick="$('#bootbox-upload-image').click();">
+                                <i class="fa fa-cloud-upload bigger-110"></i>
+                                上传图片
+                            </div>
+                        </div>
+                    </div>
+
 
                     <div class="form-group">
                         <label class="col-sm-3 control-label no-padding-right" for="form-field-select-pro"> 行业标签 </label>
@@ -344,7 +355,8 @@
                         <label class="col-sm-3 control-label no-padding-right" for="form-field-checkbox"> 强推选项 </label>
 
                         <div class="col-sm-9">
-                            <input type="checkbox" id="form-field-checkbox" >
+                            <input style="margin-right: 25px;float: left;" type="checkbox" id="form-field-checkbox" >
+                            <div class="alert alert-info" style="float: left;padding: 2px 14px;"> 选择强推后，用户在锁屏状态下也能收到资讯通知 </div>
                         </div>
                     </div>
 
@@ -357,11 +369,6 @@
 
                 <div class="clearfix form-actions">
                     <div class="col-md-offset-3 col-md-9">
-                        <button class="btn btn-success btn-purple" id="bootbox-upload-image"
-                                style="font-weight:bold">
-                            <i class="fa fa-cloud-upload bigger-110"></i>
-                            上传图片
-                        </button>
 
                         &nbsp; &nbsp; &nbsp;
                         <button class="btn btn-success" type="button" style="font-weight:bold" onclick="previewThisArticle()">
@@ -372,7 +379,7 @@
                         &nbsp; &nbsp; &nbsp;
                         <button class="btn btn-info" type="button" style="font-weight:bold" onclick="postThisArticle()">
                             <i class="fa fa-check bigger-110"></i>
-                            完成
+                            发布
                         </button>
 
                         &nbsp; &nbsp; &nbsp;
@@ -380,6 +387,20 @@
                             <i class="fa fa-undo bigger-110"></i>
                             清空
                         </button>
+
+                        &nbsp; &nbsp; &nbsp;
+                        <button class="btn btn-danger" type="reset" style="font-weight:bold" onclick="window.location.href='/app/bnews/list';return true;">
+                            <i class="fa fa-mail-reply bigger-110"></i>
+                            返回资讯列表
+                        </button>
+
+
+                        <button class="btn btn-success btn-purple" id="bootbox-upload-image"
+                                style="font-weight:bold;visibility: hidden;">
+                            <i class="fa fa-cloud-upload bigger-110"></i>
+                            上传图片
+                        </button>
+
                     </div>
                 </div>
             </div>

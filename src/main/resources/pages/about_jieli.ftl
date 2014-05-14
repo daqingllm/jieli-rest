@@ -2,7 +2,7 @@
 <html lang="zh">
 <head>
     <meta charset="utf-8"/>
-    <title>接力 关于接力中国</title>
+    <title>接力 关于上海市青企协</title>
     <meta name="description" content="接力"/>
     <!-- basic styles -->
 
@@ -179,7 +179,7 @@
                     </li>
 
                     <li>
-                        <a href="#"> 关于接力中国 </a>
+                        <a href="#"> 关于上海市青企协 </a>
                     </li>
 
                 </ul>
@@ -200,7 +200,7 @@
             <div class="page-content">
                 <div class="page-header">
                     <h1>
-                        编辑关于接力中国
+                        编辑关于上海市青企协
                         <small>
                             <i class="fa fa-angle-double-right"></i>
                             请在下面的文本框中输入内容
@@ -412,7 +412,7 @@
             contentType:"application/json; charset=utf-8",
             success:function(ret){
                 if (ret.code == 200){
-                    alert("已经更新关于接力中国的内容");
+                    alert("已经更新关于上海市青企协的内容");
                     return;
                 }else{
                     alert(ret.body);

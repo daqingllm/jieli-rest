@@ -242,9 +242,28 @@ public class Activity {
                 associationList = CommonUtil.MakeAssociationOptionListForSelect(IdentityUtils.getAssociationId(sessionId));
             }
         }
+
+        List<com.jieli.comment.Comment> commentList = new LinkedList<com.jieli.comment.Comment>();
+        String commentListString = "[";
+        if (actid != null){
+            commentList = commentDAO.find("{topicId:#,isDeleted:#}", actid, false);
+            if (commentList != null && commentList.size() > 0) {
+                for (com.jieli.comment.Comment comment : commentList)
+                    commentListString += CommonUtil.ReplaceObjectId(comment) + ",";
+                if (commentListString.endsWith(",")) {
+                    commentListString = commentListString.substring(0, commentListString.length() - 1);
+                }
+            }
+            commentListString += "]";
+        }else{
+            commentListString = "[]";
+        }
+
         params.put("username",account.username);
         params.put("isSuper", IdentityUtils.isSuper(sessionId));
         params.put("act_data",activity_data);
+        params.put("topicId",actid);
+        params.put("jsonCommentList",commentListString);
         params.put("associationList",associationList);
 
         return FTLrender.getResult("edit_activity.ftl",params);

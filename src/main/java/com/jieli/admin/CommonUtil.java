@@ -31,7 +31,7 @@ public class CommonUtil {
             "    <body>\n" +
             "\n" +
             "\t<span>您尚未登录或无权限操作，</span>\n" +
-            "\t<span id=\"totalSecond\">5</span>秒后跳转到登陆页..</span>\n" +
+            "\t<span id=\"totalSecond\">2</span>秒后跳转到登陆页..</span>\n" +
             "\n" +
             "\t<script language=\"javascript\" type=\"text/javascript\">\n" +
             "\t/*alert(document.cookie);*/\n" +

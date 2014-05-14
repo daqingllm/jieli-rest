@@ -586,9 +586,9 @@ jQuery(function($) {
                                 $.ajax({
                                     type:"POST",
                                 <#if ctype=="news">
-                                    url:"/add/news/comment",
+                                    url:"/app/news/comment",
                                 <#elseif ctype=="activity">
-                                    url:"/add/activity/comment",
+                                    url:"/app/activity/comment",
                                 </#if>
                                     async:false,
                                     data:JSON.stringify(cmt),

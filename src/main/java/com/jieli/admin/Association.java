@@ -55,12 +55,10 @@ public class Association {
             int number=0;
             Iterable<Account> accounts1 = new AccountDAO().loadByAssociationId(association.get_id() + "", AccountState.ENABLE);
             for (Account account1 : accounts1) {
-                //System.out.println(account1.username);
                 number ++;
             }
             Iterable<Account> accounts2 = new AccountDAO().loadByAssociationId(association.get_id() + "", AccountState.ADMIN);
             for (Account account2 : accounts2) {
-                //System.out.println(account2.username);
                 number ++;
             }
 

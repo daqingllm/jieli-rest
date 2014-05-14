@@ -427,11 +427,29 @@ public class News {
             tmp = tmp.substring(0,7) + "\"" + n.get_id().toString() + "\"" + tmp.substring(tmp.indexOf("},",7)+1);
         }
 
+        List<com.jieli.comment.Comment> commentList = new LinkedList<com.jieli.comment.Comment>();
+        String commentListString = "[";
+        if (artid != null){
+            commentList = commentDAO.find("{topicId:#,isDeleted:#}", artid, false);
+            if (commentList != null && commentList.size() > 0) {
+                for (com.jieli.comment.Comment comment : commentList)
+                    commentListString += CommonUtil.ReplaceObjectId(comment) + ",";
+                if (commentListString.endsWith(",")) {
+                    commentListString = commentListString.substring(0, commentListString.length() - 1);
+                }
+            }
+            commentListString += "]";
+        }else{
+            commentListString = "[]";
+        }
+
         params.put("isSuper",isSuper);
         params.put("got",got);
         params.put("art_data",tmp);
         params.put("assIdOptionList",assIdOptionList);
         params.put("interestOptionList",interestOptionList);
+        params.put("jsonCommentList",commentListString);
+        params.put("topicId",artid);
         params.put("professionOptionList",professionOptionList);
 
         return FTLrender.getResult("edit_article.ftl", params);

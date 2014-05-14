@@ -25,23 +25,27 @@ function test2227(str){
 
 // 点击预览按钮
 function previewThisArticle() {
-    var previewinpage = $("#form-field-textarea").val();
+    var previewinpage = $("#form-field-textarea").val() || "";
     var previewinlist;
     try {
         previewinlist = $("#grid-table").getGridParam("selrow");
         //if (previewinlist) previewinlist = $("#grid-table > tbody > tr").eq(previewinlist).find("td").eq(5).attr("title");
         if (previewinlist) previewinlist = $("#grid-table > tbody > tr").eq(previewinlist).find("td").eq(9).html();
+        else previewinlist = "";
     }catch (e){
         previewinlist = "";
     }
+    var regbr = new RegExp("\n","g");
+    var regns = new RegExp(" ","g");
+    var regimg = new RegExp("<img src","g");
     if (previewinpage && previewinpage.length >= previewinlist.length)
-        $("#dialog-message-preview").html(previewinpage);
+        $("#dialog-message-preview").html(previewinpage.replace(regbr,"<br/>").replace(regimg,"<img width='576' style='padding:3px;' src"));
     else
-        $("#dialog-message-preview").html(previewinlist);
+        $("#dialog-message-preview").html(previewinlist.replace(regbr,"<br/>").replace(regimg,"<img width='576' style='padding:3px;' src"));
 
     var dialog = $("#dialog-message-preview").removeClass('hide').dialog({
         modal: true,
-        width: 500,
+        width: 600,
         title: "<div class='widget-header widget-header-small'><h5 class='smaller'><i class='fa fa-check'></i> 预览 </h5></div>",
         title_html: true,
         buttons: [
@@ -119,14 +123,19 @@ function postThisArticle(){
         json["time"] = null;
     }
 
+    var regbr = new RegExp("\n","g");
+    var regns = new RegExp(" ","g");
+
     p_content = $("#form-field-textarea").val();
+    p_content = p_content.replace(regbr,"<br/>");
+
     if (p_content == null || p_content == "") {alert("请填写内容！");return;}
     json["content"] = p_content;
 
     p_overview = p_content.replace(new RegExp("<(.*?)>","g"),"").substr(0,30);
     json["overview"] = p_overview;
 
-    var phph1 = "<center><img src='";
+    var phph1 = "<center><img width='576' style='padding:3px;' src='";
     var phph2 = "'></center>";
 
     var idxs = p_content.indexOf(phph1);
@@ -194,17 +203,31 @@ function clearImgList(){
     $("#img-list-invisible").attr("style","border-width:0;display:block");
 }
 
+function setTitleImg(ph,type){
+    $.ajax({
+        type:"POST",
+        url:"/app/news/cover1",
+        data:{"type":type,"url":ph},
+        success:function(ret){
+            if (ret.code == 200)
+                alert("已设置为头图");
+            else
+                alert("设置头图失败");
+        }
+    });
+}
+
 // 删除一个图片
 function deletePic(ph){
-    var _src=ph.replace("<center><img src='","");
+    var _src=ph.replace("<center><img width='576' style='padding:3px;' src='","");
     _src = _src.replace("'></center>","");
-    _src = _src.replace("<center><img src=","");
+    _src = _src.replace("<center><img width='576' style='padding:3px;' src=","");
     _src = _src.replace("></center>","");
 
     // clear textarea
     var otextarea = $("#form-field-textarea").val().trim();
     //otextarea = otextarea.replace(ph,"");
-    otextarea = otextarea.replace("<center><img src='"+_src+"'></center>","");
+    otextarea = otextarea.replace("<center><img width='576' style='padding:3px;' src='"+_src+"'></center>","");
     $("#form-field-textarea").val(otextarea);
 
     // delete pic
@@ -247,7 +270,7 @@ var uploadArticleImageOptions = {
         if (jsn.code == 200) {
             var uploadImgSrc = jsn.body + "";
 
-            uploadImgSrc = "<center><img src='" + uploadImgSrc + "'></center>";
+            uploadImgSrc = "<center><img width='576' style='padding:3px;' src='" + uploadImgSrc + "'></center>";
             var otextarea = $("#form-field-textarea").val().trim();
             var otextarea_head = "";
             var otextarea_tail;
@@ -269,7 +292,9 @@ var uploadArticleImageOptions = {
             newImgHtml += "<div class='tools tools-right' style='height:30px;'>";
             // must be " , ' no use
             var re = new RegExp("\'", "g");
-            newImgHtml += "<a href='#' onclick='deletePic(\"" + uploadImgSrc.replace(re, "") + "\")'><i class='fa fa-times red'></i></a></div></li>";
+            newImgHtml += "<a href='#' title='设为头图' onclick='setTitleImg(\""+uploadImgSrc.replace(re,"")+"\")'><i class='fa fa-heart-o '></i></a>";
+            newImgHtml += "<a href='#' title='删除' onclick='deletePic(\""+uploadImgSrc.replace(re,"")+"\")'><i class='fa fa-times red'></i></a>";
+            newImgHtml += "</div></li>";
 
             $("#upload-img-list > li").eq(0).after(newImgHtml);
 

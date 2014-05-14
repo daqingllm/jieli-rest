@@ -360,7 +360,7 @@
 
 <!--服务-->
 <div class="form-group">
-    <label class="col-sm-3 control-label no-padding-right" for="ervice-info"> 服务信息 </label>
+    <label class="col-sm-3 control-label no-padding-right" for="ervice-info"> 服务指南 </label>
 
     <div class="col-sm-9" id="service-info">
         <!--<textarea id="form-field-textarea-service" class="autosize-transition col-xs-10 col-sm-7"
@@ -372,7 +372,7 @@
 
 <!--赞助-->
 <div class="form-group">
-    <label class="col-sm-3 control-label no-padding-right" for="form-field-textarea-sponsor"> 赞助信息 </label>
+    <label class="col-sm-3 control-label no-padding-right" for="form-field-textarea-sponsor"> 赞助展示 </label>
 
     <div class="col-sm-9">
         <textarea id="form-field-textarea-sponsor" class="autosize-transition col-xs-10 col-sm-7"

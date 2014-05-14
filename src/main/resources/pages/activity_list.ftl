@@ -212,6 +212,18 @@
                 <div class="row">
                     <div class="col-xs-12">
                         <!-- PAGE CONTENT BEGINS -->
+                        <button class="btn btn-success" type="button" style="font-weight:bold;margin-bottom: 20px;" onclick="window.location.href = '/app/bactivity/new'">
+                            <i class="fa fa-plus bigger-110"></i>
+                            添加活动
+                        </button>
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+
+                        <button class="btn btn-danger" type="button" style="font-weight:bold;margin-bottom: 20px;" id="deleteActBtn">
+                            <i class="fa fa-trash-o bigger-110"></i>
+                            删除活动
+                        </button>
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+
                         <table id="grid-table"></table>
                         <div id="grid-pager"></div>
                     </div>
@@ -531,7 +543,12 @@ jQuery(function($) {
         colModel:[
             {name:"_id",index:"_id",width:10,editable:false,hidden:true},
             {name:"associationId",index:"associationId",width:40,editable:false<#if isSuper><#else>,hidden:true</#if>},
-            {name:"title",index:"title",width:"100",editable:false},
+            {name:"title",index:"title",width:"100",editable:false,
+                formatter:function getUrl(cellValue, options, rowObject) {
+                    var url = "<a href=\"/app/bactivity/edit?actid=" + rowObject._id + "\">" + cellValue + "</a>";
+                    return url;
+                }
+            },
             {name:"tag",index:"tag",width:"45",editable:false},
             {name:"type",index:"type",width:"45",editable:false},
             {name:"description",index:"description",width:"330",editable:false},
@@ -543,9 +560,9 @@ jQuery(function($) {
         viewrecords : true,
         rowNum: 15,
         pager : pager_selector,
-        altRows: true,
+        /*altRows: true,*/
         multiselect: true,
-        multiboxonly: true,
+        /*multiboxonly: true,*/
         loadComplete : function() {
             var table = this;
             setTimeout(function(){
@@ -563,13 +580,48 @@ jQuery(function($) {
     });
 
 
+    function deleteActivities(){
+        var ids = $("#grid-table").getGridParam("selarrrow");
+        if (ids.length == 0){
+            alert("请先选中活动");
+            return;
+        }else {
+            if (!confirm("确认删除选中的活动？")) return;
+            var suc = true;
+            for (var i = 0; i < ids.length; i++){
+                var id = $("#grid-table > tbody > tr").eq(ids[i]).find("td").eq(1).attr("title");
+                if (!id || id.length == 0) continue;
+
+                $.ajax({
+                    type: "POST",
+                    url:"/app/bactivity/del?actid="+id,
+                    async: false,
+                    contentType: "application/json; charset=utf-8",
+                    success: function (jsn) {
+                        if (jsn.code != 200) {
+                            suc = false;
+                        }
+                    }
+                });
+            }
+            if (suc) {
+                alert("删除成功！");
+                window.location.reload();
+            }else{
+                alert("删除失败或部分活动删除失败！");
+            }
+        }
+    }
+
+    $("#deleteActBtn").click(deleteActivities);
+
     jQuery(grid_selector).jqGrid('navGrid',pager_selector,
             { 	//navbar options
-                add: true,
+                add: false,
                 addicon : 'fa fa-plus-circle purple',
                 addfunc : (function(){window.location.href="/app/bactivity/new";/*alert("添加操作!");*/return false;}),
 
-                edit: true,
+                edit: false,
                 editicon : 'fa fa-pencil blue',
                 editfunc : (function(){
                     var id = $("#grid-table").getGridParam("selrow");
@@ -579,7 +631,7 @@ jQuery(function($) {
                     else window.location.href = '/app/bactivity/edit?actid='+id;
                 }),
 
-                del: true,
+                del: false,
                 delicon : 'fa fa-trash-o red',
                 delfunc : (function(){/*alert("删除操作!");*/
                     if (!confirm("确认删除选中的活动?")){
@@ -602,7 +654,7 @@ jQuery(function($) {
                     return false;
                 }),
 
-                search: true,
+                search: false,
                 searchicon : 'fa fa-list orange',
                 searchfunc: (function(){
                     var id = $("#grid-table").getGridParam("selrow");
@@ -613,7 +665,7 @@ jQuery(function($) {
 
                 refresh: false,
 
-                view: true,
+                view: false,
                 viewicon : 'fa fa-search-plus grey',
                 viewfunc: (function(){
                     var id = $("#grid-table").getGridParam("selrow");
@@ -621,7 +673,7 @@ jQuery(function($) {
                     if (!id || id.length == 0) alert("请先选择一个活动");
                     else window.location.href = '/app/bactivity/view?actid='+id;
                 })
-            }).jqGrid('navButtonAdd',pager_selector,{
+            });/*.jqGrid('navButtonAdd',pager_selector,{
                 caption:"",
                 title:"报名名单",
                 buttonicon:"fa fa-list",
@@ -703,7 +755,7 @@ jQuery(function($) {
                         }
                     });
                 }
-            });
+            });*/
 
     $(".ui-jqgrid-htable").css("font-family","微软雅黑");
 
