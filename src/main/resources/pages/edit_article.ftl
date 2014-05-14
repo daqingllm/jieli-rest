@@ -183,7 +183,7 @@
             </li>
 
             <li>
-                <a href="#"> 资讯管理 </a>
+                <a href="/app/bnews/list"> 资讯管理 </a>
             </li>
 
             <li class="active"> 编辑资讯</li>

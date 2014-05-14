@@ -196,7 +196,7 @@
                     </li>
 
                     <li>
-                        <a href="#"> 匹配管理 </a>
+                        <a href="/app/bmatch/list"> 匹配管理 </a>
                     </li>
                 <#if isHistory>
                     <li class="active">匹配历史</li>

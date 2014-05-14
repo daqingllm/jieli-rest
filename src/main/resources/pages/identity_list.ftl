@@ -179,7 +179,7 @@
             </li>
 
             <li>
-                <a href="#"> 组织架构 </a>
+                <a href="/app/bidentity/list"> 组织架构 </a>
             </li>
 
             <li class="active"> 职位列表 </li>

@@ -178,7 +178,7 @@
                     </li>
 
                     <li>
-                        <a href="#"> 协会管理 </a>
+                        <a href="/app/bassociation/list"> 协会管理 </a>
                     </li>
 
                     <li class="active"> 协会列表 </li>

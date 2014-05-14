@@ -207,7 +207,7 @@
         </li>
 
         <li>
-            <a href="#"> 活动管理 </a>
+            <a href="/app/bactivity/list"> 活动管理 </a>
         </li>
 
         <li class="active"> 新建活动</li>
@@ -418,14 +418,28 @@
 <div class="form-group">
     <label class="col-sm-3 control-label no-padding-right" for=""> 普通赞助 </label>
 
-    <div id="" class="col-sm-9">
+    <div id="divSponsorInfo" class="col-sm-9">
         <div>
-            <div class="icon-plus"></div>
+            <div class="fa fa-plus fa-plus-bigger icon-plus-sp"></div>
         </div>
     </div>
 </div>
 
 <div class="space-4"></div>
+
+<!-- 钻石 赞助 -->
+<div class="form-group">
+    <label class="col-sm-3 control-label no-padding-right" for=""> 钻石赞助 </label>
+
+    <div id="divDiamondInfo" class="col-sm-9">
+        <div>
+            <div class="fa fa-plus fa-plus-bigger icon-plus-di"></div>
+        </div>
+    </div>
+</div>
+
+<div class="space-4"></div>
+
 <div class="space-4"></div>
 
 <!--截止-->
@@ -659,6 +673,7 @@
 </script>
 
 <script type="text/javascript">
+
     jQuery(function ($) {
 
     <#if isSuper>
@@ -751,6 +766,14 @@
 
         $('#icon-plus-ad').click(addArrangementDetail);
         $('#icon-plus-si').click(addServiceInfo);
+
+        addSponsorOption();
+        $('.icon-plus-sp').click(addSponsorOption);
+
+
+        addDiamondOption();
+        $('.icon-plus-di').click(addDiamondOption);
+
 
         /*$('input[name=date-range-picker]').daterangepicker({
                     format: 'YYYY-MM-DD'},
