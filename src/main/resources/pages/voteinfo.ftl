@@ -196,7 +196,7 @@
             </li>
 
             <li>
-                <a href="#"> 投票管理 </a>
+                <a href="/app/bvote/list"> 投票管理 </a>
             </li>
 
             <li class="active">

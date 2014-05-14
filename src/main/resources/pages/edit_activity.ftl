@@ -207,7 +207,7 @@
         </li>
 
         <li>
-            <a href="#"> 活动管理 </a>
+            <a href="/app/bactivity/list"> 活动管理 </a>
         </li>
 
         <li class="active"> 编辑活动</li>
@@ -407,7 +407,7 @@
 <div class="space-4"></div>
 
 <!--赞助-->
-<div class="form-group">
+<div class="form-group" style="display: none">
     <label class="col-sm-3 control-label no-padding-right" for="form-field-textarea-sponsor"> 赞助展示 </label>
 
     <div class="col-sm-9">
@@ -415,6 +415,32 @@
                   style="min-height: 140px;"></textarea>
     </div>
 </div>
+
+
+<!-- 普通 赞助 -->
+<div class="form-group">
+    <label class="col-sm-3 control-label no-padding-right" for=""> 普通赞助 </label>
+
+    <div id="divSponsorInfo" class="col-sm-9">
+        <div>
+            <div class="fa fa-plus fa-plus-bigger icon-plus-sp"></div>
+        </div>
+    </div>
+</div>
+
+<div class="space-4"></div>
+
+<!-- 钻石 赞助 -->
+<div class="form-group">
+    <label class="col-sm-3 control-label no-padding-right" for=""> 钻石赞助 </label>
+
+    <div id="divDiamondInfo" class="col-sm-9">
+        <div>
+            <div class="fa fa-plus fa-plus-bigger icon-plus-di"></div>
+        </div>
+    </div>
+</div>
+
 <div class="space-4"></div>
 <div class="space-4"></div>
 
@@ -813,6 +839,59 @@
             $('#icon-plus-ad').click(addArrangementDetail);
         }
 
+        if (data.diamondInfo) {
+            var count = 0;
+            for (var o in data.diamondInfo) {
+                //alert(o);
+                //alert(data.serviceInfo[o]);
+                if (!o || o.length == 0 ||!data.diamondInfo || data.diamondInfo.length == 0) continue;
+                count++;
+
+                var voteOption = $('<div class="diamond-choice" style="height: 180px;">' +
+                        '<input type="text" value="'+o+'" placeholder="赞助名称" class="col-xs-10 col-sm-5 vote-choice-text" style="padding-left: 7px;margin-right: 7px;">' +
+                        '<button type="button" class="btn btn-xs btn-info vote-choice-img" style="margin-left: 5px;margin-right: 5px;display: none">Pic</button>' +
+                        '<img style="margin-top: 0" class="vote-img" width="150" height="150" src="'+data.diamondInfo[o]+'" />'+
+                        '<div class="fa fa-times fa-times-bigger"></div>' +
+                        '</div>');
+                voteOption.insertBefore($('.icon-plus-di').parent());
+                voteOption.children('.fa-times-bigger').click(deleteDiamondOption);
+                voteOption.children('.vote-choice-img').click(function() {
+                    SponsorOptionUploadImg(voteOption);
+                });
+            }
+            if (count == 0) {
+                addDiamondOption();
+                $('#icon-plus-di').click(addDiamondOption);
+            }
+        }
+
+
+        if (data.sponsorInfo2) {
+            var count = 0;
+            for (var o in data.sponsorInfo2) {
+                //alert(o);
+                //alert(data.serviceInfo[o]);
+                if (!o || o.length == 0 ||!data.sponsorInfo2 || data.sponsorInfo2.length == 0) continue;
+                count++;
+
+                var voteOption = $('<div class="sponsor-choice" style="height: 180px;">' +
+                        '<input type="text" value="'+o+'" placeholder="赞助名称" class="col-xs-10 col-sm-5 vote-choice-text" style="padding-left: 7px;margin-right: 7px;">' +
+                        '<button type="button" class="btn btn-xs btn-info vote-choice-img" style="margin-left: 5px;margin-right: 5px;display: none">Pic</button>' +
+                        '<img style="margin-top: 0" class="vote-img" width="150" height="150" src="'+data.sponsorInfo2[o]+'" />'+
+                        '<div class="fa fa-times fa-times-bigger"></div>' +
+                        '</div>');
+                voteOption.insertBefore($('.icon-plus-sp').parent());
+                voteOption.children('.fa-times-bigger').click(deleteSponsorOption);
+                voteOption.children('.vote-choice-img').click(function() {
+                    SponsorOptionUploadImg(voteOption);
+                });
+            }
+            if (count == 0) {
+                addSponsorOption();
+                $('#icon-plus-sp').click(addSponsorOption);
+            }
+        }
+
         if (data.serviceInfo){
             var count = 0;
             for ( var o in data.serviceInfo){
@@ -900,37 +979,41 @@
             for (var o in album){
                 uids.push(o);
             }
-            $.ajax({
-                type:"POST",
-                url:"/app/user/load",
-                data:JSON.stringify(uids),
-                contentType: "application/json; charset=utf-8",
-                dataType: 'json',
-                success:function(ret){
-                    for (var ii = 0; ii < ret.body.length; ii++){
-                        unames.push(ret.body[ii].name);
-                    }
+            if (uids.length > 0) {
+                $.ajax({
+                    type: "POST",
+                    url: "/app/user/load",
+                    data: JSON.stringify(uids),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: 'json',
+                    success: function (ret) {
+                        if (!ret.body || ret.body.length == 0) return;
 
-                    var count = -1;
-                    for (var o in album){
-                        count ++;
-                        for (var ii = 0; ii < album[o].length; ii ++) {
-                            var uploadImgSrc = album[o][ii];
-                            var newImgHtml = "<li>";
-                            newImgHtml += "<a href='" + uploadImgSrc + "' data-rel='colorbox'>";
-                            newImgHtml += "<img alt='150x150' width='150' height='150' src='" + uploadImgSrc + "' />";
-                            newImgHtml += "<div class='text'><div class='inner'>"+unames[count]+"</div></div>";
-                            newImgHtml += "</a>";
-                            newImgHtml += "<div class='tools tools-right' style='height:30px;'>";
-                            // must be " , ' no use
-                            var re = new RegExp("\'", "g");
-                            newImgHtml += "<a href='javascript:void(0);return false;' onclick='deleteActivityPic(\"" +data["_id"] + "\",\"" + o +"\",\"" + uploadImgSrc + "\")'><i class='fa fa-times red'></i></a></div></li>";
-                            $("#upload-img-list > li").last().before(newImgHtml);
+                        for (var ii = 0; ii < ret.body.length; ii++) {
+                            unames.push(ret.body[ii].name);
                         }
+
+                        var count = -1;
+                        for (var o in album) {
+                            count++;
+                            for (var ii = 0; ii < album[o].length; ii++) {
+                                var uploadImgSrc = album[o][ii];
+                                var newImgHtml = "<li>";
+                                newImgHtml += "<a href='" + uploadImgSrc + "' data-rel='colorbox'>";
+                                newImgHtml += "<img alt='150x150' width='150' height='150' src='" + uploadImgSrc + "' />";
+                                newImgHtml += "<div class='text'><div class='inner'>" + unames[count] + "</div></div>";
+                                newImgHtml += "</a>";
+                                newImgHtml += "<div class='tools tools-right' style='height:30px;'>";
+                                // must be " , ' no use
+                                var re = new RegExp("\'", "g");
+                                newImgHtml += "<a href='javascript:void(0);return false;' onclick='deleteActivityPic(\"" + data["_id"] + "\",\"" + o + "\",\"" + uploadImgSrc + "\")'><i class='fa fa-times red'></i></a></div></li>";
+                                $("#upload-img-list > li").last().before(newImgHtml);
+                            }
+                        }
+                        window.scrollTo(0, 0);
                     }
-                    window.scrollTo(0,0);
-                }
-            });
+                });
+            }
         }
         if (album_len == 0)
             $("#img-list-invisible").attr("style","border-width:0;display:none");
@@ -1256,6 +1339,8 @@
 
     $('#icon-plus-ad').click(addArrangementDetail);
     $('#icon-plus-si').click(addServiceInfo);
+    $('.icon-plus-sp').click(addSponsorOption);
+    $('.icon-plus-di').click(addDiamondOption);
     $("#uploadTitleImageClick").click(uploadImgBox);
 
 </script>

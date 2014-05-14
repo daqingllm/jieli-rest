@@ -177,7 +177,7 @@
                     </li>
 
                     <li>
-                        <a href="#"> 账号管理 </a>
+                        <a href="/app/baccount/list"> 账号管理 </a>
                     </li>
 
                     <li class="active"> 账号列表 </li>

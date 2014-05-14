@@ -196,7 +196,7 @@
         </li>
 
         <li>
-            <a href="#"> 互帮互助管理 </a>
+            <a href="/app/bhelp/list"> 互帮互助管理 </a>
         </li>
 
         <li class="active">查看互帮互助</li>

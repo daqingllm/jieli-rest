@@ -179,7 +179,7 @@
             </li>
 
             <li>
-                <a href="#"> 分组管理 </a>
+                <a href="/app/bgroup/list"> 分组管理 </a>
             </li>
 
             <li class="active"> 分组列表 </li>

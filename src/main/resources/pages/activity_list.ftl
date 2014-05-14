@@ -178,7 +178,7 @@
                     </li>
 
                     <li>
-                        <a href="#"> 活动管理 </a>
+                        <a href="/app/bactivity/list"> 活动管理 </a>
                     </li>
 
                     <li class="active"> 活动列表 </li>
@@ -475,6 +475,13 @@ function updatePagerIcons(table) {
 function parseActData(data){
     var types = {"OFFICIAL":"官方活动","RECOMMEND":"推荐活动"};
     for (var i = 0 ; i < data.length; i++){
+        data[i].description =data[i].description || "";
+        data[i].description = data[i].description.substr(0,100);
+        var firstLineEnd = data[i].description.indexOf("\n");
+        var secondLineEnd = 0;
+        if (firstLineEnd > 0) secondLineEnd=data[i].description.indexOf("\n",firstLineEnd);
+        if (secondLineEnd > 0) data[i].description = data[i].description.substr(0,secondLineEnd);
+
         data[i].tag = types[data[i].tag];
         if (data[i].beginDate == "" ||data[i].beginDate == null){
             data[i].beginDate = "";
