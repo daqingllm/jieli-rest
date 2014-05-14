@@ -50,6 +50,8 @@ public class SimpleHelpInfo extends Model{
 
     public int commentCount;
 
+    public boolean isEmergency;
+
     public String getUserId() {
         return userId;
     }
