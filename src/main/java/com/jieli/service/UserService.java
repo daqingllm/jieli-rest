@@ -369,8 +369,11 @@ public class UserService {
             responseEntity.msg = "用户不存在";
             return  Response.status(200).entity(responseEntity).build();
         }
-        user.set_id(new ObjectId(userId));
-        userDAO.save(user);
+        oldUser.name = user.name;
+        oldUser.phone = user.phone;
+        oldUser.group = user.group;
+        oldUser.sex = user.sex;
+        userDAO.save(oldUser);
 
         responseEntity.code = 200;
         return Response.status(200).entity(responseEntity).build();
