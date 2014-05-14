@@ -374,7 +374,7 @@
                         &nbsp; &nbsp; &nbsp;
                         <button class="btn btn-info" type="button" style="font-weight:bold" onclick="postThisArticle()">
                             <i class="fa fa-check bigger-110"></i>
-                            发布
+                            确认
                         </button>
 
                         &nbsp; &nbsp; &nbsp;
@@ -593,7 +593,7 @@ try{
             newImgHtml += "<div class='tools tools-right' style='height:30px;'>";
             // must be " , ' no use
             var re = new RegExp("\'","g");
-            newImgHtml += "<a href='#' onclick='setTitleImg(\""+uploadImgSrc.replace(re,"")+"\")'><i class='fa fa-heart-o '></i></a>";
+            //newImgHtml += "<a href='#' onclick='setTitleImg(\""+uploadImgSrc.replace(re,"")+"\")'><i class='fa fa-heart-o '></i></a>";
             newImgHtml += "<a href='#' onclick='deletePic(\""+uploadImgSrc.replace(re,"")+"\")'><i class='fa fa-times red'></i></a>";
             newImgHtml += "</div></li>";
             $("#upload-img-list > li").last().before(newImgHtml);
