@@ -73,7 +73,7 @@ public class UserTest {
         System.out.println(response.returnContent().asString());
     }
 
-    @Test
+    //@Test
     public void loadSelf() throws IOException {
         Response response = Request.Get("http://114.215.185.140:8080/rest/user/self")
                 .addHeader("Cookie", "u=5348210be4b00b2ae52d3f5c")
@@ -82,7 +82,7 @@ public class UserTest {
         System.out.println(response.returnContent().asString());
     }
 
-    @Test
+    //@Test
     public void loadDirectory() throws IOException {
         Response response = Request.Get("http://114.215.185.140:8080/rest/user/directory")
                 .addHeader("Cookie", "u=5348210be4b00b2ae52d3f5c")

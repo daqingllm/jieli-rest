@@ -19,7 +19,7 @@ import java.util.Map;
  * Created by YolandaLeo on 14-4-3.
  */
 public class FeatureTest {
-    @Test
+    //@Test
     public void addHelpInfo() throws IOException {
         HelpInfo helpInfo = new HelpInfo();
         helpInfo.setTitle("求帮忙搬家");

@@ -57,12 +57,18 @@ public abstract class IdentityUtils {
     public static String getUserName(String userId) {
         UserDAO userDAO = new UserDAO();
         User user = userDAO.loadById(userId);
+        if (user == null) {
+            return null;
+        }
         return user.name;
     }
 
     public static String getUserFace(String userId) {
         UserDAO userDAO = new UserDAO();
         User user = userDAO.loadById(userId);
+        if (user == null) {
+            return null;
+        }
         return user.userFace;
     }
 
