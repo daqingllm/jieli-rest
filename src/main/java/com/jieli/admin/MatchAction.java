@@ -2,11 +2,12 @@ package com.jieli.admin;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jieli.association.*;
 import com.jieli.association.Association;
+import com.jieli.association.AssociationDAO;
 import com.jieli.common.dao.AccountDAO;
-import com.jieli.common.entity.*;
 import com.jieli.common.entity.Account;
+import com.jieli.common.entity.AccountState;
+import com.jieli.common.entity.ResponseEntity;
 import com.jieli.feature.match.Match;
 import com.jieli.feature.match.MatchDAO;
 import com.jieli.feature.match.MatchDisplay;
@@ -83,20 +84,10 @@ public class MatchAction {
         ObjectMapper om = new ObjectMapper();
         String associationId = null;
         List<Account> accountList = new ArrayList<Account>();
-        //List<com.jieli.common.entity.Account> accounts = new ArrayList<com.jieli.common.entity.Account>();
-        if (IdentityUtils.getState(sessionId) == AccountState.SUPPER) {
             Iterable<com.jieli.association.Association> associations = associationDAO.loadAll();
             for (com.jieli.association.Association association : associations) {
-                Iterable<Account> accountAdmin = accountDAO.loadByAssociationId(association.get_id().toString(),
-                        AccountState.ADMIN);
                 Iterable<Account> accountEnable = accountDAO.loadByAssociationId(association.get_id().toString(),
                         AccountState.ENABLE);
-                for(Account a : accountAdmin) {
-                    if(a.username == null) {
-                        a.username = "";
-                    }
-                    accountList.add(a);
-                }
                 for (Account b : accountEnable) {
                     if(b.username == null) {
                         b.username = "";
@@ -105,31 +96,7 @@ public class MatchAction {
                 }
             }
 
-        } else {
-            associationId = IdentityUtils.getAssociationId(sessionId);
-            com.jieli.association.Association association = associationDAO.loadById(associationId);
-            if (association == null) {
-                responseEntity.code = 2102;
-                responseEntity.msg = "协会不存在";
-                return CommonUtil.errorReturn;
-            }
-            Iterable<com.jieli.common.entity.Account> accountAdmin = accountDAO
-                    .loadByAssociationId(associationId.toString(),AccountState.ADMIN);
-            Iterable<com.jieli.common.entity.Account> accountEnable = accountDAO
-                    .loadByAssociationId(associationId.toString(),AccountState.ENABLE);
-            for(Account a : accountAdmin) {
-                if(a.username == null) {
-                    a.username = "";
-                }
-                accountList.add(a);
-            }
-            for (Account b : accountEnable) {
-                if(b.username == null) {
-                    b.username = "";
-                }
-                accountList.add(b);
-            }
-        }
+
         //trick, save _id str in password, to make url in jqgrid
         for(Account a : accountList) {
             a.password = a.get_id().toString();
