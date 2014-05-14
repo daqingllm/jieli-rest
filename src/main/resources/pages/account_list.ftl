@@ -207,6 +207,18 @@
                 <div class="row">
                     <div class="col-xs-12">
                         <!-- PAGE CONTENT BEGINS -->
+                        <button class="btn btn-success" type="button" style="font-weight:bold;margin-bottom: 20px;" onclick="window.location.href = '/app/baccount/register'">
+                            <i class="fa fa-plus bigger-110"></i>
+                            添加账号
+                        </button>
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+
+                        <button class="btn btn-danger" type="button" style="font-weight:bold;margin-bottom: 20px;display: none" id='deleteAccountBtn'>
+                            <i class="fa fa-trash-o bigger-110"></i>
+                            删除账号
+                        </button>
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+
                         <table id="grid-table"></table>
                         <div id="grid-pager"></div>
                     </div>
@@ -531,9 +543,9 @@ jQuery(function($) {
         rowNum:15,
         /*rowList:[10,20,30],*/
         pager : pager_selector,
-        altRows: true,
+        /*altRows: true,*/
         multiselect: true,
-        multiboxonly: true,
+        /*multiboxonly: true,*/
 
         loadComplete : function() {
             var table = this;
@@ -546,27 +558,67 @@ jQuery(function($) {
             }, 0);
         },
 
-        caption: "无法查看登陆密码，但可以点击按钮修改密码",
+        caption: "",
         autowidth: true
     });
 
     function makeAccount(){
-        var id = $("#grid-table").getGridParam("selrow");
-        if (id == null) return;
+        var id = $("#grid-table").getGridParam("selarrrow");
+        if (id == null || id.length == 0) return;
+
+        var accs = [];
 
         var states={"禁用":"DISABLE","普通用户":"ENABLE","协会管理员":"ADMIN","超级管理员":"SUPPER"};
-        var acc = {};
-        acc.associationId=$("#grid-table > tbody > tr").eq(id).find("td").eq(2).attr("title");
-        acc.username=$("#grid-table > tbody > tr").eq(id).find("td").eq(3).attr("title");
-        acc.state=$("#grid-table > tbody > tr").eq(id).find("td").eq(4).attr("title");
-        acc.state=states[acc.state];
-        acc.password="";
-        return acc;
+        for (var i = 0; i < id.length; i ++) {
+            var acc = {};
+            acc.associationId = $("#grid-table > tbody > tr").eq(id).find("td").eq(2).attr("title");
+            acc.username = $("#grid-table > tbody > tr").eq(id).find("td").eq(3).attr("title");
+            acc.state = $("#grid-table > tbody > tr").eq(id).find("td").eq(4).attr("title");
+            acc.state = states[acc.state];
+            acc.password = "";
+            accs.push(acc);
+        }
+
+        return accs;
     }
+
+    function deleteAccount(){
+        var accs=makeAccount();
+        /*if (acc.state != 0) return;*/
+        //acc.password="";//donot change password
+        //acc.associationId="";//donot change association
+        //acc.state=0;
+        if(confirm("确认删除选中账号？")){
+            var suc = true;
+            for (var i =0;i < accs.length; i ++) {
+                var acc = accs[i];
+                acc.password="";//donot change password
+                acc.associationId="";//donot change association
+                acc.state=0;
+                $.ajax({
+                    type: "POST",
+                    url: "/app/baccount/del",
+                    async: false,
+                    data: JSON.stringify(acc),
+                    contentType: "application/json; charset=utf-8",
+                    success: function (jsn) {
+                        if (jsn.code == 200) {
+                        }
+                        else suc=false;
+                    }
+                });
+            }
+            if (suc) {alert("删除成功");window.location.reload();}
+            else alert("删除失败");
+
+        }
+    }
+
+    $("#deleteAccountBtn").click(deleteAccount);
 
     jQuery(grid_selector).jqGrid('navGrid',pager_selector,
             { 	//navbar options
-                add: true,
+                add: false,
                 addicon : 'fa fa-pencil purple',
                 addfunc : (function(){
                     var uname = "";
@@ -596,7 +648,7 @@ jQuery(function($) {
                 }),
 
             <#if isSuper>
-                edit: true,
+                edit: false,
                 editicon : 'fa fa-arrow-up blue',
                 editfunc : (function(){
                     var acc=makeAccount();
@@ -622,15 +674,16 @@ jQuery(function($) {
                 edit: false,
             </#if>
 
-                del: true,
+                del: false,
                 delicon : 'fa fa-trash-o red',
                 delfunc : (function(){
+                    var username = "";
                     var acc=makeAccount();
                     /*if (acc.state != 0) return;*/
                     acc.password="";//donot change password
                     acc.associationId="";//donot change association
                     acc.state=0;
-                    if(confirm("确认删除账号"+acc.username+"？")){
+                    if(confirm("确认删除选中账号"+acc.username+"？")){
                         $.ajax({
                             type:"POST",
                             url:"/app/account/",

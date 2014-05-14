@@ -34,10 +34,12 @@ function previewThisArticle() {
     }catch (e){
         previewinlist = "";
     }
+    var regbr = new RegExp("\n","g");
+    var regns = new RegExp(" ","g");
     if (previewinpage && previewinpage.length >= previewinlist.length)
-        $("#dialog-message-preview").html(previewinpage);
+        $("#dialog-message-preview").html(previewinpage.replace(regbr,"<br/>").replace(regns,"&nbsp;"));
     else
-        $("#dialog-message-preview").html(previewinlist);
+        $("#dialog-message-preview").html(previewinlist.replace(regbr,"<br/>").replace(regns,"&nbsp;"));
 
     var dialog = $("#dialog-message-preview").removeClass('hide').dialog({
         modal: true,
@@ -119,7 +121,12 @@ function postThisArticle(){
         json["time"] = null;
     }
 
+    var regbr = new RegExp("\n","g");
+    var regns = new RegExp(" ","g");
+
     p_content = $("#form-field-textarea").val();
+    p_content = p_content.replace(regbr,"<br/>").replace(regns,"&nbsp;");
+
     if (p_content == null || p_content == "") {alert("请填写内容！");return;}
     json["content"] = p_content;
 
@@ -192,6 +199,20 @@ function clearImgList(){
     $("#form-field-textarea").val("");
     $("#img-list-invisible").nextAll().remove();
     $("#img-list-invisible").attr("style","border-width:0;display:block");
+}
+
+function setTitleImg(ph,type){
+    $.ajax({
+        type:"POST",
+        url:"/app/news/cover1",
+        data:{"type":type,"url":ph},
+        success:function(ret){
+            if (ret.code == 200)
+                alert("已设置为头图");
+            else
+                alert("设置头图失败");
+        }
+    });
 }
 
 // 删除一个图片
@@ -269,7 +290,9 @@ var uploadArticleImageOptions = {
             newImgHtml += "<div class='tools tools-right' style='height:30px;'>";
             // must be " , ' no use
             var re = new RegExp("\'", "g");
-            newImgHtml += "<a href='#' onclick='deletePic(\"" + uploadImgSrc.replace(re, "") + "\")'><i class='fa fa-times red'></i></a></div></li>";
+            newImgHtml += "<a href='#' title='设为头图' onclick='setTitleImg(\""+uploadImgSrc.replace(re,"")+"\")'><i class='fa fa-heart-o '></i></a>";
+            newImgHtml += "<a href='#' title='删除' onclick='deletePic(\""+uploadImgSrc.replace(re,"")+"\")'><i class='fa fa-times red'></i></a>";
+            newImgHtml += "</div></li>";
 
             $("#upload-img-list > li").eq(0).after(newImgHtml);
 

@@ -177,6 +177,27 @@ public class Account {
         return FTLrender.getResult("account_list.ftl", params);
     }
 
+
+    @POST
+    @Path("/del")
+    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+    public Response deleteAccount(@CookieParam("u") String sessionId, com.jieli.common.entity.Account account){
+        ResponseEntity responseEntity = new ResponseEntity();
+
+        Response response = CommonUtil.RoleCheckResponse(sessionId);
+        if (response != null) return response;
+
+        try{
+            accountDAO.deleteById(account.get_id().toString());
+        }catch (Exception e){
+            ;
+        }
+
+        responseEntity.code = 200;
+
+        return Response.status(200).entity(responseEntity).build();
+    }
+
     @POST
     @Path("/reuser")
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")

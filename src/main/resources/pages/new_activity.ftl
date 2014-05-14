@@ -251,6 +251,32 @@
 </div>
 <div class="space-4"></div>
 
+<div class="form-group">
+    <label class="col-sm-3 control-label no-padding-right" for="form-field-imgurl"> 标题图 </label>
+
+    <div class="col-sm-9">
+        <div class="col-sm-9">
+            <img width="150" height="150" src="" id="form-field-imgurl" style="display: none;float:left">
+            <i id="delTitleImage" class="fa fa-times fa-times-bigger" onclick="deleteTitleImage()" style="display: none"></i>
+        </div>
+    </div>
+</div>
+
+<div class="space-4"></div>
+
+<div class="form-group">
+    <label class="col-sm-3 control-label no-padding-right" for=""></label>
+
+    <div class="col-sm-9" id="service-info">
+        <!--<textarea id="form-field-textarea-service" class="autosize-transition col-xs-10 col-sm-7"
+                  style="min-height: 140px;" placeholder="请用冒号和回车分隔服务信息"></textarea>-->
+        <div><div class="btn btn-success btn-purple" id="uploadTitleImageClick" onclick="$('#bootbox-upload-image').click()">
+            <i class="fa fa-cloud-upload bigger-110"></i>
+            上传标题图片
+        </div></div>
+    </div>
+</div>
+
 <!--<#if isSuper>
     <div class="form-group">
         <label class="col-sm-3 control-label no-padding-right" for="form-field-associations"> 协会范围 </label>
@@ -316,8 +342,14 @@
     <label class="col-sm-3 control-label no-padding-right" for="form-field-type"> 活动类型 </label>
 
     <div class="col-sm-9">
-        <input type="text" id="form-field-type" placeholder="类型" class="col-xs-10 col-sm-7"
-               style="padding-left: 7px;"/>
+        <select id="form-field-type" class="col-xs-10 col-sm-7" style="padding-left:3px;">
+            <option value="下午茶" selected="selected">下午茶</option>
+            <option value="论坛">论坛</option>
+            <option value="学习讲座">学习讲座</option>
+            <option value="游学">游学</option>
+            <option value="酒会">酒会</option>
+            <option value="运动">运动</option>
+        </select>
     </div>
 </div>
 
@@ -336,7 +368,7 @@
 <div class="space-4"></div>
 
 <!--安排-->
-<div class="form-group">
+<div class="form-group" style="display: none">
     <label class="col-sm-3 control-label no-padding-right" for="form-field-textarea-arrangement"> 概要安排 </label>
 
     <div class="col-sm-9">
@@ -361,7 +393,7 @@
 
 <!--服务-->
 <div class="form-group">
-    <label class="col-sm-3 control-label no-padding-right" for="ervice-info"> 服务信息 </label>
+    <label class="col-sm-3 control-label no-padding-right" for="ervice-info"> 服务指南 </label>
 
     <div class="col-sm-9" id="service-info">
         <!--<textarea id="form-field-textarea-service" class="autosize-transition col-xs-10 col-sm-7"
@@ -373,7 +405,7 @@
 
 <!--赞助-->
 <div class="form-group">
-    <label class="col-sm-3 control-label no-padding-right" for="form-field-textarea-sponsor"> 赞助信息 </label>
+    <label class="col-sm-3 control-label no-padding-right" for="form-field-textarea-sponsor"> 赞助展示 </label>
 
     <div class="col-sm-9">
         <textarea id="form-field-textarea-sponsor" class="autosize-transition col-xs-10 col-sm-7"
@@ -422,23 +454,11 @@
 <div class="space-4"></div>
 
 <div class="form-group">
-    <label class="col-sm-3 control-label no-padding-right" for="form-field-imgurl"> 标题图 </label>
-
-    <div class="col-sm-9">
-        <div class="col-sm-9">
-            <img width="150" height="150" src="" id="form-field-imgurl" style="display: none;float:left">
-            <i id="delTitleImage" class="fa fa-times fa-times-bigger" onclick="deleteTitleImage()" style="display: none"></i>
-        </div>
-    </div>
-</div>
-
-<div class="space-4"></div>
-
-<div class="form-group">
     <label class="col-sm-3 control-label no-padding-right" for="form-field-checkbox"> 强推选项 </label>
 
     <div class="col-sm-9">
-        <input type="checkbox" id="form-field-checkbox" >
+        <input style="margin-right: 25px;float: left;" type="checkbox" id="form-field-checkbox" >
+        <div class="alert alert-info" style="float: left;padding: 2px 14px;"> 选择强推后，用户在锁屏状态下也能收到资讯通知 </div>
     </div>
 </div>
 
@@ -448,7 +468,7 @@
 <div class="clearfix form-actions">
     <div class="col-md-offset-3 col-md-9">
         <button class="btn btn-success btn-purple" id="bootbox-upload-image"
-                style="font-weight:bold">
+                style="font-weight:bold;display: none">
             <i class="fa fa-cloud-upload bigger-110"></i>
             上传标题图片
         </button>
@@ -457,13 +477,19 @@
         &nbsp; &nbsp; &nbsp;
         <button class="btn btn-info" type="button" style="font-weight:bold" onclick="<#if isSuper>finishActivity(0)<#else>finishActivity(1)</#if>;">
             <i class="fa fa-check bigger-110"></i>
-            完成
+            发布
         </button>
 
         &nbsp; &nbsp; &nbsp;
         <button class="btn" type="reset" style="font-weight:bold" onclick="deleteTitleImage();return true;">
             <i class="fa fa-undo bigger-110"></i>
             清空
+        </button>
+
+        &nbsp; &nbsp; &nbsp;
+        <button class="btn btn-danger" type="reset" style="font-weight:bold" onclick="window.location.href='/app/bactivity/list';return true;">
+            <i class="fa fa-mail-reply bigger-110"></i>
+            返回活动列表
         </button>
     </div>
 </div>

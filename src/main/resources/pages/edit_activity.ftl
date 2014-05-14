@@ -22,6 +22,7 @@
     <link rel="stylesheet" href="/assets/css/colorbox.css"/>
 
     <link rel="stylesheet" href="/assets/css/jquery.gritter.css" />
+    <link rel="stylesheet" href="/assets/css/ui.jqgrid.css" />
 
     <link rel="stylesheet" href="/assets/css/custom.css"/>
     <link rel="stylesheet" href="/assets/css/datepicker.css" />
@@ -248,6 +249,35 @@
                style="padding-left: 7px;"/>
     </div>
 </div>
+
+<div class="space-4"></div>
+
+<div class="form-group">
+    <label class="col-sm-3 control-label no-padding-right" for="form-field-imgurl"> 标题图 </label>
+
+    <div class="col-sm-9">
+        <div class="col-sm-9">
+            <img width="150" height="150" src="" id="form-field-imgurl" style="display: none;float:left">
+            <i id="delTitleImage" class="fa fa-times fa-times-bigger" onclick="deleteTitleImage()" style="display: none"></i>
+        </div>
+    </div>
+</div>
+
+<div class="space-4"></div>
+
+<div class="form-group">
+    <label class="col-sm-3 control-label no-padding-right" for=""></label>
+
+    <div class="col-sm-9" id="service-info">
+        <!--<textarea id="form-field-textarea-service" class="autosize-transition col-xs-10 col-sm-7"
+                  style="min-height: 140px;" placeholder="请用冒号和回车分隔服务信息"></textarea>-->
+        <div><div class="btn btn-success btn-purple" id="uploadTitleImageClick">
+            <i class="fa fa-cloud-upload bigger-110"></i>
+            上传标题图片
+        </div></div>
+    </div>
+</div>
+
 <div class="space-4"></div>
 
 <!--<#if isSuper>
@@ -315,8 +345,14 @@
     <label class="col-sm-3 control-label no-padding-right" for="form-field-type"> 活动类型 </label>
 
     <div class="col-sm-9">
-        <input type="text" id="form-field-type" placeholder="类型" class="col-xs-10 col-sm-7"
-               style="padding-left: 7px;"/>
+        <select id="form-field-type" class="col-xs-10 col-sm-7" style="padding-left:3px;">
+            <option value="下午茶" selected="selected">下午茶</option>
+            <option value="论坛">论坛</option>
+            <option value="学习讲座">学习讲座</option>
+            <option value="游学">游学</option>
+            <option value="酒会">酒会</option>
+            <option value="运动">运动</option>
+        </select>
     </div>
 </div>
 
@@ -335,7 +371,7 @@
 <div class="space-4"></div>
 
 <!--安排-->
-<div class="form-group">
+<div class="form-group" style="display: none">
     <label class="col-sm-3 control-label no-padding-right" for="form-field-textarea-arrangement"> 概要安排 </label>
 
     <div class="col-sm-9">
@@ -360,7 +396,7 @@
 
 <!--服务-->
 <div class="form-group">
-    <label class="col-sm-3 control-label no-padding-right" for="ervice-info"> 服务信息 </label>
+    <label class="col-sm-3 control-label no-padding-right" for="service-info"> 服务指南 </label>
 
     <div class="col-sm-9" id="service-info">
         <!--<textarea id="form-field-textarea-service" class="autosize-transition col-xs-10 col-sm-7"
@@ -372,7 +408,7 @@
 
 <!--赞助-->
 <div class="form-group">
-    <label class="col-sm-3 control-label no-padding-right" for="form-field-textarea-sponsor"> 赞助信息 </label>
+    <label class="col-sm-3 control-label no-padding-right" for="form-field-textarea-sponsor"> 赞助展示 </label>
 
     <div class="col-sm-9">
         <textarea id="form-field-textarea-sponsor" class="autosize-transition col-xs-10 col-sm-7"
@@ -421,31 +457,18 @@
 <div class="space-4"></div>
 
 <div class="form-group">
-    <label class="col-sm-3 control-label no-padding-right" for="form-field-imgurl"> 标题图 </label>
-
-    <div class="col-sm-9">
-        <div class="col-sm-9">
-            <img width="150" height="150" src="" id="form-field-imgurl" style="display: none;float:left">
-            <i id="delTitleImage" class="fa fa-times fa-times-bigger" onclick="deleteTitleImage()" style="display: none"></i>
-        </div>
-    </div>
-</div>
-
-
-<div class="space-4"></div>
-
-<div class="form-group">
     <label class="col-sm-3 control-label no-padding-right" for="form-field-checkbox"> 强推选项 </label>
 
     <div class="col-sm-9">
-        <input type="checkbox" id="form-field-checkbox" >
+        <input style="margin-right: 25px;float: left;" type="checkbox" id="form-field-checkbox" >
+        <div class="alert alert-info" style="float: left;padding: 2px 14px;"> 选择强推后，用户在锁屏状态下也能收到资讯通知 </div>
     </div>
 </div>
 
 <div class="space-4"></div>
 
 <div class="form-group">
-    <label class="col-sm-3 control-label no-padding-right" for="form-input-readonly"> 用户上传的活动图片 </label>
+    <label class="col-sm-3 control-label no-padding-right" for="form-input-readonly"> 上传的活动图片 </label>
 
     <div class="col-sm-9">
         <div class="row-fluid">
@@ -459,19 +482,20 @@
 
 </form>
 
+
 <div class="clearfix form-actions">
     <div class="col-md-offset-3 col-md-9">
         <button class="btn btn-success btn-purple" id="bootbox-upload-image"
-                style="font-weight:bold">
+                style="font-weight:bold;display: none">
             <i class="fa fa-cloud-upload bigger-110"></i>
-            上传标题图片
+            上传活动图片
         </button>
 
 
         &nbsp; &nbsp; &nbsp;
         <button class="btn btn-info" type="button" style="font-weight:bold" onclick="<#if isSuper>finishActivity(0)<#else>finishActivity(1)</#if>;">
             <i class="fa fa-check bigger-110"></i>
-            完成
+            确定
         </button>
 
         &nbsp; &nbsp; &nbsp;
@@ -479,12 +503,56 @@
             <i class="fa fa-undo bigger-110"></i>
             清空
         </button>
+
+        &nbsp; &nbsp; &nbsp;
+        <button class="btn btn-danger" type="reset" style="font-weight:bold" onclick="window.location.href='/app/bactivity/list';return true;">
+            <i class="fa fa-mail-reply bigger-110"></i>
+            返回活动列表
+        </button>
     </div>
 </div>
 </div>
 <!-- /.col -->
 </div>
 <!-- /.row -->
+
+
+<div id="" style=" margin-top: 40px; min-height: 50px;">
+    <div class="form-group">
+        <label class="col-sm-3 control-label no-padding-right" style="text-align: right" for=""> 报名名单 </label>
+
+        <div id="noJoinMembers" class="col-xs-10 col-sm-7" style="margin-top:5px;">暂无报名者</div>
+        <div class="col-xs-10 col-sm-7" id="divJoinMembers"> </div>
+    </div>
+</div>
+
+
+<div class=" form-actions" style="padding: 0"></div>
+
+<div id="" style=" margin-top: 40px; min-height: 50px;">
+    <div class="form-group">
+        <label class="col-sm-3 control-label no-padding-right" style="text-align: right" for=""> 关注名单 </label>
+
+        <div id="noFollowMembers" class="col-xs-10 col-sm-7" style="margin-top:5px;">暂无关注者</div>
+        <div class="col-xs-10 col-sm-7" id="divFollowMembers" > </div>
+    </div>
+</div>
+
+<div class=" form-actions" style="padding: 0"></div>
+
+<div class="col-sm-1"></div>
+<div class="col-sm-10">
+    <button class="btn btn-danger" type="button" style="font-weight:bold;margin-bottom: 20px;" onclick="deleteComments()">
+        <i class="fa fa-trash-o bigger-110"></i>
+        删除选中评论
+    </button>
+
+    <table id="grid-table-comment"></table>
+    <div id="grid-pager-comment"></div>
+</div>
+<div class="col-sm-1"></div>
+
+
 </div>
 <!-- /.page-content -->
 </div>
@@ -601,8 +669,10 @@
 <script src="/assets/js/jquery.inputlimiter.1.3.1.min.js"></script>
 <script src="/assets/js/jquery.maskedinput.min.js"></script>
 <script src="/assets/js/bootstrap-tag.min.js"></script>
+<script src="/assets/js/jqGrid/jquery.jqGrid.min.js"></script>
 <script src="/assets/js/jquery.gritter.min.js"></script>
 <script src="/assets/js/bootbox.min.js"></script>
+<script src="/assets/js/jqGrid/i18n/grid.locale-zh-art-cmt.js"></script>
 
 <script src="/assets/js/jquery.form.js"></script>
 
@@ -619,6 +689,73 @@
     var data = null;
 </script>
 <script>
+
+    Date.prototype.Format = function (fmt) { //author: meizz
+        var o = {
+            "M+": this.getMonth() + 1, //月份
+            "d+": this.getDate(), //日
+            "h+": this.getHours(), //小时
+            "m+": this.getMinutes(), //分
+            "s+": this.getSeconds(), //秒
+            "q+": Math.floor((this.getMonth() + 3) / 3), //季度
+            "S": this.getMilliseconds() //毫秒
+        };
+        if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+        for (var k in o)
+            if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+        return fmt;
+    }
+
+    function deleteComments() {
+        var ids = $("#grid-table-comment").getGridParam("selarrrow");
+        if (ids.length == 0){
+            alert("请先选中评论");
+            return;
+        }else {
+            if (!confirm("确认删除选中的评论？")) return;
+            var suc = true;
+            for (var i = 0; i < ids.length; i++){
+                var id = $("#grid-table-comment > tbody > tr").eq(ids[i]).find("td").eq(1).attr("title");
+                if (!id || id.length == 0) continue;
+
+                $.ajax({
+                    type: "GET",
+                    url: "/app/comment/delete?commentId=" + id,
+                    async: false,
+                    contentType: "application/json; charset=utf-8",
+                    success: function (jsn) {
+                        if (jsn.code != 200) {
+                            suc = false;
+                        }
+                    }
+                });
+            }
+            if (suc) {
+                alert("删除成功！");
+                window.location.reload();
+            }else{
+                alert("删除失败");
+            }
+        }
+    }
+
+    function parseArtData(data){
+        for (var i = 0 ; i < data.length; i++){
+            //data[i].state = states[data[i].state];
+            if (data[i].commentUserInfo) data[i].commentUserId_Name = data[i].commentUserInfo.name || "无名";
+            else data[i].commentUserId_Name = "无名";
+
+            if (data[i].commentedUserInfo) data[i].commentedUserId_Name = data[i].commentedUserInfo.name || "无名";
+            else data[i].commentedUserId_Name = "无被评论人";
+
+            var adt = data[i].addTime;
+            var now = new Date();now.setTime(adt);
+            var nowStr = now.Format("yyyy-MM-dd hh:mm:ss");
+
+            data[i].addTime = nowStr;
+        }
+        return data;
+    }
 
     function deleteActivityPic(aid,uid,pid){
         if (confirm("确认删除图片？")){
@@ -797,6 +934,7 @@
             $("#img-list-invisible").attr("style","border-width:0;display:none");
         //$("#form-field-textarea-service").val(data.serviceInfo);
 
+
         $("#form-field-textarea-sponsor").val(data.sponsorInfo);
         $("#form-field-dlDate").val(new Date(data.beginDate).Format("yyyy-MM-dd"));
         $("#form-field-fee").val(data.fee);
@@ -809,6 +947,233 @@
 
         <#if isSuper>$("form-field-associations").val(data.associationId);</#if>
 
+        var joinMembers_ = [];
+        for ( var o in data.joinMembers){
+            if (joinMembers_.indexOf(o) < 0)
+                joinMembers_.push(o);
+        }
+        $.ajax({
+            type:"POST",
+            url:"/app/user/load",
+            data:JSON.stringify(joinMembers_),
+            contentType: "application/json; charset=utf-8",
+            dataType: 'json',
+            success:function(ret){
+                if (ret.code != 200) return;
+                if (!ret.body || ret.body.length == 0) return;
+                var lis = "";
+                for (var ii = 0; ii < ret.body.length; ii++){
+                    lis += "<li style='float:left;min-width:150px;'>"+ret.body[ii].name+"</li>";
+                }
+                var message = "<div class='ui-accordion-content'><ul>"+lis+"</ul></div>";
+                $("#divJoinMembers").append(message);
+                $("#noJoinMembers").hide();
+            }
+        });
+
+
+        var followMembers_ = [];
+        if (data.followMembers && data.followMembers.length > 0) followMembers_ = data.followMembers;
+        $.ajax({
+            type:"POST",
+            url:"/app/user/load",
+            data:JSON.stringify(followMembers_),
+            contentType: "application/json; charset=utf-8",
+            dataType: 'json',
+            success:function(ret){
+                if (ret.code != 200) return;
+                if (!ret.body || ret.body.length == 0) return;
+                var lis = "";
+                for (var ii = 0; ii < ret.body.length; ii++){
+                    lis += "<li style='float:left;min-width:150px;'>"+ret.body[ii].name+"</li>";
+                }
+                var message = "<div class='ui-accordion-content'><ul>"+lis+"</ul></div>";
+                $("#divFollowMembers").append(message);
+                $("#noFollowMembers").hide();
+            }
+        });
+
+
+
+        var raw_data = [];
+
+        //raw_data.empty();
+        raw_data = ${jsonCommentList};
+        var artid = "${topicId}";
+
+        var grid_data = parseArtData(raw_data);
+        //var grid_data = raw_data;
+
+        var grid_selector = "#grid-table-comment";
+        var pager_selector = "#grid-pager-comment";
+
+        var h = 810-160;
+        if (grid_data.length < 20) h = 160/5*grid_data.length+10;
+        if (h < 330) h = 330;
+
+        jQuery(grid_selector).jqGrid({
+            data: grid_data,
+            datatype: "local",
+            height: h,
+            colNames:['_id','评论人','被评论人','评论时间','评论内容'],
+            colModel:[
+                {name:"_id",index:"_id",width:"10",editable:false,hidden:true},
+                {name:"commentUserId_Name",index:"commentUserId_Name",width:"60",editable:false},
+                {name:"commentedUserId_Name",index:"commentedUserId_Name",width:"60",editable:false},
+                {name:"addTime",index:"addTime",width:"60",editable:false},
+                {name:"content",index:"content",width:"260",editable:false}
+            ],
+            viewrecords : true,
+            rowNum:20,
+            pager : pager_selector,
+            /*altRows: true,*/
+            multiselect: true,
+            /*multiboxonly: true,*/
+
+            loadComplete : function() {
+                var table = this;
+                setTimeout(function(){
+                    styleCheckbox(table);
+
+                    updateActionIcons(table);
+                    updatePagerIcons(table);
+                    enableTooltips(table);
+                }, 0);
+            },
+
+            caption: "评论列表",
+            autowidth: true
+        });
+
+//it causes some flicker when reloading or navigating grid
+//it may be possible to have some custom formatter to do this as the grid is being created to prevent this
+//or go back to default browser checkbox styles for the grid
+        function styleCheckbox(table) {
+            /**
+             $(table).find('input:checkbox').addClass('ace')
+             .wrap('<label />')
+             .after('<span class="lbl align-top" />')
+
+
+             $('.ui-jqgrid-labels th[id*="_cb"]:first-child')
+             .find('input.cbox[type=checkbox]').addClass('ace')
+             .wrap('<label />').after('<span class="lbl align-top" />');
+             */
+        }
+
+
+//unlike navButtons icons, action icons in rows seem to be hard-coded
+//you can change them like this in here if you want
+        function updateActionIcons(table) {
+            /**
+             var replacement =
+             {
+                 'ui-icon-pencil' : 'fa fa-pencil blue',
+                 'ui-icon-trash' : 'fa fa-trash-o red',
+                 'ui-icon-disk' : 'fa fa-ok green',
+                 'ui-icon-cancel' : 'fa fa-remove red'
+             };
+             $(table).find('.ui-pg-div span.ui-icon').each(function(){
+		var icon = $(this);
+		var $class = $.trim(icon.attr('class').replace('ui-icon', ''));
+		if($class in replacement) icon.attr('class', 'ui-icon '+replacement[$class]);
+	})
+             */
+        }
+
+//replace icons with FontAwesome icons like above
+        function updatePagerIcons(table) {
+            var replacement =
+            {
+                'ui-icon-seek-first' : 'fa fa-angle-double-left bigger-140',
+                'ui-icon-seek-prev' : 'fa fa-angle-left bigger-140',
+                'ui-icon-seek-next' : 'fa fa-angle-right bigger-140',
+                'ui-icon-seek-end' : 'fa fa-angle-double-right bigger-140'
+            };
+            $('.ui-pg-table:not(.navtable) > tbody > tr > .ui-pg-button > .ui-icon').each(function(){
+                var icon = $(this);
+                var $class = $.trim(icon.attr('class').replace('ui-icon', ''));
+
+                if($class in replacement) icon.attr('class', 'ui-icon '+replacement[$class]);
+            })
+        }
+
+        function enableTooltips(table) {
+            $('.navtable .ui-pg-button').tooltip({container:'body'});
+            $(table).find('.ui-pg-div').tooltip({container:'body'});
+        }
+
+        jQuery(grid_selector).jqGrid('navGrid',pager_selector,
+                { 	//navbar options
+                    add: false,
+                    addicon : 'fa fa-plus-circle purple',
+                    addfunc : (function(){
+                        var uname = "";
+                        var assid = "";
+                        var cmt = {};
+                        bootbox.prompt("请输入评论内容：", function(result) {
+                            // 这里不改状态
+                            if (result !== null) {
+                                if (result.length == 0) ;
+                                else{
+                                    cmt.commentedUserId = "";
+                                    cmt.content = result;
+                                    cmt.topicId = artid;
+
+                                    var id = $("#grid-table-comment").getGridParam("selrow");
+                                    if (id) id=$("#grid-table-comment > tbody > tr").eq(id).find("td").eq(1).attr("title");
+                                    if (!id || id.length == 0) ;
+                                    else cmt.commentedUserId = id;
+
+                                    $.ajax({
+                                        type:"POST",
+                                        url:"/app/activity/comment",
+                                        async:false,
+                                        data:JSON.stringify(cmt),
+                                        contentType:"application/json; charset=utf-8",
+                                        success:function(jsn){
+                                            if (jsn.code==200) {alert("已添加评论");window.location.reload();}
+                                            else alert("添加评论失败："+jsn.msg);
+                                        }
+                                    });
+                                }
+                            }
+                        });
+                    }),
+
+                    edit: false,
+
+                    del: false,
+                    delicon : 'fa fa-trash-o red',
+                    delfunc : (function(){
+
+                        var id = $("#grid-table-comment").getGridParam("selrow");
+                        if (id) id=$("#grid-table-comment > tbody > tr").eq(id).find("td").eq(1).attr("title");
+                        if (!id || id.length == 0) return;
+
+                        if(confirm("确认删除选中的评论？")){
+                            $.ajax({
+                                type:"GET",
+                                url:"/app/comment/delete?commentId="+id,
+                                async:false,
+                                contentType:"application/json; charset=utf-8",
+                                success:function(jsn){
+                                    if(jsn.code==200) {alert("删除成功");window.location.reload();}
+                                    else alert("删除失败："+jsn.msg);
+                                }
+                            });
+                        }
+                    }),
+
+                    search: false,
+                    refresh: false,
+
+                    view: false
+                }
+        );
+
+
+        $(".ui-jqgrid-htable").css("font-family","微软雅黑");
 
     <#else>
         <#if got=="old">
@@ -889,6 +1254,7 @@
 
     $('#icon-plus-ad').click(addArrangementDetail);
     $('#icon-plus-si').click(addServiceInfo);
+    $("#uploadTitleImageClick").click(uploadImgBox);
 
 </script>
 </body>

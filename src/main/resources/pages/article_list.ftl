@@ -212,6 +212,24 @@
                 <div class="row">
                     <div class="col-xs-12">
                         <!-- PAGE CONTENT BEGINS -->
+                        <button class="btn btn-success" type="button" style="font-weight:bold;margin-bottom: 20px;" onclick="window.location.href = '/app/bnews/new'">
+                            <i class="fa fa-plus bigger-110"></i>
+                            添加资讯
+                        </button>
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+
+                        <button class="btn btn-info" type="button" style="font-weight:bold;margin-bottom: 20px;" onclick="previewThisArticle()">
+                            <i class="fa fa-search-plus bigger-110"></i>
+                            预览资讯
+                        </button>
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+
+                        <button class="btn btn-danger" type="button" style="font-weight:bold;margin-bottom: 20px;" id="deleteArtBtn">
+                            <i class="fa fa-trash-o bigger-110"></i>
+                            删除资讯
+                        </button>
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+
                         <table id="grid-table"></table>
                         <div id="grid-pager"></div>
                     </div>
@@ -499,7 +517,12 @@ jQuery(function($) {
         colModel:[
             {name:"_id",index:"_id",width:10,editable:false,hidden:true},
             {name:"associationId",index:"associationId",width:40,editable:false<#if isSuper><#else>,hidden:true</#if>},
-            {name:"title",index:"title",width:"100",editable:false},
+            {name:"title",index:"title",width:"100",editable:false,
+                formatter:function getUrl(cellValue, options, rowObject) {
+                    var url = "<a href=\"/app/bnews/edit?artid=" + rowObject._id + "\">" + cellValue + "</a>";
+                    return url;
+                }
+            },
             {name:"type",index:"type",width:"45",editable:false},
             {name:"overview",index:"overview",width:"330",editable:false},
             {name:"addTime",index:"addTime",width:"120",editable:false,sorttype:"date"},
@@ -531,14 +554,48 @@ jQuery(function($) {
         onPaging: function(pgButton){item_select('',pgButton);}
     });
 
+    function deleteArticles(){
+        var ids = $("#grid-table").getGridParam("selarrrow");
+        if (ids.length == 0){
+            alert("请先选中资讯");
+            return;
+        }else {
+            if (!confirm("确认删除选中的资讯？")) return;
+            var suc = true;
+            for (var i = 0; i < ids.length; i++){
+                var id = $("#grid-table > tbody > tr").eq(ids[i]).find("td").eq(1).attr("title");
+                if (!id || id.length == 0) continue;
+
+                $.ajax({
+                    type: "POST",
+                    url: "/app/bnews/del?artid=" + id,
+                    async: false,
+                    contentType: "application/json; charset=utf-8",
+                    success: function (jsn) {
+                        if (jsn.code != 200) {
+                            suc = false;
+                        }
+                    }
+                });
+            }
+            if (suc) {
+                alert("删除成功！");
+                window.location.reload();
+            }else{
+                alert("删除失败或部分资讯删除失败！");
+            }
+        }
+    }
+
+    $("#deleteArtBtn").click(deleteArticles);
 
     jQuery(grid_selector).jqGrid('navGrid',pager_selector,
             { 	//navbar options
-                add: true,
+                add: false,
                 addicon : 'fa fa-plus-circle purple',
                 addfunc : (function(){window.location.href="/app/bnews/new";/*alert("添加操作!");*/return false;}),
 
-                edit: true,
+                edit: false,
                 editicon : 'fa fa-pencil blue',
                 editfunc : (function(){
                     var id = $("#grid-table").getGridParam("selrow");
@@ -547,7 +604,7 @@ jQuery(function($) {
                     else window.location.href = '/app/bnews/edit?artid='+id;
                 }),
 
-                del: true,
+                del: false,
                 delicon : 'fa fa-trash-o red',
                 delfunc : (function(){/*alert("删除操作!");*/
                     var id = $("#grid-table").getGridParam("selrow");
@@ -569,7 +626,7 @@ jQuery(function($) {
                     }
                 }),
 
-                search: true,
+                search: false,
                 searchicon : 'fa fa-list orange',
                 searchfunc: (function(){
                     var id = $("#grid-table").getGridParam("selrow");
@@ -580,7 +637,7 @@ jQuery(function($) {
 
                 refresh: false,
 
-                view: true,
+                view: false,
                 viewicon : 'fa fa-search-plus grey',
                 viewfunc: (function(){previewThisArticle();/*alert("预览操作!");*/return false;})
             }

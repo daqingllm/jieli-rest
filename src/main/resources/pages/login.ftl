@@ -272,11 +272,13 @@
         var pos = (title == '登陆成功' ? 'gritter-center' : '');
         if (title == '登陆成功') {
             $.gritter.removeAll();
+            setTimeout(function(){window.location.href="/app/bindex";},1000);
+
             $.gritter.add({
                 title: title,
-                text: "&nbsp;&nbsp;" + msg,
+                text: "&nbsp;&nbsp;" + "请稍后...",
                 sticky:false,
-                time:500,
+                time:850,
                 class_name: 'gritter-info gritter-light ' + pos,
                 after_close:function(){
                     window.location.href="/app/bindex";

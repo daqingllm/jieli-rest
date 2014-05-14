@@ -24,6 +24,7 @@
     <!-- fonts -->
 
     <link rel="stylesheet" href="/assets/css/font-google.css"/>
+    <link rel="stylesheet" href="/assets/css/bootstrap-multiselect.css" type="text/css"/>
 
     <!-- ace styles -->
 
@@ -239,17 +240,17 @@
             </form>
         </div><!-- #dialog-message -->
 
-        <div id="dialog-message-add-user" class="hide">
+        <div id="dialog-message-add-user" class="hide" style="height: 450px;width: 500px;">
             <form>
                 <fieldset>
                     <label class="block clearfix">
                 				<span class="block input-icon input-icon-right">
 									<!--<input type="text" class="form-control" placeholder="用户名" id="add-user-name" style="margin-top: 20px;" />-->
-									<select id="add-user-name" style="margin-top: 20px;" class="form-control">
-
+                                    <select id="add-user-name" style="margin-top: 20px;height:450px;" multiple="multiple" class="multiselect form-control">
                                     </select>
                 				</span>
                     </label>
+                    <div style="min-height: 440px;min-width: 500px;">&nbsp;</div>
                 </fieldset>
             </form>
         </div>
@@ -415,6 +416,7 @@
 
 <!-- ace scripts -->
 
+<script src="/assets/js/bootstrap-multiselect.js"></script>
 <script src="/assets/js/ace-elements.min.js"></script>
 <script src="/assets/js/ace.min.js"></script>
 
@@ -609,7 +611,7 @@ function selectUser(obj){
     else {
         var oh = $(lastSelectedItem).html().trim();
         if (oh.substr(0,1) == "√") {
-            $(lastSelectedItem).html(oh.substr(1).trim());
+            //=========$(lastSelectedItem).html(oh.substr(1).trim());
             //$(lastSelectedItem).css("background-color","");
             lastSelectedItem = obj;
         }
@@ -659,6 +661,16 @@ function InitUserList(){
                 html += "<option value='"+data.body[i]._id+"'>"+data.body[i].name+"</option>";
             }
             $("#add-user-name").html(html);
+
+            $('#add-user-name').multiselect({
+                numberDisplayed:10,
+                buttonClass: 'btn-link btn ',
+                selectAllText: '全选',
+                selectAllValue: '全部',
+                nonSelectedText: '请选择',
+                nSelectedText: ' 被选中了',
+                maxHeight:400
+            });
         }
     });
 }
@@ -666,34 +678,53 @@ function InitUserList(){
 /* 从分组中移除一个用户 */
 function removeAUser(){
 
-    if (lastSelectedItem == null) {alert("请先选择一个用户！");return false;}
+    if (lastSelectedItem == null) {/*alert("请先选择一个用户！");return false;*/}
 
-    else {
+    else {}
+    {
         var cg = getCurrentGroupName();
-        var oh = $(lastSelectedItem).attr("value");
 
-        var name = $(lastSelectedItem).html().replace("√","").trim();
+        var got = 0;
+        $("#gn"+cg).find("ul").children("li").each(function() {
+            if ($(this).html().indexOf("√") > -1) {
+                got ++;
+            }
+        });
+        if (got == 0) {alert("请先点击选择用户");return;}
 
-        if (oh && name && cg &&
-                oh.length > 0 &&
-                name.length > 0 &&
-                cg.length >0 &&
-                confirm("确认要从分组"+cg+"中删除用户"+name+"?")){
-            //alert(oh);
-            $.ajax({
-                type:"POST",
-                url:"/app/baccount/dfgroup?uname="+oh+"&group="+cg,
-                success:function(data){
-                    if (data.code == 200){
-                        alert("已成功移除用户"+name);
-                    }else{
-                        alert("操作失败，"+data.msg);
-                    }
+        if (!confirm("确认要从分组"+cg+"中删除选中的"+got+"个用户?")) return;
+        var suc = true;
+        $("#gn"+cg).find("ul").children("li").each(function() {
+            if ($(this).html().indexOf("√") > -1) {
 
-                    loadThisGroup(cg,true);
+                var oh = $(this).attr("value");
+
+                var name = $(this).html().replace("√","").trim();
+
+                if (oh && name && cg &&
+                        oh.length > 0 &&
+                        name.length > 0 &&
+                        cg.length >0){
+                    //alert(oh);
+                    $.ajax({
+                        type:"POST",
+                        url:"/app/baccount/dfgroup?uname="+oh+"&group="+cg,
+                        success:function(data){
+                            if (data.code == 200){
+                            }else{
+                                suc = false;
+                            }
+
+                        }
+                    });
                 }
-            });
-        }
+            }
+        });
+        if (suc) alert("成功移除");
+        else alert("移除失败");
+
+        loadThisGroup(cg,true);
+
     }
 }
 
@@ -726,6 +757,7 @@ function addAUser(){
     }
 
     var dialog = $("#dialog-message-add-user").removeClass('hide').dialog({
+        width:580,
         modal:true,
         title: t,
         title_html:true,
@@ -733,7 +765,7 @@ function addAUser(){
             text:"取消",
             "class" : "btn btn-xs",
             click: function() {
-                $("#add-user-name").val("");
+                $("#add-user-name").multiselect('deselect', $("#add-user-name").val());
                 $( this ).dialog( "close" );
             }
         },
@@ -747,21 +779,26 @@ function addAUser(){
                     if (!uname || uname == "") return;
 
                     //alert($("#add-user-name").val());
-                    $.ajax({
-                        type:"POST",
-                        url:"/app/baccount/atgroup?uname="+uname+"&group="+cg,
-                        async:true,
-                        success:function(jsn){
-                            if (jsn.code == 200){
-                                alert("已将用户"+jsn.body+"添加至"+cg);
-                                loadThisGroup(cg,true);
-                                loadThisGroup(jsn.msg,true);
-                            }else{
-                                alert(jsn.msg);
+                    var suc = true;
+                    for (var i = 0; i < uname.length; i ++) {
+                        $.ajax({
+                            type: "POST",
+                            url: "/app/baccount/atgroup?uname=" + uname[i] + "&group=" + cg,
+                            async: true,
+                            success: function (jsn) {
+                                if (jsn.code == 200) {
+                                } else {
+                                    suc = false;
+                                    alert(jsn.msg);
+                                }
                             }
-                        }
-                    });
-                    $("#add-user-name").val("");
+                        });
+                        if (!suc) break;
+                    }
+                    alert("添加成功");
+                    loadThisGroup(cg, true);
+                    //loadThisGroup(jsn.msg, true);
+                    $("#add-user-name").multiselect('deselect', $("#add-user-name").val());
                 }
             }]
     });
