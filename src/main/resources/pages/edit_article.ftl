@@ -555,8 +555,10 @@
 <script>
     function loadThisArticle(){
     <#if got?length==0>
+try{
+        data = ${art_data};}
+    catch (err){data = {};}
 
-        data = ${art_data};
         //$("#seletAssociationIds").multiselect('select',data["associationId"]);
         $("#seletAssociationIds option[value="+data["associationId"]+"]").attr("selected","selected");
         for (var i = 0; i < data["interestTags"].length; i++)

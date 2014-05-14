@@ -203,11 +203,21 @@ function clearImgList(){
     $("#img-list-invisible").attr("style","border-width:0;display:block");
 }
 
-function setTitleImg(ph,type){
+function setTitleImg(news){
+    if (news.type!="协会动态" && "合作展示"!=news.type) {alert("该类型无法设置头图"); return;}
+    if (news.type=="协会动态") news.type = "association";
+    if (news.type=="合作展示") news.type = "enterprise";
+
+    if (!news.images || news.images.length == 0) {alert("该资讯中无图片"); return;}
+
     $.ajax({
         type:"POST",
-        url:"/app/news/cover1",
-        data:{"type":type,"url":ph},
+        url:"/app/news/cover",
+        async:false,
+        data:JSON.stringify(news),
+        contentType:"application/json",
+        cache:false,
+        processData:false,
         success:function(ret){
             if (ret.code == 200)
                 alert("已设置为头图");

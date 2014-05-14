@@ -776,7 +776,9 @@
 
     function loadThisActivity(){
     <#if got?length==0>
-        data = ${act_data};
+    try{
+        data = ${act_data};}
+    catch (err) {data = {};}
 
         $("option[value="+data["associationId"]+"]").attr("selected","selected");
 
