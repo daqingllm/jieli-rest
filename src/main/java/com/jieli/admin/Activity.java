@@ -142,7 +142,7 @@ public class Activity {
             for (com.jieli.activity.Activity activity : activities){
                 if (_total >= (_page-1)*_rowNum && _total < _page*_rowNum) {
                     String tmp = CommonUtil.ReplaceObjectId(activity);
-                    activityList += tmp;
+                    activityList += tmp + ",";
                 }
                 _total ++;
             }
