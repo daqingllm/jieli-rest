@@ -2,7 +2,8 @@ package com.jieli.admin;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jieli.association.*;
+import com.jieli.association.AssociationDAO;
+import com.jieli.association.IdentityDAO;
 import com.jieli.common.dao.AccountDAO;
 import com.jieli.common.entity.AccountState;
 import com.jieli.common.entity.ResponseEntity;
@@ -18,7 +19,10 @@ import org.codehaus.jettison.json.JSONObject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.
@@ -317,7 +321,5 @@ public class Account {
             return Response.status(200).entity(responseEntity).build();
         }
     }
-
-
 
 }

@@ -1,54 +1,54 @@
 <!DOCTYPE html>
-<html lang="zh">
-<head>
-    <meta charset="utf-8"/>
-    <title>接力 投票管理</title>
+    <html lang="zh">
+            <head>
+            <meta charset="utf-8"/>
+            <title>接力 投票管理</title>
     <meta name="description" content="接力"/>
-    <!-- basic styles -->
+        <!-- basic styles -->
 
-    <link href="/assets/css/bootstrap.min.css" rel="stylesheet"/>
-<#--<link rel="stylesheet" href="/assets/css/font-awesome.min.css"/>-->
+            <link href="/assets/css/bootstrap.min.css" rel="stylesheet"/>
+    <#--<link rel="stylesheet" href="/assets/css/font-awesome.min.css"/>-->
 
-    <!--[if IE 7]>
-    <!--<link rel="stylesheet" href="/assets/css/font-awesome-ie7.min.css"/>-->
-<#--<![endif]&ndash;&gt;-->
+            <!--[if IE 7]>
+        <!--<link rel="stylesheet" href="/assets/css/font-awesome-ie7.min.css"/>-->
+    <#--<![endif]&ndash;&gt;-->
 
     <link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
 
-    <!-- page specific plugin styles -->
-    <link rel="stylesheet" href="/assets/css/custom.css"/>
+            <!-- page specific plugin styles -->
+                <link rel="stylesheet" href="/assets/css/custom.css"/>
 
-    <link rel="stylesheet" href="/assets/css/jquery-ui-1.10.3.full.min.css"/>
-    <link rel="stylesheet" href="/assets/css/colorbox.css"/>
+                <link rel="stylesheet" href="/assets/css/jquery-ui-1.10.3.full.min.css"/>
+                <link rel="stylesheet" href="/assets/css/colorbox.css"/>
 
-    <link rel="stylesheet" href="/assets/css/jquery.gritter.css" />
+                <link rel="stylesheet" href="/assets/css/jquery.gritter.css" />
 
-    <!-- fonts -->
+            <!-- fonts -->
 
-    <link rel="stylesheet" href="/assets/css/font-google.css"/>
+                <link rel="stylesheet" href="/assets/css/font-google.css"/>
 
-    <!-- ace styles -->
+            <!-- ace styles -->
 
-    <link rel="stylesheet" href="/assets/css/ace.min.css"/>
-    <link rel="stylesheet" href="/assets/css/ace-rtl.min.css"/>
-    <link rel="stylesheet" href="/assets/css/ace-skins.min.css"/>
+                <link rel="stylesheet" href="/assets/css/ace.min.css"/>
+                <link rel="stylesheet" href="/assets/css/ace-rtl.min.css"/>
+                <link rel="stylesheet" href="/assets/css/ace-skins.min.css"/>
 
-    <!--[if lte IE 8]>
+                <!--[if lte IE 8]>
     <link rel="stylesheet" href="/assets/css/ace-ie.min.css"/>
-    <![endif]-->
+                <![endif]-->
 
-    <!-- inline styles related to this page -->
+            <!-- inline styles related to this page -->
 
-    <!-- ace settings handler -->
+            <!-- ace settings handler -->
 
-    <script src="/assets/js/ace-extra.min.js"></script>
+                <script src="/assets/js/ace-extra.min.js"></script>
 
-    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
 
-    <!--[if lt IE 9]>
-    <script src="/assets/js/html5shiv.js"></script>
-    <script src="/assets/js/respond.min.js"></script>
-    <![endif]-->
+<!--[if lt IE 9]>
+<script src="/assets/js/html5shiv.js"></script>
+<script src="/assets/js/respond.min.js"></script>
+<![endif]-->
 </head>
 
 <body>
