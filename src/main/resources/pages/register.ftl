@@ -168,10 +168,6 @@
                                             <input type="email" class="form-control" placeholder="Email" />
                                             <i class="fa fa-envelope"></i> </span> </label>-->
 
-                                            <label class="block clearfix"> <span class="block input-icon input-icon-right">
-															<input type="text" class="form-control" placeholder="用户名" id="register-username" />
-															<i class=""></i> </span> </label>
-
                                         <#if isSuper>
                                             <label class="block clearfix"> <span class="block input-icon input-icon-right">
 														
@@ -236,7 +232,11 @@
                                         </#if>
 
                                             <div class="clearfix">
-                                                <button type="button" class="width-65 pull-right btn btn-sm btn-success" onclick="register();">
+                                                <button class="btn btn-danger" type="reset" style="font-weight:bold" onclick="window.location.href='/app/baccount/list';return true;">
+                                                    <i class="fa fa-mail-reply bigger-110"></i>
+                                                    返回账户列表
+                                                </button>
+                                                <button type="button" class="btn pull-right btn-success" style="width:137px" onclick="register();">
                                                     注册
                                                     <i class="fa fa-arrow-right icon-on-right"></i>
                                                 </button>
@@ -337,8 +337,7 @@
     }
 
     function register() {
-        //var _sd = "{\"username\":\""+$("#register-username").val() + "\"<#if isSuper>,\"associationId\":\""+$("#register-assoc").val()+"\"</#if>}";
-        var _d = {"username":$("#register-username").val()<#if isSuper>,"associationId":$("#register-assoc").val()</#if>};
+        var _d = {"username":new Date().getTime()<#if isSuper>,"associationId":$("#register-assoc").val()</#if>};
         var _sd = JSON.stringify(_d);
 
         var user= checkInput();
@@ -371,7 +370,7 @@
                                 dataType: 'json',
                                 success: function (ret) {
                                     if (ret.code == 200)
-                                        showMsg("注册成功", "用户" + _d.username + "的密码是：" + jsn_body.password);
+                                        showMsg("注册成功", "用户" + _d.username + "的验证码是：" + jsn_body.password);
                                     else
                                         showMsg("注册失败", ret.msg || "");
                                 }

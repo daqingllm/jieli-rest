@@ -325,7 +325,7 @@ public class UserService {
     @Path("/face")
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     public Response loadFace(@CookieParam("u")String sessionId, List<String> userIds) {
-        if (!IdentityUtils.isAdmin(sessionId)) {
+        if (!IdentityUtils.isValidate(sessionId)) {
             return Response.status(403).build();
         }
         ResponseEntity responseEntity = new ResponseEntity();
