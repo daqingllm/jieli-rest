@@ -530,14 +530,15 @@ jQuery(function($) {
         data: grid_data,
         datatype: "local",
         height: 490,
-        colNames:['_id','协会','用户名','姓名','状态','加密密码'],
+        colNames:['_id','协会','用户名','姓名','状态','协会身份','验证码'],
         colModel:[
             {name:"_id",index:"_id",width:10,editable:false,hidden:true},
             {name:"associationId",index:"associationId",width:40,editable:false,hidden:true},
-            {name:"username",index:"username",width:"100",editable:false},
-            {name:"name",index:"name",width:"100",editable:false},
-            {name:"state",index:"state",width:"60",editable:false},
-            {name:"password",index:"password",width:"75",editable:false,hidden:true}
+            {name:"username",index:"username",width:"100",editable:false,hidden:true},
+            {name:"name",index:"name",width:"75",editable:false},
+            {name:"state",index:"state",width:"60",editable:false,hidden:true},
+            {name:"identity",index:"identity",width:"60",editable:false},
+            {name:"password",index:"password",width:"75",editable:false}
         ],
         viewrecords : true,
         rowNum:15,
