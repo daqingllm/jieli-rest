@@ -158,13 +158,13 @@ public class Account {
                 responseEntity.msg = "协会不存在";
                 return CommonUtil.errorReturn;
             }
-            Iterable<com.jieli.common.entity.Account> accountAdmin = accountDAO.loadByAssociationId(associationId.toString(),AccountState.ADMIN);
-            for (com.jieli.common.entity.Account account : accountAdmin)
-                accountList += CommonUtil.ReplaceObjectId(account).replace("}",",\"name\":\""+ CommonUtil.TransferNull(userDAO.loadById(account.userId) == null ? "" : userDAO.loadById(account.userId).name) + "\"},");
 
             Iterable<com.jieli.common.entity.Account> accountEnable = accountDAO.loadByAssociationId(associationId.toString(),AccountState.ENABLE);
-            for (com.jieli.common.entity.Account account : accountEnable)
-                accountList += CommonUtil.ReplaceObjectId(account).replace("}",",\"name\":\""+ CommonUtil.TransferNull(userDAO.loadById(account.userId) == null ? "" : userDAO.loadById(account.userId).name) + "\"},");
+            for (com.jieli.common.entity.Account account : accountEnable) {
+                User user = userDAO.loadById(account.userId);
+                accountList += CommonUtil.ReplaceObjectId(account).replace("}",",\"name\":\""+ CommonUtil.TransferNull(user == null ? "" : user.name)
+                        + "\",\"identity\":\"" + CommonUtil.TransferNull(user == null ? "" : user.identity) + "\"},");
+            }
         }
 
         accountList = CommonUtil.RemoveLast(accountList, ",") + "]";
@@ -176,7 +176,6 @@ public class Account {
 
         return FTLrender.getResult("account_list.ftl", params);
     }
-
 
     @POST
     @Path("/del")
