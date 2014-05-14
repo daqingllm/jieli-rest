@@ -587,7 +587,7 @@
                                 // untested , but it should be like : code:200,body:filepath,msg...
 
                                 if (jsn.code == 200) {
-                                    var uploadImgSrc = jsn.body + "";
+                                    var uploadImgSrc = jsn.body + "?imageView/2/h/576/w/432";
 
                                     uploadImgSrc = "<img-pLAcehOLDer" + uploadImgSrc + ">";
                                     var otextarea = $("#form-field-textarea").val().trim();
