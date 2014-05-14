@@ -33,8 +33,6 @@ public class System {
     @Path("/aboutjieli")
     @Produces(MediaType.TEXT_HTML)
     public String getAboutJieli(@CookieParam("u") String sessionId) {
-        String response = CommonUtil.RoleCheckString(sessionId);
-        if (response != null) return response;
 
         if (!IdentityUtils.isSuper(sessionId)) return CommonUtil.errorReturn;
 
@@ -61,10 +59,6 @@ public class System {
     @Path("/aboutsystem")
     @Produces(MediaType.TEXT_HTML)
     public String getAboutSystem(@CookieParam("u") String sessionId) {
-
-        String response = CommonUtil.RoleCheckString(sessionId);
-        if (response != null) return response;
-
         if (!IdentityUtils.isSuper(sessionId)) return CommonUtil.errorReturn;
 
         com.jieli.common.entity.Account account = accountDAO.loadById(sessionId);

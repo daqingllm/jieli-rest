@@ -260,7 +260,7 @@
 
                         <button class="btn btn-danger" type="button" style="font-weight:bold;margin-bottom: 20px;" onclick="deleteHelp()" id="deleteArtBtn">
                             <i class="fa fa-trash-o bigger-110"></i>
-                            É¾³ýÍ¶Æ±
+                            É¾³ý»¥°ï»¥ÖúÌù
                         </button>
                         &nbsp;&nbsp;&nbsp;&nbsp;
 
