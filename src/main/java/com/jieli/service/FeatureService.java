@@ -221,9 +221,9 @@ public class FeatureService {
     }
 
     @Path("/help/delete")
-    @GET
+    @POST
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-    public Response deleteHelpInfo(@CookieParam("u") String sessionId, @QueryParam("helpId")String helpId) {
+    public Response deleteHelpInfo(@CookieParam("u") String sessionId, List<String> helpIdList) {
         if(!IdentityUtils.isValidate(sessionId)) {
             return Response.status(403).build();
         }
@@ -231,7 +231,7 @@ public class FeatureService {
             return Response.status(403).build();
         }
         ResponseEntity responseEntity = new ResponseEntity();
-        if (helpId  == null) {
+        if (helpIdList  == null) {
             responseEntity.code = 1101;
             responseEntity.msg = "缺少参数";
             return Response.status(200).entity(responseEntity).build();
@@ -248,14 +248,17 @@ public class FeatureService {
             responseEntity.msg = "账户已被删除";
             return  Response.status(200).entity(responseEntity).build();
         }
-        HelpInfo help = helpDAO.loadById(helpId);
-        if(help == null) {
-            responseEntity.code = 1201;
-            responseEntity.msg = "互帮互助信息不存在";
-            return  Response.status(200).entity(responseEntity).build();
+        for(String helpId : helpIdList) {
+            HelpInfo help = helpDAO.loadById(helpId);
+            if(help == null) {
+                responseEntity.code = 1201;
+                responseEntity.msg = "互帮互助信息不存在, id=" + helpId;
+                return  Response.status(200).entity(responseEntity).build();
+            }
+            removeHelpDynamic(userId, helpId, HelpDynamicType.SPONSER);
+            helpDAO.deleteById(helpId);
         }
-        removeHelpDynamic(userId, helpId, HelpDynamicType.SPONSER);
-        helpDAO.deleteById(helpId);
+
         responseEntity.code = 200;
         return Response.status(200).entity(responseEntity).build();
     }
@@ -1361,7 +1364,7 @@ public class FeatureService {
         HelpDynamicShow info = new HelpDynamicShow();
         info.helpId = topicId;
         info.type = type;
-        if (helpDynamic.infos.contains(info)) {
+        if (helpDynamic != null && helpDynamic.infos.contains(info)) {
             helpDynamic.infos.remove(info);
             helpDynamicDAO.save(helpDynamic);
         }

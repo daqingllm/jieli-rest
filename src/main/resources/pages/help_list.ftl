@@ -7,11 +7,13 @@
     <!-- basic styles -->
 
     <link href="/assets/css/bootstrap.min.css" rel="stylesheet"/>
-    <link rel="stylesheet" href="/assets/css/font-awesome.min.css"/>
+<#--<link rel="stylesheet" href="/assets/css/font-awesome.min.css"/>-->
 
     <!--[if IE 7]>
-    <link rel="stylesheet" href="/assets/css/font-awesome-ie7.min.css"/>
-    <![endif]-->
+    <!--<link rel="stylesheet" href="/assets/css/font-awesome-ie7.min.css"/>-->
+<#--<![endif]&ndash;&gt;-->
+
+    <link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
 
     <!-- page specific plugin styles -->
 
@@ -194,7 +196,7 @@
                     </li>
 
                     <li>
-                        <a href="#"> »¥°ï»¥Öú¹ÜÀí </a>
+                        <a href="/app/bhelp/list"> »¥°ï»¥Öú¹ÜÀí </a>
                     </li>
 
                     <li class="active"> »¥°ï»¥ÖúÁÐ±í </li>
@@ -560,17 +562,38 @@ jQuery(function($) {
 
     jQuery(grid_selector).jqGrid('navGrid',pager_selector,
             { 	//navbar options
-                add: true,
-                addicon : 'fa fa-plus-sign purple',
-                addfunc : (function(){window.location.href="/app/bvote/new";/*alert("Ìí¼Ó²Ù×÷!");*/return false;}),
+                add: false,
+                addicon : 'fa fa-plus-circle purple',
+                addfunc : (function(){window.location.href="/app/bhelp/new";/*alert("Ìí¼Ó²Ù×÷!");*/return false;}),
 
-                edit: true,
+                edit: false,
                 editicon : 'fa fa-pencil blue',
-                editfunc : (function(){var id = $("#grid-table").getGridParam("selrow");id=$("#grid-table > tbody > tr").eq(id).find("td").eq(1).attr("title");window.location.href = '/app/bnews/edit?voteId='+id;}),
+                editfunc : (function(){
+                    var index = $("#grid-table").getGridParam("selrow");
+                    window.location.href = '/app/bhelp/edit?helpId='+id;}),
 
-                del: false,
+                del: true,
                 delicon : 'fa fa-trash-o red',
-                delfunc : (function(){alert("É¾³ý²Ù×÷!");return false;}),
+                deltitle : 'É¾³ýÑ¡ÖÐ°ïÖú',
+                delfunc : (
+                        function(){
+                            var flag=window.confirm("È·¶¨ÒªÉ¾³ý»¥°ï»¥ÖúÌûÂð?");
+                            if(flag) {
+                                var selectedIds = $("#grid-table").getGridParam("selarrrow");
+                                $.ajax({
+                                    url: '/app/feature/help/delete',
+                                    data: JSON.stringify(selectedIds),
+                                    type: 'POST',
+                                    contentType: 'application/json',
+                                    success: function(json){
+                                        if(json.code == 200) {
+                                            var associationId = $('#form-field-select-type').val();
+                                            updateGrid(associationId,1,20);
+                                        }
+                                    }
+                                });
+                            }
+                        }),
 
                 search: false,
                 searchicon : 'fa fa-search orange',
@@ -580,7 +603,12 @@ jQuery(function($) {
 
                 view: true,
                 viewicon : 'fa fa-search-plus grey',
-                viewfunc: (function(){alert("Ô¤ÀÀ²Ù×÷!");return false;})
+                viewtitle : '²é¿´°ïÖú',
+                viewfunc: (function(){
+                    var selectIds = $("#grid-table").getGridParam("selarrrow");
+
+                    window.location.href = '/app/bhelp/view?h=' + selectIds[0];
+                })
             }
     );
 
