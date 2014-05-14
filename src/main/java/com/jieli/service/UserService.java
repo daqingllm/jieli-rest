@@ -321,22 +321,27 @@ public class UserService {
         return Response.status(200).entity(responseEntity).build();
     }
 
-    @GET
+    @POST
     @Path("/face")
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-    public Response loadFace(@CookieParam("u")String sessionId, @QueryParam("userId")String userId) {
+    public Response loadFace(@CookieParam("u")String sessionId, List<String> userIds) {
         if (!IdentityUtils.isAdmin(sessionId)) {
             return Response.status(403).build();
         }
         ResponseEntity responseEntity = new ResponseEntity();
-        if (StringUtils.isEmpty(userId) || !MongoUtils.isValidObjectId(userId)) {
+        if (CollectionUtils.isEmpty(userIds)) {
             responseEntity.code = 1107;
             responseEntity.msg = "参数错误";
             return Response.status(200).entity(responseEntity).build();
         }
-        String face = IdentityUtils.getUserFace(userId);
+        List<String> faces = new ArrayList<String>();
+        for (String userId : userIds) {
+            String face = IdentityUtils.getUserFace(userId);
+            faces.add(face);
+        }
+
         responseEntity.code = 200;
-        responseEntity.body = face;
+        responseEntity.body = faces;
         return Response.status(200).entity(responseEntity).build();
     }
 

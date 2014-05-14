@@ -3,7 +3,6 @@ package com.jieli.test.remote;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.client.fluent.Response;
 import org.apache.http.entity.ContentType;
-import org.testng.annotations.Test;
 
 import java.io.IOException;
 
@@ -16,7 +15,7 @@ import java.io.IOException;
  */
 public class SysTest {
 
-    @Test
+    //@Test
     public void testFeedback() throws IOException {
         Response response = Request.Post("http://114.215.185.140:8080/rest/sys/feedback")
                 .addHeader("Cookie", "u=5348210be4b00b2ae52d3f5c")
