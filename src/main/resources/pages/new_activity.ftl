@@ -404,7 +404,7 @@
 <div class="space-4"></div>
 
 <!--ÔÞÖú-->
-<div class="form-group">
+<div class="form-group" style="display: none">
     <label class="col-sm-3 control-label no-padding-right" for="form-field-textarea-sponsor"> ÔÞÖúÕ¹Ê¾ </label>
 
     <div class="col-sm-9">
@@ -412,6 +412,19 @@
                   style="min-height: 140px;"></textarea>
     </div>
 </div>
+
+
+<!-- ÆÕÍ¨ ÔÞÖú -->
+<div class="form-group">
+    <label class="col-sm-3 control-label no-padding-right" for=""> ÆÕÍ¨ÔÞÖú </label>
+
+    <div id="" class="col-sm-9">
+        <div>
+            <div class="icon-plus"></div>
+        </div>
+    </div>
+</div>
+
 <div class="space-4"></div>
 <div class="space-4"></div>
 

@@ -204,6 +204,7 @@ function clearImgList(){
 }
 
 function setTitleImg(news){
+    try {delete news["associationName"];}catch (e){}
     if (news.type!="协会动态" && "合作展示"!=news.type && news.type != "association" && news.type != "enterprise") {alert("该类型无法设置头图"); return;}
     if (news.topPic) {alert("该资讯已经设置过头图"); return; }
     if (news.type=="协会动态") news.type = "association";

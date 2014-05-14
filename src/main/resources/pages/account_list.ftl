@@ -184,7 +184,7 @@
                 </ul>
                 <!-- .breadcrumb -->
 
-                <div class="nav-search" id="nav-search">
+                <div class="nav-search" id="nav-search" style="display: none">
                     <form class="form-search">
 								<span class="input-icon">
 									<input type="text" placeholder="ËÑË÷ ..." class="nav-search-input"

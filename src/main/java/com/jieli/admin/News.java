@@ -77,7 +77,7 @@ public class News {
         for (com.jieli.news.News news : newses){
             _total ++;
             String tmp = CommonUtil.ReplaceObjectId(news);
-            newsList += tmp.replace("\"associationId\":\"" + news.associationId + "\"", "\"associationId\":\"" + associationNames.get(news.associationId) + "\"") + ",";
+            newsList += tmp.replace("\"associationId\":\"" + news.associationId + "\"", "\"associationId\":\"" + news.associationId + "\"" + ",\"associationName\":\"" + associationNames.get(news.associationId) + "\"") + ",";
         }
 
         params.put("newsList","["+(newsList.length()>0?(newsList.substring(0,newsList.length()-1)):"")+"]");
