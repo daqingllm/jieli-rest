@@ -7,7 +7,6 @@ import com.jieli.common.entity.ResponseEntity;
 import com.jieli.feature.help.dao.HelpDAO;
 import com.jieli.feature.help.entity.SimpleHelpInfo;
 import com.jieli.user.dao.UserDAO;
-import com.jieli.user.entity.User;
 import com.jieli.util.IdentityUtils;
 import org.apache.commons.lang.StringUtils;
 
@@ -39,12 +38,6 @@ public class AjaxHelp {
         if (StringUtils.isEmpty(userId)) {
             responseEntity.code = 1103;
             responseEntity.msg = "账户出错";
-            return Response.status(200).entity(responseEntity).build();
-        }
-        User user = userDAO.loadById(userId);
-        if (user == null) {
-            responseEntity.code = 1104;
-            responseEntity.msg = "账户已被删除";
             return Response.status(200).entity(responseEntity).build();
         }
         boolean isSuper = IdentityUtils.isSuper(sessionId);

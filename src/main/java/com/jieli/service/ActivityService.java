@@ -524,13 +524,20 @@ public class ActivityService {
             return Response.status(200).entity(responseEntity).build();
         }
 
-        String userId = IdentityUtils.getUserId(sessionId);
         Activity activity = activityDAO.loadById(activityId);
         if (activity == null) {
             responseEntity.code = 3103;
             responseEntity.msg = "活动不存在";
             return Response.status(200).entity(responseEntity).build();
         }
+        if (IdentityUtils.isAdmin(sessionId)) {
+            activity.officialAlbum = pics;
+            activityDAO.save(activity);
+
+            responseEntity.code = 200;
+            return Response.status(200).entity(responseEntity).build();
+        }
+        String userId = IdentityUtils.getUserId(sessionId);
         if (activity.album == null) {
             activity.album = new HashMap<String, List<String>>();
         }
