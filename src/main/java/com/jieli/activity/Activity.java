@@ -45,6 +45,16 @@ public class Activity extends Model {
 
     public Map<String, List<String>> album = new HashMap<String, List<String>>();
 
+    public List<String> officialAlbum = new ArrayList<String>();
+
+    public List<String> getOfficialAlbum() {
+        return officialAlbum;
+    }
+
+    public void setOfficialAlbum(List<String> officialAlbum) {
+        this.officialAlbum = officialAlbum;
+    }
+
     public Map<String, List<String>> getAlbum() {
         return album;
     }

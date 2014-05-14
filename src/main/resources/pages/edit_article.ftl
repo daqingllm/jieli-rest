@@ -245,7 +245,7 @@
                                 <#else>
                                     <option value="association" selected>协会动态</option>
                                     <option value="enterprise">合作展示</option>
-                                    <option value="history">协会纪事</option>
+                                    <option value="history">协会记事</option>
                                     <option value="benefit">慈善公益</option>
                                 </#if>
                             </select>
