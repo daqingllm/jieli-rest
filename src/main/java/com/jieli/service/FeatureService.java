@@ -495,7 +495,7 @@ public class FeatureService {
             return Response.status(200).entity(responseEntity).build();
         }
         HelpInfo help = helpDAO.loadById(helpId);
-        if(help == null || MongoUtils.isValidObjectId(commentId)) {
+        if(help == null || !MongoUtils.isValidObjectId(commentId)) {
             responseEntity.code = 1205;
             responseEntity.msg = "参数错误";
             return Response.status(200).entity(responseEntity).build();
