@@ -33,6 +33,8 @@ public class Activity extends Model {
 
     public Map<String, String> diamondInfo = new LinkedHashMap<String, String>();
 
+    public Map<String, String> sponsorInfo2 = new LinkedHashMap<String, String>();
+
     public String sponsorInfo;
 
 	@JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ", timezone="GMT+8")

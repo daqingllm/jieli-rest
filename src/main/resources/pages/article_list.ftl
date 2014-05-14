@@ -224,7 +224,7 @@
                         </button>
                         &nbsp;&nbsp;&nbsp;&nbsp;
 
-                        <button class="btn btn-info" type="button" style="font-weight:bold;margin-bottom: 20px;" id="setTitleImgClick">
+                        <button class="btn btn-warning" type="button" style="font-weight:bold;margin-bottom: 20px;" id="setTitleImgClick">
                             <i class="fa fa-search-plus bigger-110"></i>
                             …Ë÷√Õ∑Õº
                         </button>
