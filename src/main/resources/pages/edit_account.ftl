@@ -2,16 +2,11 @@
 <html lang="zh">
 <head>
     <meta charset="utf-8"/>
-    <title>æ¥åŠ› è´¦æˆ·ç®¡ç†</title>
-    <meta name="description" content="æ¥åŠ›"/>
+    <title>½ÓÁ¦ ÕË»§¹ÜÀí</title>
+    <meta name="description" content="½ÓÁ¦"/>
     <!-- basic styles -->
 
     <link href="/assets/css/bootstrap.min.css" rel="stylesheet"/>
-<#--<link rel="stylesheet" href="/assets/css/font-awesome.min.css"/>-->
-
-    <!--[if IE 7]>
-    <!--<link rel="stylesheet" href="/assets/css/font-awesome-ie7.min.css"/>-->
-<#--<![endif]&ndash;&gt;-->
 
     <link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
 
@@ -68,7 +63,7 @@
             <a href="index.html" class="navbar-brand">
                 <small>
                     <i class="fa fa-leaf"></i>
-                    æ¥åŠ› åå°ç®¡ç†ç³»ç»Ÿ
+                    ½ÓÁ¦ ºóÌ¨¹ÜÀíÏµÍ³
                 </small>
             </a><!-- /.brand -->
         </div>
@@ -80,7 +75,7 @@
                     <a data-toggle="dropdown" href="#" class="dropdown-toggle">
                         <img class="nav-user-photo" src="/assets/avatars/user.jpg" alt="Jason's Photo"/>
 								<span class="user-info">
-									<small>æ¬¢è¿å…‰ä¸´,</small>
+									<small>»¶Ó­¹âÁÙ,</small>
                                 ${username}
 								</span>
 
@@ -91,7 +86,7 @@
                         <li>
                             <a href="#" onclick="document.cookie='u=;path=/';window.location.href='/app/baccount/login'">
                                 <i class="fa fa-power-off"></i>
-                                é€€å‡º
+                                ÍË³ö
                             </a>
                         </li>
                     </ul>
@@ -179,21 +174,21 @@
     <ul class="breadcrumb">
         <li>
             <i class="fa fa-home home-icon"></i>
-            <a href="/index.html">é¦–é¡µ</a>
+            <a href="/index.html">Ê×Ò³</a>
         </li>
 
         <li>
-            <a href="/app/bnews/list"> è´¦æˆ·ç®¡ç† </a>
+            <a href="/app/bnews/list"> ÕË»§¹ÜÀí </a>
         </li>
 
-        <li class="active"> ç¼–è¾‘è´¦æˆ· </li>
+        <li class="active"> ±à¼­ÕË»§ </li>
     </ul>
     <!-- .breadcrumb -->
 
     <div class="nav-search" id="nav-search" style="display: none">
         <form class="form-search">
 								<span class="input-icon">
-									<input type="text" placeholder="æœç´¢ ..." class="nav-search-input"
+									<input type="text" placeholder="ËÑË÷ ..." class="nav-search-input"
                                            id="nav-search-input" autocomplete="off"/>
 									<i class="fa fa-search nav-search-icon" style="position: absolute;top: 1px;bottom: 1px;left: 3px;"></i>
 								</span>
@@ -203,170 +198,271 @@
 </div>
 
 <div class="page-content">
-    <div class="page-header">
-        <h1>
-            ç¼–è¾‘ç”¨æˆ·çš„å§“åã€æ€§åˆ«ã€åä¼šèº«ä»½ã€ç”µè¯
-            <small>
-                <i class="fa fa-angle-double-right"></i>
-                å…¶ä»–ä¿¡æ¯åªèƒ½æŸ¥çœ‹
-            </small>
-        </h1>
+<div class="page-header">
+    <h1>
+        ±à¼­ÓÃ»§µÄĞÕÃû¡¢ĞÔ±ğ¡¢Ğ­»áÉí·İ¡¢µç»°
+        <small>
+            <i class="fa fa-angle-double-right"></i>
+            ÆäËûĞÅÏ¢Ö»ÄÜ²é¿´
+        </small>
+    </h1>
+</div>
+<!-- /.page-header -->
+
+<div class="row">
+<div class="col-xs-12">
+<!-- PAGE CONTENT BEGINS -->
+
+<form class="form-horizontal" role="form">
+
+<div class="form-group">
+    <label class="col-sm-3 control-label no-padding-right" for="form-field-name"> ĞÕÃû </label>
+
+    <div class="col-sm-9">
+        <input type="text" id="form-field-name" placeholder="ĞÕÃû" class="col-xs-10 col-sm-7"
+               style="padding-left: 7px;" value=''/>
     </div>
-    <!-- /.page-header -->
+</div>
 
-    <div class="row">
-        <div class="col-xs-12">
-            <!-- PAGE CONTENT BEGINS -->
-
-            <form class="form-horizontal" role="form">
-
-                <div class="form-group">
-                    <label class="col-sm-3 control-label no-padding-right" for="form-field-name"> å§“å </label>
-
-                    <div class="col-sm-9">
-                        <input type="text" id="form-field-name" placeholder="å§“å" class="col-xs-10 col-sm-7"
-                               style="padding-left: 7px;" value='${user.name}'/>
-                    </div>
-                </div>
-
-                <div class="space-4"></div>
+<div class="space-4"></div>
 
 
 
 
-                <div class="form-group">
-                    <label class="col-sm-3 control-label no-padding-right" for=""> ç”¨æˆ·å¤´åƒ </label>
+<div class="form-group">
+    <label class="col-sm-3 control-label no-padding-right" for=""> ÓÃ»§Í·Ïñ </label>
 
-                    <div class="col-sm-9">
-                        <img src="${user.userFace}" class="col-xs-10 col-sm-7"
-                             style="padding-left: 7px;"/>
-                    </div>
-                </div>
-
-                <div class="space-4"></div>
-
-
-
-                <div class="form-group">
-                    <label class="col-sm-3 control-label no-padding-right" for="form-field-select-sex"> æ€§åˆ« </label>
-
-                    <div class="col-sm-9">
-                        <select class="col-xs-10 col-sm-7" id="form-field-select-sex"
-                                style="padding: 5px 4px;font-size: 14px;">
-                        <#if user.sex==0>
-                            <option value="0" selected="selected">ç”·</option>
-                            <option value="1">å¥³</option>
-                        <#else>
-                            <option value="0">ç”·</option>
-                            <option value="1" selected="selected">å¥³</option>
-                        </#if>
-                        </select>
-                    </div>
-                </div>
-
-
-                <div class="form-group">
-                    <label class="col-sm-3 control-label no-padding-right" for="form-field-identi"> åä¼šèº«ä»½ </label>
-
-                    <div class="col-sm-9">
-                        <select class="form-control" id="form-field-identi">
-                        ${identityOps}
-                        </select>
-                    </div>
-                </div>
-
-                <div class="space-4"></div>
-                <script>$("#form-field-identi").val("${user.identity}")</script>
-
-
-
-                <div class="form-group">
-                    <label class="col-sm-3 control-label no-padding-right" for="form-field-phone"> ç”µè¯ </label>
-
-                    <div class="col-sm-9">
-                        <input type="text" id="form-field-phone" placeholder="ç”µè¯" class="col-xs-10 col-sm-7"
-                               style="padding-left: 7px;" value='${user.phone}'/>
-                    </div>
-                </div>
-
-                <div class="space-4"></div>
-
-
-
-                <div class="form-group">
-                    <label class="col-sm-3 control-label no-padding-right" for="form-field-birthday"> ç”Ÿæ—¥ </label>
-
-                    <div class="col-sm-9">
-                        <input type="text" id="form-field-birthday" placeholder="ç”Ÿæ—¥" class="col-xs-10 col-sm-7"
-                               style="padding-left: 7px;" value="<#if user.birthday??>${user.birthday.string('yyyyå¹´MMæœˆddæ—¥')}</#if>"/>
-                    </div>
-                </div>
-
-                <div class="space-4"></div>
-
-
-                <div class="form-group">
-                    <label class="col-sm-3 control-label no-padding-right" for="form-field-xz"> æ˜Ÿåº§ </label>
-
-                    <div class="col-sm-9">
-                        <input type="text" id="form-field-xz" placeholder="æ˜Ÿåº§" class="col-xs-10 col-sm-7"
-                               style="padding-left: 7px;" value=""/>
-                    </div>
-                </div>
-
-                <div class="space-4"></div>
-
-
-
-                <div class="form-group">
-                    <label class="col-sm-3 control-label no-padding-right" for="form-field-xq"> å…´è¶£ </label>
-
-                    <div class="col-sm-9">
-                        <input type="text" id="form-field-xq" placeholder="å…´è¶£" class="col-xs-10 col-sm-7"
-                               style="padding-left: 7px;" value="<#list user.interests as interest>${interest}<#if interest?has_next>,</#if></#list>"/>
-                    </div>
-                </div>
-
-                <div class="space-4"></div>
-
-
-                <div class="form-group">
-                    <label class="col-sm-3 control-label no-padding-right" for="form-field-degree"> æ•™è‚²ç¨‹åº¦ </label>
-
-                    <div class="col-sm-9">
-                        <input type="text" id="form-field-degree" placeholder="æ•™è‚²ç¨‹åº¦" class="col-xs-10 col-sm-7"
-                               style="padding-left: 7px;" value="<#if user.degree==0>EMBA<#elseif user.degree==1>MBA<#elseif user.degree==2>å­¦å£«<#elseif user.degree==3>ç¡•å£«<#elseif user.degree==4>åšå£«<#else>å…¶ä»–</#if>"/>
-                    </div>
-                </div>
-
-                <div class="space-4"></div>
-
-
-            </form>
-
-            <div id="dialog-message-preview" class="hide">
-            </div><!-- #dialog-message -->
-
-            <div class="clearfix form-actions">
-                <div class="col-md-offset-3 col-md-9">
-                    <button class="btn btn-info" type="button" style="font-weight:bold" onclick="postThisArticle()">
-                        <i class="fa fa-check bigger-110"></i>
-                        ç¡®è®¤
-                    </button>
-
-                    &nbsp; &nbsp; &nbsp;
-                    <button class="btn btn-danger" type="reset" style="font-weight:bold" onclick="window.location.href='/app/baccount/list';return true;">
-                        <i class="fa fa-mail-reply bigger-110"></i>
-                        è¿”å›è´¦æˆ·åˆ—è¡¨
-                    </button>
-
-                </div>
-            </div>
-
-        </div>
-        <!-- /.col -->
+    <div class="col-sm-9">
+        <img id="form-field-userFace" src="" class="col-xs-10 col-sm-7"
+             style="padding-left: 7px;"/>
     </div>
-    <!-- /.row -->
+</div>
+
+<div class="space-4"></div>
+
+
+
+<div class="form-group">
+    <label class="col-sm-3 control-label no-padding-right" for="form-field-select-sex"> ĞÔ±ğ </label>
+
+    <div class="col-sm-9">
+        <select class="col-xs-10 col-sm-7" id="form-field-select-sex"
+                style="padding: 5px 4px;font-size: 14px;">
+            <option value="0" selected="selected">ÄĞ</option>
+            <option value="1">Å®</option>
+        </select>
+    </div>
+</div>
+
+
+<div class="form-group">
+    <label class="col-sm-3 control-label no-padding-right" for="form-field-identity"> Ğ­»áÉí·İ </label>
+
+    <div class="col-sm-9">
+        <select class="col-xs-10 col-sm-7" id="form-field-identity"
+                style="padding: 5px 4px;font-size: 14px;">
+        ${identityOps}
+        </select>
+    </div>
+</div>
+
+<div class="space-4"></div>
+
+
+
+
+<div class="form-group">
+    <label class="col-sm-3 control-label no-padding-right" for="form-field-phone"> µç»° </label>
+
+    <div class="col-sm-9">
+        <input type="text" id="form-field-phone" placeholder="µç»°" class="col-xs-10 col-sm-7"
+               style="padding-left: 7px;" value=''/>
+    </div>
+</div>
+
+<div class="space-4"></div>
+
+
+
+<div class="form-group">
+    <label class="col-sm-3 control-label no-padding-right" for="form-field-birthday"> ÉúÈÕ </label>
+
+    <div class="col-sm-9">
+        <input readonly="readonly" type="text" id="form-field-birthday" placeholder="ÉúÈÕ" class="col-xs-10 col-sm-7"
+               style="padding-left: 7px;" value=""/>
+    </div>
+</div>
+
+<div class="space-4"></div>
+
+
+<div class="form-group">
+    <label class="col-sm-3 control-label no-padding-right" for="form-field-constellation"> ĞÇ×ù </label>
+
+    <div class="col-sm-9">
+        <input readonly="readonly" type="text" id="form-field-constellation" placeholder="ĞÇ×ù" class="col-xs-10 col-sm-7"
+               style="padding-left: 7px;" value=""/>
+    </div>
+</div>
+
+<div class="space-4"></div>
+
+
+
+<div class="form-group">
+    <label class="col-sm-3 control-label no-padding-right" for="form-field-interests"> ĞËÈ¤ </label>
+
+    <div class="col-sm-9">
+        <input readonly="readonly" type="text" id="form-field-interests" placeholder="ĞËÈ¤" class="col-xs-10 col-sm-7"
+               style="padding-left: 7px;" value=""/>
+    </div>
+</div>
+
+<div class="space-4"></div>
+
+
+<div class="form-group">
+    <label class="col-sm-3 control-label no-padding-right" for="form-field-degree"> ½ÌÓı³Ì¶È </label>
+
+    <div class="col-sm-9">
+        <input readonly="readonly" type="text" id="form-field-degree" placeholder="½ÌÓı³Ì¶È" class="col-xs-10 col-sm-7"
+               style="padding-left: 7px;" value=""/>
+    </div>
+</div>
+
+<div class="space-4"></div>
+
+
+
+<div class="form-group">
+    <label class="col-sm-3 control-label no-padding-right" for="form-field-profession"> ×¨ÒµĞĞÒµ </label>
+
+    <div class="col-sm-9">
+        <input readonly="readonly" type="text" id="form-field-profession" placeholder="×¨ÒµĞĞÒµ" class="col-xs-10 col-sm-7"
+               style="padding-left: 7px;" value=""/>
+    </div>
+</div>
+
+
+<div class="space-4"></div>
+
+<div class="form-group">
+    <label class="col-sm-3 control-label no-padding-right" for="form-field-mail"> ÓÊÏä </label>
+
+    <div class="col-sm-9">
+        <input readonly="readonly" type="text" id="form-field-mail" placeholder="ÓÊÏä" class="col-xs-10 col-sm-7"
+               style="padding-left: 7px;" value=""/>
+    </div>
+</div>
+
+
+<div class="space-4"></div>
+
+<div class="form-group">
+    <label class="col-sm-3 control-label no-padding-right" for="form-field-weixin"> Î¢ĞÅºÅ </label>
+
+    <div class="col-sm-9">
+        <input readonly="readonly" type="text" id="form-field-weixin" placeholder="Î¢ĞÅºÅ" class="col-xs-10 col-sm-7"
+               style="padding-left: 7px;" value=""/>
+    </div>
+</div>
+
+<div class="space-4"></div>
+
+<div class="form-group">
+    <label class="col-sm-3 control-label no-padding-right" for="form-field-enterpriseName"> ¹«Ë¾Ãû³Æ </label>
+
+    <div class="col-sm-9">
+        <input readonly="readonly" type="text" id="form-field-enterpriseName" placeholder="¹«Ë¾Ãû³Æ" class="col-xs-10 col-sm-7"
+               style="padding-left: 7px;" value=""/>
+    </div>
+</div>
+
+
+<div class="space-4"></div>
+
+<div class="form-group">
+    <label class="col-sm-3 control-label no-padding-right" for="form-field-job"> ¹«Ë¾Ö°Îñ </label>
+
+    <div class="col-sm-9">
+        <input readonly="readonly" type="text" id="form-field-job" placeholder="¹«Ë¾Ö°Îñ" class="col-xs-10 col-sm-7"
+               style="padding-left: 7px;" value=""/>
+    </div>
+</div>
+
+
+<div class="space-4"></div>
+
+<div class="form-group">
+    <label class="col-sm-3 control-label no-padding-right" for="form-field-school"> ¾Í¶ÁÑ§Ğ£ </label>
+
+    <div class="col-sm-9">
+        <input readonly="readonly" type="text" id="form-field-school" placeholder="¾Í¶ÁÑ§Ğ£" class="col-xs-10 col-sm-7"
+               style="padding-left: 7px;" value=""/>
+    </div>
+</div>
+
+<div class="space-4"></div>
+
+<div class="form-group">
+    <label class="col-sm-3 control-label no-padding-right" for="form-field-enterpriseWebsite"> ¹«Ë¾ÍøÖ· </label>
+
+    <div class="col-sm-9">
+        <input readonly="readonly" type="text" id="form-field-enterpriseWebsite" placeholder="¹«Ë¾ÍøÖ·" class="col-xs-10 col-sm-7"
+               style="padding-left: 7px;" value=""/>
+    </div>
+</div>
+
+<div class="space-4"></div>
+
+<div class="form-group">
+    <label class="col-sm-3 control-label no-padding-right" for="form-field-enterpriseFoundDate"> ¹«Ë¾³ÉÁ¢Äê·İ </label>
+
+    <div class="col-sm-9">
+        <input readonly="readonly" type="text" id="form-field-enterpriseFoundDate" placeholder="¹«Ë¾³ÉÁ¢Äê·İ" class="col-xs-10 col-sm-7"
+               style="padding-left: 7px;" value=""/>
+    </div>
+</div>
+
+<div class="space-4"></div>
+
+<div class="form-group">
+    <label class="col-sm-3 control-label no-padding-right" for="form-field-enterpriseDescription"> ¹«Ë¾¼ò½é </label>
+
+    <div class="col-sm-9">
+        <input readonly="readonly" type="text" id="form-field-enterpriseDescription" placeholder="¹«Ë¾¼ò½é" class="col-xs-10 col-sm-7"
+               style="padding-left: 7px;" value=""/>
+    </div>
+</div>
+
+<div class="space-4"></div>
+
+
+</form>
+
+<div id="dialog-message-preview" class="hide">
+</div><!-- #dialog-message -->
+
+<div class="clearfix form-actions">
+    <div class="col-md-offset-3 col-md-9">
+        <button class="btn btn-info" type="button" style="font-weight:bold" onclick="updateUser()">
+            <i class="fa fa-check bigger-110"></i>
+            È·ÈÏ
+        </button>
+
+        &nbsp; &nbsp; &nbsp;
+        <button class="btn btn-danger" type="reset" style="font-weight:bold" onclick="window.location.href='/app/baccount/list';return true;">
+            <i class="fa fa-mail-reply bigger-110"></i>
+            ·µ»ØÕË»§ÁĞ±í
+        </button>
+
+    </div>
+</div>
+
+</div>
+<!-- /.col -->
+</div>
+<!-- /.row -->
 </div>
 <!-- /.page-content -->
 </div>
@@ -511,16 +607,16 @@
 
         $.ajax({
             type:"POST",
-            url:"/app/user/edit",
+            url:"/app/user/edit?userId="+data["_id"],
             data: JSON.stringify(data),
             contentType: "application/json; charset=utf-8",
             dataType: 'json',
             success:function(ret){
                 if (ret.code == 200){
-                    alert("ç”¨æˆ·ä¿®æ”¹æˆåŠŸï¼");
+                    alert("ÓÃ»§ĞŞ¸Ä³É¹¦£¡");
                     window.location.href = "/app/baccount/list";
                 }else{
-                    alert("ç”¨æˆ·ä¿®æ”¹å¤±è´¥ " + (ret.msg || ""));
+                    alert("ÓÃ»§ĞŞ¸ÄÊ§°Ü " + (ret.msg || ""));
                 }
             },
             error:function(){
@@ -528,15 +624,44 @@
             }
         });
     }
-    function loadUser(){
+
     <#if got?length==0>
-        try{data = ${user};}
-        catch (err){data = {};}
-    <#else>
-        if(confirm("${got}"));
-        window.location.href = "/app/baccount/list";
-    </#if>
+    try{data = ${user};
+
+        $("#form-field-name").val(data["name"] || "");
+        $("#form-field-userFace").attr("src",data["userFace"] || "");
+        if (data["sex"] == 1) $("#form-field-select-sex").val("1");
+        $("#form-field-identity").val(data["identity"] || "");
+        $("#form-field-phone").val(data["phone"] || "");
+        try {
+            if (data["birthday"])  $("#form-field-birthday").val(data["birthday"].Format("yyyyÄêMMÔÂddÈÕ"));
+        }catch (e){}
+        $("#form-field-constellation").val(data["constellation"] || "");
+
+        var intlist = "";
+        for (var i in data["interests"])
+            intlist += data["interests"][i] + ",";
+        if (intlist.length > 0) intlist = intlist.substring(0,intlist.length-1);
+
+        $("#form-field-interests").val(intlist);
+        var degrees = ["EMBA","MBA","Ñ§Ê¿","Ë¶Ê¿","²©Ê¿","ÆäËû"];
+        if (data["degree"]) $("#form-field-degree").val(degrees[data["degree"]]);
+
+        $("#form-field-profession").val(data["profession"] || "");
+        $("#form-field-mail").val(data["mail"] || "");
+        $("#form-field-weixin").val(data["weixin"] || "");
+        $("#form-field-enterpriseName").val(data["enterpriseName"] || "");
+        $("#form-field-job").val(data["job"] || "");
+        $("#form-field-school").val(data["school"] || "");
+        $("#form-field-enterpriseWebsite").val(data["enterpriseWebsite"] || "");
+        $("#form-field-enterpriseFoundDate").val(data["enterpriseFoundDate"] || "");
+        $("#form-field-enterpriseDescription").val(data["enterpriseDescription"] || "");
     }
+    catch (err){data = {};}
+    <#else>
+    if(confirm("${got}"));
+    window.location.href = "/app/baccount/list";
+    </#if>
 </script>
 <script type="text/javascript">
 
@@ -548,8 +673,6 @@
     </#if>
 
     });
-
-    loadUser();
 
 </script>
 </body>

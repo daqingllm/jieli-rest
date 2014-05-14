@@ -130,9 +130,11 @@ public class Account {
             return CommonUtil.errorReturn;
         }
 
+        boolean isSuper = IdentityUtils.isSuper(sessionId);
         com.jieli.common.entity.Account account = accountDAO.loadByUserId(sessionId);
         ResponseEntity responseEntity = new ResponseEntity();
         Map<String, Object> params = new HashMap<String, Object>();
+        params.put("isSuper",isSuper);
         if (account != null && account.username != null) {
             params.put("username" , account.username);
         }
@@ -140,14 +142,6 @@ public class Account {
             params.put("username" , "");
         }
 
-        User user = userDAO.loadById(u);
-        if (user != null){
-            params.put("user",user);
-            params.put("got","");
-        }else{
-            params.put("user","");
-            params.put("got","无此用户");
-        }
         String identityOps = "<option value='' selected='selected'>普通会员</option>";
         Iterable<com.jieli.association.Identity> identities = new IdentityDAO().loadAll(IdentityUtils.getAssociationId(sessionId));
         for (com.jieli.association.Identity identity : identities) {
@@ -155,6 +149,21 @@ public class Account {
         }
         params.put("identityOps", identityOps);
 
+        com.jieli.common.entity.Account targetAccount = accountDAO.loadById(u);
+        if (targetAccount == null || targetAccount.userId == null){
+            params.put("user","");
+            params.put("got","此账户未绑定用户");
+            return FTLrender.getResult("edit_account.ftl", params);
+        }
+
+        User user = userDAO.loadById(targetAccount.userId);
+        if (user != null){
+            params.put("user",CommonUtil.ReplaceObjectId(user));
+            params.put("got","");
+        }else{
+            params.put("user","");
+            params.put("got","无此用户");
+        }
         return FTLrender.getResult("edit_account.ftl", params);
     }
 
