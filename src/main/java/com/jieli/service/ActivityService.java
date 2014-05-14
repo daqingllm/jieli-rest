@@ -397,7 +397,7 @@ public class ActivityService {
         if (activity.joinMembers.get(userId) == null) {
             activity.joinMembers.put(userId, part);
             responseEntity.msg = "已参加";
-            responseEntity.body = "{\"count\":"+activity.joinMembers.size()+",\"join\":"+0+"}";
+            responseEntity.body = "{\"count\":"+activity.joinMembers.size()+",\"join\":"+1+"}";
             insertRelated(userId, activityId, RelatedType.JOIN);
             List<String> concernedUserIds = IdentityUtils.getConcerned(userId);
 
