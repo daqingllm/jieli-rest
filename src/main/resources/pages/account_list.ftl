@@ -213,7 +213,7 @@
                         </button>
                         &nbsp;&nbsp;&nbsp;&nbsp;
 
-                        <button class="btn btn-danger" type="button" style="font-weight:bold;margin-bottom: 20px;display: none" id='deleteAccountBtn'>
+                        <button class="btn btn-danger" type="button" style="font-weight:bold;margin-bottom: 20px;" id='deleteAccountBtn'>
                             <i class="fa fa-trash-o bigger-110"></i>
                             删除账号
                         </button>
@@ -567,6 +567,7 @@ jQuery(function($) {
     });
 
     function makeAccount(){
+
         var id = $("#grid-table").getGridParam("selarrrow");
         if (id == null || id.length == 0) return;
 
@@ -574,6 +575,12 @@ jQuery(function($) {
 
         var states={"禁用":"DISABLE","普通用户":"ENABLE","协会管理员":"ADMIN","超级管理员":"SUPPER"};
         for (var i = 0; i < id.length; i ++) {
+            var a = raw_data[id[i]-1];
+            delete a["name"];
+            delete a["identity"];
+            accs.push(a);
+            continue;
+
             var acc = {};
             acc.associationId = $("#grid-table > tbody > tr").eq(id).find("td").eq(2).attr("title");
             acc.username = $("#grid-table > tbody > tr").eq(id).find("td").eq(3).attr("title");
@@ -601,7 +608,7 @@ jQuery(function($) {
                 acc.state=0;
                 $.ajax({
                     type: "POST",
-                    url: "/app/baccount/del",
+                    url: "/app/account",
                     async: false,
                     data: JSON.stringify(acc),
                     contentType: "application/json; charset=utf-8",

@@ -328,8 +328,8 @@
                                         style="float:left;font-weight:bold">
                                     <i class="icon-cloud-upload bigger-110"></i>
                                     上传图片
-                                    <div class="alert alert-info" style="float: left;padding: 2px 14px;margin-left: 15px;margin-top: 7px;"> 请上传572*364的图片 </div>
                                 </button>
+                                <div class="alert alert-info" style="float: left;padding: 2px 14px;margin-left: 15px;margin-top: 7px;"> 请上传572*364的图片 </div>
                             </#if>
 
                         </div>
@@ -518,7 +518,9 @@
 <![endif]-->
 
 <script src="/assets/js/jquery-ui-1.10.3.custom.min.js"></script>
+<script src="/assets/js/jquery-ui-1.10.3.full.min.js"></script>
 <script src="/assets/js/jquery.ui.touch-punch.min.js"></script>
+
 <script src="/assets/js/chosen.jquery.min.js"></script>
 <script src="/assets/js/fuelux/fuelux.spinner.min.js"></script>
 <script src="/assets/js/date-time/bootstrap-datepicker.min.js"></script>
