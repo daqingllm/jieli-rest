@@ -269,11 +269,11 @@
 
                     <div class="space-4"></div>
 
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label no-padding-right" for="force-type"> 是否强推 </label>
+                    <div class="form-group" style="display: none">
+                        <label class="col-sm-3 control-label no-padding-right" for="force-type1"> 是否强推 </label>
 
                         <div class="col-sm-9">
-                            <select class="col-xs-10 col-sm-7" id="force-type"
+                            <select class="col-xs-10 col-sm-7" id="force-type1"
                                     style="padding: 5px 4px;font-size: 14px;">
                                 <option value="Y" selected="selected">是</option>
                                 <option value="N">否</option>
@@ -346,6 +346,17 @@
                         </div>
                     </div>
 
+                    <div class="form-group" style="display:none;">
+                        <label class="col-sm-3 control-label no-padding-right" for="force-type"> 强推选项 </label>
+
+                        <div class="col-sm-9">
+                            <input style="margin-right: 25px;float: left;" type="checkbox" id="force-type" >
+                            <div class="alert alert-info" style="float: left;padding: 2px 14px;"> 选择强推后，用户在锁屏状态下也能收到资讯通知 </div>
+                        </div>
+                    </div>
+
+                    <div class="space-4"></div>
+
                 </form>
                 <!-- vote statistics begin -->
 
@@ -392,7 +403,7 @@
 
 
                             &nbsp; &nbsp; &nbsp;
-                            <button class="btn btn-success" type="button" style="font-weight:bold">
+                            <button class="btn btn-success" type="button" style="display:none;font-weight:bold">
                                 <i class="icon-question bigger-110"></i>
                                 预览
                             </button>
@@ -404,7 +415,7 @@
                             </button>
 
                             &nbsp; &nbsp; &nbsp;
-                            <button class="btn" type="reset" style="font-weight:bold" onclick="clearImgList();return true;">
+                            <button class="btn" type="reset" style="display:none;font-weight:bold" onclick="clearImgList();return true;">
                                 <i class="icon-undo bigger-110"></i>
                                 清空
                             </button>
@@ -1115,7 +1126,7 @@ function voteInfo(voteId, callback) {
                 var dateString = deadLine.toISOString().substr(0, 10); //assume the program will not run after year 10000
                 $('#form-field-date').val(dateString);
                 $('#form-field-select-type').val(response.body.multiple ? 'M' : 'S');
-                $('#force-type').val(response.body.force ? 'Y' : 'N');
+                /*$('#force-type').val(response.body.force ? 'Y' : 'N');*/
                 var options = response.body.options;
                 $.ajax({
                     url: '/app/feature/vote/result?voteId=' + voteId,
@@ -1221,7 +1232,8 @@ function postNewVote() {
     var request = {};
     request.title = $('#form-field-title').val();
     request.multiple = $('#form-field-select-type').val() == 'M' ? true : false;
-    request.force = $('#force-type').val() == 'Y' ? true : false;
+    //request.force = $('#force-type').val() == 'Y' ? true : false;
+    request.force = $("#force-type").is(':checked');
     request.deadLine = new Date($('#form-field-date').val());
     request.description = $('#form-field-textarea').val();
     request.options = {};
@@ -1272,10 +1284,11 @@ function postEditVote(voteId) {
         type: 'POST',
         contentType: "application/json",
         success:function(json) {
-            if(json.code == 200 && json.entity.code == 200) {
+            if(json.code == 200) {
+                alert("投票修改成功");
                 window.location.href = '/app/bvote/list';
             }
-            else if(json.entity.code == 1115) {
+            else if(json.code == 1115) {
                 alert("投票已过期，不可编辑！");
             }
             else {

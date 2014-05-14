@@ -95,11 +95,11 @@ function postThisArticle(){
 
     var p_pt,p_it;
     p_pt = $("#form-field-select-pro").val();
-    if (p_pt == null || p_pt == "") {alert("请选择行业标签！");return;}
+    if (p_pt == null || p_pt == "") {p_pt = "";}
     json["professionTag"] = p_pt;
 
     p_it = $("#selectInterest").val();
-    if (p_it == null || p_it.length == 0){alert("请选择兴趣标签！");return;}
+    if (p_it == null || p_it.length == 0){p_it = [];}
     json["interestTags"] = [];
     for (var i = 0; i < p_it.length; i++){
         json["interestTags"].push(p_it[i]);
@@ -141,7 +141,16 @@ function postThisArticle(){
     var idxs = p_content.indexOf(phph1);
     var idxe;
     json["images"] = [];
-    while(idxs >= 0){
+    $("#upload-img-list li").each(function(){
+        if ($(this).children("a") && $(this).children("a").length != 0) {
+            var _url = $(this).children("a").attr("href");
+            if (_url && _url.indexOf("http://") > -1) {
+                var jsn_img = {"placeholder": "", "url": _url, "description": p_title || ""};
+                json["images"].push(jsn_img);
+            }
+        }
+    });
+    while(idxs >= 0 && idxs < 0){
         idxe = p_content.indexOf(phph2,idxs);
         var st = 1+phph1.length;
         if (idxe-st < idxs) break;

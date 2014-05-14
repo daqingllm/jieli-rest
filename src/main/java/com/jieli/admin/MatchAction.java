@@ -76,7 +76,7 @@ public class MatchAction {
     @Path("/list")
     @Produces(MediaType.TEXT_HTML)
     public String getAccountList(@CookieParam("u")String sessionId) throws JsonProcessingException {
-        if (IdentityUtils.isSuper(sessionId)) {
+        if (!IdentityUtils.isSuper(sessionId)) {
             return CommonUtil.errorReturn;
         }
         ResponseEntity responseEntity = new ResponseEntity();
