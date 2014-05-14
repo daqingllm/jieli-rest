@@ -34,7 +34,7 @@ public class System {
     @Produces(MediaType.TEXT_HTML)
     public String getAboutJieli(@CookieParam("u") String sessionId) {
 
-        if (!IdentityUtils.isSuper(sessionId)) return CommonUtil.errorReturn;
+        if (!IdentityUtils.isAdmin(sessionId) || IdentityUtils.isSuper(sessionId)) return CommonUtil.errorReturn;
 
         com.jieli.common.entity.Account account = accountDAO.loadById(sessionId);
         Map<String, Object> params = new HashMap<String, Object>();

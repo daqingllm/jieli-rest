@@ -325,9 +325,10 @@
                             </div>
                             <#if newVote || isEditable>
                                 <button class="btn btn-success btn-purple" id="bootbox-upload-image"
-                                        style="font-weight:bold">
+                                        style="float:left;font-weight:bold">
                                     <i class="icon-cloud-upload bigger-110"></i>
                                     上传图片
+                                    <div class="alert alert-info" style="float: left;padding: 2px 14px;margin-left: 15px;margin-top: 7px;"> 请上传572*364的图片 </div>
                                 </button>
                             </#if>
 

@@ -224,7 +224,7 @@
                         <label class="col-sm-3 control-label no-padding-right" for="form-field-title"> 资讯标题 </label>
 
                         <div class="col-sm-9">
-                            <input type="text" id="form-field-title" placeholder="标题" class="col-xs-10 col-sm-7"
+                            <input type="text" id="form-field-title" placeholder="标题请勿超过30个字" class="col-xs-10 col-sm-7"
                                    style="padding-left: 7px;"/>
                         </div>
                     </div>
@@ -269,6 +269,14 @@
                     <div class="space-4"></div>
 
                     <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right" for="form-field-textarea">  </label>
+
+                        <div class="col-sm-9">
+                            <div class="col-xs-10 col-sm-7 alert alert-warning" style="margin-bottom: 0">为保证app显示质量，请确保正文中段落首行顶格</div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
                         <label class="col-sm-3 control-label no-padding-right" for="form-field-textarea"> 资讯正文 </label>
 
                         <div class="col-sm-9">
@@ -303,10 +311,11 @@
                         <label class="col-sm-3 control-label no-padding-right" for="form-input-readonly">  </label>
 
                         <div class="col-sm-9">
-                            <div class="btn btn-success btn-purple" onclick="$('#bootbox-upload-image').click();">
+                            <div style="float: left" class="btn btn-success btn-purple" onclick="$('#bootbox-upload-image').click();">
                                 <i class="fa fa-cloud-upload bigger-110"></i>
                                 上传图片
                             </div>
+                            <div class="alert alert-info" style="float: left;padding: 2px 14px;margin-left: 15px;margin-top: 7px;"> 请上传572*364的图片 </div>
                         </div>
                     </div>
 

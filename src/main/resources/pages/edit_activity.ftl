@@ -245,7 +245,7 @@
     <label class="col-sm-3 control-label no-padding-right" for="form-field-title"> 活动标题 </label>
 
     <div class="col-sm-9">
-        <input type="text" id="form-field-title" placeholder="标题" class="col-xs-10 col-sm-7"
+        <input type="text" id="form-field-title" placeholder="标题请勿超过14个字" class="col-xs-10 col-sm-7"
                style="padding-left: 7px;"/>
     </div>
 </div>
@@ -271,10 +271,12 @@
     <div class="col-sm-9" id="service-info">
         <!--<textarea id="form-field-textarea-service" class="autosize-transition col-xs-10 col-sm-7"
                   style="min-height: 140px;" placeholder="请用冒号和回车分隔服务信息"></textarea>-->
-        <div><div class="btn btn-success btn-purple" id="uploadTitleImageClick">
+        <div><div class="btn btn-success btn-purple" style="float: left" id="uploadTitleImageClick">
             <i class="fa fa-cloud-upload bigger-110"></i>
             上传标题图片
-        </div></div>
+        </div>
+            <div class="alert alert-info" style="float: left;padding: 2px 14px;margin-left: 15px;margin-top: 7px;"> 请上传572*364的图片 </div>
+        </div>
     </div>
 </div>
 
