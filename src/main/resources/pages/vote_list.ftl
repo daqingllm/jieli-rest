@@ -7,11 +7,13 @@
     <!-- basic styles -->
 
     <link href="/assets/css/bootstrap.min.css" rel="stylesheet"/>
-    <link rel="stylesheet" href="/assets/css/font-awesome.min.css"/>
+<#--<link rel="stylesheet" href="/assets/css/font-awesome.min.css"/>-->
 
     <!--[if IE 7]>
-    <link rel="stylesheet" href="/assets/css/font-awesome-ie7.min.css"/>
-    <![endif]-->
+    <!--<link rel="stylesheet" href="/assets/css/font-awesome-ie7.min.css"/>-->
+<#--<![endif]&ndash;&gt;-->
+
+    <link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
 
     <!-- page specific plugin styles -->
 
@@ -192,7 +194,7 @@
                     </li>
 
                     <li>
-                        <a href="#"> 投票管理 </a>
+                        <a href="/app/bvote/list"> 投票管理 </a>
                     </li>
 
                     <li class="active"> 投票列表 </li>
@@ -328,9 +330,9 @@
 <script type="text/javascript">
 jQuery(function ($) {
 <#if isSuper>
-    $("#sidebar-shortcuts-navlist").load("/sidebar_super.html",function(){$("#nav_list_4_1").addClass("active open");$("#nav_list_4").addClass("active");});
+    $("#sidebar-shortcuts-navlist").load("/sidebar_super.html",function(){$("#nav_list_4").addClass("active");});
 <#else>
-    $("#sidebar-shortcuts-navlist").load("/sidebar_admin.html",function(){$("#nav_list_4_1").addClass("active open");$("#nav_list_4").addClass("active");});
+    $("#sidebar-shortcuts-navlist").load("/sidebar_admin.html",function(){$("#nav_list_4").addClass("active");});
 </#if>
     var colorbox_params = {
         reposition: true,
@@ -549,10 +551,12 @@ jQuery(function($) {
     jQuery(grid_selector).jqGrid('navGrid',pager_selector,
             { 	//navbar options
                 add: true,
-                addicon : 'fa fa-plus-sign purple',
+                addicon : 'fa fa-plus-circle purple',
+                addtitle : '添加投票',
                 addfunc : (function(){window.location.href="/app/bvote/new";/*alert("添加操作!");*/return false;}),
 
                 edit: true,
+                edittitle : '编辑投票',
                 editicon : 'fa fa-pencil blue',
                 editfunc : (function(){
                     var index = $("#grid-table").getGridParam("selrow");
@@ -563,6 +567,7 @@ jQuery(function($) {
                 <#else>del: true,
                 </#if>
                 delicon : 'fa fa-trash-o red',
+                deltitle : '删除选中投票',
                 delfunc : (function(){
                     var flag=window.confirm("确定要删除投票吗?");
                     if(flag) {
@@ -590,8 +595,14 @@ jQuery(function($) {
                 refresh: false,
 
                 view: true,
-                viewicon : 'fa fa-zoom-in grey',
-                viewfunc: (function(){alert("预览操作!");return false;})
+                viewtitle : '查看投票',
+                viewicon : 'fa fa-search-plus grey',
+                viewfunc: (
+                        function(){
+                            var selectIds = $("#grid-table").getGridParam("selarrrow");
+
+                            window.location.href = '/app/bvote/view?v=' + selectIds[0];
+                        })
             }
     );
 

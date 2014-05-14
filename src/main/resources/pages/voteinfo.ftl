@@ -7,11 +7,13 @@
     <!-- basic styles -->
 
     <link href="/assets/css/bootstrap.min.css" rel="stylesheet"/>
-    <link rel="stylesheet" href="/assets/css/font-awesome.min.css"/>
+<#--<link rel="stylesheet" href="/assets/css/font-awesome.min.css"/>-->
 
     <!--[if IE 7]>
-    <link rel="stylesheet" href="/assets/css/font-awesome-ie7.min.css"/>
-    <![endif]-->
+    <!--<link rel="stylesheet" href="/assets/css/font-awesome-ie7.min.css"/>-->
+<#--<![endif]&ndash;&gt;-->
+
+    <link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
 
     <!-- page specific plugin styles -->
     <link rel="stylesheet" href="/assets/css/custom.css"/>
@@ -288,7 +290,7 @@
                             <div class="input-group input-group-sm">
                                 <input type="text" id="form-field-date" class="form-control hasDatepicker"/>
 													<span class="input-group-addon">
-														<i class="icon-calendar"></i>
+														<i class="fa fa-calendar"></i>
 													</span>
                             </div>
                         </div>
@@ -321,6 +323,14 @@
                                     <li id="img-list-invisible" style="border-width:0;display: block">暂无图片</li>
                                 </ul>
                             </div>
+                            <#if newVote || isEditable>
+                                <button class="btn btn-success btn-purple" id="bootbox-upload-image"
+                                        style="font-weight:bold">
+                                    <i class="icon-cloud-upload bigger-110"></i>
+                                    上传图片
+                                </button>
+                            </#if>
+
                         </div>
                     </div>
 
@@ -379,11 +389,7 @@
                 <div class="clearfix form-actions">
                     <div class="col-md-offset-3 col-md-9">
                         <#if newVote>
-                            <button class="btn btn-success btn-purple" id="bootbox-upload-image"
-                                    style="font-weight:bold">
-                                <i class="icon-cloud-upload bigger-110"></i>
-                                上传图片
-                            </button>
+
 
                             &nbsp; &nbsp; &nbsp;
                             <button class="btn btn-success" type="button" style="font-weight:bold">
@@ -394,7 +400,7 @@
                             &nbsp; &nbsp; &nbsp;
                             <button class="btn btn-info" type="button" style="font-weight:bold" onclick="postNewVote();">
                                 <i class="icon-ok bigger-110"></i>
-                                完成
+                                发布
                             </button>
 
                             &nbsp; &nbsp; &nbsp;
@@ -405,11 +411,6 @@
 
                         <#else>
                         <#if isEditable>
-                            <button class="btn btn-success btn-purple" id="bootbox-upload-image"
-                                    style="font-weight:bold">
-                                <i class="icon-cloud-upload bigger-110"></i>
-                                上传图片
-                            </button>
 
                             &nbsp; &nbsp; &nbsp;
                         <button class="btn btn-info" type="button" style="font-weight:bold" onclick="postEditVote('${voteId}');">
@@ -661,11 +662,10 @@
 jQuery(function ($) {
 <#if isSuper>
     $("#sidebar-shortcuts-navlist").load("/sidebar_super.html",function(){
-    ${"nav_list_4_2"}.addClass("active open");
         $("#nav_list_4").addClass("active");});
 <#else>
     $("#sidebar-shortcuts-navlist").load("/sidebar_admin.html",function(){
-            <#if newVote>$("#nav_list_4_2")<#elseif isEditable>$("#nav_list_4_4")<#else>$("#nav_list_4_3")</#if>.addClass("active open");
+            <#if newVote>$("#nav_list_4_1")<#elseif isEditable>$("#nav_list_4_3")<#else>$("#nav_list_4_2")</#if>.addClass("active open");
         $("#nav_list_4").addClass("active");});
 </#if>
     $("#bootbox-upload-image").on("click", uploadImgBox);

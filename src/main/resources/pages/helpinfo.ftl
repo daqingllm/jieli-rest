@@ -7,11 +7,13 @@
     <!-- basic styles -->
 
     <link href="/assets/css/bootstrap.min.css" rel="stylesheet"/>
-    <link rel="stylesheet" href="/assets/css/font-awesome.min.css"/>
+<#--<link rel="stylesheet" href="/assets/css/font-awesome.min.css"/>-->
 
     <!--[if IE 7]>
-    <link rel="stylesheet" href="/assets/css/font-awesome-ie7.min.css"/>
-    <![endif]-->
+    <!--<link rel="stylesheet" href="/assets/css/font-awesome-ie7.min.css"/>-->
+<#--<![endif]&ndash;&gt;-->
+
+    <link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
 
     <!-- page specific plugin styles -->
     <link rel="stylesheet" href="/assets/css/custom.css"/>
@@ -257,7 +259,7 @@
                 <div class="form-group">
                     <label class="col-sm-3 control-label no-padding-right" for="form-field-textarea"> 发起时间 </label>
                     <div class="col-sm-9">
-                        <input type="text" id="form-field-addtime" value="${help.addTime?string('yyyy-MM-dd HH:mm:ss')}"
+                        <input type="text" id="form-field-addtime" readOnly='true' value="${help.addTime?string('yyyy-MM-dd HH:mm:ss')}"
                                class="col-xs-10 col-sm-7"
                                style="padding-left: 7px;"/>
                     </div>
@@ -268,7 +270,7 @@
                     <label class="col-sm-3 control-label no-padding-right" for="form-field-textarea"> 帮助正文 </label>
 
                     <div class="col-sm-9">
-                        <textarea id="form-field-textarea" class="autosize-transition col-xs-10 col-sm-7 textarea-no-resize"
+                        <textarea id="form-field-textarea" readOnly='true' class="autosize-transition col-xs-10 col-sm-7 textarea-no-resize"
                                   style="min-height: 140px;">${help.content}</textarea>
                     </div>
 
@@ -280,7 +282,7 @@
                     <label class="col-sm-3 control-label no-padding-right" for="form-field-textarea"> 关注人数 </label>
 
                     <div class="col-sm-9">
-                        <input type="text" id="form-field-addtime" value="${help.attentionNum}"
+                        <input type="text" id="form-field-addtime" readOnly='true' value="${help.attentionNum}"
                                class="col-xs-10 col-sm-7"
                                style="padding-left: 7px;"/>
                     </div>
@@ -457,11 +459,11 @@
 jQuery(function ($) {
 <#if isSuper>
     $("#sidebar-shortcuts-navlist").load("/sidebar_super.html",function(){
-        $("#nav_list_5_2").addClass("active open");
+        $("#nav_list_5_1").addClass("active open");
     $("#nav_list_5").addClass("active");});
 <#else>
     $("#sidebar-shortcuts-navlist").load("/sidebar_admin.html",function(){
-    $("#nav_list_5_2").addClass("active open");
+    $("#nav_list_5_1").addClass("active open");
     $("#nav_list_5").addClass("active");});
 </#if>
 
