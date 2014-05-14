@@ -63,7 +63,7 @@ public class Account {
         boolean isSuper = IdentityUtils.isSuper(sessionId);
         params.put("isSuper",isSuper);
         String associationOps = "";
-        String identityOps = "<option value='' selected='selected'>协会身份为空</option>";
+        String identityOps = "<option value='' selected='selected'>普通会员</option>";
         List<Association> associationList = new ArrayList<Association>();
         if (isSuper) {
             Iterable<com.jieli.association.Association> iterable = associationDAO.loadAll();
@@ -116,6 +116,43 @@ public class Account {
         }
     }
 
+
+
+    @GET
+    @Path("/edit")
+    @Produces(MediaType.TEXT_HTML)
+    public String editUser(@CookieParam("u")String sessionId,@QueryParam("u")String u){
+        if (!IdentityUtils.isAdmin(sessionId)) {
+            return CommonUtil.errorReturn;
+        }
+
+        com.jieli.common.entity.Account account = accountDAO.loadByUserId(sessionId);
+        ResponseEntity responseEntity = new ResponseEntity();
+        Map<String, Object> params = new HashMap<String, Object>();
+        if (account != null && account.username != null) {
+            params.put("username" , account.username);
+        }
+        else {
+            params.put("username" , "");
+        }
+
+        User user = userDAO.loadById(u);
+        if (user != null){
+            params.put("user",user);
+            params.put("got","");
+        }else{
+            params.put("user","");
+            params.put("got","无此用户");
+        }
+        String identityOps = "<option value='' selected='selected'>普通会员</option>";
+        Iterable<com.jieli.association.Identity> identities = new IdentityDAO().loadAll(IdentityUtils.getAssociationId(sessionId));
+        for (com.jieli.association.Identity identity : identities) {
+            identityOps += "<option value='" + identity.name + "'>" + identity.name + "</option>";
+        }
+        params.put("identityOps", identityOps);
+
+        return FTLrender.getResult("edit_account.ftl", params);
+    }
 
     @GET
     @Path("/list")

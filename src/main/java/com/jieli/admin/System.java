@@ -48,7 +48,7 @@ public class System {
         }
 
         String contentAppend = content.replace("\"","").replace("\'","");
-        if (content.indexOf("\"") > 0 || content.indexOf("\'") > 0) content = "请不要再内容中填写英文的单引号和双引号:"+contentAppend;
+        //if (content.indexOf("\"") > 0 || content.indexOf("\'") > 0) content = "请不要再内容中填写英文的单引号和双引号:"+contentAppend;
 
         params.put("content",content);
         return FTLrender.getResult("about_jieli.ftl",params);
@@ -73,7 +73,7 @@ public class System {
         }
 
         String contentAppend = content.replace("\"","").replace("\'","");
-        if (content.indexOf("\"") > 0 || content.indexOf("\'") > 0) content = "请不要再内容中填写英文的单引号和双引号:"+contentAppend;
+        //if (content.indexOf("\"") > 0 || content.indexOf("\'") > 0) content = "请不要再内容中填写英文的单引号和双引号:"+contentAppend;
 
         params.put("content",content);
         return FTLrender.getResult("about_system.ftl",params);

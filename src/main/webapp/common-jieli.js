@@ -23,6 +23,37 @@ function test2227(str){
     return true;
 }
 
+function generateJieLiContent(){
+    var content = $("#form-field-textarea").val();
+    var regbr = new RegExp("\n","g");
+
+    return  content.replace(regbr,"<br/>");
+}
+// 预览 关于青企协
+function previewJieLi(){
+
+    var content=generateJieLiContent();
+    $("#dialog-message-preview").html(content);
+
+    var dialog = $("#dialog-message-preview").removeClass('hide').dialog({
+        modal: true,
+        width: 600,
+        title: "<div class='widget-header widget-header-small'><h5 class='smaller'><i class='fa fa-check'></i> 预览 </h5></div>",
+        title_html: true,
+        buttons: [
+            {
+                text: "取消",
+                "class": "btn btn-xs",
+                click: function () {
+                    $(this).dialog("close");
+                }
+            }
+        ]
+    });
+
+    window.scrollTo(0,0);
+}
+
 // 点击预览按钮
 function previewThisArticle() {
     var previewinpage = $("#form-field-textarea").val() || "";
@@ -65,6 +96,8 @@ function previewThisArticle() {
         sticky:true,
         class_name: 'gritter-info gritter-center gritter-light '
     });*/
+
+    window.scrollTo(0,0);
 }
 
 // 点击完成按钮
