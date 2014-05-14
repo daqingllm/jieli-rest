@@ -535,7 +535,10 @@ jQuery(function($) {
             {name:"_id",index:"_id",width:10,editable:false,hidden:true},
             {name:"associationId",index:"associationId",width:40,editable:false,hidden:true},
             {name:"username",index:"username",width:"100",editable:false,hidden:true},
-            {name:"name",index:"name",width:"75",editable:false},
+            {name:"name",index:"name",width:"75",editable:false,formatter:function getUrl(cellValue, options, rowObject) {
+                var url = "<a href=\"/app/bhelp/view?h=" + rowObject.id + "\">" + cellValue + "</a>";
+                return url;
+            }},
             {name:"state",index:"state",width:"60",editable:false,hidden:true},
             {name:"identity",index:"identity",width:"60",editable:false},
             {name:"password",index:"password",width:"75",editable:false}
