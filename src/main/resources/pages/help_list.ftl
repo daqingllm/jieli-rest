@@ -251,6 +251,23 @@
 
 
                     <div class="col-xs-12">
+                        <!-- PAGE CONTENT BEGINS -->
+                        <button class="btn btn-info" type="button" style="font-weight:bold;margin-bottom: 20px;" onclick="viewHelp()">
+                            <i class="fa fa-search-plus bigger-110"></i>
+                            ²é¿´»¥°ï»¥Öú
+                        </button>
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+
+                        <button class="btn btn-danger" type="button" style="font-weight:bold;margin-bottom: 20px;" onclick="deleteHelp()" id="deleteArtBtn">
+                            <i class="fa fa-trash-o bigger-110"></i>
+                            É¾³ýÍ¶Æ±
+                        </button>
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+
+                        <table id="grid-table"></table>
+                        <div id="grid-pager"></div>
+                    </div>
+                    <div class="col-xs-12">
 
                         <!-- PAGE CONTENT BEGINS -->
 
@@ -502,6 +519,41 @@ function enableTooltips(table) {
     $(table).find('.ui-pg-div').tooltip({container:'body'});
 }
 
+function viewHelp() {
+    var selectIds = $("#grid-table").getGridParam("selarrrow");
+
+    if(typeof selectIds.length == 0) {
+        alert("ÇëÑ¡Ôñ»¥ÖúÌù");
+    }
+    else {
+        window.location.href = '/app/bhelp/view?h=' + selectIds[0];
+    }
+}
+
+function deleteHelp() {
+    var flag=window.confirm("È·¶¨ÒªÉ¾³ý»¥°ï»¥ÖúÌûÂð?");
+    if(flag) {
+        var selectedIds = $("#grid-table").getGridParam("selarrrow");
+        if(selectedIds.length == 0) {
+            alert("ÇëÑ¡Ôñ»¥ÖúÌù");
+        }
+        else {
+            $.ajax({
+                url: '/app/feature/help/delete',
+                data: JSON.stringify(selectedIds),
+                type: 'POST',
+                contentType: 'application/json',
+                success: function(json){
+                    if(json.code == 200) {
+                        var associationId = $('#form-field-select-type').val();
+                        updateGrid(associationId,1,20);
+                    }
+                }
+            });
+        }
+    }
+}
+
 jQuery(function($) {
     var raw_data = [
         {_id:1,associationId:"1",title:"²âÊÔ1",type:"news",overview:"",content:"²âÊÔÄÚÈÝ",images:[],imagesCount:2,appreciateUserIds:[],appreciateCount:12,addTime:"20140203T12:13:14.443GMT0+800"},
@@ -572,7 +624,7 @@ jQuery(function($) {
                     var index = $("#grid-table").getGridParam("selrow");
                     window.location.href = '/app/bhelp/edit?helpId='+id;}),
 
-                del: true,
+                del: false,
                 delicon : 'fa fa-trash-o red',
                 deltitle : 'É¾³ýÑ¡ÖÐ°ïÖú',
                 delfunc : (
@@ -601,7 +653,7 @@ jQuery(function($) {
 
                 refresh: false,
 
-                view: true,
+                view: false,
                 viewicon : 'fa fa-search-plus grey',
                 viewtitle : '²é¿´°ïÖú',
                 viewfunc: (function(){

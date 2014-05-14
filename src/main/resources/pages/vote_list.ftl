@@ -233,6 +233,36 @@
                     </div>
                 </#if>
                     <div class="col-xs-12">
+                        <!-- PAGE CONTENT BEGINS -->
+                        <button class="btn btn-success" type="button" style="font-weight:bold;margin-bottom: 20px;" onclick="window.location.href = '/app/bvote/new'">
+                            <i class="fa fa-plus bigger-110"></i>
+                            发布投票
+                        </button>
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+
+                        <button class="btn btn-info" type="button" style="font-weight:bold;margin-bottom: 20px;" onclick="viewVote()">
+                            <i class="fa fa-search-plus bigger-110"></i>
+                            查看投票
+                        </button>
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+
+                        <button class="btn btn-warning" type="button" style="font-weight:bold;margin-bottom: 20px;"
+                                onclick="editVote()" id="editVote">
+                            <i class="fa fa-search-plus bigger-110"></i>
+                            编辑投票
+                        </button>
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+
+                        <button class="btn btn-danger" type="button" style="font-weight:bold;margin-bottom: 20px;" onclick="deleteVote()" id="deleteArtBtn">
+                            <i class="fa fa-trash-o bigger-110"></i>
+                            删除投票
+                        </button>
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+
+                        <table id="grid-table"></table>
+                        <div id="grid-pager"></div>
+                    </div>
+                    <div class="col-xs-12">
 
                         <!-- PAGE CONTENT BEGINS -->
 
@@ -491,6 +521,51 @@ function updateGrid(associationId, page, size) {
         }
     });
 }
+function editVote(){
+    var selectIds = $("#grid-table").getGridParam("selarrrow");
+        //var id=$("#grid-table > tbody > tr").eq(index).find("td").eq(1).attr("id");
+    if(selectIds.length == 0){
+        alert("请选择投票！");
+    }
+    else {
+        window.location.href = '/app/bvote/edit?voteId=' + selectIds[0];
+    }
+}
+function viewVote() {
+    var selectIds = $("#grid-table").getGridParam("selarrrow");
+
+    if(selectIds.length == 0){
+        alert("请选择投票！");
+    }
+    else {
+        window.location.href = '/app/bvote/view?v=' + selectIds[0];
+    }
+}
+
+function deleteVote() {
+    var flag=window.confirm("确定要删除投票吗?");
+    if(flag) {
+        var selectedIds = $("#grid-table").getGridParam("selarrrow");
+        if(selectedIds.length == 0){
+            alert("请选择投票！");
+        }
+        else {
+            $.ajax({
+                url: '/app/feature/vote/deletevote',
+                data: JSON.stringify(selectedIds),
+                type: 'POST',
+                contentType: 'application/json',
+                success: function (json) {
+                    if (json.code == 200) {
+                        var associationId = $('#form-field-select-type').val();
+                        updateGrid(associationId, 1, 20);
+                    }
+                }
+            });
+        }
+    }
+}
+
 jQuery(function($) {
 
     var pager_selector = "#grid-pager";
@@ -550,12 +625,12 @@ jQuery(function($) {
 
     jQuery(grid_selector).jqGrid('navGrid',pager_selector,
             { 	//navbar options
-                add: true,
+                add: false,
                 addicon : 'fa fa-plus-circle purple',
                 addtitle : '添加投票',
                 addfunc : (function(){window.location.href="/app/bvote/new";/*alert("添加操作!");*/return false;}),
 
-                edit: true,
+                edit: false,
                 edittitle : '编辑投票',
                 editicon : 'fa fa-pencil blue',
                 editfunc : (function(){
@@ -564,7 +639,7 @@ jQuery(function($) {
                     window.location.href = '/app/bvote/edit?voteId='+index;}),
 
                 <#if isSuper>del: false,
-                <#else>del: true,
+                <#else>del: false,
                 </#if>
                 delicon : 'fa fa-trash-o red',
                 deltitle : '删除选中投票',
@@ -594,7 +669,7 @@ jQuery(function($) {
 
                 refresh: false,
 
-                view: true,
+                view: false,
                 viewtitle : '查看投票',
                 viewicon : 'fa fa-search-plus grey',
                 viewfunc: (
