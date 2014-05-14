@@ -97,7 +97,7 @@ public class SystemService {
     @Path("/aboutJieli")
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     public Response upsertJieliInfo(@CookieParam("u")String sessionId, String content) {
-        if (!IdentityUtils.isSuper(sessionId)) {
+        if (!IdentityUtils.isAdmin(sessionId)) {
             return Response.status(403).build();
         }
         ResponseEntity responseEntity = new ResponseEntity();
