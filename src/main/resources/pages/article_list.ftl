@@ -224,6 +224,12 @@
                         </button>
                         &nbsp;&nbsp;&nbsp;&nbsp;
 
+                        <button class="btn btn-info" type="button" style="font-weight:bold;margin-bottom: 20px;" id="setTitleImgClick">
+                            <i class="fa fa-search-plus bigger-110"></i>
+                            设置头图
+                        </button>
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+
                         <button class="btn btn-danger" type="button" style="font-weight:bold;margin-bottom: 20px;" id="deleteArtBtn">
                             <i class="fa fa-trash-o bigger-110"></i>
                             删除资讯
@@ -378,6 +384,7 @@
 
 <!-- inline scripts related to this page -->
 <script type="text/javascript">
+var raw_data;
 
 //override dialog's title function to allow for HTML titles
 $.widget("ui.dialog", $.extend({}, $.ui.dialog.prototype, {
@@ -429,6 +436,16 @@ jQuery(function ($) {
 				});*/
 });
 
+function setTitleImgClickFunc(){
+    var id = $("#grid-table").getGridParam("selrow") - 1;
+    //id = $("#grid-table > tbody > tr").eq(id).find("td").eq(1).attr("title");
+    var news = raw_data[id];
+
+    setTitleImg(news);
+}
+
+$("#setTitleImgClick").click(setTitleImgClickFunc);
+
 Date.prototype.Format = function (fmt) { //author: meizz
     var o = {
         "M+": this.getMonth() + 1, //月份
@@ -446,7 +463,7 @@ Date.prototype.Format = function (fmt) { //author: meizz
 }
 
 function parseArtData(data){
-    var types = {"news":"新闻","association":"协会资讯","enterprise":"企业动态","history":"协会纪事","benefit":"公益活动"};
+    var types = {"news":"每日头条","association":"协会动态","enterprise":"合作展示","history":"协会纪事","benefit":"慈善公益"};
     for (var i = 0 ; i < data.length; i++){
         data[i].type = types[data[i].type];
         var adt = data[i].addTime;
@@ -496,7 +513,7 @@ var records = ${ti};
 var page = ${cp};
 
 jQuery(function($) {
-    var raw_data = [
+    raw_data = [
         {_id:1,associationId:"1",title:"测试1",type:"news",overview:"",content:"测试内容",images:[],imagesCount:2,appreciateUserIds:[],appreciateCount:12,addTime:"20140203T12:13:14.443GMT0+800"},
         {_id:2,associationId:"2",title:"测试2",type:"news",overview:"",content:"测试内容",images:[],imagesCount:2,appreciateUserIds:[],appreciateCount:12,addTime:"20140203T12:13:14.443GMT0+800"}
     ];
