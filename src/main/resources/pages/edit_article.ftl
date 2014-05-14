@@ -573,18 +573,17 @@
         var cont = data["content"];
 
         var regbr = new RegExp("<br/>","g");
-        var regns = new RegExp("&nbsp;","g");
-        cont = cont.replace(regbr,"\n").replace(regns," ");
+        cont = cont.replace(regbr,"\n");
 
         $("#form-field-textarea").val(cont ||"");
 
-        var idx=cont.indexOf("<center><img src='");
+        var idx=cont.indexOf("<center><img width='576' style='padding:3px;' src='");
         while(idx > -1){
             var ed = cont.indexOf("'></center",idx);
             if(ed == -1) continue;
 
             // ¸üÐÂÍ¼Æ¬¼¯
-            var uploadImgSrc = cont.substr(idx + "<center><img src='".length , ed - idx - "<center><img src='".length);
+            var uploadImgSrc = cont.substr(idx + "<center><img width='576' style='padding:3px;' src='".length , ed - idx - "<center><img width='576' style='padding:3px;' src='".length);
             var newImgHtml = "<li>";
             newImgHtml += "<a href='"+uploadImgSrc+"' data-rel='colorbox'>";
             newImgHtml += "<img alt='150x150' width='150' height='150' src='"+uploadImgSrc+"' />";
@@ -597,7 +596,7 @@
             newImgHtml += "</div></li>";
             $("#upload-img-list > li").last().before(newImgHtml);
             $("#img-list-invisible").attr("style","border-width:0;display:none");
-            idx = cont.indexOf("<center><img src='",ed);
+            idx = cont.indexOf("<center><img width='576' style='padding:3px;' src='",ed);
         }
 
 
@@ -835,6 +834,7 @@
             var spin_img = "<div id='upload-loading-img' style='margin-left:30px;margin-top:10px;display: none;'><i class='fa fa-spinner icon-spin orange bigger-125'></i></div>";
             spin_img = "";
             bootbox.dialog({
+                width:400,
                 //message: "<input type='file' id='upload-image-files' name='upload-image-files' >",
                 message: "<form id='rest-upload-form-func' action='/app/upload' method='post' enctype='multipart/form-data' acceptcharset='UTF-8'>\n<input id='rest-upload-file' multiple='' type='file' name='file' size='50' />"+spin_img+"</form>",
                 buttons: {
