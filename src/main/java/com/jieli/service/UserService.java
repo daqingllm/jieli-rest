@@ -345,4 +345,35 @@ public class UserService {
         return Response.status(200).entity(responseEntity).build();
     }
 
+    @POST
+    @Path("/edit")
+    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+    public Response editUserByAdmin(@CookieParam("u")String sessionId, @QueryParam("userId")String userId, User user) {
+        if (!IdentityUtils.isAdmin(sessionId)) {
+            return Response.status(403).build();
+        }
+        ResponseEntity responseEntity = new ResponseEntity();
+        if (StringUtils.isEmpty(userId) || user == null) {
+            responseEntity.code = 1101;
+            responseEntity.msg = "缺少参数";
+            return Response.status(200).entity(responseEntity).build();
+        }
+        if (!MongoUtils.isValidObjectId(userId)) {
+            responseEntity.code = 1105;
+            responseEntity.msg = "参数Id无效";
+            return Response.status(200).entity(responseEntity).build();
+        }
+        User oldUser = userDAO.loadById(userId);
+        if (oldUser == null) {
+            responseEntity.code = 1102;
+            responseEntity.msg = "用户不存在";
+            return  Response.status(200).entity(responseEntity).build();
+        }
+        user.set_id(new ObjectId(userId));
+        userDAO.save(user);
+
+        responseEntity.code = 200;
+        return Response.status(200).entity(responseEntity).build();
+    }
+
 }
