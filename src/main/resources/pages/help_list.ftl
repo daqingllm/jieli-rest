@@ -251,16 +251,10 @@
 
 
                     <div class="col-xs-12">
-                        <!-- PAGE CONTENT BEGINS -->
-                        <button class="btn btn-info" type="button" style="font-weight:bold;margin-bottom: 20px;" onclick="viewHelp()">
-                            <i class="fa fa-search-plus bigger-110"></i>
-                            ²é¿´»¥°ï»¥Öú
-                        </button>
-                        &nbsp;&nbsp;&nbsp;&nbsp;
 
                         <button class="btn btn-danger" type="button" style="font-weight:bold;margin-bottom: 20px;" onclick="deleteHelp()" id="deleteArtBtn">
                             <i class="fa fa-trash-o bigger-110"></i>
-                            É¾³ý»¥°ï»¥ÖúÌù
+                            É¾³ý»¥°ï»¥Öú
                         </button>
                         &nbsp;&nbsp;&nbsp;&nbsp;
 
