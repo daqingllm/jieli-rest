@@ -448,6 +448,8 @@ function parseArtData(data){
     var states = {"DISABLE":"禁用","ENABLE":"普通用户","ADMIN":"协会管理员","SUPPER":"超级管理员"};
     for (var i = 0 ; i < data.length; i++){
         data[i].state = states[data[i].state];
+
+        if (data[i].identity == undefined || data[i].identity == null || data[i].identity == "") data[i].identity = "普通会员";
     }
     return data;
 }
