@@ -143,7 +143,7 @@ function postThisArticle(){
     json["images"] = [];
     while(idxs >= 0){
         idxe = p_content.indexOf(phph2,idxs);
-        var st = idxs+phph1.length;
+        var st = 1+phph1.length;
         if (idxe-st < idxs) break;
 
         var _url = p_content.substr(st,idxe-st);
@@ -204,7 +204,8 @@ function clearImgList(){
 }
 
 function setTitleImg(news){
-    if (news.type!="协会动态" && "合作展示"!=news.type) {alert("该类型无法设置头图"); return;}
+    if (news.type!="协会动态" && "合作展示"!=news.type && news.type != "association" && news.type != "enterprise") {alert("该类型无法设置头图"); return;}
+    if (news.topPic) {alert("该资讯已经设置过头图"); return; }
     if (news.type=="协会动态") news.type = "association";
     if (news.type=="合作展示") news.type = "enterprise";
 
@@ -219,8 +220,27 @@ function setTitleImg(news){
         cache:false,
         processData:false,
         success:function(ret){
-            if (ret.code == 200)
-                alert("已设置为头图");
+            if (ret.code == 200) {
+                news.topPic = true;
+                $.ajax({
+                    url:"/app/news/?newsId="+news["_id"]+"&force=false",
+                    type:"POST",
+                    async:false,
+                    data:JSON.stringify(news),
+                    contentType:"application/json",
+                    cache:false,
+                    processData:false,
+                    success:function(ret){
+                        if (ret.code == 200)
+                            alert("已设置为头图");
+                        else
+                            alert("设置头图失败");
+                    },
+                    error:function(err){
+                        alert("设置头图失败");
+                    }
+                })
+            }
             else
                 alert("设置头图失败");
         }
@@ -302,7 +322,7 @@ var uploadArticleImageOptions = {
             newImgHtml += "<div class='tools tools-right' style='height:30px;'>";
             // must be " , ' no use
             var re = new RegExp("\'", "g");
-            newImgHtml += "<a href='#' title='设为头图' onclick='setTitleImg(\""+uploadImgSrc.replace(re,"")+"\")'><i class='fa fa-heart-o '></i></a>";
+            //newImgHtml += "<a href='#' title='设为头图' onclick='setTitleImg(\""+uploadImgSrc.replace(re,"")+"\")'><i class='fa fa-heart-o '></i></a>";
             newImgHtml += "<a href='#' title='删除' onclick='deletePic(\""+uploadImgSrc.replace(re,"")+"\")'><i class='fa fa-times red'></i></a>";
             newImgHtml += "</div></li>";
 
