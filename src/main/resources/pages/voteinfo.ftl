@@ -551,6 +551,7 @@
 
 <script src="/assets/js/ace-elements.min.js"></script>
 <script src="/assets/js/ace.min.js"></script>
+<script src="/common-jieli.js"></script>
 
 <script src="/common-jieli.js"></script>
 
@@ -588,12 +589,13 @@
         spin_img = "";
         bootbox.dialog({
             //message: "<input type='file' id='upload-image-files' name='upload-image-files' >",
-            message: "<form id='rest-upload-form' action='/upload' method='post' enctype='multipart/form-data' acceptcharset='UTF-8'>\n<input id='rest-upload-file' type='file' name='file' size='50' />"+spin_img+"</form>",
+            message: "<form id='rest-upload-form' action='/app/upload' method='post' enctype='multipart/form-data' acceptcharset='UTF-8'>\n<input id='rest-upload-file' type='file' name='file' size='50' />"+spin_img+"</form>",
             buttons: {
                 "upload": {
-                    "label": "<i class='icon-ok'></i> 上传 ",
+                    "label": "<i class='fa fa-check'></i> 上传 ",
                     "className": "btn-sm btn-success",
                     "callback": function () {
+
                         // show loading image first
                         //$("#upload-loading-img").attr("style","display:block");
 
@@ -636,7 +638,7 @@
                                     newImgHtml += "</a>";
                                     newImgHtml += "<div class='tools tools-right' style='height:30px;'>";
                                     // must be " , ' no use
-                                    newImgHtml += "<a href='#' onclick='deletePic(\""+uploadImgSrc+"\")'><i class='icon-remove red'></i></a></div></li>";
+                                    newImgHtml += "<a href='#' onclick='deletePic(\""+uploadImgSrc+"\")'><i class='fa fa-times red'></i></a></div></li>";
                                     clearImgList();
                                     $("#upload-img-list > li").eq(0).after(newImgHtml);
 
@@ -653,9 +655,12 @@
 
                         //$("#upload-loading-img").attr("style","display: none");
                     }
+                    /*"callback": function () {
+                        $('#rest-upload-form').ajaxSubmit(uploadArticleImageOptions);
+                    }*/
                 },
                 "cancel": {
-                    "label": "<i class='icon-remove'></i> 取消",
+                    "label": "<i class='fa fa-times'></i> 取消",
                     "className": "btn-sm",
                     "callback": function () {
                         //Example.show("uh oh, look out!");
