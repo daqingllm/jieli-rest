@@ -238,6 +238,9 @@ public class AccountService {
             }
             current.state = account.state;
             accountDAO.save(current);
+            if (current.state == AccountState.DISABLE) {
+                userDAO.deleteById(current.userId);
+            }
         } else if (IdentityUtils.isSuper(sessionId)){
 //            account.set_id(current.get_id());
 //            account.password = PasswordGenerator.md5Encode(account.password);
