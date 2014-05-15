@@ -325,7 +325,7 @@
                             </div>
                             <#if newVote || isEditable>
                                 <button class="btn btn-success btn-purple" id="bootbox-upload-image"
-                                        style="float:left;font-weight:bold">
+                                        style="float:left;font-weight:bold" onclick="$('#externUpload').click();return false;">
                                     <i class="icon-cloud-upload bigger-110"></i>
                                     上传图片
                                 </button>
@@ -420,6 +420,13 @@
                                 <i class="icon-undo bigger-110"></i>
                                 清空
                             </button>
+							
+							
+                            &nbsp; &nbsp; &nbsp;
+                            <button id="externUpload" class="btn" style="display:none;font-weight:bold" >
+                                <i class="icon-undo bigger-110"></i>
+                                Upload
+                            </button>
 
                         <#else>
                         <#if isEditable>
@@ -512,14 +519,16 @@
 
 <!-- page specific plugin scripts -->
 <script src="/assets/js/jquery.colorbox-min.js"></script>
+<script src="/assets/js/bootstrap-multiselect.js"></script>
 
 <!--[if lte IE 8]>
 <script src="/assets/js/excanvas.min.js"></script>
 <![endif]-->
 
 <script src="/assets/js/jquery-ui-1.10.3.custom.min.js"></script>
-<script src="/assets/js/jquery-ui-1.10.3.full.min.js"></script>
 <script src="/assets/js/jquery.ui.touch-punch.min.js"></script>
+
+<script src="/assets/js/jquery-ui-1.10.3.full.min.js"></script>
 
 <script src="/assets/js/chosen.jquery.min.js"></script>
 <script src="/assets/js/fuelux/fuelux.spinner.min.js"></script>
@@ -527,7 +536,6 @@
 <script src="/assets/js/date-time/bootstrap-timepicker.min.js"></script>
 <script src="/assets/js/date-time/moment.min.js"></script>
 <script src="/assets/js/date-time/daterangepicker.min.js"></script>
-<script src="/assets/js/bootstrap-colorpicker.min.js"></script>
 <script src="/assets/js/bootstrap-colorpicker.min.js"></script>
 <script src="/assets/js/jquery.knob.min.js"></script>
 <script src="/assets/js/jquery.autosize.min.js"></script>
@@ -537,10 +545,14 @@
 <script src="/assets/js/jquery.gritter.min.js"></script>
 <script src="/assets/js/bootbox.min.js"></script>
 
+<script src="/assets/js/jquery.form.js"></script>
+
 <!-- ace scripts -->
 
 <script src="/assets/js/ace-elements.min.js"></script>
 <script src="/assets/js/ace.min.js"></script>
+
+<script src="/common-jieli.js"></script>
 
 <!-- inline scripts related to this page -->
 <script>
@@ -682,7 +694,32 @@ jQuery(function ($) {
             <#if newVote>$("#nav_list_4_1")<#elseif isEditable>$("#nav_list_4_3")<#else>$("#nav_list_4_2")</#if>.addClass("active open");
         $("#nav_list_4").addClass("active");});
 </#if>
-    $("#bootbox-upload-image").on("click", uploadImgBox);
+
+	$("#externUpload").on("click", function () {
+            var spin_img = "<div id='upload-loading-img' style='margin-left:30px;margin-top:10px;display: none;'><i class='fa fa-spinner icon-spin orange bigger-125'></i></div>";
+            spin_img = "";
+            bootbox.dialog({
+                //message: "<input type='file' id='upload-image-files' name='upload-image-files' >",
+                message: "<form id='rest-upload-form' method='post' enctype='multipart/form-data' acceptcharset='UTF-8'>\n<input id='rest-upload-file' type='file' name='file' size='50' />"+spin_img+"</form>",
+                buttons: {
+                    "upload": {
+                        "label": "<i class='fa fa-check'></i> 上传 ",
+                        "className": "btn-sm btn-success",
+                        "callback": function () {
+                            $('#rest-upload-form').ajaxSubmit(uploadArticleImageOptions);
+                        }
+                    },
+                    "cancel": {
+                        "label": "<i class='fa fa-times'></i> 取消",
+                        "className": "btn-sm",
+                        "callback": function () {
+                            var objFile = document.getElementById('rest-upload-file');
+                            objFile.outerHTML = objFile.outerHTML.replace(/(value=\").+\"/i, "$1\"");
+                        }
+                    }
+                }
+            });
+        });
 
     var colorbox_params = {
         reposition: true,
