@@ -564,7 +564,7 @@
         $("#img-list-invisible").attr("style","border-width:0;display:block");
     }
 
-    function deletePic(ph){
+    function deletePic2(ph){
         var _src=ph.replace("<img-pLAcehOLDer","");
         _src = _src.substr(0,_src.length-1);
 
