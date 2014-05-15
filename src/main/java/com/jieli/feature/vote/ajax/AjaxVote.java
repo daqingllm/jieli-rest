@@ -8,7 +8,6 @@ import com.jieli.feature.vote.dao.VoteDAO;
 import com.jieli.feature.vote.dao.VoteResultDAO;
 import com.jieli.feature.vote.entity.SimpleVoteInfo;
 import com.jieli.user.dao.UserDAO;
-import com.jieli.user.entity.User;
 import com.jieli.util.IdentityUtils;
 import org.apache.commons.lang.StringUtils;
 
@@ -41,12 +40,6 @@ public class AjaxVote {
         if (StringUtils.isEmpty(userId)) {
             responseEntity.code = 1103;
             responseEntity.msg = "账户出错";
-            return Response.status(200).entity(responseEntity).build();
-        }
-        User user = userDAO.loadById(userId);
-        if (user == null) {
-            responseEntity.code = 1104;
-            responseEntity.msg = "账户已被删除";
             return Response.status(200).entity(responseEntity).build();
         }
         boolean isSuper = IdentityUtils.isSuper(sessionId);

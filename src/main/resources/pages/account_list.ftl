@@ -177,7 +177,7 @@
                     </li>
 
                     <li>
-                        <a href="#"> 账号管理 </a>
+                        <a href="/app/baccount/list"> 账号管理 </a>
                     </li>
 
                     <li class="active"> 账号列表 </li>
@@ -213,7 +213,7 @@
                         </button>
                         &nbsp;&nbsp;&nbsp;&nbsp;
 
-                        <button class="btn btn-danger" type="button" style="font-weight:bold;margin-bottom: 20px;display: none" id='deleteAccountBtn'>
+                        <button class="btn btn-danger" type="button" style="font-weight:bold;margin-bottom: 20px;" id='deleteAccountBtn'>
                             <i class="fa fa-trash-o bigger-110"></i>
                             删除账号
                         </button>
@@ -448,6 +448,8 @@ function parseArtData(data){
     var states = {"DISABLE":"禁用","ENABLE":"普通用户","ADMIN":"协会管理员","SUPPER":"超级管理员"};
     for (var i = 0 ; i < data.length; i++){
         data[i].state = states[data[i].state];
+
+        if (data[i].identity == undefined || data[i].identity == null || data[i].identity == "") data[i].identity = "普通会员";
     }
     return data;
 }
@@ -535,7 +537,10 @@ jQuery(function($) {
             {name:"_id",index:"_id",width:10,editable:false,hidden:true},
             {name:"associationId",index:"associationId",width:40,editable:false,hidden:true},
             {name:"username",index:"username",width:"100",editable:false,hidden:true},
-            {name:"name",index:"name",width:"75",editable:false},
+            {name:"name",index:"name",width:"75",editable:false,formatter:function getUrl(cellValue, options, rowObject) {
+                var url = "<a href=\"/app/baccount/edit?u=" + rowObject._id + "\">" + cellValue + "</a>";
+                return url;
+            }},
             {name:"state",index:"state",width:"60",editable:false,hidden:true},
             {name:"identity",index:"identity",width:"60",editable:false},
             {name:"password",index:"password",width:"75",editable:false}
@@ -564,6 +569,7 @@ jQuery(function($) {
     });
 
     function makeAccount(){
+
         var id = $("#grid-table").getGridParam("selarrrow");
         if (id == null || id.length == 0) return;
 
@@ -571,6 +577,12 @@ jQuery(function($) {
 
         var states={"禁用":"DISABLE","普通用户":"ENABLE","协会管理员":"ADMIN","超级管理员":"SUPPER"};
         for (var i = 0; i < id.length; i ++) {
+            var a = raw_data[id[i]-1];
+            delete a["name"];
+            delete a["identity"];
+            accs.push(a);
+            continue;
+
             var acc = {};
             acc.associationId = $("#grid-table > tbody > tr").eq(id).find("td").eq(2).attr("title");
             acc.username = $("#grid-table > tbody > tr").eq(id).find("td").eq(3).attr("title");
@@ -598,7 +610,7 @@ jQuery(function($) {
                 acc.state=0;
                 $.ajax({
                     type: "POST",
-                    url: "/app/baccount/del",
+                    url: "/app/account",
                     async: false,
                     data: JSON.stringify(acc),
                     contentType: "application/json; charset=utf-8",

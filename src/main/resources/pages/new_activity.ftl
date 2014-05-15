@@ -207,7 +207,7 @@
         </li>
 
         <li>
-            <a href="#"> 活动管理 </a>
+            <a href="/app/bactivity/list"> 活动管理 </a>
         </li>
 
         <li class="active"> 新建活动</li>
@@ -245,7 +245,7 @@
     <label class="col-sm-3 control-label no-padding-right" for="form-field-title"> 活动标题 </label>
 
     <div class="col-sm-9">
-        <input type="text" id="form-field-title" placeholder="标题" class="col-xs-10 col-sm-7"
+        <input type="text" id="form-field-title" placeholder="标题请勿超过14个字" class="col-xs-10 col-sm-7"
                style="padding-left: 7px;"/>
     </div>
 </div>
@@ -270,10 +270,12 @@
     <div class="col-sm-9" id="service-info">
         <!--<textarea id="form-field-textarea-service" class="autosize-transition col-xs-10 col-sm-7"
                   style="min-height: 140px;" placeholder="请用冒号和回车分隔服务信息"></textarea>-->
-        <div><div class="btn btn-success btn-purple" id="uploadTitleImageClick" onclick="$('#bootbox-upload-image').click()">
+        <div><div class="btn btn-success btn-purple" style="float: left" id="uploadTitleImageClick" onclick="$('#bootbox-upload-image').click()">
             <i class="fa fa-cloud-upload bigger-110"></i>
             上传标题图片
-        </div></div>
+        </div>
+            <div class="alert alert-info" style="float: left;padding: 2px 14px;margin-left: 15px;margin-top: 7px;"> 请上传572*364的图片 </div>
+        </div>
     </div>
 </div>
 
@@ -418,14 +420,28 @@
 <div class="form-group">
     <label class="col-sm-3 control-label no-padding-right" for=""> 普通赞助 </label>
 
-    <div id="" class="col-sm-9">
+    <div id="divSponsorInfo" class="col-sm-9">
         <div>
-            <div class="icon-plus"></div>
+            <div class="fa fa-plus fa-plus-bigger icon-plus-sp"></div>
         </div>
     </div>
 </div>
 
 <div class="space-4"></div>
+
+<!-- 钻石 赞助 -->
+<div class="form-group">
+    <label class="col-sm-3 control-label no-padding-right" for=""> 钻石赞助 </label>
+
+    <div id="divDiamondInfo" class="col-sm-9">
+        <div>
+            <div class="fa fa-plus fa-plus-bigger icon-plus-di"></div>
+        </div>
+    </div>
+</div>
+
+<div class="space-4"></div>
+
 <div class="space-4"></div>
 
 <!--截止-->
@@ -659,6 +675,7 @@
 </script>
 
 <script type="text/javascript">
+
     jQuery(function ($) {
 
     <#if isSuper>
@@ -751,6 +768,14 @@
 
         $('#icon-plus-ad').click(addArrangementDetail);
         $('#icon-plus-si').click(addServiceInfo);
+
+        addSponsorOption();
+        $('.icon-plus-sp').click(addSponsorOption);
+
+
+        addDiamondOption();
+        $('.icon-plus-di').click(addDiamondOption);
+
 
         /*$('input[name=date-range-picker]').daterangepicker({
                     format: 'YYYY-MM-DD'},

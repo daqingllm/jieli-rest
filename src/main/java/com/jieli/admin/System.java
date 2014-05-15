@@ -1,8 +1,6 @@
 package com.jieli.admin;
 
-import com.jieli.comment.CommentUserInfo;
 import com.jieli.common.dao.AccountDAO;
-import com.jieli.common.entity.ResponseEntity;
 import com.jieli.common.entity.SystemInfo;
 import com.jieli.mongo.BaseDAO;
 import com.jieli.util.FTLrender;
@@ -15,7 +13,6 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -33,10 +30,8 @@ public class System {
     @Path("/aboutjieli")
     @Produces(MediaType.TEXT_HTML)
     public String getAboutJieli(@CookieParam("u") String sessionId) {
-        String response = CommonUtil.RoleCheckString(sessionId);
-        if (response != null) return response;
 
-        if (!IdentityUtils.isSuper(sessionId)) return CommonUtil.errorReturn;
+        if (!IdentityUtils.isAdmin(sessionId) || IdentityUtils.isSuper(sessionId)) return CommonUtil.errorReturn;
 
         com.jieli.common.entity.Account account = accountDAO.loadById(sessionId);
         Map<String, Object> params = new HashMap<String, Object>();
@@ -50,7 +45,7 @@ public class System {
         }
 
         String contentAppend = content.replace("\"","").replace("\'","");
-        if (content.indexOf("\"") > 0 || content.indexOf("\'") > 0) content = "请不要再内容中填写英文的单引号和双引号:"+contentAppend;
+        //if (content.indexOf("\"") > 0 || content.indexOf("\'") > 0) content = "请不要再内容中填写英文的单引号和双引号:"+contentAppend;
 
         params.put("content",content);
         return FTLrender.getResult("about_jieli.ftl",params);
@@ -61,10 +56,6 @@ public class System {
     @Path("/aboutsystem")
     @Produces(MediaType.TEXT_HTML)
     public String getAboutSystem(@CookieParam("u") String sessionId) {
-
-        String response = CommonUtil.RoleCheckString(sessionId);
-        if (response != null) return response;
-
         if (!IdentityUtils.isSuper(sessionId)) return CommonUtil.errorReturn;
 
         com.jieli.common.entity.Account account = accountDAO.loadById(sessionId);
@@ -75,11 +66,11 @@ public class System {
         String content = "尚无软件信息";
         SystemInfo info = systemDAO.findOne("{}");
         if (info!= null && StringUtils.isNotEmpty(info.aboutSystem)) {
-            content = info.aboutSystem;
+            content = info.aboutSystem.replaceAll("\n", "<br/>");
         }
 
         String contentAppend = content.replace("\"","").replace("\'","");
-        if (content.indexOf("\"") > 0 || content.indexOf("\'") > 0) content = "请不要再内容中填写英文的单引号和双引号:"+contentAppend;
+        //if (content.indexOf("\"") > 0 || content.indexOf("\'") > 0) content = "请不要再内容中填写英文的单引号和双引号:"+contentAppend;
 
         params.put("content",content);
         return FTLrender.getResult("about_system.ftl",params);

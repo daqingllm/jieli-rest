@@ -2,7 +2,8 @@ package com.jieli.admin;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jieli.association.*;
+import com.jieli.association.AssociationDAO;
+import com.jieli.association.IdentityDAO;
 import com.jieli.common.dao.AccountDAO;
 import com.jieli.common.entity.AccountState;
 import com.jieli.common.entity.ResponseEntity;
@@ -18,7 +19,10 @@ import org.codehaus.jettison.json.JSONObject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.
@@ -63,7 +67,7 @@ public class Account {
         boolean isSuper = IdentityUtils.isSuper(sessionId);
         params.put("isSuper",isSuper);
         String associationOps = "";
-        String identityOps = "<option value='' selected='selected'>协会身份为空</option>";
+        String identityOps = "<option value='' selected='selected'>普通会员</option>";
         List<Association> associationList = new ArrayList<Association>();
         if (isSuper) {
             Iterable<com.jieli.association.Association> iterable = associationDAO.loadAll();
@@ -116,6 +120,52 @@ public class Account {
         }
     }
 
+
+
+    @GET
+    @Path("/edit")
+    @Produces(MediaType.TEXT_HTML)
+    public String editUser(@CookieParam("u")String sessionId,@QueryParam("u")String u){
+        if (!IdentityUtils.isAdmin(sessionId)) {
+            return CommonUtil.errorReturn;
+        }
+
+        boolean isSuper = IdentityUtils.isSuper(sessionId);
+        com.jieli.common.entity.Account account = accountDAO.loadByUserId(sessionId);
+        ResponseEntity responseEntity = new ResponseEntity();
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("isSuper",isSuper);
+        if (account != null && account.username != null) {
+            params.put("username" , account.username);
+        }
+        else {
+            params.put("username" , "");
+        }
+
+        String identityOps = "<option value='' selected='selected'>普通会员</option>";
+        Iterable<com.jieli.association.Identity> identities = new IdentityDAO().loadAll(IdentityUtils.getAssociationId(sessionId));
+        for (com.jieli.association.Identity identity : identities) {
+            identityOps += "<option value='" + identity.name + "'>" + identity.name + "</option>";
+        }
+        params.put("identityOps", identityOps);
+
+        com.jieli.common.entity.Account targetAccount = accountDAO.loadById(u);
+        if (targetAccount == null || targetAccount.userId == null){
+            params.put("user","");
+            params.put("got","此账户未绑定用户");
+            return FTLrender.getResult("edit_account.ftl", params);
+        }
+
+        User user = userDAO.loadById(targetAccount.userId);
+        if (user != null){
+            params.put("user",CommonUtil.ReplaceObjectId(user));
+            params.put("got","");
+        }else{
+            params.put("user","");
+            params.put("got","无此用户");
+        }
+        return FTLrender.getResult("edit_account.ftl", params);
+    }
 
     @GET
     @Path("/list")
@@ -317,7 +367,5 @@ public class Account {
             return Response.status(200).entity(responseEntity).build();
         }
     }
-
-
 
 }

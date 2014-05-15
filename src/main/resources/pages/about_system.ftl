@@ -236,7 +236,7 @@
                             </button>
 
                             &nbsp; &nbsp; &nbsp;
-                            <button class="btn" type="reset" style="font-weight:bold">
+                            <button class="btn" type="reset" style="display:none;font-weight:bold">
                                 <i class="fa fa-undo bigger-110"></i>
                                 Çå¿Õ
                             </button>

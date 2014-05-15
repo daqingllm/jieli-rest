@@ -178,7 +178,7 @@
                     </li>
 
                     <li>
-                        <a href="#"> 资讯管理 </a>
+                        <a href="/app/bactivity/list"> 资讯管理 </a>
                     </li>
 
                     <li class="active"> 资讯列表 </li>
@@ -463,7 +463,7 @@ Date.prototype.Format = function (fmt) { //author: meizz
 }
 
 function parseArtData(data){
-    var types = {"news":"每日头条","association":"协会动态","enterprise":"合作展示","history":"协会纪事","benefit":"慈善公益"};
+    var types = {"news":"每日头条","association":"协会动态","enterprise":"合作展示","history":"协会事记","benefit":"慈善公益"};
     for (var i = 0 ; i < data.length; i++){
         data[i].type = types[data[i].type];
         var adt = data[i].addTime;

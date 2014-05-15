@@ -138,6 +138,14 @@ public class Activity {
 
         if (IdentityUtils.isSuper(sessionId)){
             params.put("isSuper",true);
+            Iterable<com.jieli.activity.Activity> activities = activityDAO.getCollection().find().sort("{beginDate:-1}").as(com.jieli.activity.Activity.class);
+            for (com.jieli.activity.Activity activity : activities){
+                if (_total >= (_page-1)*_rowNum && _total < _page*_rowNum) {
+                    String tmp = CommonUtil.ReplaceObjectId(activity);
+                    activityList += tmp + ",";
+                }
+                _total ++;
+            }
         }
         else {
             params.put("isSuper",false);

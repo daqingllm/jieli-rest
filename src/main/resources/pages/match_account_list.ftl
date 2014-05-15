@@ -194,10 +194,10 @@
                     </li>
 
                     <li>
-                        <a href="#"> 账号管理 </a>
+                        <a href="/app/bmatch/list"> 匹配管理 </a>
                     </li>
 
-                    <li class="active"> 账号列表 </li>
+                    <li class="active"> 匹配用户列表 </li>
                 </ul>
                 <!-- .breadcrumb -->
 

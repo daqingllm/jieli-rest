@@ -1,55 +1,54 @@
 <!DOCTYPE html>
-<html lang="zh">
-<head>
-    <meta charset="utf-8"/>
-    <title>接力 投票管理</title>
+    <html lang="zh">
+            <head>
+            <meta charset="utf-8"/>
+            <title>接力 投票管理</title>
     <meta name="description" content="接力"/>
-    <!-- basic styles -->
+        <!-- basic styles -->
 
-    <link href="/assets/css/bootstrap.min.css" rel="stylesheet"/>
-<#--<link rel="stylesheet" href="/assets/css/font-awesome.min.css"/>-->
+            <link href="/assets/css/bootstrap.min.css" rel="stylesheet"/>
+    <#--<link rel="stylesheet" href="/assets/css/font-awesome.min.css"/>-->
 
-    <!--[if IE 7]>
-    <!--<link rel="stylesheet" href="/assets/css/font-awesome-ie7.min.css"/>-->
-<#--<![endif]&ndash;&gt;-->
+            <!--[if IE 7]>
+        <!--<link rel="stylesheet" href="/assets/css/font-awesome-ie7.min.css"/>-->
+    <#--<![endif]&ndash;&gt;-->
 
     <link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
 
-    <!-- page specific plugin styles -->
-    <link rel="stylesheet" href="/assets/css/custom.css"/>
+            <!-- page specific plugin styles -->
+                <link rel="stylesheet" href="/assets/css/custom.css"/>
 
-    <link rel="stylesheet" href="/assets/css/jquery-ui-1.10.3.full.min.css"/>
-    <link rel="stylesheet" href="/assets/css/colorbox.css"/>
+                <link rel="stylesheet" href="/assets/css/jquery-ui-1.10.3.full.min.css"/>
+                <link rel="stylesheet" href="/assets/css/colorbox.css"/>
 
-    <link rel="stylesheet" href="/assets/css/jquery.gritter.css" />
+                <link rel="stylesheet" href="/assets/css/jquery.gritter.css" />
 
-    <!-- fonts -->
+            <!-- fonts -->
 
-    <link rel="stylesheet" href="/assets/css/font-google.css"/>
+                <link rel="stylesheet" href="/assets/css/font-google.css"/>
 
-    <!-- ace styles -->
+            <!-- ace styles -->
 
-    <link rel="stylesheet" href="/assets/css/ace.min.css"/>
-    <link rel="stylesheet" href="/assets/css/ace-rtl.min.css"/>
-    <link rel="stylesheet" href="/assets/css/ace-skins.min.css"/>
+                <link rel="stylesheet" href="/assets/css/ace.min.css"/>
+                <link rel="stylesheet" href="/assets/css/ace-rtl.min.css"/>
+                <link rel="stylesheet" href="/assets/css/ace-skins.min.css"/>
 
-    <!--[if lte IE 8]>
+                <!--[if lte IE 8]>
     <link rel="stylesheet" href="/assets/css/ace-ie.min.css"/>
-    <![endif]-->
+                <![endif]-->
 
-    <!-- inline styles related to this page -->
+            <!-- inline styles related to this page -->
 
-    <!-- ace settings handler -->
+            <!-- ace settings handler -->
 
-    <script src="/assets/js/ace-extra.min.js"></script>
+                <script src="/assets/js/ace-extra.min.js"></script>
 
-    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
 
-    <!--[if lt IE 9]>
-    <script src="/assets/js/html5shiv.js"></script>
-    <script src="/assets/js/respond.min.js"></script>
-
-    <![endif]-->
+<!--[if lt IE 9]>
+<script src="/assets/js/html5shiv.js"></script>
+<script src="/assets/js/respond.min.js"></script>
+<![endif]-->
 </head>
 
 <body>
@@ -197,7 +196,7 @@
             </li>
 
             <li>
-                <a href="#"> 投票管理 </a>
+                <a href="/app/bvote/list"> 投票管理 </a>
             </li>
 
             <li class="active">
@@ -270,11 +269,11 @@
 
                     <div class="space-4"></div>
 
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label no-padding-right" for="force-type"> 是否强推 </label>
+                    <div class="form-group" style="display: none">
+                        <label class="col-sm-3 control-label no-padding-right" for="force-type1"> 是否强推 </label>
 
                         <div class="col-sm-9">
-                            <select class="col-xs-10 col-sm-7" id="force-type"
+                            <select class="col-xs-10 col-sm-7" id="force-type1"
                                     style="padding: 5px 4px;font-size: 14px;">
                                 <option value="Y" selected="selected">是</option>
                                 <option value="N">否</option>
@@ -326,10 +325,11 @@
                             </div>
                             <#if newVote || isEditable>
                                 <button class="btn btn-success btn-purple" id="bootbox-upload-image"
-                                        style="font-weight:bold">
+                                        style="float:left;font-weight:bold">
                                     <i class="icon-cloud-upload bigger-110"></i>
                                     上传图片
                                 </button>
+                                <div class="alert alert-info" style="float: left;padding: 2px 14px;margin-left: 15px;margin-top: 7px;"> 请上传572*364的图片 </div>
                             </#if>
 
                         </div>
@@ -346,6 +346,17 @@
                             </div>
                         </div>
                     </div>
+
+                    <div class="form-group" style="display:none;">
+                        <label class="col-sm-3 control-label no-padding-right" for="force-type"> 强推选项 </label>
+
+                        <div class="col-sm-9">
+                            <input style="margin-right: 25px;float: left;" type="checkbox" id="force-type" >
+                            <div class="alert alert-info" style="float: left;padding: 2px 14px;"> 选择强推后，用户在锁屏状态下也能收到资讯通知 </div>
+                        </div>
+                    </div>
+
+                    <div class="space-4"></div>
 
                 </form>
                 <!-- vote statistics begin -->
@@ -393,7 +404,7 @@
 
 
                             &nbsp; &nbsp; &nbsp;
-                            <button class="btn btn-success" type="button" style="font-weight:bold">
+                            <button class="btn btn-success" type="button" style="display:none;font-weight:bold">
                                 <i class="icon-question bigger-110"></i>
                                 预览
                             </button>
@@ -405,7 +416,7 @@
                             </button>
 
                             &nbsp; &nbsp; &nbsp;
-                            <button class="btn" type="reset" style="font-weight:bold" onclick="clearImgList();return true;">
+                            <button class="btn" type="reset" style="display:none;font-weight:bold" onclick="clearImgList();return true;">
                                 <i class="icon-undo bigger-110"></i>
                                 清空
                             </button>
@@ -507,7 +518,9 @@
 <![endif]-->
 
 <script src="/assets/js/jquery-ui-1.10.3.custom.min.js"></script>
+<script src="/assets/js/jquery-ui-1.10.3.full.min.js"></script>
 <script src="/assets/js/jquery.ui.touch-punch.min.js"></script>
+
 <script src="/assets/js/chosen.jquery.min.js"></script>
 <script src="/assets/js/fuelux/fuelux.spinner.min.js"></script>
 <script src="/assets/js/date-time/bootstrap-datepicker.min.js"></script>
@@ -1121,7 +1134,7 @@ function voteInfo(voteId, callback) {
                 var dateString = deadLine.toISOString().substr(0, 10); //assume the program will not run after year 10000
                 $('#form-field-date').val(dateString);
                 $('#form-field-select-type').val(response.body.multiple ? 'M' : 'S');
-                $('#force-type').val(response.body.force ? 'Y' : 'N');
+                /*$('#force-type').val(response.body.force ? 'Y' : 'N');*/
                 var options = response.body.options;
                 $.ajax({
                     url: '/app/feature/vote/result?voteId=' + voteId,
@@ -1227,7 +1240,8 @@ function postNewVote() {
     var request = {};
     request.title = $('#form-field-title').val();
     request.multiple = $('#form-field-select-type').val() == 'M' ? true : false;
-    request.force = $('#force-type').val() == 'Y' ? true : false;
+    //request.force = $('#force-type').val() == 'Y' ? true : false;
+    request.force = $("#force-type").is(':checked');
     request.deadLine = new Date($('#form-field-date').val());
     request.description = $('#form-field-textarea').val();
     request.options = {};
@@ -1278,10 +1292,11 @@ function postEditVote(voteId) {
         type: 'POST',
         contentType: "application/json",
         success:function(json) {
-            if(json.code == 200 && json.entity.code == 200) {
+            if(json.code == 200) {
+                alert("投票修改成功");
                 window.location.href = '/app/bvote/list';
             }
-            else if(json.entity.code == 1115) {
+            else if(json.code == 1115) {
                 alert("投票已过期，不可编辑！");
             }
             else {

@@ -315,10 +315,12 @@
                 var jsn_body="";
                 //alert(jsn);
                 if (jsn.code == 200) {
-                    eval("jsn_body="+jsn.body);
-                    document.cookie="u="+jsn_body.sessionId+"; path=/";
-                    document.cookie="a="+jsn_body.associationId+"; path=/";
-                    document.cookie="r="+jsn_body.role+"; path=/";
+                    eval("jsn_body="+jsn.body);var d = new Date();
+                    d.setTime(d.getTime()+(365*24*60*60*1000));
+                    var expires = "expires="+d.toGMTString();
+                    document.cookie="u="+jsn_body.sessionId+"; path=/; "+expires;
+                    document.cookie="a="+jsn_body.associationId+"; path=/; "+expires;
+                    document.cookie="r="+jsn_body.role+"; path=/; "+expires;
                     //$.cookie('sessionId', jsn_body.sessionId);
                     showMsg("µÇÂ½³É¹¦",jsn.msg);
                 }

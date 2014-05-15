@@ -23,6 +23,37 @@ function test2227(str){
     return true;
 }
 
+function generateJieLiContent(){
+    var content = $("#form-field-textarea").val();
+    var regbr = new RegExp("\n","g");
+
+    return  content.replace(regbr,"<br/>");
+}
+// 预览 关于青企协
+function previewJieLi(){
+
+    var content=generateJieLiContent();
+    $("#dialog-message-preview").html(content);
+
+    var dialog = $("#dialog-message-preview").removeClass('hide').dialog({
+        modal: true,
+        width: 600,
+        title: "<div class='widget-header widget-header-small'><h5 class='smaller'><i class='fa fa-check'></i> 预览 </h5></div>",
+        title_html: true,
+        buttons: [
+            {
+                text: "取消",
+                "class": "btn btn-xs",
+                click: function () {
+                    $(this).dialog("close");
+                }
+            }
+        ]
+    });
+
+    window.scrollTo(0,0);
+}
+
 // 点击预览按钮
 function previewThisArticle() {
     var previewinpage = $("#form-field-textarea").val() || "";
@@ -65,6 +96,8 @@ function previewThisArticle() {
         sticky:true,
         class_name: 'gritter-info gritter-center gritter-light '
     });*/
+
+    window.scrollTo(0,0);
 }
 
 // 点击完成按钮
@@ -95,11 +128,11 @@ function postThisArticle(){
 
     var p_pt,p_it;
     p_pt = $("#form-field-select-pro").val();
-    if (p_pt == null || p_pt == "") {alert("请选择行业标签！");return;}
+    if (p_pt == null || p_pt == "") {p_pt = "";}
     json["professionTag"] = p_pt;
 
     p_it = $("#selectInterest").val();
-    if (p_it == null || p_it.length == 0){alert("请选择兴趣标签！");return;}
+    if (p_it == null || p_it.length == 0){p_it = [];}
     json["interestTags"] = [];
     for (var i = 0; i < p_it.length; i++){
         json["interestTags"].push(p_it[i]);
@@ -141,7 +174,16 @@ function postThisArticle(){
     var idxs = p_content.indexOf(phph1);
     var idxe;
     json["images"] = [];
-    while(idxs >= 0){
+    $("#upload-img-list li").each(function(){
+        if ($(this).children("a") && $(this).children("a").length != 0) {
+            var _url = $(this).children("a").attr("href");
+            if (_url && _url.indexOf("http://") > -1) {
+                var jsn_img = {"placeholder": "", "url": _url, "description": p_title || ""};
+                json["images"].push(jsn_img);
+            }
+        }
+    });
+    while(idxs >= 0 && idxs < 0){
         idxe = p_content.indexOf(phph2,idxs);
         var st = 1+phph1.length;
         if (idxe-st < idxs) break;
@@ -155,19 +197,13 @@ function postThisArticle(){
         idxs = p_content.indexOf(phph1,idxe);
 
         //jsn += "{\"placeholder\":\""+phph+_url+">\",\"url\":\""+_url+"\",\"description\":\" \"},";
-        var jsn_img = {"placeholder":"","url":_url,"description":""};
+        var jsn_img = {"placeholder":"","url":_url,"description":p_title || ""};
         json["images"].push(jsn_img);
     }
     json["imagesCount"] = 0;
     json["appreciateUserIds"] = [];
     json["appreciateCount"] = 0;
     json["addTime"] = null;
-
-    if (isEdit){
-        json["appreciateUserIds"] = data["appreciateUserIds"];
-        json["appreciateCount"] = data["appreciateCount"];
-        json["addTime"] = data["addTime"];
-    }
 
     var p_addurl = "/app/news/?newsId="+(isEdit?json["_id"]:"")+"&force="+$("#form-field-checkbox").is(':checked');
     var suc = true;
@@ -405,8 +441,38 @@ function finishActivity(type){
             }catch (err){;}
         }
     });
+
+
+    /*sponsorInfo2:普通赞助*/
+    var sponsorPuTong = {};
+    $(".sponsor-choice").each(function(){
+        var text =$(this).children("input") ? $(this).children("input").val() || "" : "";
+        var img = $(this).children("img") ? $(this).children("img").attr("src") || "" : "";
+        if (text != "" && img != "")
+            sponsorPuTong[text] = img;
+    });
+    act["sponsorInfo2"] = sponsorPuTong;
+
+    /*diamondInfo:钻石赞助*/
+    var sponsorZshi = {};
+    $(".diamond-choice").each(function(){
+        var text =$(this).children("input") ? $(this).children("input").val() || "" : "";
+        var img = $(this).children("img") ? $(this).children("img").attr("src") || "" : "";
+        if (text != "" && img != "")
+            sponsorZshi[text] = img;
+    });
+    act["diamondInfo"] = sponsorZshi;
+
+
+    if (isEdit){
+        act["appreciateUserIds"] = data["appreciateUserIds"];
+        act["appreciateCount"] = data["appreciateCount"];
+        act["addTime"] = data["addTime"];
+    }
+
+
     act.album = {};
-    act.sponsorInfo=$("#form-field-textarea-sponsor").val();
+    //act.sponsorInfo=$("#form-field-textarea-sponsor").val();
     // dlDate is beginDate ......
     act.beginDate=new Date($("#form-field-dlDate").val());
     //act.beginDate=null;
@@ -634,6 +700,117 @@ function uploadImgBox() {
 
                     //$("#upload-loading-img").attr("style","display: none");
                     */
+                }
+            },
+            "cancel": {
+                "label": "<i class='fa fa-times'></i> 取消",
+                "className": "btn-sm",
+                "callback": function () {
+                    //Example.show("uh oh, look out!");
+                    var objFile = document.getElementById('rest-upload-file');
+                    objFile.outerHTML = objFile.outerHTML.replace(/(value=\").+\"/i, "$1\"");
+                }
+            }
+        }
+    });
+}
+
+function addSponsorOption() {
+    var voteOption = $('<div class="sponsor-choice">' +
+        '<input type="text" value="" placeholder="赞助名称" class="col-xs-10 col-sm-5 vote-choice-text" style="padding-left: 7px;margin-right: 7px;">' +
+        '<button type="button" class="btn btn-xs btn-info vote-choice-img" style="margin-left: 5px;margin-right: 5px;">Pic</button>' +
+        '<div class="fa fa-times fa-times-bigger"></div>' +
+        '</div>');
+    voteOption.insertBefore($('.icon-plus-sp').parent());
+    voteOption.children('.fa-times-bigger').click(deleteSponsorOption);
+    voteOption.children('.vote-choice-img').click(function() {
+        SponsorOptionUploadImg(voteOption);
+    });
+}
+
+function deleteSponsorOption(){
+    if ($('.sponsor-choice').length > 1) {
+        $(this).parent().remove();
+    }else{
+        $(this).parent().children("img").remove();
+        $(this).parent().children("button").show();
+        $(this).parent().children("input").val("");
+        $(this).parent().css("height","auto");
+    }
+}
+
+function addDiamondOption() {
+    var voteOption = $('<div class="diamond-choice">' +
+        '<input type="text" value="" placeholder="赞助名称" class="col-xs-10 col-sm-5 vote-choice-text" style="padding-left: 7px;margin-right: 7px;">' +
+        '<button type="button" class="btn btn-xs btn-info vote-choice-img" style="margin-left: 5px;margin-right: 5px;">Pic</button>' +
+        '<div class="fa fa-times fa-times-bigger"></div>' +
+        '</div>');
+    voteOption.insertBefore($('.icon-plus-di').parent());
+    voteOption.children('.fa-times-bigger').click(deleteDiamondOption);
+    voteOption.children('.vote-choice-img').click(function() {
+        SponsorOptionUploadImg(voteOption);
+    });
+}
+
+function deleteDiamondOption(){
+    if ($('.diamond-choice').length > 1) {
+        $(this).parent().remove();
+    }else{
+        $(this).parent().children("img").remove();
+        $(this).parent().children("button").show();
+        $(this).parent().children("input").val("");
+        $(this).parent().css("height","auto");
+    }
+}
+
+function SponsorOptionUploadImg(voteOption) {
+    var spin_img = "<div id='upload-loading-img' style='margin-left:30px;margin-top:10px;display: none;'><i class='fa fa-spinner icon-spin orange bigger-125'></i></div>";
+    spin_img = "";
+    bootbox.dialog({
+        message: "<form id='rest-upload-form' action='/upload' method='post' enctype='multipart/form-data' acceptcharset='UTF-8'>\n<input id='rest-upload-file' type='file' name='file' size='50' />"+spin_img+"</form>",
+        buttons: {
+            "upload": {
+                "label": "<i class='fa fa-check'></i> 上传 ",
+                "className": "btn-sm btn-success",
+                "callback": function () {
+                    // show loading image first
+                    //$("#upload-loading-img").attr("style","display:block");
+
+                    //Example.show("great success");
+                    // upload Image !
+                    var d = new FormData(document.getElementById('rest-upload-form'));
+                    $.ajax({
+                        url: '/app/upload',
+                        type: 'POST',
+                        contentType: false,
+                        data: d,
+                        cache: false,
+                        processData: false,
+                        async: false,
+                        success: function (jsn) {
+                            //alert(jsn);
+                            // untested , but it should be like : code:200,body:filepath,msg...
+
+                            if (jsn.code == 200) {
+
+                                var newImgHtml = "";
+
+                                newImgHtml += "<img style='margin-top: 0' class='vote-img' width='150' height='150' src='"+jsn.body+"' />";
+
+                                //newImgHtml += "<div class='tools tools-right' style='height:30px;'>";
+                                // must be " , ' no use
+                                //newImgHtml += "<a href='#' onclick='deletePic(\""+"\")'><i class='icon-remove red'></i></a></div></div>";
+                                $(newImgHtml).insertBefore(voteOption.children('.fa-times-bigger'));
+                                voteOption.children('.vote-choice-img').hide();
+                                voteOption.css({height : '200px'});
+
+                            } else {
+                                alert("上传失败！");
+                            }
+                        }
+                    });
+
+                    //$("#upload-loading-img").attr("style","display: none");
                 }
             },
             "cancel": {

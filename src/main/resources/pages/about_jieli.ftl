@@ -221,22 +221,52 @@
                                 <#--<label class="col-sm-3 control-label no-padding-right" for="form-field-content"> 活动简介 </label>-->
 
                                 <div class="col-sm-9">
-                                    <textarea id="form-field-content" class="autosize-transition col-xs-10 col-sm-7"
+                                    <textarea id="form-field-textarea" class="autosize-transition col-xs-10 col-sm-7"
                                               style="margin-top:30px;margin-left:100px;min-height: 140px;"></textarea>
                                 </div>
                             </div>
                             <div class="space-4"></div>
+
+
+                            <div class="form-group">
+                                <label class="col-sm-1 control-label no-padding-right" for="form-input-readonly"> 图片 </label>
+
+                                <div class="col-sm-9">
+                                    <div class="row-fluid">
+                                        <ul class="ace-thumbnails" id="upload-img-list">
+                                            <li id="img-list-invisible" style="border-width:0;display: block"></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
                         </form>
 
+                        <div id="dialog-message-preview" class="hide">
+                        </div><!-- #dialog-message -->
+
                         <div class="clearfix form-actions" style="padding-left:320px;">
+
+                            <button class="btn btn-success btn-purple" id="bootbox-upload-image"
+                                    style="font-weight:bold;">
+                                <i class="fa fa-cloud-upload bigger-110"></i>
+                                上传标题图片
+                            </button>
+
                             &nbsp; &nbsp; &nbsp;
+                            <button class="btn btn-btn-success" type="button" style="font-weight:bold" onclick="previewJieLi();">
+                                <i class="fa fa-check bigger-110"></i>
+                                预览
+                            </button>
+                            &nbsp; &nbsp; &nbsp;
+
                             <button class="btn btn-info" type="button" style="font-weight:bold" onclick="postAboutJieli();">
                                 <i class="fa fa-check bigger-110"></i>
                                 完成
                             </button>
 
                             &nbsp; &nbsp; &nbsp;
-                            <button class="btn" type="reset" style="font-weight:bold">
+                            <button class="btn" type="reset" style="display:none;font-weight:bold">
                                 <i class="fa fa-undo bigger-110"></i>
                                 清空
                             </button>
@@ -349,6 +379,9 @@
 
 <script src="/assets/js/jquery-ui-1.10.3.custom.min.js"></script>
 <script src="/assets/js/jquery.ui.touch-punch.min.js"></script>
+
+<script src="/assets/js/jquery-ui-1.10.3.full.min.js"></script>
+
 <script src="/assets/js/chosen.jquery.min.js"></script>
 <script src="/assets/js/fuelux/fuelux.spinner.min.js"></script>
 <script src="/assets/js/date-time/bootstrap-datepicker.min.js"></script>
@@ -396,15 +429,50 @@
 
 <script type="text/javascript">
 
+    $("#bootbox-upload-image").on("click", function () {
+        var spin_img = "<div id='upload-loading-img' style='margin-left:30px;margin-top:10px;display: none;'><i class='fa fa-spinner icon-spin orange bigger-125'></i></div>";
+        spin_img = "";
+        bootbox.dialog({
+            message: "<form id='rest-upload-form' method='post' enctype='multipart/form-data' acceptcharset='UTF-8'>\n<input id='rest-upload-file' type='file' name='file' size='50' />"+spin_img+"</form>",
+            buttons: {
+                "upload": {
+                    "label": "<i class='fa fa-check'></i> 上传 ",
+                    "className": "btn-sm btn-success",
+                    "callback": function () {
+                        $('#rest-upload-form').ajaxSubmit(uploadArticleImageOptions);
+                    }
+                },
+                "cancel": {
+                    "label": "<i class='fa fa-times'></i> 取消",
+                    "className": "btn-sm",
+                    "callback": function () {
+                        var objFile = document.getElementById('rest-upload-file');
+                        objFile.outerHTML = objFile.outerHTML.replace(/(value=\").+\"/i, "$1\"");
+                    }
+                }
+            }
+        });
+    });
+
+
+    $.widget("ui.dialog", $.extend({}, $.ui.dialog.prototype, {
+        _title: function(title) {
+            var $title = this.options.title || '&nbsp;'
+            if( ("title_html" in this.options) && this.options.title_html == true )
+                title.html($title);
+            else title.text($title);
+        }
+    }));
+
     function postAboutJieli(){
-        var content = $("#form-field-content").val();
+        var content = generateJieLiContent();
         if (!content || content.length == 0){
             alert("请填写内容！");return;
         }
-        var re = new RegExp("\"","g");
-        content = content.replace(re,"\u0022");
-        re = new RegExp("\'","g");
-        content = content.replace(re,"\u0027");
+//        var re = new RegExp("\"","g");
+//        content = content.replace(re,"\u0022");
+//        re = new RegExp("\'","g");
+//        content = content.replace(re,"\u0027");
         $.ajax({
             url:"/app/sys/aboutJieli",
             type:"POST",
@@ -441,7 +509,7 @@
 
     jQuery(function($){
         var content = "${content}" || "";
-        $("#form-field-content").val(content);
+        $("#form-field-textarea").val(content);
     });
 </script>
 </body>
