@@ -492,7 +492,7 @@
 
     jQuery(function ($) {
 
-        $("#sidebar-shortcuts-navlist").load("/sidebar_super.html",function(){$("#nav_list_11_1").addClass("active open");$("#nav_list_11").addClass("active");
+        $("#sidebar-shortcuts-navlist").load("/sidebar_admin.html",function(){$("#nav_list_11_1").addClass("active open");$("#nav_list_11").addClass("active");
             $("#nav_list_11_1 i").css({"position":"absolute","left":"10px","top":"11px","font-size":"12px","width":"18px","text-align":"center","color":"#c86139","display":"inline"});});
 
         $('#selectAssociationIds').multiselect({

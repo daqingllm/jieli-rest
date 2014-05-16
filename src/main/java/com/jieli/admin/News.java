@@ -237,7 +237,9 @@ public class News {
         params.put("interestOptionList",interestOptionList);
         params.put("professionOptionList",professionOptionList);
 
-        return FTLrender.getResult("new_article.ftl", params);
+        //return FTLrender.getResult("new_article.ftl", params);
+
+        return FTLrender.getResult("test.ftl",params);
     }
 
     // 不仅要处理多associationid，还要转义json中的引号

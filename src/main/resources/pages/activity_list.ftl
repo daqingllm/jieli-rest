@@ -7,11 +7,6 @@
     <!-- basic styles -->
 
     <link href="/assets/css/bootstrap.min.css" rel="stylesheet"/>
-    <#--<link rel="stylesheet" href="/assets/css/font-awesome.min.css"/>-->
-
-    <!--[if IE 7]>
-    <!--<link rel="stylesheet" href="/assets/css/font-awesome-ie7.min.css"/>-->
-    <#--<![endif]&ndash;&gt;-->
 
     <link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
 
@@ -359,6 +354,7 @@
 
 <script src="/assets/js/ace-elements.min.js"></script>
 <script src="/assets/js/ace.min.js"></script>
+<script src="/common-jieli.js"></script>
 
 <!-- inline scripts related to this page -->
 
