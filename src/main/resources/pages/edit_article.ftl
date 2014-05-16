@@ -585,7 +585,7 @@ try{
         $("#form-field-textarea").val(cont ||"");
 
         var idx=cont.indexOf("<center><img width='576' style='padding:3px;' src='");
-        while(idx > -1){
+        while(idx > -1 && idx < 0){
             var ed = cont.indexOf("'></center",idx);
             if(ed == -1) continue;
 
@@ -605,6 +605,22 @@ try{
             $("#img-list-invisible").attr("style","border-width:0;display:none");
             idx = cont.indexOf("<center><img width='576' style='padding:3px;' src='",ed);
         }
+		
+		for (var ii = 0; ii < data["images"].length; ii ++){
+			var uploadImgSrc = data["images"][ii].url;
+            var newImgHtml = "<li>";
+            newImgHtml += "<a href='"+uploadImgSrc+"' data-rel='colorbox'>";
+            newImgHtml += "<img alt='150x150' width='150' height='150' src='"+uploadImgSrc+"' />";
+            newImgHtml += "</a>";
+            newImgHtml += "<div class='tools tools-right' style='height:30px;'>";
+            // must be " , ' no use
+            var re = new RegExp("\'","g");
+            //newImgHtml += "<a href='#' onclick='setTitleImg(\""+uploadImgSrc.replace(re,"")+"\")'><i class='fa fa-heart-o '></i></a>";
+            newImgHtml += "<a href='#' onclick='deletePic(\""+uploadImgSrc.replace(re,"")+"\")'><i class='fa fa-times red'></i></a>";
+            newImgHtml += "</div></li>";
+            $("#upload-img-list > li").last().before(newImgHtml);
+            $("#img-list-invisible").attr("style","border-width:0;display:none");
+		}
 
 
         var raw_data = [];

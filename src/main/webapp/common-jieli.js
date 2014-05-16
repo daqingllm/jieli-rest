@@ -310,6 +310,8 @@ function deletePic(ph){
     _src = _src.replace("'></center>","");
     _src = _src.replace("<center><img width='576' style='padding:3px;' src=","");
     _src = _src.replace("></center>","");
+    _src = _src.replace("<center><img width=576 style=padding:3px; src=","");
+    _src = _src.replace("></center>","");
 
     // clear textarea
     var otextarea = $("#form-field-textarea").val().trim();
