@@ -121,7 +121,7 @@ function previewThisArticle() {
 }
 
 // 点击完成按钮
-function postThisArticle(){
+function postThisArticle(images){
     // content 是内容 in html
     // overview 是列表页中使用的预览-需要生产一下 ： 去掉img，center表情
 
@@ -194,6 +194,14 @@ function postThisArticle(){
     var idxs = p_content.indexOf(phph1);
     var idxe;
     json["images"] = [];
+
+    if (images && images.length > 0) {
+        for (var i=0; i < images.length;i++) {
+            var jsn_img = {"placeholder": "", "url": images[i], "description": p_title || ""};
+            json["images"].push(jsn_img);
+        }
+    }
+
     $("#upload-img-list li").each(function(){
         if ($(this).children("a") && $(this).children("a").length != 0) {
             var _url = $(this).children("a").attr("href");
