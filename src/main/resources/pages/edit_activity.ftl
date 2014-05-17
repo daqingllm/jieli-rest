@@ -490,7 +490,7 @@
 
 <div class="space-4"></div>
 
-<div class="form-group">
+<div class="form-group" style="display: none">
     <label class="col-sm-3 control-label no-padding-right" for="form-input-readonly"> 上传的活动图片 </label>
 
     <div class="col-sm-9">
@@ -781,7 +781,7 @@
     }
 
     function deleteActivityPic(aid,uid,pid){
-        if (confirm("确认删除图片？")){
+        if (confirm("确认删除用户上传的图片？删除后将无法恢复！")){
             $.ajax({
                 type:"GET",
                 url:"/app/activity/deletepic?activityId="+aid+"&userId="+uid+"&pic="+pid,
@@ -970,6 +970,7 @@
 
         var album = data.album;
         var album_len = 0;
+        // 只在历史活动中显示用户上传的图片 和 管理员上传的图片
         if (album){
             var uids = [];
             var unames = [];
@@ -1024,7 +1025,7 @@
         if (data.url && data.url.length > 0){
             $("#form-field-imgurl").attr("src",data.url);
             $("#form-field-imgurl").css("display","block");
-            $("#delTitleImage").css("display","block");
+            $("#delTitleImage").css("display","inline");
         }
 
         <#if isSuper>$("form-field-associations").val(data.associationId);</#if>

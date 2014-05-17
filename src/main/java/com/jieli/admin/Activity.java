@@ -220,31 +220,36 @@ public class Activity {
         String activity_data = "";
         String associationList = "";
 
-        if (activity == null)
-            params.put("got","无此活动！");
+        String targetFTL = "edit_activity.ftl";
+        if (activity == null) {
+            params.put("got", "无此活动！");
+        }
         else if(activity.beginDate != null
-         && activity.beginDate.compareTo(new Date()) < 0)
-            params.put("got","old");
+         && activity.beginDate.compareTo(new Date()) < 0) {
+            params.put("got", "old");
+            targetFTL = "history_activity.ftl";
+        }
         else {
             params.put("got", "");
-
-            // 判断用户是否已经登录
-            if (account == null ||
-                    (!IdentityUtils.isSuper(sessionId) && !activity.associationId.equals(account.associationId)) ||
-                    !IdentityUtils.isValidate(sessionId) ||
-                    !IdentityUtils.isAdmin(sessionId)
-                    ) {
-                return CommonUtil.errorReturn;
-            }
-
-            activity_data = CommonUtil.ReplaceObjectId(activity);
-
-            if (IdentityUtils.isSuper(sessionId)) {
-                associationList = CommonUtil.MakeAssociationOptionListForSelect("");
-            } else {
-                associationList = CommonUtil.MakeAssociationOptionListForSelect(IdentityUtils.getAssociationId(sessionId));
-            }
         }
+
+        // 判断用户是否已经登录
+        if (account == null ||
+                (!IdentityUtils.isSuper(sessionId) && !activity.associationId.equals(account.associationId)) ||
+                !IdentityUtils.isValidate(sessionId) ||
+                !IdentityUtils.isAdmin(sessionId)
+                ) {
+            return CommonUtil.errorReturn;
+        }
+
+        activity_data = CommonUtil.ReplaceObjectId(activity);
+
+        if (IdentityUtils.isSuper(sessionId)) {
+            associationList = CommonUtil.MakeAssociationOptionListForSelect("");
+        } else {
+            associationList = CommonUtil.MakeAssociationOptionListForSelect(IdentityUtils.getAssociationId(sessionId));
+        }
+
 
         List<com.jieli.comment.Comment> commentList = new LinkedList<com.jieli.comment.Comment>();
         String commentListString = "[";
@@ -262,12 +267,14 @@ public class Activity {
             commentListString = "[]";
         }
 
+        if (activity_data == "" || activity_data == null) activity_data = "{}";
+
         params.put("act_data",activity_data);
         params.put("topicId",actid);
         params.put("jsonCommentList",commentListString);
         params.put("associationList",associationList);
 
-        return FTLrender.getResult("edit_activity.ftl",params);
+        return FTLrender.getResult(targetFTL,params);
     }
 
 

@@ -589,8 +589,8 @@ function loadThisGroup(name,refresh){
                 else {
                     //eval("jsn_body={"+jsn.body+"}");
                     jsn_body = jsn.body;
-                    $("#gn"+name).children("div").eq(0).children("p").eq(0).html("一共有"+$("#gn"+name).length+"个用户属于"+name + btn_html);
                     loadGroupMembers(name,jsn_body,refresh);
+                    $("#gn"+name).children("div").eq(0).children("p").eq(0).html("一共有"+$("#gn"+name+" > div > ul > li").length+"个用户属于"+name + btn_html);
                 }
             }
         }

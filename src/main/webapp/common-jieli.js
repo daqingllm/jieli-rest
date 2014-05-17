@@ -140,13 +140,6 @@ function previewThisArticle(textObj,images) {
         ]
     });
 
-    /*$.gritter.add({
-        title: "预览",
-        text: ""+$("#form-field-textarea").val(),
-        sticky:true,
-        class_name: 'gritter-info gritter-center gritter-light '
-    });*/
-
     window.scrollTo(0,0);
 }
 
@@ -250,13 +243,8 @@ function postThisArticle(images){
 
         var _url = p_content.substr(st,idxe-st);
 
-        //var head = p_overview.substr(0,idxs) || "";
-        //var tail =  p_overview.substr(idxe+1) || "";
-        //p_overview = head + "<center><img src='"+_url+"'></center>";
-
         idxs = p_content.indexOf(phph1,idxe);
 
-        //jsn += "{\"placeholder\":\""+phph+_url+">\",\"url\":\""+_url+"\",\"description\":\" \"},";
         var jsn_img = {"placeholder":"","url":_url,"description":p_title || ""};
         json["images"].push(jsn_img);
     }
@@ -408,8 +396,6 @@ var uploadArticleImageOptions = {
                 otextarea_head = otextarea.substring(0, pos);
             otextarea_tail = otextarea.substring(pos);
 
-            //alert(otextarea_head + "[+]" + otextarea_tail);
-
             $("#form-field-textarea").val(otextarea_head + uploadImgSrc + otextarea_tail);
 
             // 更新图片集
@@ -421,15 +407,12 @@ var uploadArticleImageOptions = {
             newImgHtml += "<div class='tools tools-right' style='height:30px;'>";
             // must be " , ' no use
             var re = new RegExp("\'", "g");
-            //newImgHtml += "<a href='#' title='设为头图' onclick='setTitleImg(\""+uploadImgSrc.replace(re,"")+"\")'><i class='fa fa-heart-o '></i></a>";
             newImgHtml += "<a href='#' title='删除' onclick='deletePic(\""+uploadImgSrc.replace(re,"")+"\")'><i class='fa fa-times red'></i></a>";
             newImgHtml += "</div></li>";
 
             $("#upload-img-list > li").eq(0).after(newImgHtml);
 
             $("#img-list-invisible").attr("style", "border-width:0;display:none");
-
-            /*$('.ace-thumbnails [data-rel="colorbox"]').colorbox(colorbox_params);*/
 
             $("#cboxLoadingGraphic").append("<i class='fa fa-spinner orange'></i>");//let's add a custom loading icon
         } else {
@@ -454,13 +437,12 @@ function finishActivity(type){
     }
 
     if (type == 0)
-    act.tag = "RECOMMEND";
+        act.tag = "RECOMMEND";
     else
-    act.tag = "OFFICIAL";
+        act.tag = "OFFICIAL";
 
     act.title=$("#form-field-title").val();
     act.actDate=new Date($("#form-field-actDate").val());
-    //act.actDate=null;
     act.location=$("#form-field-location").val();
     act.type=$("#form-field-type").val();
     act.description=$("#form-field-textarea-description").val();
@@ -478,22 +460,6 @@ function finishActivity(type){
     });
 
     act.serviceInfo = {};
-    /*
-     var serviceRaw = $("#form-field-textarea-service").val();
-     var serviceList = serviceRaw.split("\n");
-     for (var i = 0; i < serviceList.length; i++){
-     var findex = serviceList[i].indexOf(":");
-     if (serviceList[i].indexOf(":") > -1 || serviceList[i].indexOf("：") > -1){
-     if (findex < 0) findex = serviceList[i].indexOf("：");
-     var head = serviceList[i].substr(0,findex);
-     var tail = serviceList[i].substr(findex);
-     eval("act.serviceInfo."+head+"='"+tail+"'");
-     }else{
-     eval("act.serviceInfo."+serviceList[i]+"='"+serviceList[i]+"'");;
-     }
-     }
-     //act.serviceInfo=$("#form-field-textarea-service").val();
-     */
     $(".service-info").each(function(){
         var head = $(this).children("input").eq(0).val();
         var tail = $(this).children("input").eq(1).val();
@@ -534,19 +500,14 @@ function finishActivity(type){
 
 
     act.album = {};
-    //act.sponsorInfo=$("#form-field-textarea-sponsor").val();
-    // dlDate is beginDate ......
+    act.officialAlbum = {};
     act.beginDate=new Date($("#form-field-dlDate").val());
     //act.beginDate=null;
     act.fee=$("#form-field-fee").val();
     act.maxMembers=$("#form-field-max").val();
     act.url=$("#form-field-imgurl").attr("src");
 
-//  <#if isSuper>
-//      act.associationId=$("#form-field-associations").val();
-//  <#else>
-//      act.associationId="";
-//  </#if>
+
     var p_assid = $("#selectAssociationIds").val();
 
     act.addTime=null;
@@ -616,10 +577,7 @@ function check(act) {
         return "必须选择至少一个协会";
 
     return null;
-
 }
-
-
 
 function deleteTitleImage(){
     $("#delTitleImage").css("display","none");
@@ -682,8 +640,6 @@ function addArrangementDetail() {
     }
 }
 
-
-
 function GetDate10(dateStr,offsetDay) {
     var datetime=new Date(dateStr);
     datetime.setTime(datetime.getTime()+86400000*offsetDay);
@@ -707,7 +663,7 @@ var uploadActivityImageOptions = {
 
             $("#form-field-imgurl").attr("src",uploadImgSrc);
             $("#form-field-imgurl").css("display","block");
-            $("#delTitleImage").css("display","block");
+            $("#delTitleImage").css("display","inline");
 
         } else {
             alert("上传失败");
@@ -719,56 +675,19 @@ function uploadImgBox() {
     var spin_img = "<div id='upload-loading-img' style='margin-left:30px;margin-top:10px;display: none;'><i class='fa fa-spinner icon-spin orange bigger-125'></i></div>";
     spin_img = "";
     bootbox.dialog({
-        //message: "<input type='file' id='upload-image-files' name='upload-image-files' >",
         message: "<form id='rest-upload-form' action='/app/upload' method='post' enctype='multipart/form-data' acceptcharset='UTF-8'>\n<input id='rest-upload-file' type='file' name='file' size='50' />"+spin_img+"</form>",
         buttons: {
             "upload": {
                 "label": "<i class='fa fa-check'></i> 上传 ",
                 "className": "btn-sm btn-success",
                 "callback": function () {
-                    // show loading image first
-                    //$("#upload-loading-img").attr("style","display:block");
-
-                    //Example.show("great success");
-                    // upload Image !
                     $('#rest-upload-form').ajaxSubmit(uploadActivityImageOptions);
-
-                    /*
-                    var d = new FormData(document.getElementById('rest-upload-form'));
-                    $.ajax({
-                        url: '/app/upload',
-                        type: 'POST',
-                        contentType: false,
-                        data: d,
-                        cache: false,
-                        processData: false,
-                        async: false,
-                        success: function (jsn) {
-                            //alert(jsn);
-                            // untested , but it should be like : code:200,body:filepath,msg...
-
-                            if (jsn.code == 200) {
-                                var uploadImgSrc = jsn.body + "";
-
-                                $("#form-field-imgurl").attr("src",uploadImgSrc);
-                                $("#form-field-imgurl").css("display","block");
-                                $("#delTitleImage").css("display","block");
-
-                            } else {
-                                alert("上传失败！");
-                            }
-                        }
-                    });
-
-                    //$("#upload-loading-img").attr("style","display: none");
-                    */
                 }
             },
             "cancel": {
                 "label": "<i class='fa fa-times'></i> 取消",
                 "className": "btn-sm",
                 "callback": function () {
-                    //Example.show("uh oh, look out!");
                     var objFile = document.getElementById('rest-upload-file');
                     objFile.outerHTML = objFile.outerHTML.replace(/(value=\").+\"/i, "$1\"");
                 }
@@ -888,32 +807,37 @@ function SponsorOptionUploadImg(voteOption) {
     });
 }
 
-/* 删除图片imagesUpload[idx] , 即[图片{idxPreview}]*/
-function CustomRemoveFile(idx){
+/* 在dropZoneId内 */
+/* 删除图片imageArray[idx] , 即[图片{idxPreview}]*/
+/* 如果需要 更新textarea[textAreaId]的内容 */
+function CustomRemoveFile(dropZoneId,imageArray,idx,textAreaId){
+    var dwTextArea = (textAreaId && textAreaId != "");
     var idxPreview = idx + 1;
     var position = "";
-    if (idx <= imagesUpload.length){
+    if (idx < imageArray.length){
         // 获取[图片n]
-        position = imagesUpload[idx].position;
-        var otextarea = $("#"+textAreaId).val().trim();
+        position = imageArray[idx].position;
 
         // 删掉[图片n]
-        otextarea = otextarea.replace("[图片"+position+"]","");
+        var otextarea = "";
+        if (dwTextArea) otextarea = $("#"+textAreaId).val().trim();
+        if (dwTextArea) otextarea = otextarea.replace("[图片"+position+"]","");
 
         // 获取[图片n+...]
-        var imageSliceTail = imagesUpload.slice(idx+1,imagesUpload.length) || [];
+        var imageSliceTail = imageArray.slice(idx+1,imageArray.length) || [];
         for (var i=0; i < imageSliceTail.length; i++) {
             // 将图片[n+...] 向前移动一位：[图片n+1]变成了[图片n]. imagesUpload&&textarea 同时操作
-            otextarea = otextarea.replace("[图片"+imageSliceTail[i].position+"]","[图片"+(imageSliceTail[i].position-1)+"]");
+            if (dwTextArea) otextarea = otextarea.replace("[图片"+imageSliceTail[i].position+"]","[图片"+(imageSliceTail[i].position-1)+"]");
             imageSliceTail[i].position --;
         }
-        $("#"+textAreaId).val(otextarea);
-        imagesUpload = imagesUpload.slice(0,idx).concat( imageSliceTail );
+
+        if (dwTextArea) $("#"+textAreaId).val(otextarea);
+        imageArray = imageArray.slice(0,idx).concat( imageSliceTail );
 
         // 更新图片名称
         var num = -1;
         var count = 0;
-        $(".dz-preview").each(function(){
+        $("#"+ dropZoneId +" .dz-preview").each(function(){
             var ele = $(this).find(".dz-filename").eq(0).children("span").html();
             var curIdx = parseInt(ele.substr(3));
             if (curIdx == idxPreview) num = count;
@@ -923,11 +847,19 @@ function CustomRemoveFile(idx){
         });
 
         if (num > -1)
-            $(".dz-preview").eq(num).remove();
+            $("#"+dropZoneId+" .dz-preview").eq(num).remove();
 
-        if (imagesUpload.length == 0) $(".dropzone").removeClass("dz-started");
+        if (imageArray.length == 0) $("#"+dropZoneId).removeClass("dz-started");
     }else{
         // 可能上传的文件太大了
         ;
     }
+
+    return imageArray;
+}
+
+/*obj is a img element*/
+function selectText(obj){
+    var str = $(obj).parent().children(".dz-filename").eq(0).children("span").html();
+    focusTextareaPart($("#"+textAreaId)[0],str);
 }

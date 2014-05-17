@@ -295,7 +295,7 @@
                     上传图片
                 </div>
                 <div id="dropzone" class="col-xs-10 col-sm-7" style="margin-bottom: 20px;">
-                    <form action="/app/upload" class="dropzone" style="min-height: 180px;">
+                    <form action="/app/upload" class="dropzone" id="adminUploaded" style="min-height: 180px;">
                         <div class="fallback">
                             <input name="file" type="file" multiple="" />
                         </div>
@@ -542,12 +542,9 @@
 
 <script type="text/javascript">
 
+    var imagesUpload = [];
     var textAreaId = "form-field-textarea";
-
-    function selectText(obj){
-        var str = $(obj).parent().children(".dz-filename").eq(0).children("span").html();
-        focusTextareaPart($("#"+textAreaId)[0],str);
-    }
+    var adminUploadedImagesDivId = "adminUploaded";
 
     /**
      * imagesUpload 保存url与图片名称的对应关系
@@ -555,10 +552,9 @@
      * .dz-filename 只显示图片名称
      * 点击dz-filename会选中textarea里的对应内容！
      */
-    var imagesUpload = [];
     jQuery(function($){
         try {
-            $(".dropzone").dropzone({
+            $("#"+adminUploadedImagesDivId).dropzone({
                 url:"/app/upload",
                 paramName: "file", // The name that will be used to transfer the file
                 maxFilesize: 1.5, // MB
@@ -595,11 +591,11 @@
                 removedfile: function(file){
                     // file.previewElement 之前还有一个元素 dz-default dz-message
                     var idx = $(file.previewElement).index() - 1;
-                    CustomRemoveFile(idx);
+                    imagesUpload = CustomRemoveFile(adminUploadedImagesDivId,imagesUpload,idx,textAreaId);
                     if (file.previewElement) $(file.previewElement).remove();
                 }
             });
-            $(".dropzone").css("min-height","180px");
+            $("#"+adminUploadedImagesDivId).css("min-height","180px");
         } catch(e) {
             alert('Dropzone.js does not support older browsers!');
         }

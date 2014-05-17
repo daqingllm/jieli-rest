@@ -546,9 +546,9 @@ jQuery(function($) {
         rowNum:15,
         /*rowList:[10,20,30],*/
         pager : pager_selector,
-        altRows: true,
+        /*altRows: true,*/
         multiselect: true,
-        multiboxonly: true,
+        /*multiboxonly: true,*/
 
         loadComplete : function() {
             var table = this;

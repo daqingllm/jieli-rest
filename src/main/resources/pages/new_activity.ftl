@@ -252,7 +252,7 @@
     <div class="col-sm-9">
         <div class="col-sm-9">
             <img width="150" height="150" src="" id="form-field-imgurl" style="display: none;float:left">
-            <i id="delTitleImage" class="fa fa-times fa-times-bigger" onclick="deleteTitleImage()" style="display: none"></i>
+            <i id="delTitleImage" class="fa fa-times fa-times-bigger" onclick="deleteTitleImage()" style="display: inline"></i>
         </div>
     </div>
 </div>
@@ -717,12 +717,6 @@
         $('.ace-thumbnails [data-rel="colorbox"]').colorbox(colorbox_params);
         $("#cboxLoadingGraphic").append("<i class='fa fa-spinner orange'></i>");//let's add a custom loading icon
 
-        /**$(window).on('resize.colorbox', function() {
-					try {
-						//this function has been changed in recent versions of colorbox, so it won't work
-						$.fn.colorbox.load();//to redraw the current frame
-					} catch(e){}
-				});*/
     });
 
     jQuery(function ($) {
@@ -771,18 +765,6 @@
         addDiamondOption();
         $('.icon-plus-di').click(addDiamondOption);
 
-
-        /*$('input[name=date-range-picker]').daterangepicker({
-                    format: 'YYYY-MM-DD'},
-                function(start, end, label) {
-                    //alert('A date range was chosen: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
-                    if (start.format('YYYY-MM-DD') == end.format('YYYY-MM-DD')){
-                        $('input[name=date-range-picker]').val(start.format('YYYY-MM-DD'));
-                    }else{
-                        $('input[name=date-range-picker]').val(start.format('YYYY-MM-DD') + ' жа ' + end.format('YYYY-MM-DD'));
-                    }
-                });
-                */
         $('#form-field-dlDate').datepicker({autoclose:true,format: "yyyy-mm-dd"});
         $('#form-field-actDate').datepicker({autoclose:true,format: "yyyy-mm-dd"});
     });
