@@ -98,7 +98,7 @@ function previewJieLi(){
 }
 
 // 点击预览按钮
-function previewThisArticle(text,images) {
+function previewThisArticle(textObj,images) {
     var previewinpage = $("#form-field-textarea").val() || "";
     var previewinlist;
     try {
@@ -116,7 +116,8 @@ function previewThisArticle(text,images) {
     else
         $("#dialog-message-preview").html(previewinlist.replace(regbr,"<br/>").replace(regimg,"<img width='576' style='padding:3px;' src"));
 
-    if (text&&images){
+    if (textObj&&images){
+        var text = $("#"+textObj).val() || $("#"+textObj).html();
         for (var i = 0; i < images.length; i++){
             text = text.replace("[图片"+images[i].position+"]",imageHead+images[i].url+imageTail);
         }
@@ -885,4 +886,48 @@ function SponsorOptionUploadImg(voteOption) {
             }
         }
     });
+}
+
+/* 删除图片imagesUpload[idx] , 即[图片{idxPreview}]*/
+function CustomRemoveFile(idx){
+    var idxPreview = idx + 1;
+    var position = "";
+    if (idx <= imagesUpload.length){
+        // 获取[图片n]
+        position = imagesUpload[idx].position;
+        var otextarea = $("#"+textAreaId).val().trim();
+
+        // 删掉[图片n]
+        otextarea = otextarea.replace("[图片"+position+"]","");
+
+        // 获取[图片n+...]
+        var imageSliceTail = imagesUpload.slice(idx+1,imagesUpload.length) || [];
+        for (var i=0; i < imageSliceTail.length; i++) {
+            // 将图片[n+...] 向前移动一位：[图片n+1]变成了[图片n]. imagesUpload&&textarea 同时操作
+            otextarea = otextarea.replace("[图片"+imageSliceTail[i].position+"]","[图片"+(imageSliceTail[i].position-1)+"]");
+            imageSliceTail[i].position --;
+        }
+        $("#"+textAreaId).val(otextarea);
+        imagesUpload = imagesUpload.slice(0,idx).concat( imageSliceTail );
+
+        // 更新图片名称
+        var num = -1;
+        var count = 0;
+        $(".dz-preview").each(function(){
+            var ele = $(this).find(".dz-filename").eq(0).children("span").html();
+            var curIdx = parseInt(ele.substr(3));
+            if (curIdx == idxPreview) num = count;
+            if (curIdx > idxPreview) $(this).find(".dz-filename").eq(0).children("span").html("[图片" + (curIdx-1) + "]");
+
+            count ++;
+        });
+
+        if (num > -1)
+            $(".dz-preview").eq(num).remove();
+
+        if (imagesUpload.length == 0) $(".dropzone").removeClass("dz-started");
+    }else{
+        // 可能上传的文件太大了
+        ;
+    }
 }

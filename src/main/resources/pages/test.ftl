@@ -2,7 +2,7 @@
 <html lang="zh">
 <head>
     <meta charset="utf-8"/>
-    <title>接力 资讯管理</title>
+    <title>old new_article.ftl</title>
     <meta name="description" content="接力"/>
     <!-- basic styles -->
 
@@ -19,7 +19,6 @@
 
     <link rel="stylesheet" href="/assets/css/datepicker.css" />
     <link rel="stylesheet" href="/assets/css/bootstrap-multiselect.css" type="text/css"/>
-    <link rel="stylesheet" href="/assets/css/dropzone.css" />
 
     <!-- fonts -->
 
@@ -63,7 +62,7 @@
             <a href="index.html" class="navbar-brand">
                 <small>
                     <i class="fa fa-leaf"></i>
-                    ${associationName} 后台管理系统
+                ${associationName} 后台管理系统
                 </small>
             </a><!-- /.brand -->
         </div>
@@ -211,215 +210,205 @@
 
 <div class="row">
 <div class="col-xs-12">
-<!-- PAGE CONTENT BEGINS -->
+    <!-- PAGE CONTENT BEGINS -->
 
-<form class="form-horizontal" role="form">
+    <form class="form-horizontal" role="form">
 
-    <div class="form-group">
-        <label class="col-sm-3 control-label no-padding-right" for="form-field-title"> 资讯标题 </label>
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right" for="form-field-title"> 资讯标题 </label>
 
-        <div class="col-sm-9">
-            <input type="text" id="form-field-title" placeholder="标题请勿超过30个字" class="col-xs-10 col-sm-7"
-                   style="padding-left: 7px;"/>
+            <div class="col-sm-9">
+                <input type="text" id="form-field-title" placeholder="标题请勿超过30个字" class="col-xs-10 col-sm-7"
+                       style="padding-left: 7px;"/>
+            </div>
         </div>
-    </div>
 
-    <div class="space-4"></div>
+        <div class="space-4"></div>
 
-    <div class="form-group">
-        <label class="col-sm-3 control-label no-padding-right" for="form-field-select-type"> 资讯类型 </label>
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right" for="form-field-select-type"> 资讯类型 </label>
 
-        <div class="col-sm-9">
-            <select class="col-xs-10 col-sm-7" id="form-field-select-type"
-                    style="padding: 5px 4px;font-size: 14px;" onchange="toggleShowTime();">
-            <#if isSuper>
-                <option value="news" selected>每日头条</option>
-                <option value="association">协会动态</option>
-                <option value="enterprise">合作展示</option>
-                <option value="benefit">慈善公益</option>
-            <#else>
-                <option value="association" selected>协会动态</option>
-                <option value="enterprise">合作展示</option>
-                <option value="benefit">慈善公益</option>
-                <option value="history">协会事记</option>
-            </#if>
-            </select>
+            <div class="col-sm-9">
+                <select class="col-xs-10 col-sm-7" id="form-field-select-type"
+                        style="padding: 5px 4px;font-size: 14px;" onchange="toggleShowTime();">
+                <#if isSuper>
+                    <option value="news" selected>每日头条</option>
+                    <option value="association">协会动态</option>
+                    <option value="enterprise">合作展示</option>
+                    <option value="benefit">慈善公益</option>
+                <#else>
+                    <option value="association" selected>协会动态</option>
+                    <option value="enterprise">合作展示</option>
+                    <option value="history">协会事记</option>
+                    <option value="benefit">慈善公益</option>
+                </#if>
+                </select>
+            </div>
         </div>
-    </div>
 
-    <div class="space-4"></div>
+        <div class="space-4"></div>
 
-    <div class="form-group" id="form-field-occDate-parent" style="display: none;">
-        <label class="col-sm-3 control-label no-padding-right" for="form-field-occDate"> 时&nbsp;间 </label>
-        <div class="col-sm-3">
-            <div class="input-group">
-                <input type="text" id="form-field-occDate" class="form-control hasDatepicker"/>
+        <div class="form-group" id="form-field-occDate-parent" style="display: none;">
+            <label class="col-sm-3 control-label no-padding-right" for="form-field-occDate"> 时&nbsp;间 </label>
+            <div class="col-sm-3">
+                <div class="input-group">
+                    <input type="text" id="form-field-occDate" class="form-control hasDatepicker"/>
                         		<span class="input-group-addon">
                         			<i class="fa fa-calendar"></i>
                         		</span>
+                </div>
             </div>
         </div>
-    </div>
 
-    <div class="space-4"></div>
+        <div class="space-4"></div>
 
-    <div class="form-group">
-        <label class="col-sm-3 control-label no-padding-right" for="form-field-textarea">  </label>
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right" for="form-field-textarea">  </label>
 
-        <div class="col-sm-9">
-            <div class="col-xs-10 col-sm-7 alert alert-warning" style="margin-bottom: 0">为保证app显示质量，请确保正文中段落首行顶格</div>
-        </div>
-    </div>
-
-    <div class="form-group">
-        <label class="col-sm-3 control-label no-padding-right" for="form-field-textarea"> 资讯正文 </label>
-
-        <div class="col-sm-9">
-
-            <textarea id="form-field-textarea" class="autosize-transition col-xs-10 col-sm-7"
-                      style="min-height: 140px;"></textarea>
-        </div>
-
-    </div>
-
-    <div class="space-4"></div>
-
-    <div class="form-group" style="display:none;">
-        <label class="col-sm-3 control-label no-padding-right" for="form-input-readonly"> 资讯图片 </label>
-
-        <div class="col-sm-9">
-            <!--<button class="btn btn-info"> 上传标题图 </button>-->
-
-            <!--<br/>-->
-
-            <!--<img src="/assets/images/gallery/image-4.jpg" style="max-width: 400px;"/> -->
-            <div class="row-fluid">
-                <ul class="ace-thumbnails" id="upload-img-list">
-                    <li id="img-list-invisible" style="border-width:0;display: block">暂无图片</li>
-                </ul>
+            <div class="col-sm-9">
+                <div class="col-xs-10 col-sm-7 alert alert-warning" style="margin-bottom: 0">为保证app显示质量，请确保正文中段落首行顶格</div>
             </div>
         </div>
-    </div>
 
-    <div class="space-4"></div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right" for="form-field-textarea"> 资讯正文 </label>
 
-</form>
+            <div class="col-sm-9">
 
-    <div class="form-group">
-        <label class="col-sm-3 control-label no-padding-right" for="form-input-readonly" style="text-align: right"> 上传图片 </label>
+                <textarea id="form-field-textarea" class="autosize-transition col-xs-10 col-sm-7"
+                          style="min-height: 140px;"></textarea>
+            </div>
 
-        <div class="col-sm-9">
-            <div style="float: right;display: none" class="btn btn-success btn-purple" onclick="$('#bootbox-upload-image').click();">
+        </div>
+
+        <div class="space-4"></div>
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right" for="form-input-readonly"> 资讯图片 </label>
+
+            <div class="col-sm-9">
+                <!--<button class="btn btn-info"> 上传标题图 </button>-->
+
+                <!--<br/>-->
+
+                <!--<img src="/assets/images/gallery/image-4.jpg" style="max-width: 400px;"/> -->
+                <div class="row-fluid">
+                    <ul class="ace-thumbnails" id="upload-img-list">
+                        <li id="img-list-invisible" style="border-width:0;display: block">暂无图片</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="space-4"></div>
+
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right" for="form-input-readonly">  </label>
+
+            <div class="col-sm-9">
+                <div style="float: left" class="btn btn-success btn-purple" onclick="$('#bootbox-upload-image').click();">
+                    <i class="fa fa-cloud-upload bigger-110"></i>
+                    上传图片
+                </div>
+                <div class="alert alert-info" style="float: left;padding: 2px 14px;margin-left: 15px;margin-top: 7px;"> 请上传572*364的图片 </div>
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right" for="form-field-select-pro"> 行业标签 </label>
+
+            <div class="col-sm-9">
+                <select class="col-xs-10 col-sm-7" id="form-field-select-pro"
+                        style="padding: 5px 4px;font-size: 14px;">
+                    <option value="" selected="selected"></option>
+                ${professionOptionList}
+                </select>
+            </div>
+        </div>
+
+
+        <div class="space-4"></div>
+
+
+
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right" for="form-input-readonly"> 兴趣标签 </label>
+
+            <div class="col-sm-9">
+                <select id="selectInterest" multiple="multiple" class="multiselect">${interestOptionList}</select>
+            </div>
+        </div>
+
+
+
+        <div class="space-4"></div>
+
+
+        <div class="form-group <#if isSuper==false>hidden</#if>">
+            <label class="col-sm-3 control-label no-padding-right" for="form-input-readonly"> 选择协会 </label>
+
+            <div class="col-sm-9">
+                <select id="selectAssociationIds" multiple="multiple" class="multiselect">${assIdOptionList}</select>
+            </div>
+        </div>
+
+        <div class="space-4"></div>
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right" for="form-field-checkbox"> 强推选项 </label>
+
+            <div class="col-sm-9">
+                <input style="margin-right: 25px;float: left;" type="checkbox" id="form-field-checkbox" >
+                <div class="alert alert-info" style="float: left;padding: 2px 14px;"> 选择强推后，用户在锁屏状态下也能收到资讯通知 </div>
+            </div>
+        </div>
+
+        <div class="space-4"></div>
+
+    </form>
+
+    <div id="dialog-message-preview" class="hide">
+    </div><!-- #dialog-message -->
+
+    <div class="clearfix form-actions">
+        <div class="col-md-offset-3 col-md-9">
+
+            &nbsp; &nbsp; &nbsp;
+            <button class="btn btn-success" type="button" style="font-weight:bold" onclick="previewThisArticle()">
+                <i class="fa fa-question bigger-110"></i>
+                预览
+            </button>
+
+            &nbsp; &nbsp; &nbsp;
+            <button class="btn btn-info" type="button" style="font-weight:bold" onclick="postThisArticle()">
+                <i class="fa fa-check bigger-110"></i>
+                发布
+            </button>
+
+            &nbsp; &nbsp; &nbsp;
+            <button class="btn" type="reset" style="font-weight:bold" onclick="clearImgList();return true;">
+                <i class="fa fa-undo bigger-110"></i>
+                清空
+            </button>
+
+            &nbsp; &nbsp; &nbsp;
+            <button class="btn btn-danger" type="reset" style="font-weight:bold" onclick="window.location.href='/app/bnews/list';return true;">
+                <i class="fa fa-mail-reply bigger-110"></i>
+                返回资讯列表
+            </button>
+
+
+            <button class="btn btn-success btn-purple" id="bootbox-upload-image"
+                    style="font-weight:bold;visibility: hidden;">
                 <i class="fa fa-cloud-upload bigger-110"></i>
                 上传图片
-            </div>
-            <div id="dropzone" class="col-xs-10 col-sm-7" style="margin-bottom: 20px;">
-                <form action="http://localhost:8080/app/upload" class="dropzone" style="min-height: 180px;">
-                    <div class="fallback">
-                        <input name="file" type="file" multiple="" />
-                    </div>
-                </form>
-            </div>
-            <div class="alert alert-info" style="display:none;float: left;padding: 2px 14px;margin-left: 15px;margin-top: 7px;"> 请上传572*364的图片 </div>
+            </button>
+
         </div>
     </div>
-
-<form class="form-horizontal" role="form">
-
-    <div class="space-4"></div>
-    <div class="form-group">
-        <label class="col-sm-3 control-label no-padding-right" for="form-field-select-pro"> 行业标签 </label>
-
-        <div class="col-sm-9">
-            <select class="col-xs-10 col-sm-7" id="form-field-select-pro"
-                    style="padding: 5px 4px;font-size: 14px;">
-                <option value="" selected="selected"></option>
-            ${professionOptionList}
-            </select>
-        </div>
-    </div>
-
-
-    <div class="space-4"></div>
-
-
-
-
-    <div class="form-group">
-        <label class="col-sm-3 control-label no-padding-right" for="form-input-readonly"> 兴趣标签 </label>
-
-        <div class="col-sm-9">
-            <select id="selectInterest" multiple="multiple" class="multiselect">${interestOptionList}</select>
-        </div>
-    </div>
-
-
-
-    <div class="space-4"></div>
-
-
-    <div class="form-group <#if isSuper==false>hidden</#if>">
-        <label class="col-sm-3 control-label no-padding-right" for="form-input-readonly"> 选择协会 </label>
-
-        <div class="col-sm-9">
-            <select id="selectAssociationIds" multiple="multiple" class="multiselect">${assIdOptionList}</select>
-        </div>
-    </div>
-
-    <div class="space-4"></div>
-
-    <div class="form-group">
-        <label class="col-sm-3 control-label no-padding-right" for="form-field-checkbox"> 强推选项 </label>
-
-        <div class="col-sm-9">
-            <input style="margin-right: 25px;float: left;" type="checkbox" id="form-field-checkbox" >
-            <div class="alert alert-info" style="float: left;padding: 2px 14px;"> 选择强推后，用户在锁屏状态下也能收到资讯通知 </div>
-        </div>
-    </div>
-
-    <div class="space-4"></div>
-
-</form>
-
-<div id="dialog-message-preview" class="hide">
-</div><!-- #dialog-message -->
-
-<div class="clearfix form-actions">
-    <div class="col-md-offset-3 col-md-9">
-
-        &nbsp; &nbsp; &nbsp;
-        <button class="btn btn-success" type="button" style="font-weight:bold" onclick="previewThisArticle()">
-            <i class="fa fa-question bigger-110"></i>
-            预览
-        </button>
-
-        &nbsp; &nbsp; &nbsp;
-        <button class="btn btn-info" type="button" style="font-weight:bold" onclick="postThisArticle(imagesUpload)">
-            <i class="fa fa-check bigger-110"></i>
-            发布
-        </button>
-
-        &nbsp; &nbsp; &nbsp;
-        <button class="btn" type="reset" style="font-weight:bold" onclick="clearImgList();return true;">
-            <i class="fa fa-undo bigger-110"></i>
-            清空
-        </button>
-
-        &nbsp; &nbsp; &nbsp;
-        <button class="btn btn-danger" type="reset" style="font-weight:bold" onclick="window.location.href='/app/bnews/list';return true;">
-            <i class="fa fa-mail-reply bigger-110"></i>
-            返回资讯列表
-        </button>
-
-
-        <button class="btn btn-success btn-purple" id="bootbox-upload-image"
-                style="font-weight:bold;visibility: hidden;">
-            <i class="fa fa-cloud-upload bigger-110"></i>
-            上传图片
-        </button>
-
-    </div>
-</div>
 </div>
 <!-- /.col -->
 </div>
@@ -545,8 +534,6 @@
 <script src="/assets/js/bootstrap-tag.min.js"></script>
 <script src="/assets/js/jquery.gritter.min.js"></script>
 <script src="/assets/js/bootbox.min.js"></script>
-<script src="/assets/js/dropzone.min.js"></script>
-
 
 <script src="/assets/js/jquery.form.js"></script>
 
@@ -560,99 +547,6 @@
 <!-- inline scripts related to this page -->
 
 <script type="text/javascript">
-
-    var textAreaId = "form-field-textarea";
-
-    function selectText(obj){
-        var str = $(obj).parent().children(".dz-filename").eq(0).children("span").html();
-        focusTextareaPart($("#"+textAreaId)[0],str);
-    }
-
-    /**
-     * imagesUpload 保存url与图片名称的对应关系
-     * textarea 只显示图片名称
-     * .dz-filename 只显示图片名称
-     * 点击dz-filename会选中textarea里的对应内容！
-     */
-    var imagesUpload = [];
-    jQuery(function($){
-        try {
-            $(".dropzone").dropzone({
-                url:"/app/upload",
-                paramName: "file", // The name that will be used to transfer the file
-                maxFilesize: 1.5, // MB
-
-                addRemoveLinks : true,
-                dictDefaultMessage :
-                        '<span class="bigger-150 bolder"><i class="fa fa-caret-right red"></i> \
-                        <span class="smaller-80 grey">拖拽或点击 : 请上传572*364的图片</span> <br /> \
-                        <i class="upload-icon fa fa-cloud-upload blue icon-3x"></i>'
-                ,
-                dictResponseError: 'Error while uploading file!',
-
-                //change the previewTemplate to use Bootstrap progress bars
-                previewTemplate: "<div class=\"dz-preview dz-file-preview\">\n  <div class=\"dz-details\">\n    <div class=\"dz-filename\"><span data-dz-name></span></div>\n    <div class=\"dz-size\" data-dz-size></div>\n    <img data-dz-thumbnail onclick=\"selectText(this)\" />\n  </div>\n  <div class=\"progress progress-small progress-striped active\"><div class=\"progress-bar progress-bar-success\" data-dz-uploadprogress></div></div>\n  <div class=\"dz-success-mark\"><span></span></div>\n  <div class=\"dz-error-mark\"><span></span></div>\n  <div class=\"dz-error-message\"><span data-dz-errormessage></span></div>\n</div>",
-
-                success: function(file,response){
-                    //alert(response);
-                    if (response.code == 200){
-                        var len = imagesUpload.length;
-                        var curImage = {"url":response.body,"position":(len+1)};
-                        imagesUpload.push(curImage);
-
-                        // 设置图片的名字
-                        $(file.previewElement).find(".dz-filename").eq(0).children("span").html("[图片"+curImage.position+"]");
-
-                        // 更新textarea
-                        var pos = getTextAreaCursorPosition() || 0;
-                        var otextarea = $("#"+textAreaId).val().trim();
-                        var otextarea_head = pos > 0 ? otextarea.substring(0, pos) : "";
-                        var otextarea_tail = otextarea.substring(pos);
-                        $("#"+textAreaId).val(otextarea_head + "[图片"+curImage.position+"]" + otextarea_tail);
-                    }
-                },
-                removedfile: function(file){
-                    // file.previewElement 之前还有一个元素 dz-default dz-message
-                    var idx = $(file.previewElement).index() - 1;
-
-                    var position = "";
-                    if (idx <= imagesUpload.length){
-                        // 获取[图片n]
-                        position = imagesUpload[idx].position;
-                        var otextarea = $("#"+textAreaId).val().trim();
-
-                        // 删掉[图片n]
-                        otextarea = otextarea.replace("[图片"+position+"]","");
-
-                        // 获取[图片n+...]
-                        var imageSliceTail = imagesUpload.slice(idx+1,imagesUpload.length);
-                        for (var i=0; i < imageSliceTail.length; i++) {
-                            // 将图片[n+...] 向前移动一位：[图片n+1]变成了[图片n]. imagesUpload&&textarea 同时操作
-                            otextarea = otextarea.replace("[图片"+imageSliceTail[i].position+"]","[图片"+(imageSliceTail[i].position-1)+"]");
-                            imageSliceTail[i].position --;
-                        }
-                        $("#"+textAreaId).val(otextarea);
-                        imagesUpload = imagesUpload.slice(0,idx).concat( imageSliceTail );
-
-                        // 更新图片名称
-                        $(".dz-preview").each(function(){
-                            var ele = $(this).find(".dz-filename").eq(0).children("span").html();
-                            var curIdx = parseInt(ele.substr(3));
-                            if (curIdx > idx){
-                                $(this).find(".dz-filename").eq(0).children("span").html("[图片" + (curIdx-1) + "]");
-                            }
-                        });
-                    }
-                    $(file.previewElement).remove();
-                }
-            });
-            $(".dropzone").css("min-height","180px");
-        } catch(e) {
-            alert('Dropzone.js does not support older browsers!');
-        }
-
-    });
-
     //override dialog's title function to allow for HTML titles
     $.widget("ui.dialog", $.extend({}, $.ui.dialog.prototype, {
         _title: function(title) {

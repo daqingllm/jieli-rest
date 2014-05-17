@@ -20,6 +20,7 @@
 
     <link rel="stylesheet" href="/assets/css/bootstrap-multiselect.css" type="text/css"/>
     <link rel="stylesheet" href="/assets/css/ui.jqgrid.css" />
+    <link rel="stylesheet" href="/assets/css/dropzone.css" />
 
     <!-- fonts -->
 
@@ -203,7 +204,7 @@
                 编辑新闻、资讯或者企业动态
                 <small>
                     <i class="fa fa-angle-double-right"></i>
-                    上传图片后文本框内会产生&lt;img src='...'&gt;标签，您可以通过移动该标签调整图片位置
+                    上传图片后文本框内会产生[图片N]标签，您可以通过移动该标签调整图片位置
                 </small>
             </h1>
         </div>
@@ -240,8 +241,8 @@
                                 <#else>
                                     <option value="association" selected>协会动态</option>
                                     <option value="enterprise">合作展示</option>
-                                    <option value="history">协会事记</option>
                                     <option value="benefit">慈善公益</option>
+                                    <option value="history">协会事记</option>
                                 </#if>
                             </select>
                         </div>
@@ -283,7 +284,7 @@
 
                     <div class="space-4"></div>
 
-                    <div class="form-group">
+                    <div class="form-group" style="display: none">
                         <label class="col-sm-3 control-label no-padding-right" for="form-input-readonly"> 资讯图片 </label>
 
                         <div class="col-sm-9">
@@ -301,19 +302,24 @@
                     </div>
                     <div class="space-4"></div>
 
+                </form>
 
                     <div class="form-group">
-                        <label class="col-sm-3 control-label no-padding-right" for="form-input-readonly">  </label>
+                        <label class="col-sm-3 control-label no-padding-right" for="form-input-readonly" style="text-align: right"> 上传图片 </label>
 
                         <div class="col-sm-9">
-                            <div style="float: left" class="btn btn-success btn-purple" onclick="$('#bootbox-upload-image').click();">
-                                <i class="fa fa-cloud-upload bigger-110"></i>
-                                上传图片
+                            <div id="dropzone" class="col-xs-10 col-sm-7" style="margin-bottom: 20px;">
+                                <form action="/app/upload" class="dropzone" style="min-height: 180px;">
+                                    <div class="fallback">
+                                        <input name="file" type="file" multiple="" />
+                                    </div>
+                                </form>
                             </div>
-                            <div class="alert alert-info" style="float: left;padding: 2px 14px;margin-left: 15px;margin-top: 7px;"> 请上传572*364的图片 </div>
+                            <div class="alert alert-info" style="display:none;float: left;padding: 2px 14px;margin-left: 15px;margin-top: 7px;"> 请上传572*364的图片 </div>
                         </div>
                     </div>
 
+                <form class="form-horizontal" role="form">
 
                     <div class="form-group">
                         <label class="col-sm-3 control-label no-padding-right" for="form-field-select-pro"> 行业标签 </label>
@@ -371,13 +377,13 @@
 
                 <div class="clearfix form-actions">
                     <div class="col-md-offset-3 col-md-9">
-                        <button class="btn btn-success" type="button" style="font-weight:bold" onclick="previewThisArticle()">
+                        <button class="btn btn-success" type="button" style="font-weight:bold" onclick="previewThisArticle(textAreaId,imagesUpload)">
                             <i class="fa fa-question bigger-110"></i>
                             预览
                         </button>
 
                         &nbsp; &nbsp; &nbsp;
-                        <button class="btn btn-info" type="button" style="font-weight:bold" onclick="postThisArticle()">
+                        <button class="btn btn-info" type="button" style="font-weight:bold" onclick="postThisArticle(imagesUpload)">
                             <i class="fa fa-check bigger-110"></i>
                             确认
                         </button>
@@ -541,6 +547,7 @@
 <script src="/assets/js/bootstrap-tag.min.js"></script>
 <script src="/assets/js/jquery.gritter.min.js"></script>
 <script src="/assets/js/bootbox.min.js"></script>
+<script src="/assets/js/dropzone.min.js"></script>
 
 <script src="/assets/js/jquery.form.js"></script>
 <script src="/assets/js/jqGrid/jquery.jqGrid.min.js"></script>
@@ -558,11 +565,108 @@
     var data = null;
 </script>
 <script>
+
+    var textAreaId = "form-field-textarea";
+
+    function selectText(obj){
+        var str = $(obj).parent().children(".dz-filename").eq(0).children("span").html();
+        focusTextareaPart($("#"+textAreaId)[0],str);
+    }
+
+    function addUploadedImages(){
+        for (var ii = 0; ii < data["images"].length; ii ++) {
+            addAnImage(data["images"][ii].url);
+        }
+    }
+
+    function addAnImage(url){
+        var len = imagesUpload.length;
+        var curImage = {"url":url,"position":(len+1)};
+        imagesUpload.push(curImage);
+
+        // 设置图片的名字
+        var ImageDiv = "<div class=\"dz-preview dz-processing dz-image-preview\">"+
+                "<div class=\"dz-details\">"+
+                "<div class=\"dz-filename\"><span data-dz-name>[图片"+curImage.position+"]</span></div>"+
+                "<img height=\"100\" width=\"100\" src=\""+curImage.url+"\" onclick=\"selectText(this)\" />"+
+                "</div>" +
+                "<a onclick=\"CustomRemoveFile("+len+");return false;\" class=\"dz-remove\" href=\"javascript:undefined;\">删除</a>" +
+                "</div>";
+
+        var jqImageDiv = $(ImageDiv);
+        $(".dropzone").append(jqImageDiv);
+
+        if (imagesUpload.length == 1) $(".dropzone").addClass("dz-started");
+
+        // 更新textarea
+        var otextarea = $("#"+textAreaId).val().trim();
+        otextarea = otextarea.replace(imageHead+curImage.url+imageTail,"[图片"+curImage.position+"]");
+        $("#"+textAreaId).val(otextarea);
+    }
+
+    /**
+     * imagesUpload 保存url与图片名称的对应关系
+     * textarea 只显示图片名称
+     * .dz-filename 只显示图片名称
+     * 点击dz-filename会选中textarea里的对应内容！
+     */
+    var imagesUpload = [];
+    jQuery(function($){
+        try {
+            $(".dropzone").dropzone({
+                url:"/app/upload",
+                paramName: "file", // The name that will be used to transfer the file
+                maxFilesize: 1.5, // MB
+
+                addRemoveLinks : true,
+                dictDefaultMessage :
+                        '<span class="bigger-150 bolder"><i class="fa fa-caret-right red"></i> \
+                        <span class="smaller-80 grey">拖拽或点击 : 请上传572*364的图片</span> <br /> \
+                        <i class="upload-icon fa fa-cloud-upload blue icon-3x"></i>'
+                ,
+                dictResponseError: 'Error while uploading file!',
+
+                //change the previewTemplate to use Bootstrap progress bars
+                previewTemplate: "<div class=\"dz-preview dz-file-preview\">\n  <div class=\"dz-details\">\n    <div class=\"dz-filename\"><span data-dz-name></span></div>\n    <div style=\"display: none\" class=\"dz-size\" data-dz-size></div>\n    <img data-dz-thumbnail onclick=\"selectText(this)\" />\n  </div>\n  <div style=\"display: none\" class=\"progress progress-small progress-striped active\"><div class=\"progress-bar progress-bar-success\" data-dz-uploadprogress></div></div>\n  <div class=\"dz-success-mark\"><span></span></div>\n  <div class=\"dz-error-mark\"><span></span></div>\n  <div class=\"dz-error-message\"><span data-dz-errormessage></span></div>\n</div>",
+
+                success: function(file,response){
+                    //alert(response);
+                    if (response.code == 200){
+                        var len = imagesUpload.length;
+                        var curImage = {"url":response.body,"position":(len+1)};
+                        imagesUpload.push(curImage);
+
+                        // 设置图片的名字
+                        $(file.previewElement).find(".dz-filename").eq(0).children("span").html("[图片"+curImage.position+"]");
+
+                        // 更新textarea
+                        var pos = getTextAreaCursorPosition() || 0;
+                        var otextarea = $("#"+textAreaId).val().trim();
+                        var otextarea_head = pos > 0 ? otextarea.substring(0, pos) : "";
+                        var otextarea_tail = otextarea.substring(pos);
+                        $("#"+textAreaId).val(otextarea_head + "[图片"+curImage.position+"]" + otextarea_tail);
+                    }
+                },
+                removedfile: function(file){
+                    // file.previewElement 之前还有一个元素 dz-default dz-message
+                    var idx = $(file.previewElement).index() - 1;
+                    CustomRemoveFile(idx);
+                    if (file.previewElement) $(file.previewElement).remove();
+                }
+            });
+            $(".dropzone").css("min-height","180px");
+
+            addUploadedImages();
+        } catch(e) {
+            alert('Dropzone.js does not support older browsers!');
+        }
+
+    });
+
     function loadThisArticle(){
     <#if got?length==0>
-try{
-        data = ${art_data};}
-    catch (err){data = {};}
+        try{data = ${art_data};}
+        catch (err){data = {};}
 
         //$("#seletAssociationIds").multiselect('select',data["associationId"]);
         $("#seletAssociationIds option[value="+data["associationId"]+"]").attr("selected","selected");
@@ -584,53 +688,12 @@ try{
 
         $("#form-field-textarea").val(cont ||"");
 
-        var idx=cont.indexOf("<center><img width='576' style='padding:3px;' src='");
-        while(idx > -1 && idx < 0){
-            var ed = cont.indexOf("'></center",idx);
-            if(ed == -1) continue;
-
-            // 更新图片集
-            var uploadImgSrc = cont.substr(idx + "<center><img width='576' style='padding:3px;' src='".length , ed - idx - "<center><img width='576' style='padding:3px;' src='".length);
-            var newImgHtml = "<li>";
-            newImgHtml += "<a href='"+uploadImgSrc+"' data-rel='colorbox'>";
-            newImgHtml += "<img alt='150x150' width='150' height='150' src='"+uploadImgSrc+"' />";
-            newImgHtml += "</a>";
-            newImgHtml += "<div class='tools tools-right' style='height:30px;'>";
-            // must be " , ' no use
-            var re = new RegExp("\'","g");
-            //newImgHtml += "<a href='#' onclick='setTitleImg(\""+uploadImgSrc.replace(re,"")+"\")'><i class='fa fa-heart-o '></i></a>";
-            newImgHtml += "<a href='#' onclick='deletePic(\""+uploadImgSrc.replace(re,"")+"\")'><i class='fa fa-times red'></i></a>";
-            newImgHtml += "</div></li>";
-            $("#upload-img-list > li").last().before(newImgHtml);
-            $("#img-list-invisible").attr("style","border-width:0;display:none");
-            idx = cont.indexOf("<center><img width='576' style='padding:3px;' src='",ed);
-        }
-		
-		for (var ii = 0; ii < data["images"].length; ii ++){
-			var uploadImgSrc = data["images"][ii].url;
-            var newImgHtml = "<li>";
-            newImgHtml += "<a href='"+uploadImgSrc+"' data-rel='colorbox'>";
-            newImgHtml += "<img alt='150x150' width='150' height='150' src='"+uploadImgSrc+"' />";
-            newImgHtml += "</a>";
-            newImgHtml += "<div class='tools tools-right' style='height:30px;'>";
-            // must be " , ' no use
-            var re = new RegExp("\'","g");
-            //newImgHtml += "<a href='#' onclick='setTitleImg(\""+uploadImgSrc.replace(re,"")+"\")'><i class='fa fa-heart-o '></i></a>";
-            newImgHtml += "<a href='#' onclick='deletePic(\""+uploadImgSrc.replace(re,"")+"\")'><i class='fa fa-times red'></i></a>";
-            newImgHtml += "</div></li>";
-            $("#upload-img-list > li").last().before(newImgHtml);
-            $("#img-list-invisible").attr("style","border-width:0;display:none");
-		}
-
-
         var raw_data = [];
 
-        //raw_data.empty();
         raw_data = ${jsonCommentList};
         var artid = "${topicId}";
 
         var grid_data = parseArtData(raw_data);
-        //var grid_data = raw_data;
 
         var grid_selector = "#grid-table-comment";
         var pager_selector = "#grid-pager-comment";
@@ -731,22 +794,6 @@ try{
             $(table).find('.ui-pg-div').tooltip({container:'body'});
         }
 
-
-        Date.prototype.Format = function (fmt) { //author: meizz
-            var o = {
-                "M+": this.getMonth() + 1, //月份
-                "d+": this.getDate(), //日
-                "h+": this.getHours(), //小时
-                "m+": this.getMinutes(), //分
-                "s+": this.getSeconds(), //秒
-                "q+": Math.floor((this.getMonth() + 3) / 3), //季度
-                "S": this.getMilliseconds() //毫秒
-            };
-            if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
-            for (var k in o)
-                if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
-            return fmt;
-        }
 
         function deleteComments() {
             var ids = $("#grid-table-comment").getGridParam("selarrrow");
@@ -851,59 +898,6 @@ try{
             nonSelectedText: '请选择',
             nSelectedText: ' 被选中了',
             maxHeight:400
-        });
-
-        function uploadImageClick(){
-            var spin_img = "<div id='upload-loading-img' style='margin-left:30px;margin-top:10px;display: none;'><i class='fa fa-spinner icon-spin orange bigger-125'></i></div>";
-            spin_img = "";
-            bootbox.dialog({
-                width:400,
-                //message: "<input type='file' id='upload-image-files' name='upload-image-files' >",
-                message: "<form id='rest-upload-form-func' action='/app/upload' method='post' enctype='multipart/form-data' acceptcharset='UTF-8'>\n<input id='rest-upload-file' multiple='' type='file' name='file' size='50' />"+spin_img+"</form>",
-                buttons: {
-                    "upload": {
-                        "label": "<i class='fa fa-check'></i> 上传 ",
-                        "className": "btn-sm btn-success",
-                        "callback": function () {
-                            $('#rest-upload-form-func').ajaxSubmit(uploadArticleImageOptions);
-                        }
-                    },
-                    "cancel": {
-                        "label": "<i class='fa fa-times'></i> 取消",
-                        "className": "btn-sm",
-                        "callback": function () {
-                            var objFile = document.getElementById('rest-upload-file');
-                            objFile.outerHTML = objFile.outerHTML.replace(/(value=\").+\"/i, "$1\"");
-                        }
-                    }
-                }
-            });
-        }
-
-        $("#bootbox-upload-image").on("click", function () {
-            var spin_img = "<div id='upload-loading-img' style='margin-left:30px;margin-top:10px;display: none;'><i class='fa fa-spinner icon-spin orange bigger-125'></i></div>";
-            spin_img = "";
-            bootbox.dialog({
-                //message: "<input type='file' id='upload-image-files' name='upload-image-files' >",
-                message: "<form id='rest-upload-form' action='/app/upload' method='post' enctype='multipart/form-data' acceptcharset='UTF-8'>\n<input id='rest-upload-file' type='file' name='file' size='50' />"+spin_img+"</form>",
-                buttons: {
-                    "upload": {
-                        "label": "<i class='fa fa-check'></i> 上传 ",
-                        "className": "btn-sm btn-success",
-                        "callback": function () {
-                            $('#rest-upload-form').ajaxSubmit(uploadArticleImageOptions);
-                        }
-                    },
-                    "cancel": {
-                        "label": "<i class='fa fa-times'></i> 取消",
-                        "className": "btn-sm",
-                        "callback": function () {
-                            var objFile = document.getElementById('rest-upload-file');
-                            objFile.outerHTML = objFile.outerHTML.replace(/(value=\").+\"/i, "$1\"");
-                        }
-                    }
-                }
-            });
         });
 
         var colorbox_params = {
