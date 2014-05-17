@@ -39,61 +39,22 @@ public class VoteAction {
     private VoteResultDAO voteResultDAO = new VoteResultDAO();
     private UserDAO userDAO = new UserDAO();
     private BaseDAO<Comment> commentDAO = new BaseDAO<Comment>(Collections.Comment, Comment.class);
-    private String errorReturn = "<!DOCTYPE html>\n" +
-            "<html>\n" +
-            "    <head>\n" +
-            "        <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">\n" +
-            "        <title>请先登录</title>\n" +
-            "    </head>\n" +
-            "    <body>\n" +
-            "\n" +
-            "\t<span>您尚未登录，</span>\n" +
-            "\t<span id=\"totalSecond\">5</span>秒后跳转到登陆页..</span>\n" +
-            "\n" +
-            "\t<script language=\"javascript\" type=\"text/javascript\">\n" +
-            "\talert(document.cookie);\n" +
-            "\t\tvar second = document.getElementById('totalSecond').textContent;\n" +
-            "\n" +
-            "\t\tif (navigator.appName.indexOf(\"Explorer\") > -1)\n" +
-            "\t\t\tsecond = document.getElementById('totalSecond').innerText;\n" +
-            "\t\telse\n" +
-            "\t\t\tsecond = document.getElementById('totalSecond').textContent;\n" +
-            "\n" +
-            "\t\tsetInterval(\"redirect()\", 1000);\n" +
-            "\t\t\n" +
-            "\t\tfunction redirect()\n" +
-            "\t\t{\n" +
-            "\t\t\tif (second < 0)\n" +
-            "\t\t\t\tlocation.href = '/app/baccount/login';\n" +
-            "\t\t\telse {\n" +
-            "\t\t\t\tif (navigator.appName.indexOf(\"Explorer\") > -1)\n" +
-            "\t\t\t\t\tdocument.getElementById('totalSecond').innerText = second--;\n" +
-            "\t\t\t\telse\n" +
-            "\t\t\t\t\tdocument.getElementById('totalSecond').textContent = second--;\n" +
-            "\t\t\t}\n" +
-            "\t\t}\n" +
-            "\t</script>\n" +
-            "    </body>\n" +
-            "</html>";
 
     @GET
     @Produces(MediaType.TEXT_HTML)
     @Path("/new")
     public String createVote(@CookieParam("u")String sessionId) {
         if (!IdentityUtils.isValidate(sessionId)) {
-            return errorReturn;
+            return CommonUtil.errorReturn;
         }
         if(!IdentityUtils.isAdmin(sessionId)) {
-            return errorReturn;
+            return CommonUtil.errorReturn;
         }
         Account account = accountDAO.loadById(sessionId);
         if (account == null || account.username == null || account.username == ""){
-            return errorReturn;
+            return CommonUtil.errorReturn;
         }
-        boolean isSuper = IdentityUtils.isSuper(sessionId);
-        Map<String, Object> params = new HashMap<String, Object>();
-        params.put("username",account.username);
-        params.put("isSuper", isSuper);
+        Map<String, Object> params = CommonUtil.GenerateCommonParams(account);
         params.put("newVote", true);
         params.put("isEditable", true);
         return FTLrender.getResult("voteinfo.ftl", params);
@@ -104,20 +65,19 @@ public class VoteAction {
     @Path("/view")
     public String viewVote(@CookieParam("u") String sessionId, @QueryParam("v")String voteId) {
         if(!IdentityUtils.isValidate(sessionId)) {
-            return errorReturn;
+            return CommonUtil.errorReturn;
         }
         if(!IdentityUtils.isAdmin(sessionId)) {
-            return errorReturn;
+            return CommonUtil.errorReturn;
         }
         Account account = accountDAO.loadById(sessionId);
         if (account == null || account.username == null || account.username == ""){
-            return errorReturn;
+            return CommonUtil.errorReturn;
         }
         if(!MongoUtils.isValidObjectId(voteId)) {
-            return errorReturn;
+            return CommonUtil.errorReturn;
         }
 
-        boolean isSuper = IdentityUtils.isSuper(sessionId);
         List<Comment> commentList = commentDAO.find("{topicId:#, topicType:#, isDeleted:#}",
                 voteId, TopicType.Vote, false);
         if( !CollectionUtils.isEmpty(commentList) ){
@@ -135,9 +95,7 @@ public class VoteAction {
         else {
             commentList = new ArrayList<Comment>();
         }
-        Map<String, Object> params = new HashMap<String, Object>();
-        params.put("username", account.username);
-        params.put("isSuper", isSuper);
+        Map<String, Object> params = CommonUtil.GenerateCommonParams(account);
         if(!MongoUtils.isValidObjectId(voteId)) {
             return FTLrender.getResult("error.ftl", params);
         }
@@ -153,19 +111,16 @@ public class VoteAction {
     @Path("/edit")
     public String modifyVote(@CookieParam("u")String sessionId, @QueryParam("voteId")String voteId) {
         if(!IdentityUtils.isValidate(sessionId)) {
-            return errorReturn;
+            return CommonUtil.errorReturn;
         }
         if(!IdentityUtils.isAdmin(sessionId)) {
-            return errorReturn;
+            return CommonUtil.errorReturn;
         }
         Account account = accountDAO.loadById(sessionId);
         if (account == null || account.username == null || account.username == ""){
-            return errorReturn;
+            return CommonUtil.errorReturn;
         }
-        boolean isSuper = IdentityUtils.isSuper(sessionId);
-        Map<String, Object> params = new HashMap<String, Object>();
-        params.put("username", account.username);
-        params.put("isSuper", isSuper);
+        Map<String, Object> params = CommonUtil.GenerateCommonParams(account);
         if(!MongoUtils.isValidObjectId(voteId)) {
             return FTLrender.getResult("error.ftl", params);
         }
@@ -180,25 +135,22 @@ public class VoteAction {
     @Path("/list")
     public String getVoteList(@CookieParam("u")String sessionId) {
         if(!IdentityUtils.isValidate(sessionId)) {
-            return errorReturn;
+            return CommonUtil.errorReturn;
         }
         if(!IdentityUtils.isAdmin(sessionId)) {
-            return errorReturn;
+            return CommonUtil.errorReturn;
         }
         Account account = accountDAO.loadById(sessionId);
         if (account == null || account.username == null || account.username == ""){
-            return errorReturn;
+            return CommonUtil.errorReturn;
         }
         String associationId = IdentityUtils.getAssociationId(sessionId);
-        boolean isSuper = false;
-        Map<String, Object> params = new HashMap<String, Object>();
-        params.put("username", account.username);
+        Map<String, Object> params = CommonUtil.GenerateCommonParams(account);
         List<SimpleVoteInfo> voteList = new ArrayList<SimpleVoteInfo>();
         List<Association> associationList = new ArrayList<Association>();
         Integer pageNo = 1;
         Integer pageSize = 20;
         if(IdentityUtils.isSuper(sessionId)) {
-            isSuper = true;
             Iterable<com.jieli.association.Association> associations = associationDAO.loadAll();
             for(Association a : associations) {
                 associationList.add(a);
@@ -207,7 +159,6 @@ public class VoteAction {
         }
         else {
             if(!MongoUtils.isValidObjectId(associationId)) {
-                params.put("isSuper", false);
                 return FTLrender.getResult("error.ftl", params);
             }
         }
@@ -243,7 +194,6 @@ public class VoteAction {
         }
 
         params.put("jsonVoteList", jsonVoteList);
-        params.put("isSuper", isSuper);
         return FTLrender.getResult("vote_list.ftl", params);
 
     }

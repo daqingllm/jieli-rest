@@ -68,15 +68,10 @@ public class Identity {
         if (er != null) return  er;
 
         com.jieli.common.entity.Account account = accountDAO.loadById(sessionId);
-        Map<String, Object> params = new HashMap<String, Object>();
-        params.put("username",account.username);
+        Map<String, Object> params = CommonUtil.GenerateCommonParams(account);
 
         String associationOps = "";
-        if (account.state == AccountState.ADMIN) {
-            params.put("isSuper", false);
-        }
-        else {
-            params.put("isSuper", true);
+        if (account.state == AccountState.SUPPER) {
             List<com.jieli.association.Association> associationList = new ArrayList<com.jieli.association.Association>();
             Iterable<com.jieli.association.Association> iterable = associationDAO.loadAll();
             for (com.jieli.association.Association association : iterable)

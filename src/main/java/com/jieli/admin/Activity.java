@@ -53,11 +53,9 @@ public class Activity {
             associationList = CommonUtil.MakeAssociationOptionListForSelect(IdentityUtils.getAssociationId(sessionId));
         }
 
-        String username = accountDAO.loadById(sessionId).username;
+        Account account = accountDAO.loadById(sessionId);
 
-        Map<String, Object> params = new HashMap<String, Object>();
-        params.put("isSuper",isSuper);
-        params.put("username",username);
+        Map<String, Object> params = CommonUtil.GenerateCommonParams(account);
         params.put("associationList",associationList);
 
         return FTLrender.getResult("new_activity.ftl", params);
@@ -114,8 +112,7 @@ public class Activity {
         if (response != null) return response;
 
         com.jieli.common.entity.Account account = accountDAO.loadById(sessionId);
-        Map<String, Object> params = new HashMap<String, Object>();
-        params.put("username",account.username);
+        Map<String, Object> params = CommonUtil.GenerateCommonParams(account);
 
         int _page = 1,_rowNum = 15,_total=0,_totalPage = 0;
         try{
@@ -137,7 +134,6 @@ public class Activity {
         String activityList = "";
 
         if (IdentityUtils.isSuper(sessionId)){
-            params.put("isSuper",true);
             Iterable<com.jieli.activity.Activity> activities = activityDAO.getCollection().find().sort("{beginDate:-1}").as(com.jieli.activity.Activity.class);
             for (com.jieli.activity.Activity activity : activities){
                 if (_total >= (_page-1)*_rowNum && _total < _page*_rowNum) {
@@ -148,7 +144,6 @@ public class Activity {
             }
         }
         else {
-            params.put("isSuper",false);
             ObjectMapper objectMapper = new ObjectMapper();
 
             String associationName = associationDAO.loadById(account.associationId).name;
@@ -221,7 +216,7 @@ public class Activity {
         com.jieli.activity.Activity activity = activityDAO.loadById(actid);
         Account account = accountDAO.loadById(sessionId);
 
-        Map<String, Object> params = new HashMap<String, Object>();
+        Map<String, Object> params = CommonUtil.GenerateCommonParams(account);
         String activity_data = "";
         String associationList = "";
 
@@ -267,8 +262,6 @@ public class Activity {
             commentListString = "[]";
         }
 
-        params.put("username",account.username);
-        params.put("isSuper", IdentityUtils.isSuper(sessionId));
         params.put("act_data",activity_data);
         params.put("topicId",actid);
         params.put("jsonCommentList",commentListString);
@@ -286,7 +279,7 @@ public class Activity {
         com.jieli.activity.Activity activity = activityDAO.loadById(actid);
         Account account = accountDAO.loadById(sessionId);
 
-        Map<String, Object> params = new HashMap<String, Object>();
+        Map<String, Object> params = CommonUtil.GenerateCommonParams(account);
         String activity_data = "";
         String associationList = "";
 
@@ -315,8 +308,6 @@ public class Activity {
                 associationList = CommonUtil.MakeAssociationOptionListForSelect(IdentityUtils.getAssociationId(sessionId));
             }
         }
-        params.put("username",account.username);
-        params.put("isSuper", IdentityUtils.isSuper(sessionId));
         params.put("act_data",activity_data);
         params.put("associationList",associationList);
         return FTLrender.getResult("view_activity.ftl",params);
@@ -347,9 +338,7 @@ public class Activity {
             commentListString += "]";
 
             com.jieli.common.entity.Account account = accountDAO.loadById(sessionId);
-            Map<String, Object> params = new HashMap<String, Object>();
-            params.put("username",account.username);
-            params.put("isSuper", IdentityUtils.isSuper(sessionId));
+            Map<String, Object> params = CommonUtil.GenerateCommonParams(account);
             params.put("jsonCommentList",commentListString);
             params.put("topicId",activityId);
             params.put("ctype","activity");

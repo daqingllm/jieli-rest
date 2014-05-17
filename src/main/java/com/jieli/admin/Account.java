@@ -62,7 +62,7 @@ public class Account {
             return CommonUtil.errorReturn;
         }
 
-        Map<String, Object> params = new HashMap<String, Object>();
+        Map<String, Object> params = CommonUtil.GenerateCommonParams(account);
         params.put("username",account.username);
         boolean isSuper = IdentityUtils.isSuper(sessionId);
         params.put("isSuper",isSuper);
@@ -130,17 +130,9 @@ public class Account {
             return CommonUtil.errorReturn;
         }
 
-        boolean isSuper = IdentityUtils.isSuper(sessionId);
-        com.jieli.common.entity.Account account = accountDAO.loadByUserId(sessionId);
+        com.jieli.common.entity.Account account = accountDAO.loadById(sessionId);
         ResponseEntity responseEntity = new ResponseEntity();
-        Map<String, Object> params = new HashMap<String, Object>();
-        params.put("isSuper",isSuper);
-        if (account != null && account.username != null) {
-            params.put("username" , account.username);
-        }
-        else {
-            params.put("username" , "");
-        }
+        Map<String, Object> params = CommonUtil.GenerateCommonParams(account);
 
         String identityOps = "<option value='' selected='selected'>普通会员</option>";
         Iterable<com.jieli.association.Identity> identities = new IdentityDAO().loadAll(IdentityUtils.getAssociationId(sessionId));
@@ -219,7 +211,8 @@ public class Account {
 
         accountList = CommonUtil.RemoveLast(accountList, ",") + "]";
 
-        Map<String, Object> params = new HashMap<String, Object>();
+        com.jieli.common.entity.Account account = accountDAO.loadById(sessionId);
+        Map<String, Object> params = CommonUtil.GenerateCommonParams(account);
         params.put("isSuper", IdentityUtils.getState(sessionId) == AccountState.SUPPER);
         params.put("jsonAccList",accountList);
         params.put("username",accountDAO.loadById(sessionId).username);

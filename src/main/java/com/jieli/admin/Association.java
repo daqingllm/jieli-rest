@@ -45,9 +45,7 @@ public class Association {
 
         com.jieli.common.entity.Account account = accountDAO.loadById(sessionId);
 
-        Map<String, Object> params = new HashMap<String, Object>();
-
-        params.put("username",account.username);
+        Map<String, Object> params = CommonUtil.GenerateCommonParams(account);
 
         String associationList = "[";
         Iterable<com.jieli.association.Association> associations = associationDAO.loadAll();
@@ -68,7 +66,6 @@ public class Association {
         else associationList += "]";
 
         params.put("jsonAssociList",associationList);
-        params.put("isSuper",true);
 
         return FTLrender.getResult("association_list.ftl",params);
     }
