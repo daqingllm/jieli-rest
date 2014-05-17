@@ -240,8 +240,8 @@
             <#else>
                 <option value="association" selected>协会动态</option>
                 <option value="enterprise">合作展示</option>
-                <option value="history">协会事记</option>
                 <option value="benefit">慈善公益</option>
+                <option value="history">协会事记</option>
             </#if>
             </select>
         </div>
@@ -561,6 +561,19 @@
 
 <script type="text/javascript">
 
+    var textAreaId = "form-field-textarea";
+
+    function selectText(obj){
+        var str = $(obj).parent().children(".dz-filename").eq(0).children("span").html();
+        focusTextareaPart($("#"+textAreaId)[0],str);
+    }
+
+    /**
+     * imagesUpload 保存url与图片名称的对应关系
+     * textarea 只显示图片名称
+     * .dz-filename 只显示图片名称
+     * 点击dz-filename会选中textarea里的对应内容！
+     */
     var imagesUpload = [];
     jQuery(function($){
         try {
@@ -578,37 +591,57 @@
                 dictResponseError: 'Error while uploading file!',
 
                 //change the previewTemplate to use Bootstrap progress bars
-                previewTemplate: "<div class=\"dz-preview dz-file-preview\">\n  <div class=\"dz-details\">\n    <div class=\"dz-filename\"><span data-dz-name></span></div>\n    <div class=\"dz-size\" data-dz-size></div>\n    <img data-dz-thumbnail />\n  </div>\n  <div class=\"progress progress-small progress-striped active\"><div class=\"progress-bar progress-bar-success\" data-dz-uploadprogress></div></div>\n  <div class=\"dz-success-mark\"><span></span></div>\n  <div class=\"dz-error-mark\"><span></span></div>\n  <div class=\"dz-error-message\"><span data-dz-errormessage></span></div>\n</div>",
+                previewTemplate: "<div class=\"dz-preview dz-file-preview\">\n  <div class=\"dz-details\">\n    <div class=\"dz-filename\"><span data-dz-name></span></div>\n    <div class=\"dz-size\" data-dz-size></div>\n    <img data-dz-thumbnail onclick=\"selectText(this)\" />\n  </div>\n  <div class=\"progress progress-small progress-striped active\"><div class=\"progress-bar progress-bar-success\" data-dz-uploadprogress></div></div>\n  <div class=\"dz-success-mark\"><span></span></div>\n  <div class=\"dz-error-mark\"><span></span></div>\n  <div class=\"dz-error-message\"><span data-dz-errormessage></span></div>\n</div>",
 
                 success: function(file,response){
                     //alert(response);
                     if (response.code == 200){
-                        imagesUpload.push(response.body);
+                        var len = imagesUpload.length;
+                        var curImage = {"url":response.body,"position":(len+1)};
+                        imagesUpload.push(curImage);
 
-                        var uploadImgSrc = response.body;
-                        uploadImgSrc = "<center><img width='576' style='padding:3px;' src='" + uploadImgSrc + "'></center>";
-                        var otextarea = $("#form-field-textarea").val().trim();
-                        var otextarea_head = "";
-                        var otextarea_tail;
+                        // 设置图片的名字
+                        $(file.previewElement).find(".dz-filename").eq(0).children("span").html("[图片"+curImage.position+"]");
+
+                        // 更新textarea
                         var pos = getTextAreaCursorPosition() || 0;
-                        if (pos > 1)
-                            otextarea_head = otextarea.substring(0, pos);
-                        otextarea_tail = otextarea.substring(pos);
-
-                        $("#form-field-textarea").val(otextarea_head + uploadImgSrc + otextarea_tail);
+                        var otextarea = $("#"+textAreaId).val().trim();
+                        var otextarea_head = pos > 0 ? otextarea.substring(0, pos) : "";
+                        var otextarea_tail = otextarea.substring(pos);
+                        $("#"+textAreaId).val(otextarea_head + "[图片"+curImage.position+"]" + otextarea_tail);
                     }
                 },
                 removedfile: function(file){
+                    // file.previewElement 之前还有一个元素 dz-default dz-message
                     var idx = $(file.previewElement).index() - 1;
-                    var src = "";
+
+                    var position = "";
                     if (idx <= imagesUpload.length){
-                        src = imagesUpload[idx];
+                        // 获取[图片n]
+                        position = imagesUpload[idx].position;
+                        var otextarea = $("#"+textAreaId).val().trim();
 
-                        var otextarea = $("#form-field-textarea").val().trim();
-                        otextarea = otextarea.replace("<center><img width='576' style='padding:3px;' src='"+src+"'></center>","");
-                        $("#form-field-textarea").val(otextarea);
+                        // 删掉[图片n]
+                        otextarea = otextarea.replace("[图片"+position+"]","");
 
-                        imagesUpload.slice(0,idx).concat(imagesUpload.slice(idx+1,imagesUpload.length));
+                        // 获取[图片n+...]
+                        var imageSliceTail = imagesUpload.slice(idx+1,imagesUpload.length);
+                        for (var i=0; i < imageSliceTail.length; i++) {
+                            // 将图片[n+...] 向前移动一位：[图片n+1]变成了[图片n]. imagesUpload&&textarea 同时操作
+                            otextarea = otextarea.replace("[图片"+imageSliceTail[i].position+"]","[图片"+(imageSliceTail[i].position-1)+"]");
+                            imageSliceTail[i].position --;
+                        }
+                        $("#"+textAreaId).val(otextarea);
+                        imagesUpload = imagesUpload.slice(0,idx).concat( imageSliceTail );
+
+                        // 更新图片名称
+                        $(".dz-preview").each(function(){
+                            var ele = $(this).find(".dz-filename").eq(0).children("span").html();
+                            var curIdx = parseInt(ele.substr(3));
+                            if (curIdx > idx){
+                                $(this).find(".dz-filename").eq(0).children("span").html("[图片" + (curIdx-1) + "]");
+                            }
+                        });
                     }
                     $(file.previewElement).remove();
                 }

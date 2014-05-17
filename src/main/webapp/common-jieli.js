@@ -1,3 +1,25 @@
+var imageHead = "<center><img width='576' style='padding:3px;' src='";
+var imageTail = "?imageView/4/w/572/h/432"+"'></center>";
+
+/* 选中target(应该是一个textarea)的部分内容：第一个str */
+function focusTextareaPart(target,str) {
+    if (!target || !str || str.length == 0) return;
+    var text = target.value;
+    var start = text.indexOf(str);
+    var end = start + str.length;
+    if(target.setSelectionRange){
+        target.setSelectionRange(start, end);
+    }else{
+        var range = target.createTextRange();
+        range.collapse(true);
+        range.moveStart('character', start);
+        range.moveEnd('character', str.length);
+        range.select();
+    }
+    target.focus();
+}
+
+/*ie7下无此函数*/
 if (!Array.prototype.indexOf)
 {
     Array.prototype.indexOf = function(elt /*, from*/)
@@ -19,6 +41,7 @@ if (!Array.prototype.indexOf)
     };
 }
 
+/*格式化日期*/
 Date.prototype.Format = function (fmt) { //author: meizz
     var o = {
         "M+": this.getMonth() + 1, //月份
@@ -75,12 +98,11 @@ function previewJieLi(){
 }
 
 // 点击预览按钮
-function previewThisArticle() {
+function previewThisArticle(text,images) {
     var previewinpage = $("#form-field-textarea").val() || "";
     var previewinlist;
     try {
         previewinlist = $("#grid-table").getGridParam("selrow");
-        //if (previewinlist) previewinlist = $("#grid-table > tbody > tr").eq(previewinlist).find("td").eq(5).attr("title");
         if (previewinlist) previewinlist = $("#grid-table > tbody > tr").eq(previewinlist).find("td").eq(9).html();
         else previewinlist = "";
     }catch (e){
@@ -93,6 +115,13 @@ function previewThisArticle() {
         $("#dialog-message-preview").html(previewinpage.replace(regbr,"<br/>").replace(regimg,"<img width='576' style='padding:3px;' src"));
     else
         $("#dialog-message-preview").html(previewinlist.replace(regbr,"<br/>").replace(regimg,"<img width='576' style='padding:3px;' src"));
+
+    if (text&&images){
+        for (var i = 0; i < images.length; i++){
+            text = text.replace("[图片"+images[i].position+"]",imageHead+images[i].url+imageTail);
+        }
+        $("#dialog-message-preview").html(text);
+    }
 
     var dialog = $("#dialog-message-preview").removeClass('hide').dialog({
         modal: true,
@@ -197,9 +226,11 @@ function postThisArticle(images){
 
     if (images && images.length > 0) {
         for (var i=0; i < images.length;i++) {
-            var jsn_img = {"placeholder": "", "url": images[i], "description": p_title || ""};
+            var jsn_img = {"placeholder": "", "url": images[i].url, "description": p_title || ""};
             json["images"].push(jsn_img);
+            p_content = p_content.replace("[图片"+images[i].position+"]",imageHead+images[i].url+imageTail);
         }
+        json["content"] = p_content;
     }
 
     $("#upload-img-list li").each(function(){
