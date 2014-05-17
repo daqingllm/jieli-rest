@@ -6,15 +6,12 @@ import com.jieli.activity.*;
 import com.jieli.activity.Activity;
 import com.jieli.association.*;
 import com.jieli.association.Association;
-import com.jieli.common.entity.InterestTag;
-import com.jieli.common.entity.ProfessionTag;
+import com.jieli.common.entity.*;
 import com.jieli.mongo.Model;
 import com.jieli.util.IdentityUtils;
 
 import javax.ws.rs.core.Response;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.LinkedHashMap;
+import java.util.*;
 
 /**
  * Created by 95 on 2014/4/16.
@@ -182,5 +179,21 @@ public class CommonUtil {
 
         if (src.endsWith(last)) return src.substring(0,src.length()-last.length());
         else  return src;
+    }
+
+    public static Map<String, Object> GenerateCommonParams(com.jieli.common.entity.Account account){
+        if (account == null){
+            return null;
+        }
+        Map<String, Object> params = new HashMap<String, Object>();
+        com.jieli.association.Association association = associationDAO.loadById(account.associationId);
+        params.put("username",account.username);
+        params.put("isSuper",account.state == AccountState.SUPPER);
+        if(association!=null)
+            params.put("associationName",association.name);
+        else
+            params.put("associationName","接力");
+
+        return params;
     }
 }

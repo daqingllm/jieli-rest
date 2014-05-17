@@ -1,6 +1,8 @@
 package com.jieli.admin;
 
+import com.jieli.association.*;
 import com.jieli.common.dao.AccountDAO;
+import com.jieli.common.entity.AccountState;
 import com.jieli.common.entity.SystemInfo;
 import com.jieli.mongo.BaseDAO;
 import com.jieli.util.FTLrender;
@@ -23,6 +25,7 @@ import java.util.Map;
 @Path("/bsys")
 public class System {
     private AccountDAO accountDAO = new AccountDAO();
+    private AssociationDAO associationDAO = new AssociationDAO();
     BaseDAO<SystemInfo> systemDAO = new BaseDAO<SystemInfo>("systeminfo", SystemInfo.class);
 
     /*关于接力中国*/
@@ -30,22 +33,18 @@ public class System {
     @Path("/aboutjieli")
     @Produces(MediaType.TEXT_HTML)
     public String getAboutJieli(@CookieParam("u") String sessionId) {
-
-        if (!IdentityUtils.isAdmin(sessionId) || IdentityUtils.isSuper(sessionId)) return CommonUtil.errorReturn;
-
         com.jieli.common.entity.Account account = accountDAO.loadById(sessionId);
-        Map<String, Object> params = new HashMap<String, Object>();
-        params.put("username",account.username);
-        params.put("isSuper",true);
+        if (account==null || account.state != AccountState.ADMIN){
+            return CommonUtil.errorReturn;
+        }
+
+        Map<String, Object> params = CommonUtil.GenerateCommonParams(account);
 
         String content = "尚无系统信息";
         SystemInfo info = systemDAO.findOne("{}");
         if (info!= null && StringUtils.isNotEmpty(info.aboutJieli)) {
             content = info.aboutJieli;
         }
-
-        String contentAppend = content.replace("\"","").replace("\'","");
-        //if (content.indexOf("\"") > 0 || content.indexOf("\'") > 0) content = "请不要再内容中填写英文的单引号和双引号:"+contentAppend;
 
         params.put("content",content);
         return FTLrender.getResult("about_jieli.ftl",params);
@@ -56,21 +55,18 @@ public class System {
     @Path("/aboutsystem")
     @Produces(MediaType.TEXT_HTML)
     public String getAboutSystem(@CookieParam("u") String sessionId) {
-        if (!IdentityUtils.isSuper(sessionId)) return CommonUtil.errorReturn;
-
         com.jieli.common.entity.Account account = accountDAO.loadById(sessionId);
-        Map<String, Object> params = new HashMap<String, Object>();
-        params.put("username",account.username);
-        params.put("isSuper",true);
+        if (account==null || account.state != AccountState.SUPPER){
+            return CommonUtil.errorReturn;
+        }
+
+        Map<String, Object> params = CommonUtil.GenerateCommonParams(account);
 
         String content = "尚无软件信息";
         SystemInfo info = systemDAO.findOne("{}");
         if (info!= null && StringUtils.isNotEmpty(info.aboutSystem)) {
             content = info.aboutSystem.replaceAll("\n", "<br/>");
         }
-
-        String contentAppend = content.replace("\"","").replace("\'","");
-        //if (content.indexOf("\"") > 0 || content.indexOf("\'") > 0) content = "请不要再内容中填写英文的单引号和双引号:"+contentAppend;
 
         params.put("content",content);
         return FTLrender.getResult("about_system.ftl",params);
