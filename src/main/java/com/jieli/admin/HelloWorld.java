@@ -39,7 +39,7 @@ public class HelloWorld {
             return CommonUtil.errorReturn;
         }
 
-        Map<String, Object> params = new HashMap<String, Object>();
+        Map<String, Object> params = CommonUtil.GenerateCommonParams(account);
 
         if (account.state.compareTo(AccountState.SUPPER)==0)
             params.put("isSuper",true);

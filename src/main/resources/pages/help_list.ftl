@@ -60,7 +60,7 @@
             <a href="index.html" class="navbar-brand">
                 <small>
                     <i class="fa fa-leaf"></i>
-                    接力 后台管理系统
+                    ${associationName} 后台管理系统
                 </small>
             </a><!-- /.brand -->
         </div>
@@ -233,9 +233,9 @@
                     <label class="col-sm-3 control-label no-padding-right" for="form-field-select-type"> 请选择帮助类型 </label>
                     <div class="col-sm-9">
                         <select class="col-xs-10 col-sm-7" id="help-select" style="padding: 5px 4px;font-size: 14px;">
-                            <option value="0" selected="selected">供给</option>
-                            <option value="1">需求</option>
-                            <option value="2">全部</option>
+                            <option value="2" selected="selected">全部</option>
+                            <option value="1">供给</option>
+                            <option value="0">需求</option>
                         </select>
                     </div>
                     <div class="space-4"></div>

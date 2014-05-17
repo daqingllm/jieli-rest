@@ -39,8 +39,7 @@ public class News {
         if (response != null) return response;
 
         com.jieli.common.entity.Account account = accountDAO.loadById(sessionId);
-        Map<String, Object> params = new HashMap<String, Object>();
-        params.put("username",account.username);
+        Map<String, Object> params = CommonUtil.GenerateCommonParams(account);
 
         int _page = 1,_rowNum = 15,_total=0,_totalPage = 0;
         try{
@@ -206,11 +205,10 @@ public class News {
         }
 
 
-        Map<String, Object> params = new HashMap<String, Object>();
+        Map<String, Object> params = CommonUtil.GenerateCommonParams(account);
         // 这里用 user name ， 还是 account username ？
         // 目前super user name 是空的
 
-        params.put("username",account.username);
         //params.put("username",user.name);
 
 
@@ -232,7 +230,6 @@ public class News {
         interestOptionList = CommonUtil.MakeInterestOptionList();
         professionOptionList = CommonUtil.MakeProfessionOptionList();
 
-        params.put("isSuper",isSuper);
         params.put("assIdOptionList",assIdOptionList);
         params.put("interestOptionList",interestOptionList);
         params.put("professionOptionList",professionOptionList);
@@ -368,11 +365,10 @@ public class News {
         }
 
 
-        Map<String, Object> params = new HashMap<String, Object>();
+        Map<String, Object> params = CommonUtil.GenerateCommonParams(account);
         // 这里用 user name ， 还是 account username ？
         // 目前super user name 是空的
 
-        params.put("username",account.username);
         //params.put("username",user.name);
 
 
@@ -445,7 +441,6 @@ public class News {
             commentListString = "[]";
         }
 
-        params.put("isSuper",isSuper);
         params.put("got",got);
         params.put("art_data",tmp);
         params.put("assIdOptionList",assIdOptionList);
@@ -482,9 +477,7 @@ public class News {
             commentListString += "]";
 
             com.jieli.common.entity.Account account = accountDAO.loadById(sessionId);
-            Map<String, Object> params = new HashMap<String, Object>();
-            params.put("username",account.username);
-            params.put("isSuper", IdentityUtils.isSuper(sessionId));
+            Map<String, Object> params = CommonUtil.GenerateCommonParams(account);
             params.put("jsonCommentList",commentListString);
             params.put("topicId",newsId);
             params.put("ctype","news");

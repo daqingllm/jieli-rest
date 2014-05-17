@@ -70,14 +70,11 @@ public class Group {
         if (er != null) return  er;
 
         com.jieli.common.entity.Account account = accountDAO.loadById(sessionId);
-        Map<String, Object> params = new HashMap<String, Object>();
-        params.put("username",account.username);
+        Map<String, Object> params = CommonUtil.GenerateCommonParams(account);
 
         String associationOps = "";
-        if (account.state == AccountState.ADMIN) {
-            params.put("isSuper", false);
-        }
-        else {
+        if (account.state == AccountState.SUPPER)
+        {
             params.put("isSuper", true);
             List<com.jieli.association.Association> associationList = new ArrayList<com.jieli.association.Association>();
             Iterable<com.jieli.association.Association> iterable = associationDAO.loadAll();
