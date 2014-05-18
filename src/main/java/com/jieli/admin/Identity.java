@@ -1,9 +1,9 @@
 package com.jieli.admin;
 
 import com.jieli.association.*;
+import com.jieli.association.Association;
 import com.jieli.common.dao.AccountDAO;
-import com.jieli.common.entity.AccountState;
-import com.jieli.common.entity.ResponseEntity;
+import com.jieli.common.entity.*;
 import com.jieli.user.dao.UserDAO;
 import com.jieli.user.entity.User;
 import com.jieli.util.FTLrender;
@@ -28,6 +28,42 @@ public class Identity {
     private AssociationDAO associationDAO = new AssociationDAO();
     private IdentityDAO identityDAO = new IdentityDAO();
     private UserDAO userDAO = new UserDAO();
+
+
+    /* update identity index , identities has the index info ! */
+    @POST
+    @Path("/index")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response updateIdentity(@CookieParam("u") String sessionId, @QueryParam("id") String id, List<String> identityList){
+        com.jieli.common.entity.Account account = accountDAO.loadById(sessionId);
+        ResponseEntity responseEntity = new ResponseEntity();
+
+        if (account.state != AccountState.ADMIN && account.state != AccountState.SUPPER){
+            responseEntity.code = 200;
+            responseEntity.msg = "无权限";
+            return Response.status(200).entity(responseEntity).build();
+        }
+
+        Association association = associationDAO.loadById(id);
+        Iterable<com.jieli.association.Identity> identifies = null;
+        if (account.state == AccountState.SUPPER && association != null){
+            identifies = identityDAO.loadAll(association.get_id().toString());
+        } else if (account.state == AccountState.ADMIN){
+            identifies = identityDAO.loadAll(account.associationId);
+        }else{
+            responseEntity.code = 200;
+            responseEntity.msg = "缺少参数id";
+            return Response.status(200).entity(responseEntity).build();
+        }
+
+        for (com.jieli.association.Identity oldIdentity : identifies) {
+            oldIdentity.index = identityList.indexOf(oldIdentity.name);
+            identityDAO.save(oldIdentity);
+        }
+
+        responseEntity.code = 200;
+        return Response.status(200).entity(responseEntity).build();
+    }
 
     @POST
     @Path("/del")
