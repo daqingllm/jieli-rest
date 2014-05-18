@@ -13,6 +13,8 @@ public class Identity extends Model {
 
     public String name;
 
+    public int index;
+
     public String getAssociationId() {
         return associationId;
     }
