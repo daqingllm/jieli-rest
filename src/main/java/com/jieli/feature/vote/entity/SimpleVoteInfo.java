@@ -19,6 +19,7 @@ public class SimpleVoteInfo extends Model{
     private Integer participants;
     private Integer totalVote; //总票数
     public String picture;
+    private boolean isUserVoted;
 
     public String getAssociationId() {
         return associationId;
@@ -98,5 +99,13 @@ public class SimpleVoteInfo extends Model{
 
     public void setTotalVote(Integer totalVote) {
         this.totalVote = totalVote;
+    }
+
+    public boolean isUserVoted() {
+        return isUserVoted;
+    }
+
+    public void setUserVoted(boolean isUserVoted) {
+        this.isUserVoted = isUserVoted;
     }
 }

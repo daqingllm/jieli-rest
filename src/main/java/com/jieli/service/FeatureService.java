@@ -584,6 +584,20 @@ public class FeatureService {
             size = 20;
         }
         List<SimpleVoteInfo> voteList = voteDAO.getVoteInfoList(page, size, associationId);
+        for(SimpleVoteInfo v : voteList) {
+            VoteResult result = voteResultDAO.loadByVoteId(v.get_id().toString());
+            if(result.getVoteList() == null || result.getVoteList().size() == 0) {
+                v.setUserVoted(false);
+                continue;
+            }
+            v.setUserVoted(false);
+            for(Vote vote : result.getVoteList()) {
+                if(vote.getUserId().equals(userId)){
+                    v.setUserVoted(true);
+                    break;
+                }
+            }
+        }
         responseEntity.code = 200;
         responseEntity.body = voteList;
         return Response.status(200).entity(responseEntity).build();

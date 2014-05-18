@@ -306,6 +306,14 @@
         </div>
 
         <form class="form-horizontal" role="form">
+            <div class="space-4"></div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right" for="form-field-textarea">  </label>
+
+                <div class="col-sm-9">
+                    <div class="col-xs-10 col-sm-7 alert alert-warning" style="margin-bottom: 0">如果标签与用户个人标签相同，用户会得到提示</div>
+                </div>
+            </div>
 
             <div class="space-4"></div>
             <div class="form-group">
