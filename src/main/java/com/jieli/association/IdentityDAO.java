@@ -12,6 +12,6 @@ import com.jieli.mongo.GenericDAO;
 public class IdentityDAO extends GenericDAO<Identity> {
 
     public Iterable<Identity> loadAll(String associationId) {
-        return col.find("{associationId:#}", associationId).as(Identity.class);
+        return col.find("{associationId:#}", associationId).sort("{index:1}").as(Identity.class);
     }
 }

@@ -499,10 +499,10 @@
 
     <div class="space-4"></div>
     <div class="form-group">
-        <label class="col-sm-3 control-label no-padding-right" for="form-field-select-pro">  </label>
+        <label class="col-sm-3 control-label no-padding-right" for="form-field-select-pro2">  </label>
 
         <div class="col-sm-9">
-            <div class="col-xs-10 col-sm-7" id="form-field-select-pro" > &nbsp; </div>
+            <div class="col-xs-10 col-sm-7" id="form-field-select-pro2" > &nbsp; </div>
         </div>
     </div>
 

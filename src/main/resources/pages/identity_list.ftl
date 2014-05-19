@@ -43,6 +43,13 @@
     <script src="/assets/js/html5shiv.js"></script>
     <script src="/assets/js/respond.min.js"></script>
     <![endif]-->
+
+    <style>
+        button{
+            font-family : "Microsoft YaHei";
+        }
+    </style>
+
 </head>
 
 <body>
@@ -281,6 +288,25 @@
                     <i class="fa fa-times bigger-110"></i>
                     删除当前分组
                 </button>
+
+                &nbsp; &nbsp; &nbsp;
+                <button class="btn btn-success" type="reset" onclick="moveCurrentGroup(0)">
+                    <i class="fa fa-arrow-up bigger-110"></i>
+                    上移当前分组
+                </button>
+
+                &nbsp; &nbsp; &nbsp;
+                <button class="btn btn-success" type="reset" onclick="moveCurrentGroup(1)">
+                    <i class="fa fa-arrow-down bigger-110"></i>
+                    下移当前分组
+                </button>
+
+                &nbsp; &nbsp; &nbsp;
+                <button class="btn btn-warning" type="reset" onclick="updateIndex()">
+                    <i class="fa fa-arrow-down bigger-110"></i>
+                    保存当前分组次序
+                </button>
+
             </div>
         </div>
 
@@ -563,6 +589,42 @@ jQuery(function($){
 
     loadThisGroup("${firstGroupName}",true);
 });
+
+function updateIndex(){
+    var idens = [];
+    $(".group").each(function(){idens.push($(this).attr("id").substr(2));});
+
+    $.ajax({
+        type:"POST",
+        url:"/app/bidentity/index",
+        data: JSON.stringify(idens),
+        contentType: "application/json; charset=utf-8",
+        dataType: 'json',
+        async: false,
+        success: function (ret) {
+            if (ret.code == 200)
+                alert("已经更新排列顺序！");
+            else
+                alert("更新排列顺序失败"+ret.msg);
+        }
+    });
+}
+
+function moveCurrentGroup(down){
+    var gn = getCurrentGroupName();
+    var cur = $("#gn"+gn).index();
+    var total = $(".group").length;
+    var target = (cur + (down == 1 ? 1 : -1));
+
+    if (target < 0) return;
+    if (target > total-1) return;
+
+    if (down == 1){
+        $("#gn"+gn).insertAfter($(".group").eq(target));
+    }else{
+        $("#gn"+gn).insertBefore($(".group").eq(target));
+    }
+}
 
 /* 载入此分组用户列表 */
 function loadThisGroup(name,refresh){

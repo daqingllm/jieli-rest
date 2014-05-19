@@ -47,7 +47,9 @@ public class MatchUtil {
         if (!StringUtils.isEmpty(user1.constellation) && !StringUtils.isEmpty(user2.constellation)) {
             score += calConstellation(user1.constellation, user2.constellation);
         }
-        score += calEducation(user1, user2);
+//        score += calEducation(user1, user2);
+        score += 5;
+        match.matchInfos.add("教育背景相近");
 
         match.score = score;
     }

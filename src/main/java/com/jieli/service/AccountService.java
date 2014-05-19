@@ -71,7 +71,8 @@ public class AccountService {
             responseEntity.msg = "用户不存在";
             return Response.status(200).entity(responseEntity).build();
         }
-        if (!password.equals(account.password)) {
+        String temPassword = generateTempPassword(phone);
+        if (!password.equals(temPassword)) {
             responseEntity.code = 1002;
             responseEntity.msg = "密码不正确";
             return Response.status(200).entity(responseEntity).build();
@@ -85,6 +86,14 @@ public class AccountService {
         json.put("userId", account.userId);
         responseEntity.body = json.toString();
         return Response.status(200).entity(responseEntity).build();
+    }
+
+    private String generateTempPassword(String phone) {
+        int length = phone.length();
+        if (length < 6) {
+            return phone;
+        }
+        return phone.substring(length - 6);
     }
 
     @Path("/login")
