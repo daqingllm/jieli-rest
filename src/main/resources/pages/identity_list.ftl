@@ -2,7 +2,7 @@
 <html lang="zh">
 <head>
     <meta charset="utf-8"/>
-    <title>接力 组织架构设置</title>
+    <title>${associationName} 组织架构设置</title>
     <meta name="description" content="接力"/>
     <!-- basic styles -->
 

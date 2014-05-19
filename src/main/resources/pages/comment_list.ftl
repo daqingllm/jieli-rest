@@ -3,9 +3,9 @@
 <head>
     <meta charset="utf-8"/>
 <#if ctype=="news">
-    <title>接力 资讯管理</title>
+    <title>${associationName} 资讯管理</title>
 <#elseif ctype=="activity">
-    <title>接力 活动管理</title>
+    <title>${associationName} 活动管理</title>
 </#if>
     <meta name="description" content="接力"/>
     <!-- basic styles -->

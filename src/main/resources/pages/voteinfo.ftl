@@ -2,7 +2,7 @@
     <html lang="zh">
             <head>
             <meta charset="utf-8"/>
-            <title>接力 投票管理</title>
+            <title>${associationName} 投票管理</title>
     <meta name="description" content="接力"/>
         <!-- basic styles -->
 

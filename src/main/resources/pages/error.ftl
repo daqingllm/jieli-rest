@@ -2,7 +2,7 @@
 <html lang="zh">
 <head>
     <meta charset="utf-8"/>
-    <title>接力 资讯管理</title>
+    <title>上海市青企协 错误</title>
     <meta name="description" content="接力"/>
     <!-- basic styles -->
 
@@ -61,7 +61,7 @@
             <a href="index.html" class="navbar-brand">
                 <small>
                     <i class="icon-leaf"></i>
-                    ${associationName} 后台管理系统
+                    上海市青企协 后台管理系统
                 </small>
             </a><!-- /.brand -->
         </div>
