@@ -70,6 +70,13 @@ function generateJieLiContent(){
     var content = $("#form-field-textarea").val();
     var regbr = new RegExp("\n","g");
 
+    if (imagesUploadAdmin && imagesUploadAdmin.length > 0) {
+        for (var i=0; i < imagesUploadAdmin.length;i++) {
+            var jsn_img = {"placeholder": "", "url": imagesUploadAdmin[i].url, "description": ""};
+            content = content.replace("[图片"+imagesUploadAdmin[i].position+"]",imageHead+imagesUploadAdmin[i].url+imageTail);
+        }
+    }
+
     return  content.replace(regbr,"<br/>");
 }
 // 预览 关于青企协

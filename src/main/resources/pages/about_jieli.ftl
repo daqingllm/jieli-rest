@@ -20,6 +20,7 @@
 
     <link rel="stylesheet" href="/assets/css/datepicker.css" />
     <link rel="stylesheet" href="/assets/css/daterangepicker.css" />
+    <link rel="stylesheet" href="/assets/css/dropzone.css" />
 
     <!-- fonts -->
 
@@ -200,7 +201,7 @@
             <div class="page-content">
                 <div class="page-header">
                     <h1>
-                        编辑关于上海市青企协
+                        编辑关于${associationName}
                         <small>
                             <i class="fa fa-angle-double-right"></i>
                             请在下面的文本框中输入内容
@@ -228,7 +229,7 @@
                             <div class="space-4"></div>
 
 
-                            <div class="form-group">
+                            <div class="form-group" style="display: none">
                                 <label class="col-sm-1 control-label no-padding-right" for="form-input-readonly"> 图片 </label>
 
                                 <div class="col-sm-9">
@@ -242,13 +243,46 @@
 
                         </form>
 
+
+                        <div class="form-group">
+                            <#--<label class="col-sm-3 control-label no-padding-right" for="form-input-readonly" style="text-align: right"> 上传图片 </label>-->
+
+                            <div class="col-sm-9">
+                                <div id="dropzone" class="autosize-transition col-xs-10 col-sm-7"  style="margin-top:30px;margin-left:100px;min-height: 140px;">
+                                    <form action="/app/upload" class="dropzone" id="adminUploaded" style="min-height: 180px;">
+                                        <div class="fallback">
+                                            <input name="file" type="file" multiple="" />
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <form class="form-horizontal" role="form">
+
+                            <div class="space-4"></div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label no-padding-right" for="form-field-select-pro2">  </label>
+
+                                <div class="col-sm-9">
+                                    <div class="col-xs-10 col-sm-7" id="form-field-select-pro2" > &nbsp; </div>
+                                </div>
+                            </div>
+
+
+                            <div class="space-4"></div>
+
+                        </form>
+
+
                         <div id="dialog-message-preview" class="hide">
                         </div><!-- #dialog-message -->
 
                         <div class="clearfix form-actions" style="padding-left:320px;">
 
                             <button class="btn btn-success btn-purple" id="bootbox-upload-image"
-                                    style="font-weight:bold;">
+                                    style="display:none;font-weight:bold;">
                                 <i class="fa fa-cloud-upload bigger-110"></i>
                                 上传标题图片
                             </button>
@@ -398,6 +432,7 @@
 <script src="/assets/js/bootbox.min.js"></script>
 
 <script src="/assets/js/jquery.form.js"></script>
+<script src="/assets/js/dropzone.min.js"></script>
 
 <!-- ace scripts -->
 
@@ -428,6 +463,60 @@
 </script>
 
 <script type="text/javascript">
+
+    var textAreaId = "form-field-textarea";
+    var imageTemp = [];
+    var imagesUploadAdmin = [];
+    var adminUploadedImagesId = "adminUploaded";
+
+    function addUploadedImages(){
+        if (textAreaId) {
+            var otextarea = $("#" + textAreaId).val().trim();
+            var start = 0;
+            var end;
+            var temp = 0;
+
+            while((tmp = otextarea.indexOf(imageHead,start))>-1){
+                start = tmp+imageHead.length;
+                end = otextarea.indexOf(imageTail,start);
+                var url = otextarea.substr(start,end-start);
+                imageTemp.push(url);
+            }
+        }
+
+        for (var ii = 0; ii < imageTemp.length; ii ++) {
+            addAnImage(imageTemp[ii],adminUploadedImagesId);
+        }
+    }
+
+    /* add img[url] to ImageArray-DivImageList-TextArea */
+    function addAnImage(url,divId){
+        var len = imagesUploadAdmin.length;
+        var curImage = {"url":url,"position":(len+1)};
+        imagesUploadAdmin.push(curImage);
+
+        // 设置图片的名字
+        var ImageDiv = "<div class=\"dz-preview dz-processing dz-image-preview\">"+
+                "<div class=\"dz-details\">"+
+                "<div class=\"dz-filename\"><span data-dz-name>[图片"+curImage.position+"]</span></div>"+
+                "<img height=\"100\" width=\"100\" src=\""+curImage.url+"\" onclick=\"selectText(this)\" />"+
+                "</div>" +
+                "<a onclick=\"imagesUploadAdmin = CustomRemoveFile(\'"+divId+"\',imagesUploadAdmin,"+len+",\'"+textAreaId+"\');return false;\" class=\"dz-remove\" href=\"javascript:undefined;\">删除</a>" +
+                "</div>";
+
+        var jqImageDiv = $(ImageDiv);
+        $("#"+divId).append(jqImageDiv);
+
+        if (imagesUploadAdmin.length == 1) $("#"+divId).addClass("dz-started");
+
+        // 更新textarea
+        if (textAreaId) {
+            var otextarea = $("#" + textAreaId).val().trim();
+            otextarea = otextarea.replace(imageHead + curImage.url + imageTail, "[图片" + curImage.position + "]");
+            $("#" + textAreaId).val(otextarea);
+        }
+    }
+
 
     $("#bootbox-upload-image").on("click", function () {
         var spin_img = "<div id='upload-loading-img' style='margin-left:30px;margin-top:10px;display: none;'><i class='fa fa-spinner icon-spin orange bigger-125'></i></div>";
@@ -481,7 +570,7 @@
             success:function(ret){
                 if (ret.code == 200){
                     alert("已经更新关于上海市青企协的内容");
-                    return;
+                    window.location.reload();
                 }else{
                     alert(ret.body);
                     return;
@@ -510,6 +599,55 @@
     jQuery(function($){
         var content = "${content}" || "";
         $("#form-field-textarea").val(content);
+
+        try {
+            $("#"+adminUploadedImagesId).dropzone({
+                url:"/app/upload",
+                paramName: "file", // The name that will be used to transfer the file
+                maxFilesize: 1.5, // MB
+
+                addRemoveLinks : true,
+                dictDefaultMessage :
+                        '<span class="bigger-150 bolder"><i class="fa fa-caret-right red"></i> \
+                        <span class="smaller-80 grey">拖拽或点击 : 请上传572*364的图片</span> <br /> \
+                        <i class="upload-icon fa fa-cloud-upload blue icon-3x"></i>'
+                ,
+                dictResponseError: 'Error while uploading file!',
+
+                //change the previewTemplate to use Bootstrap progress bars
+                previewTemplate: "<div class=\"dz-preview dz-file-preview\">\n  <div class=\"dz-details\">\n    <div class=\"dz-filename\"><span data-dz-name></span></div>\n    <div style=\"display: none\" class=\"dz-size\" data-dz-size></div>\n    <img data-dz-thumbnail onclick=\"selectText(this)\" />\n  </div>\n  <div style=\"display: none\" class=\"progress progress-small progress-striped active\"><div class=\"progress-bar progress-bar-success\" data-dz-uploadprogress></div></div>\n  <div class=\"dz-success-mark\"><span></span></div>\n  <div class=\"dz-error-mark\"><span></span></div>\n  <div class=\"dz-error-message\"><span data-dz-errormessage></span></div>\n</div>",
+
+                success: function(file,response){
+                    //alert(response);
+                    if (response.code == 200){
+                        var len = imagesUploadAdmin.length;
+                        var curImage = {"url":response.body,"position":(len+1)};
+                        imagesUploadAdmin.push(curImage);
+
+                        // 设置图片的名字
+                        $(file.previewElement).find(".dz-filename").eq(0).children("span").html("[图片"+curImage.position+"]");
+
+                        // 更新textarea
+                        var pos = getTextAreaCursorPosition() || 0;
+                        var otextarea = $("#"+textAreaId).val().trim();
+                        var otextarea_head = pos > 0 ? otextarea.substring(0, pos) : "";
+                        var otextarea_tail = otextarea.substring(pos);
+                        $("#"+textAreaId).val(otextarea_head + "[图片"+curImage.position+"]" + otextarea_tail);
+                    }
+                },
+                removedfile: function(file){
+                    // file.previewElement 之前还有一个元素 dz-default dz-message
+                    var idx = $(file.previewElement).index() - 1;
+                    imagesUpload = CustomRemoveFile(adminUploadedImagesId,imagesUploadAdmin,idx,textAreaId);
+                    if (file.previewElement) $(file.previewElement).remove();
+                }
+            });
+            $("#"+adminUploadedImagesId).css("min-height","180px");
+
+            addUploadedImages();
+        } catch(e) {
+            alert('Dropzone.js does not support older browsers!');
+        }
     });
 </script>
 </body>
