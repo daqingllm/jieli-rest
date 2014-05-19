@@ -135,6 +135,38 @@ public class AssociationService {
         responseEntity.body = accounts;
         return Response.status(200).entity(responseEntity).build();
     }
+    @GET
+    @Path("/organizationOrder")
+    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+    public Response loadOrganizationOrder(@CookieParam("u")String sessionId, @QueryParam("id")String id) {
+
+        if (!IdentityUtils.isValidate(sessionId)) {
+            return Response.status(403).build();
+        }
+        ResponseEntity responseEntity = new ResponseEntity();
+        String associationId = null;
+        if (IdentityUtils.getState(sessionId) == AccountState.SUPPER) {
+            if (StringUtils.isEmpty(id)) {
+                responseEntity.code = 2101;
+                responseEntity.msg = "缺少参数";
+                return Response.status(200).entity(responseEntity).build();
+            }
+            associationId = id;
+        } else {
+            associationId = IdentityUtils.getAssociationId(sessionId);
+        }
+        Association association = associationDAO.loadById(associationId);
+        if (association == null) {
+            responseEntity.code = 2102;
+            responseEntity.msg = "协会不存在";
+            return Response.status(200).entity(responseEntity).build();
+        }
+
+        Iterable<Identity> identifies = identityDAO.loadAll(associationId);
+        responseEntity.code = 200;
+        responseEntity.body = identifies;
+        return Response.status(200).entity(responseEntity).build();
+    }
 
     @GET
     @Path("/organization")

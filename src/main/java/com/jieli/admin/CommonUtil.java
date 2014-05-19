@@ -8,6 +8,8 @@ import com.jieli.association.*;
 import com.jieli.association.Association;
 import com.jieli.common.entity.*;
 import com.jieli.mongo.Model;
+import com.jieli.user.dao.UserDAO;
+import com.jieli.user.entity.*;
 import com.jieli.util.IdentityUtils;
 
 import javax.ws.rs.core.Response;
@@ -189,6 +191,16 @@ public class CommonUtil {
         com.jieli.association.Association association = associationDAO.loadById(account.associationId);
         params.put("username",account.username);
         params.put("isSuper",account.state == AccountState.SUPPER);
+
+        String userFace = "/assets/avatars/user.jpg";
+        if (account.userId != null){
+            com.jieli.user.entity.User user = new UserDAO().loadById(account.userId);
+            if (user != null && user.userFace != null){
+                userFace = user.userFace;
+            }
+        }
+        params.put("userFace",userFace);
+
         if(association!=null)
             params.put("associationName",association.name);
         else
