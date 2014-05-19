@@ -675,10 +675,13 @@
         $("#form-field-title").val(data["title"]);
         $("#form-field-select-type").val(data["type"]);
 
-        if (data.time && data.time.length >= 10)
-            $("#form-field-occDate").val(new Date(data.time.substr(0,10)).Format("yyyy-MM-dd"));
-        else
-            $("#form-field-occDate").val(GetDate10(new Date(),0));
+            try {
+                $("#form-field-occDate").val(new Date(data.time).Format("yyyy-MM-dd"));
+                $("#form-field-occDate-parent").show();
+            }catch (err){
+                $("#form-field-occDate").val(GetDate10(new Date(),0));
+            }
+
 
         var cont = data["content"];
 

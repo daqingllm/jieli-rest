@@ -135,6 +135,8 @@ public class AssociationService {
         responseEntity.body = accounts;
         return Response.status(200).entity(responseEntity).build();
     }
+
+    /* 组织顺序,返回组织列表 */
     @GET
     @Path("/organizationOrder")
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
