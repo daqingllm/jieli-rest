@@ -13,6 +13,9 @@ import java.io.*;
  * Created by xianxing on 2014/3/22.
  */
 public class UploaderUtils {
+    private  static  long lastIndex = 1;
+    private  static  long lastNano = 1;
+
     private static Mac mac = null;
     //private static String bucketName = "xianxing-test";
     private static String bucketName = "jieli-images";
@@ -49,9 +52,17 @@ public class UploaderUtils {
         if (uploadFileLocation.endsWith("\\") || uploadFileLocation.endsWith("/"));else
         uploadFileLocation += "\\";
 
-        String prefix = System.nanoTime()+"_";
+        long nano = System.nanoTime();
+        String prefix = nano+"_";
         //String FileName = uploadFileLocation + new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss_").format(new Date()).toString() + uploadFileName;
-        String FileName = uploadFileLocation + prefix + uploadFileName;
+        if (lastNano != nano){
+            lastNano = nano;
+            lastIndex = 1;
+        }else{
+            lastIndex ++;
+        }
+
+        String FileName = uploadFileLocation + prefix + lastIndex;
 
         try {
             OutputStream out= new FileOutputStream(new File(FileName));
