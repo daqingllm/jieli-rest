@@ -57,7 +57,15 @@ public class NewsService {
         }
 
         String associationId = IdentityUtils.getAssociationId(sessionId);
-        List<News> newses = newsDAO.paginate(page, pagesize, "{associationId:#, type:#}", associationId, type);
+        List<News> newses = null;
+
+        if (type != "history")
+        {
+            newses =  newsDAO.paginate(page, pagesize, "{associationId:#, type:#}", associationId, type);
+        }
+        else{
+            newses =  newsDAO.paginateInOrder(page, pagesize, "{time:1}", "{associationId:#, type:#}", associationId, type);
+        }
 
 
         ResponseEntity responseEntity = new ResponseEntity();
