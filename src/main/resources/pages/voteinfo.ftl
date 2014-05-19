@@ -17,6 +17,7 @@
                 <link rel="stylesheet" href="/assets/css/colorbox.css"/>
 
                 <link rel="stylesheet" href="/assets/css/jquery.gritter.css" />
+                <link rel="stylesheet" href="/assets/css/dropzone.css" />
 
             <!-- fonts -->
 
@@ -303,8 +304,27 @@
                     </div>
 
                     <div class="space-4"></div>
+                </form>
 
-                    <div class="form-group">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right" for="form-input-readonly" style="text-align: right"> 上传图片 </label>
+
+                    <div class="col-sm-9">
+                        <div id="dropzone" class="col-xs-10 col-sm-7" style="margin-bottom: 20px;">
+                            <form action="/app/upload" id="adminUploaded" class="dropzone" style="min-height: 180px;">
+                                <div class="fallback">
+                                    <input name="file" type="file" multiple="" />
+                                </div>
+                            </form>
+                        </div>
+                        <div class="alert alert-info" style="display:none;float: left;padding: 2px 14px;margin-left: 15px;margin-top: 7px;"> 请上传572*364的图片 </div>
+                    </div>
+                </div>
+
+
+                <form class="form-horizontal" role="form">
+
+                    <div class="form-group" style="display: none">
                         <label class="col-sm-3 control-label no-padding-right" for="form-input-readonly"> 正文图片(可选) </label>
 
                         <div class="col-sm-9">
@@ -540,6 +560,7 @@
 <script src="/assets/js/jquery.gritter.min.js"></script>
 <script src="/assets/js/bootbox.min.js"></script>
 
+<script src="/assets/js/dropzone.min.js"></script>
 <script src="/assets/js/jquery.form.js"></script>
 
 <!-- ace scripts -->
@@ -551,6 +572,64 @@
 <script src="/common-jieli.js"></script>
 
 <!-- inline scripts related to this page -->
+
+<script>
+
+    var textAreaId = "form-field-textarea";
+    var imageTemp = [];
+    var imagesUploadAdmin = [];
+    var adminUploadedImagesId = "adminUploaded";
+
+    function addUploadedImages(){
+        if (textAreaId) {
+            var otextarea = $("#" + textAreaId).val().trim();
+            var start = 0;
+            var end;
+            var temp = 0;
+
+            while((tmp = otextarea.indexOf(imageHead,start))>-1){
+                start = tmp+imageHead.length;
+                end = otextarea.indexOf(imageTail,start);
+                var url = otextarea.substr(start,end-start);
+                imageTemp.push(url);
+            }
+        }
+
+        for (var ii = 0; ii < imageTemp.length; ii ++) {
+            addAnImage(imageTemp[ii],adminUploadedImagesId);
+        }
+    }
+
+    /* add img[url] to ImageArray-DivImageList-TextArea */
+    function addAnImage(url,divId){
+        var len = imagesUploadAdmin.length;
+        var curImage = {"url":url,"position":(len+1)};
+        imagesUploadAdmin.push(curImage);
+
+        // 设置图片的名字
+        var ImageDiv = "<div class=\"dz-preview dz-processing dz-image-preview\">"+
+                "<div class=\"dz-details\">"+
+                "<div class=\"dz-filename\"><span data-dz-name>[图片"+curImage.position+"]</span></div>"+
+                "<img height=\"100\" width=\"100\" src=\""+curImage.url+"\" onclick=\"selectText(this)\" />"+
+                "</div>" +
+                "<a onclick=\"imagesUploadAdmin = CustomRemoveFile(\'"+divId+"\',imagesUploadAdmin,"+len+",\'"+textAreaId+"\');return false;\" class=\"dz-remove\" href=\"javascript:undefined;\">删除</a>" +
+                "</div>";
+
+        var jqImageDiv = $(ImageDiv);
+        $("#"+divId).append(jqImageDiv);
+
+        if (imagesUploadAdmin.length == 1) $("#"+divId).addClass("dz-started");
+
+        // 更新textarea
+        if (textAreaId) {
+            var otextarea = $("#" + textAreaId).val().trim();
+            otextarea = otextarea.replace(imageHead + curImage.url + imageTail, "[图片" + curImage.position + "]");
+            $("#" + textAreaId).val(otextarea);
+        }
+    }
+
+</script>
+
 <script>
     function clearImgList(){
         $("#form-field-title").val("");
@@ -1033,7 +1112,57 @@ jQuery(function($){
         <#else>
             voteInfo('${voteId}', viewSettings);
         </#if>
+
     </#if>
+
+
+    try {
+        $("#"+adminUploadedImagesId).dropzone({
+            url:"/app/upload",
+            paramName: "file", // The name that will be used to transfer the file
+            maxFilesize: 1.5, // MB
+
+            addRemoveLinks : true,
+            dictDefaultMessage :
+                    '<span class="bigger-150 bolder"> \
+                    <span style="font-size:16px;font-family:Microsoft YaHei" class="grey">拖拽/点击上传（图片建议尺寸572像素*354像素）<br>您可通过移动文本框内[图片N]标签调整图片所在文本中的位置</span> <br /> \
+                    <i class="upload-icon fa fa-cloud-upload blue icon-3x"></i>'
+            ,
+            dictResponseError: 'Error while uploading file!',
+
+            //change the previewTemplate to use Bootstrap progress bars
+            previewTemplate: "<div class=\"dz-preview dz-file-preview\">\n  <div class=\"dz-details\">\n    <div class=\"dz-filename\"><span data-dz-name></span></div>\n    <div style=\"display: none\" class=\"dz-size\" data-dz-size></div>\n    <img data-dz-thumbnail onclick=\"selectText(this)\" />\n  </div>\n  <div style=\"display: none\" class=\"progress progress-small progress-striped active\"><div class=\"progress-bar progress-bar-success\" data-dz-uploadprogress></div></div>\n  <div class=\"dz-success-mark\"><span></span></div>\n  <div class=\"dz-error-mark\"><span></span></div>\n  <div class=\"dz-error-message\"><span data-dz-errormessage></span></div>\n</div>",
+
+            success: function(file,response){
+                //alert(response);
+                if (response.code == 200){
+                    var len = imagesUploadAdmin.length;
+                    var curImage = {"url":response.body,"position":(len+1)};
+                    imagesUploadAdmin.push(curImage);
+
+                    // 设置图片的名字
+                    $(file.previewElement).find(".dz-filename").eq(0).children("span").html("[图片"+curImage.position+"]");
+
+                    // 更新textarea
+                    var pos = getTextAreaCursorPosition() || 0;
+                    var otextarea = $("#"+textAreaId).val().trim();
+                    var otextarea_head = pos > 0 ? otextarea.substring(0, pos) : "";
+                    var otextarea_tail = otextarea.substring(pos);
+                    $("#"+textAreaId).val(otextarea_head + "[图片"+curImage.position+"]" + otextarea_tail);
+                }
+            },
+            removedfile: function(file){
+                // file.previewElement 之前还有一个元素 dz-default dz-message
+                var idx = $(file.previewElement).index() - 1;
+                imagesUpload = CustomRemoveFile(adminUploadedImagesId,imagesUploadAdmin,idx,textAreaId);
+                if (file.previewElement) $(file.previewElement).remove();
+            }
+        });
+        $("#"+adminUploadedImagesId).css("min-height","180px");
+
+    } catch(e) {
+        alert('Dropzone.js does not support older browsers!');
+    }
 
 });
 
@@ -1162,6 +1291,9 @@ function voteInfo(voteId, callback) {
             if (response.code == 200) {
                 $('#form-field-title').val(response.body.title);
                 $('#form-field-textarea').val(response.body.description);
+
+                addUploadedImages();
+
                 var deadLine = new Date(response.body.deadLine);
                 var dateString = deadLine.toISOString().substr(0, 10); //assume the program will not run after year 10000
                 $('#form-field-date').val(dateString);
@@ -1198,7 +1330,6 @@ function voteInfo(voteId, callback) {
                         }
                     }
                 });
-
 
 
 
@@ -1275,7 +1406,8 @@ function postNewVote() {
     //request.force = $('#force-type').val() == 'Y' ? true : false;
     request.force = $("#force-type").is(':checked');
     request.deadLine = new Date($('#form-field-date').val());
-    request.description = $('#form-field-textarea').val();
+    //request.description = $('#form-field-textarea').val();
+    request.description = generateJieLiContent() || "";
     request.options = {};
     var index=0;
     $('.vote-choice-text').each(function() {
@@ -1305,7 +1437,8 @@ function postEditVote(voteId) {
     request.title = $('#form-field-title').val();
     request.multiple = $('#form-field-select-type').val() == 'M' ? true : false;
     request.deadLine = new Date($('#form-field-date').val());
-    request.description = $('#form-field-textarea').val();
+    //request.description = $('#form-field-textarea').val();
+    request.description = generateJieLiContent() || "";
     request.options = {};
     var index=0;
     $('.vote-choice-text').each(function() {

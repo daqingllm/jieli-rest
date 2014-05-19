@@ -430,6 +430,10 @@ function parseArtData(data){
         data[i].deadLine = dStr;
 
         data[i].content = data[i].description.substr(0, 30);
+        if (data[i].content.indexOf("<") > -1){
+            data[i].content = data[i].content.substr(0,data[i].content.indexOf("<"));
+        }
+
         //data[i].content = data[i].content.substr(0,30);
 
         //var re = new  RegExp("\\u0022","g");

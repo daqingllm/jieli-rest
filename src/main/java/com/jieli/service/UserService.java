@@ -371,7 +371,7 @@ public class UserService {
         }
         oldUser.name = user.name;
         oldUser.phone = user.phone;
-        oldUser.group = user.group;
+        oldUser.identity = user.identity;
         oldUser.sex = user.sex;
         userDAO.save(oldUser);
 

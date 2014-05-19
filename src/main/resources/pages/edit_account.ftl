@@ -602,7 +602,7 @@
     function updateUser(){
         data["name"] = $("#form-field-name").val();
         data["sex"] = $("#form-field-select-sex").val();
-        data["identity"] = $("#form-field-identi").val();
+        data["identity"] = $("#form-field-identity").val();
         data["phone"] = $("#form-field-phone").val();
 
         $.ajax({
