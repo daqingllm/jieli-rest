@@ -311,7 +311,7 @@
                 <label class="col-sm-3 control-label no-padding-right" for="form-field-textarea">  </label>
 
                 <div class="col-sm-9">
-                    <div class="col-xs-10 col-sm-7 alert alert-warning" style="margin-bottom: 0">如果标签与用户个人标签相同，用户会得到提示</div>
+                    <div class="col-xs-10 col-sm-7 alert alert-warning" style="margin-bottom: 0">如果行业标签和兴趣标签与用户个人标签相同，用户会得到提示</div>
                 </div>
             </div>
 
