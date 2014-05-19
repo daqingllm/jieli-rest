@@ -542,6 +542,24 @@ function deleteHelp() {
         }
     }
 }
+function updateGrid(associationId, page, size) {
+    $.ajax({
+        url: "/app/feature/ajaxhelp/list?a="+associationId+"&page="+page+"&size="+size,
+        type : 'GET',
+        contentType: "application/json",
+        success: function(response) {
+            if (response.code == 200) {
+                var data = response.body;
+
+                $('#grid-table').jqGrid('clearGridData', true).trigger('reloadGrid');
+                $("#grid-table").jqGrid('setGridParam', {
+                    datatype: 'local',
+                    data: parseHelpData(data)
+                }).trigger('reloadGrid');
+            }
+        }
+    });
+}
 
 jQuery(function($) {
     var raw_data = [

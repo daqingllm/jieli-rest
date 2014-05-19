@@ -72,7 +72,7 @@ public class HelpAction {
         }
         Integer pageNo = 1;
         Integer pageSize = 20;
-        Integer type = 0;
+        Integer type = 2;
         List<SimpleHelpInfo> helpList = helpDAO.getHelpInfoList(pageNo, pageSize, associationId, type);
 
         for(SimpleHelpInfo h : helpList) {
