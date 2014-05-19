@@ -49,6 +49,7 @@ public class MatchUtil {
         }
 //        score += calEducation(user1, user2);
         score += 5;
+        match.matchInfos.add("教育背景相近");
 
         match.score = score;
     }
