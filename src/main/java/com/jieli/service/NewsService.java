@@ -59,7 +59,7 @@ public class NewsService {
         String associationId = IdentityUtils.getAssociationId(sessionId);
         List<News> newses = null;
 
-        if (type != "history")
+        if (type.compareTo("history") != 0)
         {
             newses =  newsDAO.paginate(page, pagesize, "{associationId:#, type:#}", associationId, type);
         }
