@@ -174,23 +174,16 @@ public class Account {
         if (IdentityUtils.getState(sessionId) == AccountState.SUPPER) {
             Iterable<com.jieli.association.Association> associations = associationDAO.loadAll();
             for (com.jieli.association.Association association : associations) {
-                Iterable<com.jieli.common.entity.Account> accountAdmin = accountDAO.loadByAssociationId(association.get_id().toString(), AccountState.ADMIN);
-                for (com.jieli.common.entity.Account account : accountAdmin) {
-                    String tmp = om.writeValueAsString(account);
-                    if (tmp.indexOf("{\"time\":") > -1) {
-                        tmp = tmp.substring(0, 7) + "\"" + account.get_id().toString() + "\"" + tmp.substring(tmp.indexOf("},", 7) + 1);
-                    }
-                    accountList += tmp + ",";
-                }
-
-                Iterable<com.jieli.common.entity.Account> accountEnable = accountDAO.loadByAssociationId(association.get_id().toString(), AccountState.ENABLE);
-                for (com.jieli.common.entity.Account account : accountEnable) {
-                    String tmp = om.writeValueAsString(account);
-                    if (tmp.indexOf("{\"time\":") > -1) {
-                        tmp = tmp.substring(0, 7) + "\"" + account.get_id().toString() + "\"" + tmp.substring(tmp.indexOf("},", 7) + 1);
-                    }
-                    accountList += tmp + ",";
-                }
+				Iterable<com.jieli.common.entity.Account> accountEnable = accountDAO.loadByAssociationId(association.get_id().toString(),AccountState.ENABLE);
+				for (com.jieli.common.entity.Account account : accountEnable) {
+					User user = userDAO.loadById(account.userId);
+					String phoneSub = "";
+					try{phoneSub = user.phone.substring(5, 11);}catch(Exception e){phoneSub="";}
+					accountList += CommonUtil.ReplaceObjectId(account).replace("}",",\"name\":\""+ CommonUtil.TransferNull(user == null ? "" : user.name)
+							+ "\",\"identity\":\"" + CommonUtil.TransferNull(user == null ? "" : user.identity)
+					 + "\",\"phone\":\"" + CommonUtil.TransferNull(user == null ? "" : phoneSub) + "\"},");
+				}
+				
             }
         } else {
             associationId = IdentityUtils.getAssociationId(sessionId);
@@ -204,7 +197,8 @@ public class Account {
             Iterable<com.jieli.common.entity.Account> accountEnable = accountDAO.loadByAssociationId(associationId.toString(),AccountState.ENABLE);
             for (com.jieli.common.entity.Account account : accountEnable) {
                 User user = userDAO.loadById(account.userId);
-                String phoneSub = user.phone.substring(5, 11);
+                String phoneSub = "";
+				try{phoneSub = user.phone.substring(5, 11);}catch(Exception e){phoneSub="";}
                 accountList += CommonUtil.ReplaceObjectId(account).replace("}",",\"name\":\""+ CommonUtil.TransferNull(user == null ? "" : user.name)
                         + "\",\"identity\":\"" + CommonUtil.TransferNull(user == null ? "" : user.identity)
                  + "\",\"phone\":\"" + CommonUtil.TransferNull(user == null ? "" : phoneSub) + "\"},");
