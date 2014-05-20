@@ -527,7 +527,7 @@ jQuery(function($) {
         data: grid_data,
         datatype: "local",
         height: 490,
-        colNames:['_id','协会','用户名','姓名','状态','协会身份','验证码'],
+        colNames:['_id','协会','用户名','姓名','状态','协会身份','手机后六位'],
         colModel:[
             {name:"_id",index:"_id",width:10,editable:false,hidden:true},
             {name:"associationId",index:"associationId",width:40,editable:false,hidden:true},
@@ -538,7 +538,7 @@ jQuery(function($) {
             }},
             {name:"state",index:"state",width:"60",editable:false,hidden:true},
             {name:"identity",index:"identity",width:"60",editable:false},
-            {name:"password",index:"password",width:"75",editable:false}
+            {name:"phone",index:"password",width:"75",editable:false}
         ],
         viewrecords : true,
         rowNum:15,

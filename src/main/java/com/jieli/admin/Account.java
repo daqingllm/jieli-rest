@@ -204,8 +204,10 @@ public class Account {
             Iterable<com.jieli.common.entity.Account> accountEnable = accountDAO.loadByAssociationId(associationId.toString(),AccountState.ENABLE);
             for (com.jieli.common.entity.Account account : accountEnable) {
                 User user = userDAO.loadById(account.userId);
+                String phoneSub = user.phone.substring(5, 11);
                 accountList += CommonUtil.ReplaceObjectId(account).replace("}",",\"name\":\""+ CommonUtil.TransferNull(user == null ? "" : user.name)
-                        + "\",\"identity\":\"" + CommonUtil.TransferNull(user == null ? "" : user.identity) + "\"},");
+                        + "\",\"identity\":\"" + CommonUtil.TransferNull(user == null ? "" : user.identity)
+                 + "\",\"phone\":\"" + CommonUtil.TransferNull(user == null ? "" : phoneSub) + "\"},");
             }
         }
 
@@ -213,7 +215,6 @@ public class Account {
 
         com.jieli.common.entity.Account account = accountDAO.loadById(sessionId);
         Map<String, Object> params = CommonUtil.GenerateCommonParams(account);
-        params.put("isSuper", IdentityUtils.getState(sessionId) == AccountState.SUPPER);
         params.put("jsonAccList",accountList);
         params.put("username",accountDAO.loadById(sessionId).username);
 
