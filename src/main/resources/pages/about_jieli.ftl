@@ -244,7 +244,7 @@
                         </form>
 
 
-                        <div class="form-group">
+                        <div class="form-group" style="display:none;">
                             <#--<label class="col-sm-3 control-label no-padding-right" for="form-input-readonly" style="text-align: right"> ÉÏ´«Í¼Æ¬ </label>-->
 
                             <div class="col-sm-9">

@@ -277,7 +277,7 @@
         </div>
 
         <div class="clearfix form-actions">
-            <div class="col-md-offset-3 col-md-9">
+            <div class="col-md-offset-1 col-md-9">
                 <button class="btn btn-info" type="button" onclick="addAGroup()">
                     <i class="fa fa-plus bigger-110"></i>
                     添加一个分组
