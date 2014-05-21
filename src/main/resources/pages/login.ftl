@@ -2,7 +2,7 @@
 <html lang="zh">
 <head>
     <meta charset="utf-8" />
-    <title>上海市青企协 登录</title>
+    <title>协会助手 登录</title>
     <meta name="keywords" content="接力" />
     <meta name="description" content="接力" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -54,7 +54,7 @@
             <div class="col-sm-10 col-sm-offset-1">
                 <div class="login-container">
                     <div class="center" style="margin-top: 40px;margin-bottom: 20px;">
-                        <h1><i class="fa fa-leaf green"></i><span class="red">接力</span><span class="white">后台管理系统</span></h1>
+                        <h1><i class="fa fa-leaf green"></i><span class="red">协会助手</span><span class="white">后台管理系统</span></h1>
                         <h4 class="blue">&copy; Company Name</h4>
                     </div>
 
