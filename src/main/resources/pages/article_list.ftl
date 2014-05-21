@@ -470,6 +470,10 @@ function parseArtData(data){
         data[i].addTime = nowStr;
 
         //data[i].content = data[i].overview;
+        if (data[i].topPic){
+            data[i].title = "<span style='color:rgb(226, 64, 64)'>[头图]</span>&nbsp;" + data[i].title;
+        }
+
     }
     return data;
 }
@@ -528,7 +532,7 @@ jQuery(function($) {
         colNames:['_id','协会','资讯标题','资讯类型', '资讯内容', '添加日期', '图片数量', '点赞数量','资讯内容html'],
         colModel:[
             {name:"_id",index:"_id",width:10,editable:false,hidden:true},
-            {name:"associationId",index:"associationId",width:40,editable:false<#if isSuper><#else>,hidden:true</#if>},
+            {name:"associationId",index:"associationId",width:40,editable:false,hidden:true},
             {name:"title",index:"title",width:"100",editable:false,
                 formatter:function getUrl(cellValue, options, rowObject) {
                     var url = "<a href=\"/app/bnews/edit?artid=" + rowObject._id + "\">" + cellValue + "</a>";

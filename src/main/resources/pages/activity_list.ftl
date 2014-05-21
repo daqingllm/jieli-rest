@@ -545,7 +545,7 @@ jQuery(function($) {
         colNames:['_id','协会','活动名称','活动种类','活动类型', '活动简介', '报名截止日期','','','活动地点'],
         colModel:[
             {name:"_id",index:"_id",width:10,editable:false,hidden:true},
-            {name:"associationId",index:"associationId",width:40,editable:false<#if isSuper><#else>,hidden:true</#if>},
+            {name:"associationId",index:"associationId",width:40,editable:false,hidden:true},
             {name:"title",index:"title",width:"100",editable:false,
                 formatter:function getUrl(cellValue, options, rowObject) {
                     var url = "<a href=\"/app/bactivity/edit?actid=" + rowObject._id + "\">" + cellValue + "</a>";
