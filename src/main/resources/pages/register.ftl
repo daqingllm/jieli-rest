@@ -365,7 +365,7 @@
                                 dataType: 'json',
                                 success: function (ret) {
                                     if (ret.code == 200)
-                                        showMsg("注册成功");
+                                        showMsg("注册成功", "用户" + user.name);
                                     else
                                         showMsg("注册失败", ret.msg || "");
                                 }
