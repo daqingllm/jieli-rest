@@ -365,7 +365,7 @@
                                 dataType: 'json',
                                 success: function (ret) {
                                     if (ret.code == 200)
-                                        showMsg("注册成功", "用户" + _d.username + "的验证码是：" + jsn_body.password);
+                                        showMsg("注册成功");
                                     else
                                         showMsg("注册失败", ret.msg || "");
                                 }

@@ -235,7 +235,7 @@
                         </button>
                         &nbsp;&nbsp;&nbsp;&nbsp;
 
-                        <button class="btn btn-info" type="button" style="font-weight:bold;margin-bottom: 20px;" onclick="viewVote()">
+                        <!--<button class="btn btn-info" type="button" style="font-weight:bold;margin-bottom: 20px;" onclick="viewVote()">
                             <i class="fa fa-search-plus bigger-110"></i>
                             查看投票
                         </button>
@@ -246,7 +246,7 @@
                             <i class="fa fa-search-plus bigger-110"></i>
                             编辑投票
                         </button>
-                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        &nbsp;&nbsp;&nbsp;&nbsp;-->
 
                         <button class="btn btn-danger" type="button" style="font-weight:bold;margin-bottom: 20px;" onclick="deleteVote()" id="deleteArtBtn">
                             <i class="fa fa-trash-o bigger-110"></i>
@@ -586,7 +586,7 @@ jQuery(function($) {
             //{name:"associationId",index:"associationId",width:40,editable:false, hidden:true},
             <#if isSuper>{name:"associationName",index:"associationName",width:40,editable:false},</#if>
             {name:"title",index:"title",width:"100",editable:false, formatter:function getUrl(cellValue, options, rowObject) {
-                var url = "<a href=\"/app/bvote/view?v=" + rowObject.id + "\">" + cellValue + "</a>";
+                var url = "<a href=\"/app/bvote/edit?voteId=" + rowObject.id + "\">" + cellValue + "</a>";
                 return url;
             }},
             {name:"type",index:"type",width:"45",editable:false},
