@@ -358,6 +358,9 @@
 
 <!-- inline scripts related to this page -->
 <script>
+
+    var adminList = [];
+
     function loadThisArticle(){
         var artid = request.getParameter("artid");
         if (artid == null || artid.length < 1) return;
@@ -447,7 +450,10 @@ Date.prototype.Format = function (fmt) { //author: meizz
 function parseArtData(data){
     var states = {"DISABLE":"禁用","ENABLE":"普通用户","ADMIN":"协会管理员","SUPPER":"超级管理员"};
     for (var i = 0 ; i < data.length; i++){
-        if (data[i].state == "ADMIN") data[i].name = data[i].username;
+        if (data[i].state == "ADMIN") {
+            data[i].name = data[i].username;
+            adminList.push(data[i]["_id"]);
+        }
 
         data[i].state = states[data[i].state];
 
@@ -542,7 +548,8 @@ jQuery(function($) {
             {name:"username",index:"username",width:"100",editable:false,hidden:true},
             {name:"name",index:"name",width:"75",editable:false,formatter:function getUrl(cellValue, options, rowObject) {
                 var url = "<a href=\"/app/baccount/edit?u=" + rowObject._id + "\">" + cellValue + "</a>";
-                return url;
+                if (adminList.indexOf(rowObject._id) > -1) return "<span style='color:rgb(226, 64, 64)'>[管理员]</span>&nbsp;<span style='color:#428bca'>" + cellValue + "</span>";
+                else return url;
             }},
             {name:"state",index:"state",width:"60",editable:false,hidden:true},
             {name:"identity",index:"identity",width:"60",editable:false},
