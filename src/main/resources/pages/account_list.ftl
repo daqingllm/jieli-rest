@@ -656,8 +656,8 @@ jQuery(function($) {
         bootbox.prompt("请输入 管理员 ‘"+acc[0].username+"’的新密码：", function(result) {
             // 这里不改状态
             if (result !== null) {
-                if (result.length <= 5){
-                    alert("密码长度必须大于5");
+                if (result.length <= 3){
+                    alert("密码长度必须大于3");
                 }else{
                     acc[0].password=result;
                     $.ajax({
@@ -699,8 +699,8 @@ jQuery(function($) {
                     bootbox.prompt("请输入用户 ‘"+acc.username+"’的新密码：", function(result) {
                         // 这里不改状态
                         if (result !== null) {
-                            if (result.length <= 5){
-                                alert("密码长度必须大于5");
+                            if (result.length <= 3){
+                                alert("密码长度必须大于3");
                             }else{
                                 acc.password=result;
                                 $.ajax({
