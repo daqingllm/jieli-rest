@@ -54,8 +54,8 @@
             <div class="col-sm-10 col-sm-offset-1">
                 <div class="login-container">
                     <div class="center" style="margin-top: 40px;margin-bottom: 20px;">
-                        <h1><i class="fa fa-leaf green"></i><span class="red">协会助手</span><span class="white">后台管理系统</span></h1>
-                        <h4 class="blue">&copy; Company Name</h4>
+                        <h1><i class="fa fa-leaf green"></i><span class="red">上海市青年企业家协会</span><br><span class="white">后台管理系统</span></h1>
+                        <h4 class="blue">&copy; 蕊蕾文化传播</h4>
                     </div>
 
                     <div class="space-6"></div>
