@@ -13,16 +13,14 @@ import com.jieli.util.FTLrender;
 import com.jieli.util.IdentityUtils;
 import com.jieli.util.PasswordGenerator;
 import com.sun.jersey.spi.resource.Singleton;
+import org.apache.commons.lang.StringUtils;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -46,6 +44,40 @@ public class Account {
         //params.put("isOk", true);
         //params.put("message", "hello 大骏！");
         return FTLrender.getResult("login.ftl", params);
+    }
+
+    @POST
+    @Path("/changepassword")
+    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+    public Response changeAccount(@CookieParam("u")String sessionId, com.jieli.common.entity.Account account) {
+        ResponseEntity responseEntity = new ResponseEntity();
+        com.jieli.common.entity.Account current = accountDAO.loadByUsername(account.username);
+        if (current == null) {
+            responseEntity.code = 1001;
+            responseEntity.msg = "用户名不存在";
+            return Response.status(200).entity(responseEntity).build();
+        }
+        if (IdentityUtils.isAdmin(sessionId)){
+            User user = userDAO.loadById(account.userId);
+            if (StringUtils.isNotEmpty(account.password)) {
+                current.password = PasswordGenerator.md5Encode(account.password);
+            }
+            if (StringUtils.isNotEmpty(account.associationId)) {
+                current.associationId = account.associationId;
+                if (user!=null)
+                    user.associationId = account.associationId;
+            }
+            current.state = account.state;
+            accountDAO.save(current);
+            if (user!=null)
+                userDAO.save(user);
+
+            responseEntity.code = 200;
+            return Response.status(200).entity(responseEntity).build();
+        }
+
+        responseEntity.code = 1002;
+        return Response.status(200).entity(responseEntity).build();
     }
 
     @GET
@@ -163,7 +195,7 @@ public class Account {
     @Path("/list")
     @Produces(MediaType.TEXT_HTML)
     public String loadUsers(@CookieParam("u")String sessionId,@QueryParam("id")String id /*,@QueryParam("state")int state*/) throws JsonProcessingException {
-        if (!IdentityUtils.isAdmin(sessionId) || IdentityUtils.isSuper(sessionId)) {
+        if (!IdentityUtils.isAdmin(sessionId) && !IdentityUtils.isSuper(sessionId)) {
             return CommonUtil.errorReturn;
         }
         ResponseEntity responseEntity = new ResponseEntity();
@@ -174,10 +206,23 @@ public class Account {
         if (IdentityUtils.getState(sessionId) == AccountState.SUPPER) {
             Iterable<com.jieli.association.Association> associations = associationDAO.loadAll();
             for (com.jieli.association.Association association : associations) {
-				Iterable<com.jieli.common.entity.Account> accountEnable = accountDAO.loadByAssociationId(association.get_id().toString(),AccountState.ENABLE);
+
+                Iterable<com.jieli.common.entity.Account> accountMyself = accountDAO.loadByAssociationId(association.get_id().toString(),AccountState.ADMIN);
+                for (com.jieli.common.entity.Account account : accountMyself) {
+                    User user = userDAO.loadById(account.userId);
+                    String phoneSub = "";
+                    try{phoneSub = user.phone.substring(5, 11);}catch(Exception e){phoneSub="";}
+                    accountList += CommonUtil.ReplaceObjectId(account).replace("}",",\"name\":\""+ CommonUtil.TransferNull(user == null ? "" : user.name)
+                            + "\",\"identity\":\"" + CommonUtil.TransferNull(user == null ? "" : user.identity)
+                            + "\",\"phone\":\"" + CommonUtil.TransferNull(user == null ? "" : phoneSub) + "\"},");
+                }
+
+                Iterable<com.jieli.common.entity.Account> accountEnable = accountDAO.loadByAssociationId(association.get_id().toString(),AccountState.ENABLE);
 				for (com.jieli.common.entity.Account account : accountEnable) {
 					User user = userDAO.loadById(account.userId);
 					String phoneSub = "";
+
+                    /*remind this : any field added here must be deleted in account_list.ftl -> delete a['identity'] for example (line 576)*/
 					try{phoneSub = user.phone.substring(5, 11);}catch(Exception e){phoneSub="";}
 					accountList += CommonUtil.ReplaceObjectId(account).replace("}",",\"name\":\""+ CommonUtil.TransferNull(user == null ? "" : user.name)
 							+ "\",\"identity\":\"" + CommonUtil.TransferNull(user == null ? "" : user.identity)
@@ -192,6 +237,16 @@ public class Account {
                 responseEntity.code = 2102;
                 responseEntity.msg = "协会不存在";
                 return CommonUtil.errorReturn;
+            }
+
+            Iterable<com.jieli.common.entity.Account> accountMyself = accountDAO.loadByAssociationId(associationId.toString(),AccountState.ADMIN);
+            for (com.jieli.common.entity.Account account : accountMyself) {
+                User user = userDAO.loadById(account.userId);
+                String phoneSub = "";
+                try{phoneSub = user.phone.substring(5, 11);}catch(Exception e){phoneSub="";}
+                accountList += CommonUtil.ReplaceObjectId(account).replace("}",",\"name\":\""+ CommonUtil.TransferNull(user == null ? "" : user.name)
+                        + "\",\"identity\":\"" + CommonUtil.TransferNull(user == null ? "" : user.identity)
+                        + "\",\"phone\":\"" + CommonUtil.TransferNull(user == null ? "" : phoneSub) + "\"},");
             }
 
             Iterable<com.jieli.common.entity.Account> accountEnable = accountDAO.loadByAssociationId(associationId.toString(),AccountState.ENABLE);
