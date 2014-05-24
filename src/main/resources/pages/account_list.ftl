@@ -214,6 +214,11 @@
                         </button>
                         &nbsp;&nbsp;&nbsp;&nbsp;
 
+                        <button class="btn btn-info" type="button" style="font-weight:bold;margin-bottom: 20px;" id='changeVerifyBtn'>
+                            <i class="fa fa-pencil bigger-110"></i>
+                            修改管理员密码
+                        </button>
+
                         <table id="grid-table"></table>
                         <div id="grid-pager"></div>
                     </div>
@@ -353,6 +358,9 @@
 
 <!-- inline scripts related to this page -->
 <script>
+
+    var adminList = [];
+
     function loadThisArticle(){
         var artid = request.getParameter("artid");
         if (artid == null || artid.length < 1) return;
@@ -442,9 +450,15 @@ Date.prototype.Format = function (fmt) { //author: meizz
 function parseArtData(data){
     var states = {"DISABLE":"禁用","ENABLE":"普通用户","ADMIN":"协会管理员","SUPPER":"超级管理员"};
     for (var i = 0 ; i < data.length; i++){
+        if (data[i].state == "ADMIN") {
+            data[i].name = data[i].username;
+            adminList.push(data[i]["_id"]);
+        }
+
         data[i].state = states[data[i].state];
 
         if (data[i].identity == undefined || data[i].identity == null || data[i].identity == "") data[i].identity = "普通会员";
+
     }
     return data;
 }
@@ -534,7 +548,8 @@ jQuery(function($) {
             {name:"username",index:"username",width:"100",editable:false,hidden:true},
             {name:"name",index:"name",width:"75",editable:false,formatter:function getUrl(cellValue, options, rowObject) {
                 var url = "<a href=\"/app/baccount/edit?u=" + rowObject._id + "\">" + cellValue + "</a>";
-                return url;
+                if (adminList.indexOf(rowObject._id) > -1) return "<span style='color:rgb(226, 64, 64)'>[管理员]</span>&nbsp;<span style='color:#428bca'>" + cellValue + "</span>";
+                else return url;
             }},
             {name:"state",index:"state",width:"60",editable:false,hidden:true},
             {name:"identity",index:"identity",width:"60",editable:false},
@@ -575,6 +590,12 @@ jQuery(function($) {
             var a = raw_data[id[i]-1];
             delete a["name"];
             delete a["identity"];
+            delete a["phone"];
+            if (a.state == "禁用" ||
+                    a.state == "普通用户" ||
+                    a.state == "协会管理员" ||
+                    a.state == "超级管理员")
+            a.state = states[a.state];
             accs.push(a);
             continue;
 
@@ -624,6 +645,47 @@ jQuery(function($) {
 
     $("#deleteAccountBtn").click(deleteAccount);
 
+    function changeVerify(){
+
+        var uname = "";
+        var assid = "";
+        var acc = makeAccount();
+
+        if (!acc || acc.length == 0 || acc[0].state == "DISABLE" || acc[0].state == "ENABLE"){
+            alert("请先选中一个管理员账号！");
+            return ;
+        } else if (acc[0].state == "ADMIN") {
+            /*if (!confirm("确认修改管理员的密码吗？")) return;*/
+        } else if (acc[0].state == "SUPPER") {
+            /*if (!confirm("确认修改管理员的密码吗？")) return;*/
+        } else {alert("无法修改！");return;}
+
+        bootbox.prompt("请输入 管理员 ‘"+acc[0].username+"’的新密码：", function(result) {
+            // 这里不改状态
+            if (result !== null) {
+                if (result.length <= 3){
+                    alert("密码长度必须大于3");
+                }else{
+                    acc[0].password=result;
+                    $.ajax({
+                        type:"POST",
+                        url:"/app/baccount/changepassword",
+                        async:false,
+                        data:JSON.stringify(acc[0]),
+                        contentType:"application/json; charset=utf-8",
+                        success:function(jsn){
+                            if (jsn.code==200) alert("密码已经修改成"+result);
+                            else alert("密码修改失败");
+                        }
+                    });
+                }
+            }
+        });
+
+    }
+
+    $("#changeVerifyBtn").click(changeVerify);
+
     jQuery(grid_selector).jqGrid('navGrid',pager_selector,
             { 	//navbar options
                 add: false,
@@ -632,11 +694,20 @@ jQuery(function($) {
                     var uname = "";
                     var assid = "";
                     var acc = makeAccount();
+
+                    if (acc.state == 1){
+                        return ;
+                    } else if (acc.state == 2) {
+                        if (!confirm("确认修改管理员的密码吗？")) return;
+                    } else {
+                        return;
+                    }
+
                     bootbox.prompt("请输入用户 ‘"+acc.username+"’的新密码：", function(result) {
                         // 这里不改状态
                         if (result !== null) {
-                            if (result.length <= 5){
-                                alert("密码长度必须大于5");
+                            if (result.length <= 3){
+                                alert("密码长度必须大于3");
                             }else{
                                 acc.password=result;
                                 $.ajax({

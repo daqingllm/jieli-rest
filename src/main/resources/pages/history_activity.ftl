@@ -783,7 +783,7 @@
 
                 addRemoveLinks: true,
                 dictDefaultMessage: '<span class="bigger-150 bolder"> \
-                        <span style="font-size:16px;font-family:Microsoft YaHei" class="grey">拖拽/点击上传（图片建议尺寸572像素*354像素）<br>您可通过移动文本框内[图片N]标签调整图片所在文本中的位置</span> <br /> \
+                        <span style="font-size:16px;font-family:Microsoft YaHei" class="grey">拖拽/点击上传（图片建议尺寸572像素*354像素）<br>裁剪图片请到http://xiuxiu.web.meitu.com/main.html<br>您可通过移动文本框内[图片N]标签调整图片所在文本中的位置</span> <br /> \
                         <i class="upload-icon fa fa-cloud-upload blue icon-3x"></i>',
                 dictResponseError: 'Error while uploading file!',
 
@@ -809,6 +809,7 @@
                 }
             });
             $("#"+adminUploadedImagesId).css("min-height", "180px");
+            $("#"+adminUploadedImagesId+" .dz-message").css("margin-top","-81px");
 
             addUploadedImages();
         } catch (e) {

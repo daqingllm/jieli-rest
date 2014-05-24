@@ -204,8 +204,7 @@
 
 							欢迎使用
 							<strong class="green">
-								接力后台管理系统
-								<small>(v1.0)</small>
+								${associationName} 后台管理系统
 							</strong>
 						</div>
                     </div>
