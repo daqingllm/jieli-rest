@@ -52,6 +52,11 @@ public class SimpleHelpInfo extends Model{
 
     public boolean isEmergency;
 
+    /**
+     * 审批状态
+     */
+    private int status;
+
     public String getUserId() {
         return userId;
     }
@@ -154,5 +159,13 @@ public class SimpleHelpInfo extends Model{
 
     public void setCommentCount(int commentCount) {
         this.commentCount = commentCount;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
     }
 }

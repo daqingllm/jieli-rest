@@ -64,6 +64,11 @@ public class HelpInfo extends Model{
      */
     private int commentCount;
 
+    /**
+     * 审批状态
+     */
+    private int status;
+
     public int getCommentCount() {
         return commentCount;
     }
@@ -170,5 +175,13 @@ public class HelpInfo extends Model{
 
     public void setTypeDetail(int typeDetail) {
         this.typeDetail = typeDetail;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
     }
 }

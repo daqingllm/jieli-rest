@@ -144,6 +144,7 @@ public class FeatureService {
         User user = userDAO.loadById(userId);
         help.setUserName(user.name);
         help.setUserFace(user.userFace);
+        help.setStatus(HelpStatus.PENDING.getValue());
 
         if(help.getType() != 0 && help.getType() != 1) {
             help.setType(0);
@@ -207,6 +208,9 @@ public class FeatureService {
         }
         if(newHelp.getType() == 0 || newHelp.getType() == 1) {
             oldHelp.setType(newHelp.getType());
+        }
+        if(newHelp.getStatus() > 0) {
+            oldHelp.setStatus(newHelp.getStatus());
         }
         if(newHelp.getTitle() != null) {
             oldHelp.setTitle(newHelp.getTitle());

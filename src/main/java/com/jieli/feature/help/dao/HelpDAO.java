@@ -2,6 +2,7 @@ package com.jieli.feature.help.dao;
 
 import com.jieli.comment.Comment;
 import com.jieli.feature.help.entity.HelpInfo;
+import com.jieli.feature.help.entity.HelpStatus;
 import com.jieli.feature.help.entity.SimpleHelpInfo;
 import com.jieli.mongo.GenericDAO;
 import com.jieli.util.CollectionUtils;
