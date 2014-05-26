@@ -262,6 +262,16 @@ public class UserService {
 //        }
 
 
+        if (directory != null && !CollectionUtils.isEmpty(directory.content)) {
+            for (Friend friend : directory.content) {
+                User user = userDAO.loadById(friend.userId);
+                if (user == null) {
+                    continue;
+                }
+                friendIds.add(user.get_id().toString());
+            }
+        }
+
         Iterable<Group> allGroups = new GroupDAO().loadAll(IdentityUtils.getAssociationId(sessionId));
         for (Group group : allGroups) {
             Iterable<User> allUsers = userDAO.loadByGroup(IdentityUtils.getAssociationId(sessionId),group.name);
@@ -269,7 +279,14 @@ public class UserService {
                 groupIds.add(user.get_id().toString());
                 UserBasicInfo baseUser = new UserBasicInfo();
                 baseUser.userId = user.get_id().toString();
-                baseUser.special = false;
+
+                if (friendIds.contains(user.get_id().toString())) {
+                    baseUser.special = true;
+                }
+                else{
+                    baseUser.special = false;
+                }
+
                 baseUser.name = user.name;
                 baseUser.group = user.group;
                 baseUser.identity = user.identity;
@@ -288,7 +305,14 @@ public class UserService {
             }
             UserBasicInfo baseUser = new UserBasicInfo();
             baseUser.userId = user.get_id().toString();
-            baseUser.special = false;
+
+            if (friendIds.contains(user.get_id().toString())) {
+                baseUser.special = true;
+            }
+            else{
+                baseUser.special = false;
+            }
+
             baseUser.name = user.name;
             baseUser.group = user.group;
             baseUser.identity = user.identity;
