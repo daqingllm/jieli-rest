@@ -1,5 +1,7 @@
 package com.jieli.service;
 
+import com.jieli.association.Group;
+import com.jieli.association.GroupDAO;
 import com.jieli.common.dao.AccountDAO;
 import com.jieli.common.entity.Account;
 import com.jieli.common.entity.ResponseEntity;
@@ -217,18 +219,57 @@ public class UserService {
         Directory directory = directoryDAO.loadByUserId(userId);
         List<UserBasicInfo> baseUsers = new ArrayList<UserBasicInfo>();
         List<String> friendIds = new ArrayList<String>();
+        List<String> groupIds = new ArrayList<String>();
 
-        if (directory != null && !CollectionUtils.isEmpty(directory.content)) {
-            for (Friend friend : directory.content) {
-                User user = userDAO.loadById(friend.userId);
-                if (user == null) {
-                    continue;
-                }
-                friendIds.add(user.get_id().toString());
+//        if (directory != null && !CollectionUtils.isEmpty(directory.content)) {
+//            for (Friend friend : directory.content) {
+//                User user = userDAO.loadById(friend.userId);
+//                if (user == null) {
+//                    continue;
+//                }
+//                friendIds.add(user.get_id().toString());
+//
+//                UserBasicInfo baseUser = new UserBasicInfo();
+//                baseUser.userId = friend.userId;
+//                baseUser.special = true;
+//                baseUser.name = user.name;
+//                baseUser.group = user.group;
+//                baseUser.identity = user.identity;
+//                baseUser.score = user.score;
+//                baseUser.sex = user.sex;
+//                baseUser.userFace = user.userFace;
+//
+//                baseUsers.add(baseUser);
+//            }
+//        }
+//
+//        Iterable<User> allUsers = userDAO.loadAll(IdentityUtils.getAssociationId(sessionId));
+//        for (User user : allUsers) {
+//            if (friendIds.contains(user.get_id().toString())) {
+//                continue;
+//            }
+//            UserBasicInfo baseUser = new UserBasicInfo();
+//            baseUser.userId = user.get_id().toString();
+//            baseUser.special = false;
+//            baseUser.name = user.name;
+//            baseUser.group = user.group;
+//            baseUser.identity = user.identity;
+//            baseUser.score = user.score;
+//            baseUser.sex = user.sex;
+//            baseUser.userFace = user.userFace;
+//
+//            baseUsers.add(baseUser);
+//        }
 
+
+        Iterable<Group> allGroups = new GroupDAO().loadAll(IdentityUtils.getAssociationId(sessionId));
+        for (Group group : allGroups) {
+            Iterable<User> allUsers = userDAO.loadByGroup(IdentityUtils.getAssociationId(sessionId),group.name);
+            for (User user : allUsers) {
+                groupIds.add(user.get_id().toString());
                 UserBasicInfo baseUser = new UserBasicInfo();
-                baseUser.userId = friend.userId;
-                baseUser.special = true;
+                baseUser.userId = user.get_id().toString();
+                baseUser.special = false;
                 baseUser.name = user.name;
                 baseUser.group = user.group;
                 baseUser.identity = user.identity;
@@ -242,7 +283,7 @@ public class UserService {
 
         Iterable<User> allUsers = userDAO.loadAll(IdentityUtils.getAssociationId(sessionId));
         for (User user : allUsers) {
-            if (friendIds.contains(user.get_id().toString())) {
+            if (groupIds.contains(user.get_id().toString())) {
                 continue;
             }
             UserBasicInfo baseUser = new UserBasicInfo();
