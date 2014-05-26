@@ -73,6 +73,9 @@ public class UserService {
             return  Response.status(200).entity(responseEntity).build();
         }
 
+        /*xianxing*/
+        if (user.identity == "") user.identity = "普通会员";
+
         responseEntity.code = 200;
         responseEntity.body = user;
         return Response.status(200).entity(responseEntity).build();
