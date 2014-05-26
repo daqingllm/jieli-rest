@@ -299,7 +299,7 @@
         <div class="form-group">
             <label class="col-sm-3 control-label no-padding-right" for="form-input-readonly" style="text-align: right;padding-right:7px !important"> 上传图片 </label>
 
-            <div class="col-sm-9">
+            <div class="col-sm-9" style="padding:2px;">
                 <div style="float: right;display: none" class="btn btn-success btn-purple" onclick="$('#bootbox-upload-image').click();">
                     <i class="fa fa-cloud-upload bigger-110"></i>
                     上传图片
