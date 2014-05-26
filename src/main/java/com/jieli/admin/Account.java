@@ -72,8 +72,9 @@ public class Account {
             }
             current.state = account.state;
             accountDAO.save(current);
-            if (user!=null)
+            if (user!=null) {
                 userDAO.save(user);
+            }
 
             responseEntity.code = 200;
             return Response.status(200).entity(responseEntity).build();

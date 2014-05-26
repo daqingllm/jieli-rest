@@ -265,6 +265,11 @@ public class AccountService {
             current.state = account.state;
             accountDAO.save(current);
             if (user!=null)
+
+
+            /*xianxing*/
+            if (user.identity == "普通会员") user.identity = "";
+
             userDAO.save(user);
         }
 

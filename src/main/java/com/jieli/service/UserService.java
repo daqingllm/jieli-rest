@@ -96,6 +96,10 @@ public class UserService {
         }
 
         user.set_id(new ObjectId(userId));
+
+        /*xianxing*/
+        if (user.identity == "普通会员") user.identity = "";
+
         userDAO.save(user);
         responseEntity.code = 200;
         return Response.status(200).entity(responseEntity).build();
@@ -289,7 +293,7 @@ public class UserService {
 
                 baseUser.name = user.name;
                 baseUser.group = user.group;
-                baseUser.identity = user.identity;
+                baseUser.identity = (user.identity == "" || user.identity == null) ? "普通会员" : user.identity;
                 baseUser.score = user.score;
                 baseUser.sex = user.sex;
                 baseUser.userFace = user.userFace;
@@ -315,7 +319,7 @@ public class UserService {
 
             baseUser.name = user.name;
             baseUser.group = user.group;
-            baseUser.identity = user.identity;
+            baseUser.identity = (user.identity == "" || user.identity == null) ? "普通会员" : user.identity;
             baseUser.score = user.score;
             baseUser.sex = user.sex;
             baseUser.userFace = user.userFace;
@@ -437,6 +441,10 @@ public class UserService {
         oldUser.name = user.name;
         oldUser.phone = user.phone;
         oldUser.identity = user.identity;
+
+        /*xianxing*/
+        if (oldUser.identity == "普通会员") oldUser.identity = "";
+
         oldUser.sex = user.sex;
         userDAO.save(oldUser);
 
