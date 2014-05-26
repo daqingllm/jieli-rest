@@ -284,17 +284,27 @@
 
             <div class="space-4"></div>
 
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right" for="">  </label>
+
+                <div class="col-sm-9">
+                    <div class="col-xs-10 col-sm-7 alert alert-warning" style="margin-bottom: 0">裁剪图片请到&nbsp;<a href="http://xiuxiu.web.meitu.com/main.html" target="_blank">http://xiuxiu.web.meitu.com/main.html</a></div>
+                </div>
+            </div>
+			
+            <div class="space-4"></div>
+
         </form>
 
         <div class="form-group">
-            <label class="col-sm-3 control-label no-padding-right" for="form-input-readonly" style="text-align: right"> 上传图片 </label>
+            <label class="col-sm-3 control-label no-padding-right" for="form-input-readonly" style="text-align: right;padding-right:7px !important"> 上传图片 </label>
 
             <div class="col-sm-9">
                 <div style="float: right;display: none" class="btn btn-success btn-purple" onclick="$('#bootbox-upload-image').click();">
                     <i class="fa fa-cloud-upload bigger-110"></i>
                     上传图片
                 </div>
-                <div id="dropzone" class="col-xs-10 col-sm-7" style="margin-bottom: 20px;">
+                <div id="dropzone" class="col-xs-10 col-sm-7" style="margin-bottom: 20px; padding: 2px; margin-left: 4px;">
                     <form action="/app/upload" class="dropzone" id="adminUploaded" style="min-height: 180px;">
                         <div class="fallback">
                             <input name="file" type="file" multiple="" />
@@ -570,7 +580,7 @@
                 addRemoveLinks : true,
                 dictDefaultMessage :
                         '<span class="bigger-150 bolder"> \
-                        <span style="font-size:16px;font-family:Microsoft YaHei" class="grey">拖拽/点击上传（图片建议尺寸572像素*354像素）<br>裁剪图片请到http://xiuxiu.web.meitu.com/main.html<br>您可通过移动文本框内[图片N]标签调整图片所在文本中的位置</span> <br /> \
+                        <span style="font-size:16px;font-family:Microsoft YaHei" class="grey">拖拽/点击上传（图片建议尺寸572像素*354像素）<br>您可通过移动文本框内[图片N]标签调整图片所在文本中的位置</span> <br /> \
                         <i class="upload-icon fa fa-cloud-upload blue icon-3x"></i>'
                 ,
                 dictResponseError: 'Error while uploading file!',
