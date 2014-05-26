@@ -452,6 +452,7 @@ function parseArtData(data){
     for (var i = 0 ; i < data.length; i++){
         if (data[i].state == "ADMIN") {
             data[i].name = data[i].username;
+            data[i].identity = "协会管理员";
             adminList.push(data[i]["_id"]);
         }
 
@@ -617,7 +618,13 @@ jQuery(function($) {
         //acc.password="";//donot change password
         //acc.associationId="";//donot change association
         //acc.state=0;
-        if(confirm("确认删除选中账号？")){
+        var includeAdmin = false;
+        var selectAdmin = "";
+        for (var i = 0; i < accs.length; i ++){
+            if (accs[i].state == "ADMIN"){includeAdmin = true;selectAdmin=accs[i].username;break;}
+        }
+
+        if(confirm("确认删除选中账号？"+(includeAdmin?"请注意：您选中了管理员账号":"")+selectAdmin)){
             var suc = true;
             for (var i =0;i < accs.length; i ++) {
                 var acc = accs[i];
