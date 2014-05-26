@@ -278,16 +278,7 @@ public class Account {
                         + "\",\"identity\":\"" + CommonUtil.TransferNull(user == null ? "" : user.identity)
                         + "\",\"phone\":\"" + CommonUtil.TransferNull(user == null ? "" : phoneSub) + "\"},");
 
-//                accountList += tmpString;
-
-                String uname =(user == null ? "" : (user.name == null ? "" : user.name + ","));
-                if (uname != "") {
-                    testString += uname;
-                    if (accountListStringMap.containsKey(uname))
-                        accountListStringMap.put(uname,accountListStringMap.get(uname)+tmpString);
-                    else
-                        accountListStringMap.put(uname,tmpString);
-                }
+                accountList2 += tmpString;
             }
 
             Iterable<com.jieli.common.entity.Account> accountEnable = accountDAO.loadByAssociationId(associationId.toString(),AccountState.ENABLE);
