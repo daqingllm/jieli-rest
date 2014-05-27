@@ -24,6 +24,7 @@ public class MatchDAO extends GenericDAO<Match> {
         if (oldMatch != null) {
             oldMatch.score = match.score;
             save(oldMatch);
+            return;
         }
         oldMatch = col.findOne("{userId1:#, userId2:#, score:#}", match.userId2, match.userId1, match).as(Match.class);
         if (oldMatch != null) {
