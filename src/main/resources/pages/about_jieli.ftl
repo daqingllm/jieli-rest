@@ -243,7 +243,7 @@
 
                             <div class="space-4"></div>
 
-                            <div class="form-group">
+                            <div class="form-group" style="display:none;">
                                 <label class="col-sm-3 control-label no-padding-right" for="">  </label>
 
                                 <div class="col-sm-9">
