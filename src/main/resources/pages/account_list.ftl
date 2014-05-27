@@ -208,7 +208,7 @@
                         </button>
                         &nbsp;&nbsp;&nbsp;&nbsp;
 
-                        <button class="btn btn-danger" type="button" style="font-weight:bold;margin-bottom: 20px;display:none;" id='deleteAccountBtn'>
+                        <button class="btn btn-danger" type="button" style="font-weight:bold;margin-bottom: 20px;" id='deleteAccountBtn'>
                             <i class="fa fa-trash-o bigger-110"></i>
                             删除账号
                         </button>
@@ -588,7 +588,13 @@ jQuery(function($) {
 
         var states={"禁用":"DISABLE","普通用户":"ENABLE","协会管理员":"ADMIN","超级管理员":"SUPPER"};
         for (var i = 0; i < id.length; i ++) {
-            var a = raw_data[id[i]-1];
+            var _id_ = $("#grid-table > tbody > tr").eq(id[i]).find("td").eq(1).attr("title");
+            var curpagenum = $("#grid-table").jqGrid('getGridParam', 'page');
+            var realIndex = (curpagenum-1)*15 + parseInt(id[i]) - 1;
+
+            if (realIndex >= raw_data.length && realIndex < 0 || raw_data[realIndex]._id != _id_){continue;}
+
+            var a = raw_data[realIndex];
             delete a["name"];
             delete a["identity"];
             delete a["phone"];

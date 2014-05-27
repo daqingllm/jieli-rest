@@ -227,14 +227,8 @@ public class Account {
 
 //                    accountList += tmpString;
 
-                    String uname =(user == null ? "" : (user.name == null ? "" : user.name + ","));
-                    if (uname != "") {
-                        testString += uname;
-                        if (accountListStringMap.containsKey(uname))
-                            accountListStringMap.put(uname,accountListStringMap.get(uname)+tmpString);
-                        else
-                            accountListStringMap.put(uname,tmpString);
-                    }
+
+                    accountList2 += tmpString;
                 }
 
                 Iterable<com.jieli.common.entity.Account> accountEnable = accountDAO.loadByAssociationId(association.get_id().toString(),AccountState.ENABLE);
@@ -252,11 +246,12 @@ public class Account {
 
                     String uname =(user == null ? "" : (user.name == null ? "" : user.name + ","));
                     if (uname != "") {
-                        testString += uname;
                         if (accountListStringMap.containsKey(uname))
                             accountListStringMap.put(uname,accountListStringMap.get(uname)+tmpString);
-                        else
+                        else{
                             accountListStringMap.put(uname,tmpString);
+                            testString += uname;
+                        }
                     }
 				}
 				
@@ -295,11 +290,12 @@ public class Account {
 
                 String uname =(user == null ? "" : (user.name == null ? "" : user.name + ","));
                 if (uname != "") {
-                    testString += uname;
                     if (accountListStringMap.containsKey(uname))
                         accountListStringMap.put(uname,accountListStringMap.get(uname)+tmpString);
-                    else
-                        accountListStringMap.put(uname,tmpString);
+                    else {
+                        accountListStringMap.put(uname, tmpString);
+                        testString += uname;
+                    }
                 }
             }
         }
