@@ -3,6 +3,7 @@ package com.jieli.test.remote;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jieli.common.entity.Account;
 import com.jieli.common.entity.AccountState;
+import com.jieli.util.PasswordGenerator;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.client.fluent.Response;
 import org.apache.http.entity.ContentType;
@@ -90,5 +91,10 @@ public class AccountTest {
                 .execute();
 
         System.out.println(response.returnContent().asString());
+    }
+
+    @Test
+    public void testPassword() {
+        System.out.println(PasswordGenerator.md5Encode("syea"));
     }
 }
