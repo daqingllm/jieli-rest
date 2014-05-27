@@ -208,7 +208,7 @@
                         </button>
                         &nbsp;&nbsp;&nbsp;&nbsp;
 
-                        <button class="btn btn-danger" type="button" style="font-weight:bold;margin-bottom: 20px;" id='deleteAccountBtn'>
+                        <button class="btn btn-danger" type="button" style="font-weight:bold;margin-bottom: 20px;display:none;" id='deleteAccountBtn'>
                             <i class="fa fa-trash-o bigger-110"></i>
                             É¾³ýÕËºÅ
                         </button>
