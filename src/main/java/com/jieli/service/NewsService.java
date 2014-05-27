@@ -231,9 +231,31 @@ public class NewsService {
             responseEntity.msg = "缺少图片";
             return Response.status(200).entity(responseEntity).build();
         }
+
+        Iterable<Image> images = imageDAO.loadCoverImages();
+        int count = 1;
+        for (Image image_ : images){
+            if (count == 4){
+                String newsId = image_.newsId;
+                News news_ = newsDAO.loadById(newsId);
+                if (news_ != null) {
+                    news_.topPic = false;
+                    newsDAO.save(news_);
+                }
+                break;
+            }
+            count ++;
+        }
+
         Image image = news.images.get(0);
         image.newsId = news.get_id().toString();
         imageDAO.save(image);
+
+        News news_ = newsDAO.loadById(image.newsId);
+        if (news_ != null){
+            news_.topPic = true;
+            newsDAO.save(news_);
+        }
 
         responseEntity.code = 200;
         return  Response.status(200).entity(responseEntity).build();

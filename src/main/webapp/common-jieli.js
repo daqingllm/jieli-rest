@@ -313,6 +313,9 @@ function setTitleImg(news){
         processData:false,
         success:function(ret){
             if (ret.code == 200) {
+                alert("已设置为头图");
+                return;
+
                 news.topPic = true;
                 $.ajax({
                     url:"/app/news/?newsId="+news["_id"]+"&force=false",
@@ -331,7 +334,7 @@ function setTitleImg(news){
                     error:function(err){
                         alert("设置头图失败");
                     }
-                })
+                });
             }
             else
                 alert("设置头图失败");
