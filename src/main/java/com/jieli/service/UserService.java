@@ -176,7 +176,26 @@ public class UserService {
         userDAO.update(user);
 
         if (first) {
-            String name = IdentityUtils.getUserName(userId);
+            MatchThread matchThread = new MatchThread(user);
+            matchThread.start();
+
+        }
+
+        responseEntity.code = 200;
+        return Response.status(200).entity(responseEntity).build();
+    }
+
+    class MatchThread extends Thread {
+
+        private User user;
+
+        public MatchThread(User user) {
+            this.user = user;
+        }
+
+        @Override
+        public void run() {
+            String name = user.name;
             MatchTask matchTask = new MatchTask(5, user);
             List<Match> result = matchTask.getResult();
             for (Match match : result) {
@@ -208,9 +227,6 @@ public class UserService {
                 messageDAO.save(message);
             }
         }
-
-        responseEntity.code = 200;
-        return Response.status(200).entity(responseEntity).build();
     }
 
     @GET
