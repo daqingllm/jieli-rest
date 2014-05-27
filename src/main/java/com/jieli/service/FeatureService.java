@@ -1008,7 +1008,9 @@ public class FeatureService {
         List<MatchDisplay> results = new ArrayList<MatchDisplay>();
         for (Match match : matches) {
             MatchDisplay display = makeDisplay(match);
-            results.add(display);
+            if (display != null) {
+                results.add(display);
+            }
         }
 
         responseEntity.code = 200;
@@ -1047,7 +1049,9 @@ public class FeatureService {
                 MatchUtil matchUtil = new MatchUtil(self, user);
                 Match match = matchUtil.getMatch();
                 MatchDisplay display = makeDisplay(match);
-                results.add(display);
+                if (display != null) {
+                    results.add(display);
+                }
             }
         }
         responseEntity.code = 200;
@@ -1066,11 +1070,16 @@ public class FeatureService {
             count = 5;
         }
         ResponseEntity responseEntity = new ResponseEntity();
-        Iterable<Match> matches = matchDAO.getTopMatch(count);
+        Iterable<Match> matches = matchDAO.getTopMatch(1000);
         List<MatchDisplay> results = new ArrayList<MatchDisplay>();
         for (Match match : matches) {
             MatchDisplay display = makeDisplay(match);
-            results.add(display);
+            if (display != null) {
+                results.add(display);
+            }
+            if (results.size() == count) {
+                break;
+            }
         }
 
         responseEntity.code = 200;
@@ -1086,11 +1095,13 @@ public class FeatureService {
             return Response.status(403).build();
         }
         ResponseEntity responseEntity = new ResponseEntity();
-        Iterable<Match> matches = matchDAO.getTopMatchByUserId(userId, count);
+        Iterable<Match> matches = matchDAO.getTopMatchByUserId(userId, 1000);
         List<MatchDisplay> results = new ArrayList<MatchDisplay>();
         for (Match match : matches) {
             MatchDisplay display = makeDisplay(match);
-            results.add(display);
+            if (display != null) {
+                results.add(display);
+            }
         }
 
         responseEntity.code = 200;
@@ -1301,11 +1312,14 @@ public class FeatureService {
     private MatchDisplay makeDisplay(Match match) {
         MatchDisplay display = new MatchDisplay();
         User user1 = userDAO.loadById(match.userId1);
+        User user2 = userDAO.loadById(match.userId2);
+        if (user1 == null || user2 == null) {
+            return null;
+        }
         display.userId1 = user1.get_id().toString();
         display.name1 = user1.name;
         display.userFace1 = user1.userFace;
         display.phone1 = user1.phone;
-        User user2 = userDAO.loadById(match.userId2);
         display.userId2 = user2.get_id().toString();
         display.name2 = user2.name;
         display.userFace2 = user2.userFace;
