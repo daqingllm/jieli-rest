@@ -575,6 +575,39 @@
 </script>
 <script>
 
+    function deleteComments() {
+        var ids = $("#grid-table-comment").getGridParam("selarrrow");
+        if (ids.length == 0){
+            alert("请先选中评论");
+            return;
+        }else {
+            if (!confirm("确认删除选中的评论？")) return;
+            var suc = true;
+            for (var i = 0; i < ids.length; i++){
+                var id = $("#grid-table-comment > tbody > tr").eq(ids[i]).find("td").eq(1).attr("title");
+                if (!id || id.length == 0) continue;
+
+                $.ajax({
+                    type: "GET",
+                    url: "/app/comment/delete?commentId=" + id,
+                    async: false,
+                    contentType: "application/json; charset=utf-8",
+                    success: function (jsn) {
+                        if (jsn.code != 200) {
+                            suc = false;
+                        }
+                    }
+                });
+            }
+            if (suc) {
+                alert("删除成功！");
+                window.location.reload();
+            }else{
+                alert("删除失败");
+            }
+        }
+    }
+
     var imagesUpload = [];
     var textAreaId = "form-field-textarea";
     var adminUploadedImagesDivId = "adminUploaded";
@@ -807,39 +840,6 @@
             $(table).find('.ui-pg-div').tooltip({container:'body'});
         }
 
-
-        function deleteComments() {
-            var ids = $("#grid-table-comment").getGridParam("selarrrow");
-            if (ids.length == 0){
-                alert("请先选中评论");
-                return;
-            }else {
-                if (!confirm("确认删除选中的评论？")) return;
-                var suc = true;
-                for (var i = 0; i < ids.length; i++){
-                    var id = $("#grid-table-comment > tbody > tr").eq(ids[i]).find("td").eq(1).attr("title");
-                    if (!id || id.length == 0) continue;
-
-                    $.ajax({
-                        type: "GET",
-                        url: "/app/comment/delete?commentId=" + id,
-                        async: false,
-                        contentType: "application/json; charset=utf-8",
-                        success: function (jsn) {
-                            if (jsn.code != 200) {
-                                suc = false;
-                            }
-                        }
-                    });
-                }
-                if (suc) {
-                    alert("删除成功！");
-                    window.location.reload();
-                }else{
-                    alert("删除失败");
-                }
-            }
-        }
 
         function parseArtData(data){
             for (var i = 0 ; i < data.length; i++){
