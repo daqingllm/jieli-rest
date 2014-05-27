@@ -20,13 +20,13 @@ public class MatchDAO extends GenericDAO<Match> {
     }
 
     public void upsert(Match match) {
-        Match oldMatch = col.findOne("{userId1:#, userId2:#, score:#}", match.userId1, match.userId2, match).as(Match.class);
+        Match oldMatch = col.findOne("{userId1:#, userId2:#, score:#}", match.userId1, match.userId2, match.score).as(Match.class);
         if (oldMatch != null) {
             oldMatch.score = match.score;
             save(oldMatch);
             return;
         }
-        oldMatch = col.findOne("{userId1:#, userId2:#, score:#}", match.userId2, match.userId1, match).as(Match.class);
+        oldMatch = col.findOne("{userId1:#, userId2:#, score:#}", match.userId2, match.userId1, match.score).as(Match.class);
         if (oldMatch != null) {
             oldMatch.score = match.score;
             save(oldMatch);
