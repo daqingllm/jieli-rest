@@ -268,7 +268,7 @@ public class AccountService {
 
 
             /*xianxing*/
-            if (user.identity == "普通会员") user.identity = "";
+            if (user.identity == "普通会员") user.identity = null;
 
             userDAO.save(user);
         }

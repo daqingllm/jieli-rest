@@ -692,6 +692,7 @@
                 $("#form-field-occDate").val(GetDate10(new Date(),0));
             }
 
+        toggleShowTime();
 
         var cont = data["content"];
 
