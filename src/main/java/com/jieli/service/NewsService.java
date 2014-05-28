@@ -16,6 +16,7 @@ import org.bson.types.ObjectId;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -199,10 +200,17 @@ public class NewsService {
         }
 
         Iterable<Image> images = imageDAO.loadCoverImages();
+        List<Image> imageList = new ArrayList<Image>();
+        for (Image image : images){
+            if (image.url.indexOf("?imageView/4/w/472/h/354") < 0)
+                image.url += "?imageView/4/w/472/h/354";
+
+            imageList.add(image);
+        }
 
         ResponseEntity responseEntity = new ResponseEntity();
         responseEntity.code = 200;
-        responseEntity.body = images;
+        responseEntity.body = imageList;
 
         return  Response.status(200).entity(responseEntity).build();
     }
