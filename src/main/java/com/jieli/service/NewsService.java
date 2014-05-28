@@ -202,8 +202,8 @@ public class NewsService {
         Iterable<Image> images = imageDAO.loadCoverImages();
         List<Image> imageList = new ArrayList<Image>();
         for (Image image : images){
-            if (image.url.indexOf("?imageView/4/w/572/h/354") < 0)
-                image.url += "?imageView/4/w/572/h/354";
+            if (image.url.indexOf("?imageView/4/w/472/h/354") < 0)
+                image.url += "?imageView/4/w/472/h/354";
 
             imageList.add(image);
         }

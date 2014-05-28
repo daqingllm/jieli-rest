@@ -269,7 +269,7 @@
             <i class="fa fa-cloud-upload bigger-110"></i>
             上传标题图片
         </div>
-            <div class="alert alert-info" style="float: left;padding: 2px 14px;margin-left: 15px;margin-top: 7px;"> 请上传572*364的图片 </div>
+            <div class="alert alert-info" style="float: left;padding: 2px 14px;margin-left: 15px;margin-top: 7px;"> 请上472*354的图片 </div>
         </div>
     </div>
 </div>

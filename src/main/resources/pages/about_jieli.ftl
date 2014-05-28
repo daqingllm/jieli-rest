@@ -620,7 +620,7 @@
                 addRemoveLinks : true,
                 dictDefaultMessage :
                         '<span class="bigger-150 bolder"> \
-                        <span style="font-size:16px;font-family:Microsoft YaHei" class="grey">拖拽/点击上传（图片建议尺寸572像素*354像素）<br>您可通过移动文本框内[图片N]标签调整图片所在文本中的位置</span> <br /> \
+                        <span style="font-size:16px;font-family:Microsoft YaHei" class="grey">拖拽/点击上传（图片建议尺寸472像素*354像素）<br>您可通过移动文本框内[图片N]标签调整图片所在文本中的位置</span> <br /> \
                         <i class="upload-icon fa fa-cloud-upload blue icon-3x"></i>'
                 ,
                 dictResponseError: 'Error while uploading file!',
