@@ -264,13 +264,11 @@ public class AccountService {
             }
             current.state = account.state;
             accountDAO.save(current);
-            if (user!=null)
-
-
-            /*xianxing*/
-            if (user.identity == "普通会员") user.identity = null;
-
-            userDAO.save(user);
+            if (user!=null){
+				/*xianxing*/
+				if (user.identity == "普通会员") user.identity = null;
+				userDAO.save(user);
+			}
         }
 
         responseEntity.code = 200;
