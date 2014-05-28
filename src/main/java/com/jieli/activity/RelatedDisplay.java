@@ -18,6 +18,8 @@ public class RelatedDisplay implements Serializable {
 
     public String title;
 
+    public Date activityDate;
+
     public RelatedType type;
 
     public Date time;

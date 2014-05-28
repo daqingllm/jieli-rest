@@ -315,6 +315,7 @@ public class ActivityService {
             }
             display.type = info.type;
             display.title = activity.title;
+            display.activityDate = activity.beginDate;
             display.time = info.time;
             displays.add(display);
         }
