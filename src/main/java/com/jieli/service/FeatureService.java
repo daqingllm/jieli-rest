@@ -1036,15 +1036,11 @@ public class FeatureService {
         for (String userId : userIds) {
             if (!StringUtils.isEmpty(userId) && MongoUtils.isValidObjectId(userId)) {
                 if (IdentityUtils.getUserId(sessionId).equals(userId)) {
-                    responseEntity.code = 6102;
-                    responseEntity.msg = "不能与自己匹配";
-                    return  Response.status(200).entity(responseEntity).build();
+                    continue;
                 }
                 User user = userDAO.loadById(userId);
                 if (user == null) {
-                    responseEntity.code = 1102;
-                    responseEntity.msg = "用户不存在";
-                    return  Response.status(200).entity(responseEntity).build();
+                    continue;
                 }
                 MatchUtil matchUtil = new MatchUtil(self, user);
                 Match match = matchUtil.getMatch();
