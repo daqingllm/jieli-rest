@@ -510,7 +510,7 @@ function finishActivity(type){
 
 
     act.album = {};
-    act.officialAlbum = {};
+    act.officialAlbum = [];
     act.beginDate=new Date($("#form-field-dlDate").val());
     //act.beginDate=null;
     act.fee=$("#form-field-fee").val();
@@ -692,6 +692,81 @@ function uploadImgBox() {
                 "className": "btn-sm btn-success",
                 "callback": function () {
                     $('#rest-upload-form').ajaxSubmit(uploadActivityImageOptions);
+                }
+            },
+            "cancel": {
+                "label": "<i class='fa fa-times'></i> 取消",
+                "className": "btn-sm",
+                "callback": function () {
+                    var objFile = document.getElementById('rest-upload-file');
+                    objFile.outerHTML = objFile.outerHTML.replace(/(value=\").+\"/i, "$1\"");
+                }
+            }
+        }
+    });
+}
+
+
+var uploaduserFaceImageOptions = {
+    url: '/app/upload',
+    type:'post',
+    dataType:'json',
+    contentType:'text/plain',
+    success:function( jsn ) {
+        var msg = jsn.msg;
+        if (jsn.code == 200) {
+            var uploadImgSrc = jsn.body + "";
+
+            $("#form-field-imgurl").attr("src",uploadImgSrc);
+            $("#form-field-imgurl").css("display","block");
+            $("#delTitleImage").css("display","inline");
+            $("#preview_box").show();
+
+
+            $("#form-field-imgurl").attr("src",uploadImgSrc);
+            $("#crop_preview").attr("src",uploadImgSrc);
+//            $(".jcrop-holder").find("img").attr("src","http://jieli-images.qiniudn.com/911816764528403_IMG_2181.jpeg?imageView/4/w/600");
+
+            //记得放在jQuery(window).load(...)内调用，否则Jcrop无法正确初始化
+            $("#form-field-imgurl").Jcrop({
+                onChange : showPreview,
+                onSelect : showPreview,
+                aspectRatio : 1
+            });
+            //简单的事件处理程序，响应自onChange,onSelect事件，按照上面的Jcrop调用
+            function showPreview(coords) {
+                if (parseInt(coords.w) > 0) {
+                    //计算预览区域图片缩放的比例，通过计算显示区域的宽度(与高度)与剪裁的宽度(与高度)之比得到
+                    var rx = $("#preview_box").width() / coords.w;
+                    var ry = $("#preview_box").height() / coords.h;
+                    //通过比例值控制图片的样式与显示
+                    $("#crop_preview").css({
+                        width : Math.round(rx * $("#form-field-imgurl").width()) + "px", //预览图片宽度为计算比例值与原图片宽度的乘积
+                        height : Math.round(rx * $("#form-field-imgurl").height()) + "px", //预览图片高度为计算比例值与原图片高度的乘积
+                        marginLeft : "-" + Math.round(rx * coords.x) + "px",
+                        marginTop : "-" + Math.round(ry * coords.y) + "px"
+                    });
+                }
+            }
+
+        } else {
+            alert("上传失败");
+        }
+    }
+}
+
+/*头像上传图片*/
+function uploadImgUserface() {
+    var spin_img = "<div id='upload-loading-img' style='margin-left:30px;margin-top:10px;display: none;'><i class='fa fa-spinner icon-spin orange bigger-125'></i></div>";
+    spin_img = "";
+    bootbox.dialog({
+        message: "<form id='rest-upload-form' action='/app/upload' method='post' enctype='multipart/form-data' acceptcharset='UTF-8'>\n<input id='rest-upload-file' type='file' name='file' size='50' />"+spin_img+"</form>",
+        buttons: {
+            "upload": {
+                "label": "<i class='fa fa-check'></i> 上传 ",
+                "className": "btn-sm btn-success",
+                "callback": function () {
+                    $('#rest-upload-form').ajaxSubmit(uploaduserFaceImageOptions);
                 }
             },
             "cancel": {
