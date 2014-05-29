@@ -418,6 +418,9 @@
                     alert(ret.body);
                     return;
                 }
+            },
+            error: function(XMLHttpRequest, textStatus, errorThrown) {
+                alert("²Ù×÷Ê§°Ü£¬´íÎóÂë£º"+XMLHttpRequest.status);
             }
         });
     }

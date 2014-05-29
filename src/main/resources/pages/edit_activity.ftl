@@ -735,8 +735,9 @@
             alert("请先选中评论");
             return;
         }else {
-            if (!confirm("确认删除选中的评论？")) return;
+            if (ids.length == 0 || !confirm("确认删除选中的评论？")) return;
             var suc = true;
+            var erro = false;
             for (var i = 0; i < ids.length; i++){
                 var id = $("#grid-table-comment > tbody > tr").eq(ids[i]).find("td").eq(1).attr("title");
                 if (!id || id.length == 0) continue;
@@ -750,9 +751,17 @@
                         if (jsn.code != 200) {
                             suc = false;
                         }
+                    },
+                    error: function(XMLHttpRequest, textStatus, errorThrown) {
+                        alert("操作失败，错误码："+XMLHttpRequest.status);
+                        erro = true;
+                        return;
                     }
                 });
             }
+
+            if (erro) return;
+
             if (suc) {
                 alert("删除成功！");
                 window.location.reload();
@@ -792,6 +801,10 @@
                     }else{
                         alert("删除失败。"+ret.msg);
                     }
+                },
+                error: function(XMLHttpRequest, textStatus, errorThrown) {
+                    alert("操作失败，错误码："+XMLHttpRequest.status);
+                    return;
                 }
             });
         }
@@ -1009,6 +1022,9 @@
                             }
                         }
                         window.scrollTo(0, 0);
+                    },
+                    error: function(XMLHttpRequest, textStatus, errorThrown) {
+                        alert("无法获取全部活动图片，错误码："+XMLHttpRequest.status);
                     }
                 });
             }
@@ -1051,6 +1067,9 @@
                 var message = "<div class='ui-accordion-content'><ul>"+lis+"</ul></div>";
                 $("#divJoinMembers").append(message);
                 $("#noJoinMembers").hide();
+            },
+            error: function(XMLHttpRequest, textStatus, errorThrown) {
+                alert("获取参加活动用户列表时发生错误，错误码："+XMLHttpRequest.status);
             }
         });
 
@@ -1073,6 +1092,9 @@
                 var message = "<div class='ui-accordion-content'><ul>"+lis+"</ul></div>";
                 $("#divFollowMembers").append(message);
                 $("#noFollowMembers").hide();
+            },
+            error: function(XMLHttpRequest, textStatus, errorThrown) {
+                alert("获取参加活动用户列表时发生错误，错误码："+XMLHttpRequest.status);
             }
         });
 
@@ -1217,6 +1239,10 @@
                                         success:function(jsn){
                                             if (jsn.code==200) {alert("已添加评论");window.location.reload();}
                                             else alert("添加评论失败："+jsn.msg);
+                                        },
+                                        error: function(XMLHttpRequest, textStatus, errorThrown) {
+                                            alert("操作失败，错误码："+XMLHttpRequest.status);
+                                            return;
                                         }
                                     });
                                 }
@@ -1243,6 +1269,10 @@
                                 success:function(jsn){
                                     if(jsn.code==200) {alert("删除成功");window.location.reload();}
                                     else alert("删除失败："+jsn.msg);
+                                },
+                                error: function(XMLHttpRequest, textStatus, errorThrown) {
+                                    alert("操作失败，错误码："+XMLHttpRequest.status);
+                                    return;
                                 }
                             });
                         }

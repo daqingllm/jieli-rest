@@ -747,6 +747,10 @@
             success:function(ret){
                 if (ret.code != 200) alert("保存上传的活动图片失败："+ret.msg);
                 else window.location.href = "/app/bactivity/list";
+            },
+            error: function(XMLHttpRequest, textStatus, errorThrown) {
+                alert("操作失败，错误码："+XMLHttpRequest.status);
+                return;
             }
         })
     }
@@ -835,6 +839,7 @@ function deleteComments() {
     }else {
         if (!confirm("确认删除选中的评论？")) return;
         var suc = true;
+        var erro = false;
         for (var i = 0; i < ids.length; i++){
             var id = $("#grid-table-comment > tbody > tr").eq(ids[i]).find("td").eq(1).attr("title");
             if (!id || id.length == 0) continue;
@@ -848,9 +853,17 @@ function deleteComments() {
                     if (jsn.code != 200) {
                         suc = false;
                     }
+                },
+                error: function(XMLHttpRequest, textStatus, errorThrown) {
+                    alert("操作失败，错误码："+XMLHttpRequest.status);
+                    erro = true;
+                    return;
                 }
             });
         }
+
+        if (erro) return;
+
         if (suc) {
             alert("删除成功！");
             window.location.reload();
@@ -890,6 +903,10 @@ function deleteActivityPic(aid,uid,pid){
                 }else{
                     alert("删除失败。"+ret.msg);
                 }
+            },
+            error: function(XMLHttpRequest, textStatus, errorThrown) {
+                alert("操作失败，错误码："+XMLHttpRequest.status);
+                return;
             }
         });
     }
@@ -1112,6 +1129,9 @@ function loadThisActivity(){
                         }
                     }
                     window.scrollTo(0, 0);
+                },
+                error: function(XMLHttpRequest, textStatus, errorThrown) {
+                    alert("无法载入全部活动图片，错误码："+XMLHttpRequest.status);
                 }
             });
         }
@@ -1154,6 +1174,9 @@ function loadThisActivity(){
             var message = "<div class='ui-accordion-content'><ul>"+lis+"</ul></div>";
             $("#divJoinMembers").append(message);
             $("#noJoinMembers").hide();
+        },
+        error: function(XMLHttpRequest, textStatus, errorThrown) {
+            alert("无法载入参与人列表，错误码："+XMLHttpRequest.status);
         }
     });
 
@@ -1176,6 +1199,9 @@ function loadThisActivity(){
             var message = "<div class='ui-accordion-content'><ul>"+lis+"</ul></div>";
             $("#divFollowMembers").append(message);
             $("#noFollowMembers").hide();
+        },
+        error: function(XMLHttpRequest, textStatus, errorThrown) {
+            alert("无法载入关注者列表，错误码："+XMLHttpRequest.status);
         }
     });
 
@@ -1320,6 +1346,10 @@ function loadThisActivity(){
                                     success:function(jsn){
                                         if (jsn.code==200) {alert("已添加评论");window.location.reload();}
                                         else alert("添加评论失败："+jsn.msg);
+                                    },
+                                    error: function(XMLHttpRequest, textStatus, errorThrown) {
+                                        alert("操作失败，错误码："+XMLHttpRequest.status);
+                                        return;
                                     }
                                 });
                             }
@@ -1346,6 +1376,10 @@ function loadThisActivity(){
                             success:function(jsn){
                                 if(jsn.code==200) {alert("删除成功");window.location.reload();}
                                 else alert("删除失败："+jsn.msg);
+                            },
+                            error: function(XMLHttpRequest, textStatus, errorThrown) {
+                                alert("操作失败，错误码："+XMLHttpRequest.status);
+                                return;
                             }
                         });
                     }

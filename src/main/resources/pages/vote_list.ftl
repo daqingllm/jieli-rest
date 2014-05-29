@@ -517,6 +517,10 @@ function updateGrid(associationId, page, size) {
                     data: parseArtData(data)
                 }).trigger('reloadGrid');
             }
+        },
+        error: function(XMLHttpRequest, textStatus, errorThrown) {
+            alert("²Ù×÷Ê§°Ü£¬´íÎóÂë£º"+XMLHttpRequest.status);
+            return;
         }
     });
 }
@@ -559,6 +563,10 @@ function deleteVote() {
                         var associationId = $('#form-field-select-type').val();
                         updateGrid(associationId, 1, 20);
                     }
+                },
+                error: function(XMLHttpRequest, textStatus, errorThrown) {
+                    alert("²Ù×÷Ê§°Ü£¬´íÎóÂë£º"+XMLHttpRequest.status);
+                    return;
                 }
             });
         }
@@ -656,6 +664,10 @@ jQuery(function($) {
                                     var associationId = $('#form-field-select-type').val();
                                     updateGrid(associationId,1,20);
                                 }
+                            },
+                            error: function(XMLHttpRequest, textStatus, errorThrown) {
+                                alert("²Ù×÷Ê§°Ü£¬´íÎóÂë£º"+XMLHttpRequest.status);
+                                return;
                             }
                         });
                     }

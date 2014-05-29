@@ -371,6 +371,10 @@
             async:true,
             success:function(data){
                 alert(data);
+            },
+            error: function(XMLHttpRequest, textStatus, errorThrown) {
+                alert("无法获取内容，错误码："+XMLHttpRequest.status);
+                return;
             }
         });
         ;
@@ -385,6 +389,10 @@
             data:d,
             success:function(jsn){
                 var ulist;
+            },
+            error: function(XMLHttpRequest, textStatus, errorThrown) {
+                alert("无法获取用户列表，错误码："+XMLHttpRequest.status);
+                return;
             }
         });
     }
@@ -630,8 +638,9 @@ jQuery(function($) {
             if (accs[i].state == "ADMIN"){includeAdmin = true;selectAdmin=accs[i].username;break;}
         }
 
-        if(confirm("确认删除选中账号？"+(includeAdmin?"请注意：您选中了管理员账号":"")+selectAdmin)){
+        if(accs.length > 0 && confirm("确认删除选中账号？"+(includeAdmin?"请注意：您选中了管理员账号":"")+selectAdmin)){
             var suc = true;
+            var erro = false;
             for (var i =0;i < accs.length; i ++) {
                 var acc = accs[i];
                 acc.password="";//donot change password
@@ -647,9 +656,17 @@ jQuery(function($) {
                         if (jsn.code == 200) {
                         }
                         else suc=false;
+                    },
+                    error: function(XMLHttpRequest, textStatus, errorThrown) {
+                        alert("操作失败，错误码："+XMLHttpRequest.status);
+                        erro = true;
+                        return;
                     }
                 });
             }
+
+            if (erro) return;
+
             if (suc) {alert("删除成功");window.location.reload();}
             else alert("删除失败");
 
@@ -689,6 +706,10 @@ jQuery(function($) {
                         success:function(jsn){
                             if (jsn.code==200) alert("密码已经修改成"+result);
                             else alert("密码修改失败");
+                        },
+                        error: function(XMLHttpRequest, textStatus, errorThrown) {
+                            alert("操作失败，错误码："+XMLHttpRequest.status);
+                            return;
                         }
                     });
                 }
@@ -732,6 +753,10 @@ jQuery(function($) {
                                     success:function(jsn){
                                         if (jsn.code==200) alert("密码已经修改成"+result);
                                         else alert("密码修改失败，因为"+jsn.msg);
+                                    },
+                                    error: function(XMLHttpRequest, textStatus, errorThrown) {
+                                        alert("操作失败，错误码："+XMLHttpRequest.status);
+                                        return;
                                     }
                                 });
                             }
@@ -758,6 +783,10 @@ jQuery(function($) {
                             success:function(jsn){
                                 if(jsn.code==200) alert("用户"+acc.username+"已经升级为管理员");
                                 else alert("操作失败，"+jsn.msg);
+                            },
+                            error: function(XMLHttpRequest, textStatus, errorThrown) {
+                                alert("操作失败，错误码："+XMLHttpRequest.status);
+                                return;
                             }
                         });
                     }
@@ -785,6 +814,10 @@ jQuery(function($) {
                             success:function(jsn){
                                 if(jsn.code==200) {alert("用户"+acc.username+"已被删除");window.location.reload();}
                                 else alert("操作失败，"+jsn.msg);
+                            },
+                            error: function(XMLHttpRequest, textStatus, errorThrown) {
+                                alert("操作失败，错误码："+XMLHttpRequest.status);
+                                return;
                             }
                         });
                     }

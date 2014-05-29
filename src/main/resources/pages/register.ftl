@@ -368,6 +368,10 @@
                                         showMsg("×¢²á³É¹¦", "ÓÃ»§" + user.name);
                                     else
                                         showMsg("×¢²áÊ§°Ü", ret.msg || "");
+                                },
+                                error: function(XMLHttpRequest, textStatus, errorThrown) {
+                                    alert("²Ù×÷Ê§°Ü£¬´íÎóÂë£º"+XMLHttpRequest.status);
+                                    return;
                                 }
                             });
                         }

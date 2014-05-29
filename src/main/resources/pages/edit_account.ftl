@@ -20,6 +20,7 @@
 
     <link rel="stylesheet" href="/assets/css/bootstrap-multiselect.css" type="text/css"/>
     <link rel="stylesheet" href="/assets/css/ui.jqgrid.css" />
+    <link rel="stylesheet" href="/assets/css/jquery.Jcrop.css" type="text/css" />
 
     <!-- fonts -->
 
@@ -47,6 +48,40 @@
     <script src="/assets/js/html5shiv.js"></script>
     <script src="/assets/js/respond.min.js"></script>
     <![endif]-->
+
+    <style type="text/css">
+
+        /* Apply these styles only when #preview-pane has
+           been placed within the Jcrop widget */
+        .jcrop-holder #preview-pane {
+            display: block;
+            position: absolute;
+            z-index: 2000;
+            top: 10px;
+            right: -280px;
+            padding: 6px;
+            border: 1px rgba(0,0,0,.4) solid;
+            background-color: white;
+
+            -webkit-border-radius: 6px;
+            -moz-border-radius: 6px;
+            border-radius: 6px;
+
+            -webkit-box-shadow: 1px 1px 5px 2px rgba(0, 0, 0, 0.2);
+            -moz-box-shadow: 1px 1px 5px 2px rgba(0, 0, 0, 0.2);
+            box-shadow: 1px 1px 5px 2px rgba(0, 0, 0, 0.2);
+        }
+
+        /* The Javascript code will set the aspect ratio of the crop
+           area based on the size of the thumbnail preview,
+           specified here */
+        #preview-pane .preview-container {
+            width: 120px;
+            height: 120px;
+            overflow: hidden;
+        }
+
+    </style>
 </head>
 
 <body>
@@ -233,14 +268,45 @@
     <label class="col-sm-3 control-label no-padding-right" for=""> 用户头像 </label>
 
     <div class="col-sm-9">
-        <img id="form-field-userFace" src="" class="col-xs-10 col-sm-7"
+        <img id="form-field-userFace" src="" class=""
              style="padding-left: 7px;"/>
     </div>
 </div>
 
 <div class="space-4"></div>
+</form>
 
 
+<div class="form-group">
+    <label class="col-sm-3 control-label no-padding-right" for=""></label>
+
+    <div class="col-sm-9" id="uploadUserFace">
+        <div><div class="btn btn-success btn-purple" style="float: left" id="uploadTitleImageClick">
+            <i class="fa fa-cloud-upload bigger-110"></i>
+            上传头像
+        </div>
+            <div class="alert alert-info" style="float: left;padding: 2px 14px;margin-left: 15px;margin-top: 7px;"> 请上传400*400的图片 </div>
+        </div>
+    </div>
+</div>
+
+<div class="form-group" style="min-height: 430px;display: none">
+    <label class="col-sm-3 control-label no-padding-right" for="form-input-readonly" style="text-align: right;padding-right:7px !important"> 裁剪图片 </label>
+
+    <div class="col-sm-9" style="padding:2px;">
+        <div id="resizeImage" class="col-xs-10 col-sm-7" style="margin-bottom: 20px; padding: 2px; margin-left: 4px">
+            <img id="userFaceImage" src="" />
+        </div>
+    </div>
+</div>
+
+<div id="preview-pane" style="display: none">
+    <div class="preview-container">
+        <img src="" class="jcrop-preview" alt="Preview" />
+    </div>
+</div>
+
+<form class="form-horizontal" role="form">
 
 <div class="form-group">
     <label class="col-sm-3 control-label no-padding-right" for="form-field-select-sex"> 性别 </label>
@@ -288,7 +354,7 @@
     <label class="col-sm-3 control-label no-padding-right" for="form-field-birthday"> 生日 </label>
 
     <div class="col-sm-9">
-        <input readonly="readonly" type="text" id="form-field-birthday" placeholder="生日" class="col-xs-10 col-sm-7"
+        <input type="text" id="form-field-birthday" placeholder="格式1990-01-01" class="col-xs-10 col-sm-7"
                style="padding-left: 7px;" value=""/>
     </div>
 </div>
@@ -300,7 +366,7 @@
     <label class="col-sm-3 control-label no-padding-right" for="form-field-constellation"> 星座 </label>
 
     <div class="col-sm-9">
-        <input readonly="readonly" type="text" id="form-field-constellation" placeholder="星座" class="col-xs-10 col-sm-7"
+        <input type="text" id="form-field-constellation" placeholder="星座" class="col-xs-10 col-sm-7"
                style="padding-left: 7px;" value=""/>
     </div>
 </div>
@@ -313,7 +379,7 @@
     <label class="col-sm-3 control-label no-padding-right" for="form-field-interests"> 兴趣 </label>
 
     <div class="col-sm-9">
-        <input readonly="readonly" type="text" id="form-field-interests" placeholder="兴趣" class="col-xs-10 col-sm-7"
+        <input type="text" id="form-field-interests" placeholder="用逗号分隔" class="col-xs-10 col-sm-7"
                style="padding-left: 7px;" value=""/>
     </div>
 </div>
@@ -325,8 +391,16 @@
     <label class="col-sm-3 control-label no-padding-right" for="form-field-degree"> 教育程度 </label>
 
     <div class="col-sm-9">
-        <input readonly="readonly" type="text" id="form-field-degree" placeholder="教育程度" class="col-xs-10 col-sm-7"
-               style="padding-left: 7px;" value=""/>
+        <input readonly="readonly" type="text" id="form-field-degree2" placeholder="教育程度" class="col-xs-10 col-sm-7"
+               style="padding-left: 7px;display: none" value=""/>
+        <select id="form-field-degree" class="col-xs-10 col-sm-7" style="padding-left: 7px;">
+            <option value="0">EMBA</option>
+            <option value="1">MBA</option>
+            <option value="2">学士</option>
+            <option value="3" selected="selected">硕士</option>
+            <option value="4">博士</option>
+            <option value="5">其他</option>
+        </select>
     </div>
 </div>
 
@@ -338,7 +412,7 @@
     <label class="col-sm-3 control-label no-padding-right" for="form-field-profession"> 专业行业 </label>
 
     <div class="col-sm-9">
-        <input readonly="readonly" type="text" id="form-field-profession" placeholder="专业行业" class="col-xs-10 col-sm-7"
+        <input type="text" id="form-field-profession" placeholder="专业行业" class="col-xs-10 col-sm-7"
                style="padding-left: 7px;" value=""/>
     </div>
 </div>
@@ -350,7 +424,7 @@
     <label class="col-sm-3 control-label no-padding-right" for="form-field-mail"> 邮箱 </label>
 
     <div class="col-sm-9">
-        <input readonly="readonly" type="text" id="form-field-mail" placeholder="邮箱" class="col-xs-10 col-sm-7"
+        <input type="text" id="form-field-mail" placeholder="邮箱" class="col-xs-10 col-sm-7"
                style="padding-left: 7px;" value=""/>
     </div>
 </div>
@@ -362,7 +436,7 @@
     <label class="col-sm-3 control-label no-padding-right" for="form-field-weixin"> 微信号 </label>
 
     <div class="col-sm-9">
-        <input readonly="readonly" type="text" id="form-field-weixin" placeholder="微信号" class="col-xs-10 col-sm-7"
+        <input type="text" id="form-field-weixin" placeholder="微信号" class="col-xs-10 col-sm-7"
                style="padding-left: 7px;" value=""/>
     </div>
 </div>
@@ -373,7 +447,7 @@
     <label class="col-sm-3 control-label no-padding-right" for="form-field-enterpriseName"> 公司名称 </label>
 
     <div class="col-sm-9">
-        <input readonly="readonly" type="text" id="form-field-enterpriseName" placeholder="公司名称" class="col-xs-10 col-sm-7"
+        <input type="text" id="form-field-enterpriseName" placeholder="公司名称" class="col-xs-10 col-sm-7"
                style="padding-left: 7px;" value=""/>
     </div>
 </div>
@@ -385,7 +459,7 @@
     <label class="col-sm-3 control-label no-padding-right" for="form-field-job"> 公司职务 </label>
 
     <div class="col-sm-9">
-        <input readonly="readonly" type="text" id="form-field-job" placeholder="公司职务" class="col-xs-10 col-sm-7"
+        <input type="text" id="form-field-job" placeholder="公司职务" class="col-xs-10 col-sm-7"
                style="padding-left: 7px;" value=""/>
     </div>
 </div>
@@ -397,7 +471,7 @@
     <label class="col-sm-3 control-label no-padding-right" for="form-field-school"> 就读学校 </label>
 
     <div class="col-sm-9">
-        <input readonly="readonly" type="text" id="form-field-school" placeholder="就读学校" class="col-xs-10 col-sm-7"
+        <input type="text" id="form-field-school" placeholder="就读学校" class="col-xs-10 col-sm-7"
                style="padding-left: 7px;" value=""/>
     </div>
 </div>
@@ -408,7 +482,7 @@
     <label class="col-sm-3 control-label no-padding-right" for="form-field-enterpriseWebsite"> 公司网址 </label>
 
     <div class="col-sm-9">
-        <input readonly="readonly" type="text" id="form-field-enterpriseWebsite" placeholder="公司网址" class="col-xs-10 col-sm-7"
+        <input type="text" id="form-field-enterpriseWebsite" placeholder="公司网址" class="col-xs-10 col-sm-7"
                style="padding-left: 7px;" value=""/>
     </div>
 </div>
@@ -419,7 +493,7 @@
     <label class="col-sm-3 control-label no-padding-right" for="form-field-enterpriseFoundDate"> 公司成立年份 </label>
 
     <div class="col-sm-9">
-        <input readonly="readonly" type="text" id="form-field-enterpriseFoundDate" placeholder="公司成立年份" class="col-xs-10 col-sm-7"
+        <input type="text" id="form-field-enterpriseFoundDate" placeholder="公司成立年份" class="col-xs-10 col-sm-7"
                style="padding-left: 7px;" value=""/>
     </div>
 </div>
@@ -430,7 +504,7 @@
     <label class="col-sm-3 control-label no-padding-right" for="form-field-enterpriseDescription"> 公司简介 </label>
 
     <div class="col-sm-9">
-        <input readonly="readonly" type="text" id="form-field-enterpriseDescription" placeholder="公司简介" class="col-xs-10 col-sm-7"
+        <input type="text" id="form-field-enterpriseDescription" placeholder="公司简介" class="col-xs-10 col-sm-7"
                style="padding-left: 7px;" value=""/>
     </div>
 </div>
@@ -593,6 +667,17 @@
 <script src="/assets/js/ace.min.js"></script>
 
 <script src="/common-jieli.js"></script>
+<script src="/assets/js/jquery.Jcrop.js"></script>
+
+<script type="text/javascript">
+    jQuery(function($){
+
+        //console.log('init',[xsize,ysize]);
+
+    });
+
+
+</script>
 
 <!-- inline scripts related to this page -->
 <script>
@@ -600,10 +685,58 @@
 </script>
 <script>
     function updateUser(){
+        if ($("#form-field-name").val().length == 0) {alert("姓名不能为空");return;}
+        if ($("#form-field-phone").val().length == 0) {alert("手机号码不能为空");return;}
+        if ($("#form-field-birthday").val().length != 0 &&
+                $("#form-field-birthday").val().length != 10) {alert("生日格式不正确");return;}
+
         data["name"] = $("#form-field-name").val();
         data["sex"] = $("#form-field-select-sex").val();
         data["identity"] = $("#form-field-identity").val();
+        var pn =$("#form-field-phone").val();
+        if (pn && pn.length != "13888888888".length){if (!confirm("确定手机号码为"+pn+"?")) return;}
         data["phone"] = $("#form-field-phone").val();
+
+        data["degree"] = $("#form-field-degree").val();
+
+        data["userFace"] = $("#form-field-userFace").attr("src");
+        var dd = $("#form-field-birthday").val();
+        if (dd == "") data["birthday"] = null;
+        else {
+            try {
+                var d = new Date(dd);
+                if (checkDate(dd)) {
+                    data["birthday"] = d;
+                } else if (dd != "") {
+                    alert("生日无效或者格式错误！");
+                    return;
+                }
+            } catch (err) {
+                ;
+            }
+        }
+        data["interests"] = $("#form-field-interests").val().replace(new RegExp("，","g"),",").split(",");
+        data["constellation"] = $("#form-field-constellation").val();
+        data["profession"] = $("#form-field-profession").val();
+        data["mail"] = $("#form-field-mail").val();
+        data["weixin"] = $("#form-field-weixin").val();
+        data["enterpriseName"] = $("#form-field-enterpriseName").val();
+        data["job"] = $("#form-field-job").val();
+        data["school"] = $("#form-field-school").val();
+        data["enterpriseWebsite"] = $("#form-field-enterpriseWebsite").val();
+        data["enterpriseDescription"] = $("#form-field-enterpriseDescription").val();
+        var d2 = $("#form-field-enterpriseFoundDate").val();
+        if (d2 == "") data["enterpriseFoundDate"] = null;
+        else {
+            d2 += "-01-01";
+            try {
+                var dt = new Date(d2);
+                if (checkDate(d2))
+                    data["enterpriseFoundDate"] = dt;
+            } catch (err) {
+                ;
+            }
+        }
 
         $.ajax({
             type:"POST",
@@ -619,8 +752,9 @@
                     alert("用户修改失败 " + (ret.msg || ""));
                 }
             },
-            error:function(){
-                ;
+            error: function(XMLHttpRequest, textStatus, errorThrown) {
+                alert("操作失败，错误码："+XMLHttpRequest.status);
+                return;
             }
         });
     }
@@ -634,7 +768,7 @@
         $("#form-field-identity").val(data["identity"] || "");
         $("#form-field-phone").val(data["phone"] || "");
         try {
-            if (data["birthday"])  $("#form-field-birthday").val(data["birthday"].Format("yyyy年MM月dd日"));
+            if (data["birthday"])  $("#form-field-birthday").val(new Date(data["birthday"]).Format("yyyy-MM-dd"));
         }catch (e){}
         $("#form-field-constellation").val(data["constellation"] || "");
 
@@ -644,8 +778,9 @@
         if (intlist.length > 0) intlist = intlist.substring(0,intlist.length-1);
 
         $("#form-field-interests").val(intlist);
-        var degrees = ["EMBA","MBA","学士","硕士","博士","其他"];
-        if (data["degree"]) $("#form-field-degree").val(degrees[data["degree"]]);
+//        var degrees = ["EMBA","MBA","学士","硕士","博士","其他"];
+//        if (data["degree"]) $("#form-field-degree").val(degrees[data["degree"]]);
+        $("#form-field-degree").val(data["degree"]);
 
         $("#form-field-profession").val(data["profession"] || "");
         $("#form-field-mail").val(data["mail"] || "");
@@ -654,8 +789,8 @@
         $("#form-field-job").val(data["job"] || "");
         $("#form-field-school").val(data["school"] || "");
         $("#form-field-enterpriseWebsite").val(data["enterpriseWebsite"] || "");
-        $("#form-field-enterpriseFoundDate").val(data["enterpriseFoundDate"] || "");
         $("#form-field-enterpriseDescription").val(data["enterpriseDescription"] || "");
+        if (data["enterpriseFoundDate"]){try{$("#form-field-enterpriseFoundDate").val(new Date(data["enterpriseFoundDate"]).Format("yyyy"));}catch (e){}}
     }
     catch (err){data = {};}
     <#else>
@@ -674,6 +809,7 @@
 
     });
 
+    $("#uploadTitleImageClick").click(uploadImgUserface);
 </script>
 </body>
 </html>

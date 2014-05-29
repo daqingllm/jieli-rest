@@ -351,6 +351,10 @@
             data:d,
             success:function(jsn){
                 var ulist;
+            },
+            error: function(XMLHttpRequest, textStatus, errorThrown) {
+                alert("无法获取用户列表，错误码："+XMLHttpRequest.status);
+                return;
             }
         });
     }

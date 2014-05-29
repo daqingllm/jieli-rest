@@ -605,6 +605,10 @@ jQuery(function($) {
                                     success:function(jsn){
                                         if (jsn.code==200) alert("密码已经修改成"+result);
                                         else alert("密码修改失败，因为"+jsn.msg);
+                                    },
+                                    error: function(XMLHttpRequest, textStatus, errorThrown) {
+                                        alert("操作失败，错误码："+XMLHttpRequest.status);
+                                        return;
                                     }
                                 });
                             }
@@ -631,6 +635,10 @@ jQuery(function($) {
                             success:function(jsn){
                                 if(jsn.code==200) alert("用户"+acc.username+"已经升级为管理员");
                                 else alert("操作失败，"+jsn.msg);
+                            },
+                            error: function(XMLHttpRequest, textStatus, errorThrown) {
+                                alert("操作失败，错误码："+XMLHttpRequest.status);
+                                return;
                             }
                         });
                     }
@@ -657,6 +665,10 @@ jQuery(function($) {
                             success:function(jsn){
                                 if(jsn.code==200) alert("用户"+acc.username+"已被删除");
                                 else alert("操作失败，"+jsn.msg);
+                            },
+                            error: function(XMLHttpRequest, textStatus, errorThrown) {
+                                alert("操作失败，错误码："+XMLHttpRequest.status);
+                                return;
                             }
                         });
                     }

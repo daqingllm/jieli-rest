@@ -735,6 +735,10 @@
                                 } else {
                                     alert("上传失败！");
                                 }
+                            },
+                            error: function(XMLHttpRequest, textStatus, errorThrown) {
+                                alert("操作失败，错误码："+XMLHttpRequest.status);
+                                return;
                             }
                         });
 
@@ -1239,6 +1243,10 @@ function voteOptionUploadImg(voteOption) {
                             } else {
                                 alert("上传失败！");
                             }
+                        },
+                        error: function(XMLHttpRequest, textStatus, errorThrown) {
+                            alert("操作失败，错误码："+XMLHttpRequest.status);
+                            return;
                         }
                     });
 
@@ -1340,12 +1348,20 @@ function voteInfo(voteId, callback) {
                             }
                             callback();
                         }
+                    },
+                    error: function(XMLHttpRequest, textStatus, errorThrown) {
+                        alert("载入错误，错误码："+XMLHttpRequest.status);
+                        return;
                     }
                 });
 
 
 
             }
+        },
+        error: function(XMLHttpRequest, textStatus, errorThrown) {
+            alert("载入错误，错误码："+XMLHttpRequest.status);
+            return;
         }
     });
 }
@@ -1441,6 +1457,10 @@ function postNewVote() {
             if(json.code == 200) {
                 window.location.href = '/app/bvote/list';
             }
+        },
+        error: function(XMLHttpRequest, textStatus, errorThrown) {
+            alert("操作失败，错误码："+XMLHttpRequest.status);
+            return;
         }
     });
 }
@@ -1479,6 +1499,10 @@ function postEditVote(voteId) {
             else {
                 alert("出错啦！\n请联系万能的技术人员");
             }
+        },
+        error: function(XMLHttpRequest, textStatus, errorThrown) {
+            alert("操作失败，错误码："+XMLHttpRequest.status);
+            return;
         }
     });
 }

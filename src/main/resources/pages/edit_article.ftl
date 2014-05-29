@@ -583,6 +583,7 @@
         }else {
             if (!confirm("确认删除选中的评论？")) return;
             var suc = true;
+            var erro = false;
             for (var i = 0; i < ids.length; i++){
                 var id = $("#grid-table-comment > tbody > tr").eq(ids[i]).find("td").eq(1).attr("title");
                 if (!id || id.length == 0) continue;
@@ -596,9 +597,17 @@
                         if (jsn.code != 200) {
                             suc = false;
                         }
+                    },
+                    error: function(XMLHttpRequest, textStatus, errorThrown) {
+                        alert("操作失败，错误码："+XMLHttpRequest.status);
+                        erro = true;
+                        return;
                     }
                 });
             }
+
+            if (erro) return;
+
             if (suc) {
                 alert("删除成功！");
                 window.location.reload();

@@ -589,8 +589,9 @@ jQuery(function($) {
             alert("请先选中活动");
             return;
         }else {
-            if (!confirm("确认删除选中的活动？")) return;
+            if (ids.length == 0 || !confirm("确认删除选中的活动？")) return;
             var suc = true;
+            var erro = false;
             for (var i = 0; i < ids.length; i++){
                 var id = $("#grid-table > tbody > tr").eq(ids[i]).find("td").eq(1).attr("title");
                 if (!id || id.length == 0) continue;
@@ -604,9 +605,17 @@ jQuery(function($) {
                         if (jsn.code != 200) {
                             suc = false;
                         }
+                    },
+                    error: function(XMLHttpRequest, textStatus, errorThrown) {
+                        alert("操作失败，错误码："+XMLHttpRequest.status);
+                        erro = true;
+                        return;
                     }
                 });
             }
+
+            if (erro) return;
+
             if (suc) {
                 alert("删除成功！");
                 window.location.reload();
@@ -652,6 +661,10 @@ jQuery(function($) {
                         success:function(data){
                             alert(data.msg);
                             window.location.reload();
+                        },
+                        error: function(XMLHttpRequest, textStatus, errorThrown) {
+                            alert("操作失败，错误码："+XMLHttpRequest.status);
+                            return;
                         }
                     });
                     return false;

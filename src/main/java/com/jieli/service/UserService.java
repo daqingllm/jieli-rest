@@ -457,14 +457,42 @@ public class UserService {
             responseEntity.msg = "用户不存在";
             return  Response.status(200).entity(responseEntity).build();
         }
+
+        if (user.phone == null || user.phone == "" ||
+                user.name == null || user.name == ""){
+            responseEntity.code = 1112;
+            responseEntity.msg = "必须填写姓名和手机号";
+            return  Response.status(200).entity(responseEntity).build();
+        }
+
+        Iterable<User> phoneUser = userDAO.find("{phone:\'"+user.phone+"\'}");
+        for (User usser : phoneUser){
+            if (user.equals(usser)) continue;
+            responseEntity.code = 1111;
+            responseEntity.msg = "此手机号码已经被用户 "+usser.name+" 注册使用了！";
+            return Response.status(200).entity(responseEntity).build();
+        }
+
         oldUser.name = user.name;
         oldUser.phone = user.phone;
         oldUser.identity = user.identity;
-
-        /*xianxing*/
-        if (oldUser.identity == "普通会员") oldUser.identity = null;
-
+        if (oldUser.identity == "") oldUser.identity = null;
         oldUser.sex = user.sex;
+        oldUser.degree = user.degree;
+        oldUser.userFace = user.userFace;
+        oldUser.birthday = user.birthday;
+        oldUser.constellation = user.constellation;
+        oldUser.profession = user.profession;
+        oldUser.mail = user.mail;
+        oldUser.job = user.job;
+        oldUser.weixin = user.weixin;
+        oldUser.enterpriseName = user.enterpriseName;
+        oldUser.school = user.school;
+        oldUser.enterpriseWebsite = user.enterpriseWebsite;
+        oldUser.enterpriseFoundDate = user.enterpriseFoundDate;
+        oldUser.enterpriseDescription = user.enterpriseDescription;
+        oldUser.interests = user.interests;
+
         userDAO.save(oldUser);
 
         responseEntity.code = 200;

@@ -262,6 +262,7 @@ function postThisArticle(images){
 
     var p_addurl = "/app/news/?newsId="+(isEdit?json["_id"]:"")+"&force="+$("#form-field-checkbox").is(':checked');
     var suc = true;
+    var erro = false;
     // if edit , there is only one element in p_assid
     for (var i = 0; i <p_assid.length;i++) {
         json["associationId"] = p_assid[i];
@@ -274,9 +275,16 @@ function postThisArticle(images){
             async: false,
             success: function (ret) {
                 if (ret.code != 200) suc = false;
+            },
+            error: function(XMLHttpRequest, textStatus, errorThrown) {
+                alert("操作失败，错误码："+XMLHttpRequest.status);
+                erro = true;
+                return;
             }
         });
     }
+
+    if (erro) return;
 
     if (suc) {
         if (p_id > -1) {alert("已经成功编辑此资讯");window.location.href = "/app/bnews/list";}
@@ -338,6 +346,10 @@ function setTitleImg(news){
             }
             else
                 alert("设置头图失败");
+        },
+        error: function(XMLHttpRequest, textStatus, errorThrown) {
+            alert("操作失败，错误码："+XMLHttpRequest.status);
+            return;
         }
     });
 }
@@ -539,6 +551,7 @@ function finishActivity(type){
 
     var suc = true;
     var url = "/app/activity/?activityId="+(isEdit?act["_id"]:"")+"&force="+$("#form-field-checkbox").is(':checked');
+    var erro = false;
     for (var i = 0; i <p_assid.length;i++) {
         act.associationId = p_assid[i];
         $.ajax({
@@ -553,9 +566,16 @@ function finishActivity(type){
                 if (data.code != 200){
                     suc = false;
                 }
+            },
+            error: function(XMLHttpRequest, textStatus, errorThrown) {
+                alert("操作失败，错误码："+XMLHttpRequest.status);
+                erro = true;
+                return;
             }
         });
     }
+
+    if (erro) return;
 
     if (suc) {
         if (p_id > -1) {alert("已经成功编辑此活动");window.location.href = "/app/bactivity/list";}
@@ -707,6 +727,39 @@ function uploadImgBox() {
 }
 
 
+function updatePreview(c)
+{
+    if (parseInt(c.w) > 0)
+    {
+        var rx = xsize / c.w;
+        var ry = ysize / c.h;
+
+        $pimg.css({
+            width: Math.round(rx * boundx) + 'px',
+            height: Math.round(ry * boundy) + 'px',
+            marginLeft: '-' + Math.round(rx * c.x) + 'px',
+            marginTop: '-' + Math.round(ry * c.y) + 'px'
+        });
+    }
+}
+
+// Create variables (in this scope) to hold the API and image size
+var jcrop_api,
+    boundx,
+    boundy,
+
+// Grab some information about the preview pane
+    $preview = $('#preview-pane'),
+    $pcnt = $('#preview-pane .preview-container'),
+    $pimg = $('#preview-pane .preview-container img'),
+
+    xsize = $pcnt.width(),
+    ysize = $pcnt.height();
+
+function checkDate(date){
+    return (new Date(date).getDate()==date.substring(date.length-2));
+}
+
 var uploaduserFaceImageOptions = {
     url: '/app/upload',
     type:'post',
@@ -720,34 +773,35 @@ var uploaduserFaceImageOptions = {
             $("#form-field-imgurl").attr("src",uploadImgSrc);
             $("#form-field-imgurl").css("display","block");
             $("#delTitleImage").css("display","inline");
-            $("#preview_box").show();
+
+            $("#form-field-userFace").attr("src",uploadImgSrc);
+/*
+            $("#userFaceImage").attr("src",uploadImgSrc);
+            $(".preview-container").find("img").attr("src",uploadImgSrc);
+            $(".jcrop-holder").find("img").attr("src",uploadImgSrc);
 
 
-            $("#form-field-imgurl").attr("src",uploadImgSrc);
-            $("#crop_preview").attr("src",uploadImgSrc);
-//            $(".jcrop-holder").find("img").attr("src","http://jieli-images.qiniudn.com/911816764528403_IMG_2181.jpeg?imageView/4/w/600");
 
-            //记得放在jQuery(window).load(...)内调用，否则Jcrop无法正确初始化
-            $("#form-field-imgurl").Jcrop({
-                onChange : showPreview,
-                onSelect : showPreview,
-                aspectRatio : 1
+            $('#userFaceImage').Jcrop({
+                onChange: updatePreview,
+                onSelect: updatePreview,
+                aspectRatio: xsize / ysize,
+                minSize:[400,400]
+            },function(){
+                // Use the API to get the real image size
+                var bounds = this.getBounds();
+                boundx = bounds[0];
+                boundy = bounds[1];
+                alert(boundx);
+                alert(boundy);
+                // Store the API in the jcrop_api variable
+                jcrop_api = this;
+
+                // Move the preview into the jcrop container for css positioning
+                $preview.appendTo(jcrop_api.ui.holder);
             });
-            //简单的事件处理程序，响应自onChange,onSelect事件，按照上面的Jcrop调用
-            function showPreview(coords) {
-                if (parseInt(coords.w) > 0) {
-                    //计算预览区域图片缩放的比例，通过计算显示区域的宽度(与高度)与剪裁的宽度(与高度)之比得到
-                    var rx = $("#preview_box").width() / coords.w;
-                    var ry = $("#preview_box").height() / coords.h;
-                    //通过比例值控制图片的样式与显示
-                    $("#crop_preview").css({
-                        width : Math.round(rx * $("#form-field-imgurl").width()) + "px", //预览图片宽度为计算比例值与原图片宽度的乘积
-                        height : Math.round(rx * $("#form-field-imgurl").height()) + "px", //预览图片高度为计算比例值与原图片高度的乘积
-                        marginLeft : "-" + Math.round(rx * coords.x) + "px",
-                        marginTop : "-" + Math.round(ry * coords.y) + "px"
-                    });
-                }
-            }
+
+            $("#preview-pane").show();*/
 
         } else {
             alert("上传失败");
@@ -873,6 +927,10 @@ function SponsorOptionUploadImg(voteOption) {
                             } else {
                                 alert("上传失败！");
                             }
+                        },
+                        error: function(XMLHttpRequest, textStatus, errorThrown) {
+                            alert("操作失败，错误码："+XMLHttpRequest.status);
+                            return;
                         }
                     });
 
