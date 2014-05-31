@@ -361,6 +361,10 @@
             async:true,
             success:function(data){
                 alert(data);
+            },
+            error: function(XMLHttpRequest, textStatus, errorThrown) {
+                alert("ÔØÈëÊ§°Ü£¬´íÎóÂë£º"+XMLHttpRequest.status);
+                return;
             }
         });
         ;
@@ -547,6 +551,10 @@ function deleteHelp() {
                         var associationId = $('#form-field-select-type').val();
                         updateGrid(associationId,1,20);
                     }
+                },
+                error: function(XMLHttpRequest, textStatus, errorThrown) {
+                    alert("²Ù×÷Ê§°Ü£¬´íÎóÂë£º"+XMLHttpRequest.status);
+                    return;
                 }
             });
         }
@@ -567,6 +575,10 @@ function updateGrid(associationId, page, size) {
                     data: parseHelpData(data)
                 }).trigger('reloadGrid');
             }
+        },
+        error: function(XMLHttpRequest, textStatus, errorThrown) {
+            alert("²Ù×÷Ê§°Ü£¬´íÎóÂë£º"+XMLHttpRequest.status);
+            return;
         }
     });
 }
@@ -690,6 +702,10 @@ jQuery(function($) {
                                             var associationId = $('#form-field-select-type').val();
                                             updateGrid(associationId,1,20);
                                         }
+                                    },
+                                    error: function(XMLHttpRequest, textStatus, errorThrown) {
+                                        alert("²Ù×÷Ê§°Ü£¬´íÎóÂë£º"+XMLHttpRequest.status);
+                                        return;
                                     }
                                 });
                             }
@@ -787,6 +803,10 @@ jQuery(function ($) {
                     datatype: 'local',
                     data: parseHelpData(data)
                 }).trigger('reloadGrid');
+            },
+            error: function(XMLHttpRequest, textStatus, errorThrown) {
+                alert("²Ù×÷Ê§°Ü£¬´íÎóÂë£º"+XMLHttpRequest.status);
+                return;
             }
         });
     });

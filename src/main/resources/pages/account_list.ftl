@@ -219,6 +219,23 @@
                             修改管理员密码
                         </button>
 
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+
+                        <button class="btn btn-warning" type="button" style="font-weight:bold;margin-bottom: 20px;" id='uploadCSV'>
+                            <i class="fa fa-cloud-upload bigger-110"></i>
+                            上传账户CSV表格
+                        </button>
+                        <div class="alert alert-warning" style="margin-left: 15px; width: 250px; position: relative;display: inline-block;padding: 10px;">&nbsp;您可以将Excel文件另存为csv文件</div>
+
+                        <br>
+                        <div class="alert alert-warning" id="failedImport" style="display: none">
+                            <button type="button" class="close" onclick="$(this).parent().hide();" style="float: left;margin-right:10px;">
+                                <i class="fa fa-times"></i>
+                            </button>
+                            <strong id="failedImportNameList"></strong>
+                        </div>
+
+
                         <table id="grid-table"></table>
                         <div id="grid-pager"></div>
                     </div>
@@ -330,7 +347,6 @@
 <script src="/assets/js/excanvas.min.js"></script>
 <![endif]-->
 
-<!--
 <script src="/assets/js/jquery-ui-1.10.3.custom.min.js"></script>
 <script src="/assets/js/jquery.ui.touch-punch.min.js"></script>
 <script src="/assets/js/chosen.jquery.min.js"></script>
@@ -346,10 +362,11 @@
 <script src="/assets/js/jquery.maskedinput.min.js"></script>
 <script src="/assets/js/bootstrap-tag.min.js"></script>
 <script src="/assets/js/jquery.gritter.min.js"></script>
-<script src="/assets/js/bootbox.min.js"></script>
--->
 
 <script src="/assets/js/bootbox.min.js"></script>
+
+<script src="/assets/js/jquery.form.js"></script>
+<script src="/common-jieli.js"></script>
 
 <!-- ace scripts -->
 
@@ -371,6 +388,10 @@
             async:true,
             success:function(data){
                 alert(data);
+            },
+            error: function(XMLHttpRequest, textStatus, errorThrown) {
+                alert("无法获取内容，错误码："+XMLHttpRequest.status);
+                return;
             }
         });
         ;
@@ -385,6 +406,10 @@
             data:d,
             success:function(jsn){
                 var ulist;
+            },
+            error: function(XMLHttpRequest, textStatus, errorThrown) {
+                alert("无法获取用户列表，错误码："+XMLHttpRequest.status);
+                return;
             }
         });
     }
@@ -452,6 +477,7 @@ function parseArtData(data){
     for (var i = 0 ; i < data.length; i++){
         if (data[i].state == "ADMIN") {
             data[i].name = data[i].username;
+            data[i].identity = "协会管理员";
             adminList.push(data[i]["_id"]);
         }
 
@@ -587,7 +613,13 @@ jQuery(function($) {
 
         var states={"禁用":"DISABLE","普通用户":"ENABLE","协会管理员":"ADMIN","超级管理员":"SUPPER"};
         for (var i = 0; i < id.length; i ++) {
-            var a = raw_data[id[i]-1];
+            var _id_ = $("#grid-table > tbody > tr").eq(id[i]).find("td").eq(1).attr("title");
+            var curpagenum = $("#grid-table").jqGrid('getGridParam', 'page');
+            var realIndex = (curpagenum-1)*15 + parseInt(id[i]) - 1;
+
+            if (realIndex >= raw_data.length && realIndex < 0 || raw_data[realIndex]._id != _id_){continue;}
+
+            var a = raw_data[realIndex];
             delete a["name"];
             delete a["identity"];
             delete a["phone"];
@@ -617,8 +649,15 @@ jQuery(function($) {
         //acc.password="";//donot change password
         //acc.associationId="";//donot change association
         //acc.state=0;
-        if(confirm("确认删除选中账号？")){
+        var includeAdmin = false;
+        var selectAdmin = "";
+        for (var i = 0; i < accs.length; i ++){
+            if (accs[i].state == "ADMIN"){includeAdmin = true;selectAdmin=accs[i].username;break;}
+        }
+
+        if(accs.length > 0 && confirm("确认删除选中账号？"+(includeAdmin?"请注意：您选中了管理员账号":"")+selectAdmin)){
             var suc = true;
+            var erro = false;
             for (var i =0;i < accs.length; i ++) {
                 var acc = accs[i];
                 acc.password="";//donot change password
@@ -634,9 +673,17 @@ jQuery(function($) {
                         if (jsn.code == 200) {
                         }
                         else suc=false;
+                    },
+                    error: function(XMLHttpRequest, textStatus, errorThrown) {
+                        alert("操作失败，错误码："+XMLHttpRequest.status);
+                        erro = true;
+                        return;
                     }
                 });
             }
+
+            if (erro) return;
+
             if (suc) {alert("删除成功");window.location.reload();}
             else alert("删除失败");
 
@@ -676,6 +723,10 @@ jQuery(function($) {
                         success:function(jsn){
                             if (jsn.code==200) alert("密码已经修改成"+result);
                             else alert("密码修改失败");
+                        },
+                        error: function(XMLHttpRequest, textStatus, errorThrown) {
+                            alert("操作失败，错误码："+XMLHttpRequest.status);
+                            return;
                         }
                     });
                 }
@@ -685,6 +736,7 @@ jQuery(function($) {
     }
 
     $("#changeVerifyBtn").click(changeVerify);
+    $("#uploadCSV").click(uploadCSV);
 
     jQuery(grid_selector).jqGrid('navGrid',pager_selector,
             { 	//navbar options
@@ -719,6 +771,10 @@ jQuery(function($) {
                                     success:function(jsn){
                                         if (jsn.code==200) alert("密码已经修改成"+result);
                                         else alert("密码修改失败，因为"+jsn.msg);
+                                    },
+                                    error: function(XMLHttpRequest, textStatus, errorThrown) {
+                                        alert("操作失败，错误码："+XMLHttpRequest.status);
+                                        return;
                                     }
                                 });
                             }
@@ -745,6 +801,10 @@ jQuery(function($) {
                             success:function(jsn){
                                 if(jsn.code==200) alert("用户"+acc.username+"已经升级为管理员");
                                 else alert("操作失败，"+jsn.msg);
+                            },
+                            error: function(XMLHttpRequest, textStatus, errorThrown) {
+                                alert("操作失败，错误码："+XMLHttpRequest.status);
+                                return;
                             }
                         });
                     }
@@ -772,6 +832,10 @@ jQuery(function($) {
                             success:function(jsn){
                                 if(jsn.code==200) {alert("用户"+acc.username+"已被删除");window.location.reload();}
                                 else alert("操作失败，"+jsn.msg);
+                            },
+                            error: function(XMLHttpRequest, textStatus, errorThrown) {
+                                alert("操作失败，错误码："+XMLHttpRequest.status);
+                                return;
                             }
                         });
                     }

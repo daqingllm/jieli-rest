@@ -262,6 +262,7 @@ function postThisArticle(images){
 
     var p_addurl = "/app/news/?newsId="+(isEdit?json["_id"]:"")+"&force="+$("#form-field-checkbox").is(':checked');
     var suc = true;
+    var erro = false;
     // if edit , there is only one element in p_assid
     for (var i = 0; i <p_assid.length;i++) {
         json["associationId"] = p_assid[i];
@@ -274,9 +275,16 @@ function postThisArticle(images){
             async: false,
             success: function (ret) {
                 if (ret.code != 200) suc = false;
+            },
+            error: function(XMLHttpRequest, textStatus, errorThrown) {
+                alert("操作失败，错误码："+XMLHttpRequest.status);
+                erro = true;
+                return;
             }
         });
     }
+
+    if (erro) return;
 
     if (suc) {
         if (p_id > -1) {alert("已经成功编辑此资讯");window.location.href = "/app/bnews/list";}
@@ -313,6 +321,9 @@ function setTitleImg(news){
         processData:false,
         success:function(ret){
             if (ret.code == 200) {
+                alert("已设置为头图");
+                return;
+
                 news.topPic = true;
                 $.ajax({
                     url:"/app/news/?newsId="+news["_id"]+"&force=false",
@@ -331,10 +342,14 @@ function setTitleImg(news){
                     error:function(err){
                         alert("设置头图失败");
                     }
-                })
+                });
             }
             else
                 alert("设置头图失败");
+        },
+        error: function(XMLHttpRequest, textStatus, errorThrown) {
+            alert("操作失败，错误码："+XMLHttpRequest.status);
+            return;
         }
     });
 }
@@ -425,6 +440,10 @@ var uploadArticleImageOptions = {
         } else {
             alert("上传失败");
         }
+    },
+    error: function(XMLHttpRequest, textStatus, errorThrown) {
+        alert("操作失败，错误码："+XMLHttpRequest.status);
+        return;
     }
 };
 
@@ -507,7 +526,7 @@ function finishActivity(type){
 
 
     act.album = {};
-    act.officialAlbum = {};
+    act.officialAlbum = [];
     act.beginDate=new Date($("#form-field-dlDate").val());
     //act.beginDate=null;
     act.fee=$("#form-field-fee").val();
@@ -536,6 +555,7 @@ function finishActivity(type){
 
     var suc = true;
     var url = "/app/activity/?activityId="+(isEdit?act["_id"]:"")+"&force="+$("#form-field-checkbox").is(':checked');
+    var erro = false;
     for (var i = 0; i <p_assid.length;i++) {
         act.associationId = p_assid[i];
         $.ajax({
@@ -550,9 +570,16 @@ function finishActivity(type){
                 if (data.code != 200){
                     suc = false;
                 }
+            },
+            error: function(XMLHttpRequest, textStatus, errorThrown) {
+                alert("操作失败，错误码："+XMLHttpRequest.status);
+                erro = true;
+                return;
             }
         });
     }
+
+    if (erro) return;
 
     if (suc) {
         if (p_id > -1) {alert("已经成功编辑此活动");window.location.href = "/app/bactivity/list";}
@@ -675,6 +702,10 @@ var uploadActivityImageOptions = {
         } else {
             alert("上传失败");
         }
+    },
+    error: function(XMLHttpRequest, textStatus, errorThrown) {
+        alert("操作失败，错误码："+XMLHttpRequest.status);
+        return;
     }
 }
 /*活动中上传图片*/
@@ -689,6 +720,165 @@ function uploadImgBox() {
                 "className": "btn-sm btn-success",
                 "callback": function () {
                     $('#rest-upload-form').ajaxSubmit(uploadActivityImageOptions);
+                }
+            },
+            "cancel": {
+                "label": "<i class='fa fa-times'></i> 取消",
+                "className": "btn-sm",
+                "callback": function () {
+                    var objFile = document.getElementById('rest-upload-file');
+                    objFile.outerHTML = objFile.outerHTML.replace(/(value=\").+\"/i, "$1\"");
+                }
+            }
+        }
+    });
+}
+
+var uploadExcelOptions = {
+    url: '/app/uploadExcel',
+    type:'post',
+    dataType:'json',
+    contentType:'text/plain',
+    success:function( jsn ) {
+        var msg = jsn.msg;
+        alert(msg);
+
+        if (jsn.body) {
+            $("#failedImport").show();
+            $("#failedImportNameList").html("导入失败的用户有："+jsn.body);
+        } else {
+            $("#failedImport").hide();
+        }
+    },
+    error: function(XMLHttpRequest, textStatus, errorThrown) {
+        alert("操作失败，错误码："+XMLHttpRequest.status);
+        return;
+    }
+};
+
+/*Excel上传*/
+function uploadCSV() {
+    var spin_img = "<div id='upload-loading-img' style='margin-left:30px;margin-top:10px;display: none;'><i class='fa fa-spinner icon-spin orange bigger-125'></i></div>";
+    spin_img = "";
+    bootbox.dialog({
+        message: "<form id='rest-upload-form' action='/app/uploadExcel' method='post' enctype='multipart/form-data' acceptcharset='UTF-8'>\n<input id='rest-upload-file' type='file' name='file' size='50' />"+spin_img+"</form>",
+        buttons: {
+            "upload": {
+                "label": "<i class='fa fa-check'></i> 上传 ",
+                "className": "btn-sm btn-success",
+                "callback": function () {
+                    $('#rest-upload-form').ajaxSubmit(uploadExcelOptions);
+                }
+            },
+            "cancel": {
+                "label": "<i class='fa fa-times'></i> 取消",
+                "className": "btn-sm",
+                "callback": function () {
+                    var objFile = document.getElementById('rest-upload-file');
+                    objFile.outerHTML = objFile.outerHTML.replace(/(value=\").+\"/i, "$1\"");
+                }
+            }
+        }
+    });
+}
+function updatePreview(c)
+{
+    if (parseInt(c.w) > 0)
+    {
+        var rx = xsize / c.w;
+        var ry = ysize / c.h;
+
+        $pimg.css({
+            width: Math.round(rx * boundx) + 'px',
+            height: Math.round(ry * boundy) + 'px',
+            marginLeft: '-' + Math.round(rx * c.x) + 'px',
+            marginTop: '-' + Math.round(ry * c.y) + 'px'
+        });
+    }
+}
+
+// Create variables (in this scope) to hold the API and image size
+var jcrop_api,
+    boundx,
+    boundy,
+
+// Grab some information about the preview pane
+    $preview = $('#preview-pane'),
+    $pcnt = $('#preview-pane .preview-container'),
+    $pimg = $('#preview-pane .preview-container img'),
+
+    xsize = $pcnt.width(),
+    ysize = $pcnt.height();
+
+function checkDate(date){
+    return (new Date(date).getDate()==date.substring(date.length-2));
+}
+
+var uploaduserFaceImageOptions = {
+    url: '/app/upload',
+    type:'post',
+    dataType:'json',
+    contentType:'text/plain',
+    success:function( jsn ) {
+        var msg = jsn.msg;
+        if (jsn.code == 200) {
+            var uploadImgSrc = jsn.body + "";
+
+            $("#form-field-imgurl").attr("src",uploadImgSrc);
+            $("#form-field-imgurl").css("display","block");
+            $("#delTitleImage").css("display","inline");
+
+            $("#form-field-userFace").attr("src",uploadImgSrc);
+/*
+            $("#userFaceImage").attr("src",uploadImgSrc);
+            $(".preview-container").find("img").attr("src",uploadImgSrc);
+            $(".jcrop-holder").find("img").attr("src",uploadImgSrc);
+
+
+
+            $('#userFaceImage').Jcrop({
+                onChange: updatePreview,
+                onSelect: updatePreview,
+                aspectRatio: xsize / ysize,
+                minSize:[400,400]
+            },function(){
+                // Use the API to get the real image size
+                var bounds = this.getBounds();
+                boundx = bounds[0];
+                boundy = bounds[1];
+                alert(boundx);
+                alert(boundy);
+                // Store the API in the jcrop_api variable
+                jcrop_api = this;
+
+                // Move the preview into the jcrop container for css positioning
+                $preview.appendTo(jcrop_api.ui.holder);
+            });
+
+            $("#preview-pane").show();*/
+
+        } else {
+            alert("上传失败");
+        }
+    },
+    error: function(XMLHttpRequest, textStatus, errorThrown) {
+        alert("操作失败，错误码："+XMLHttpRequest.status);
+        return;
+    }
+}
+
+/*头像上传图片*/
+function uploadImgUserface() {
+    var spin_img = "<div id='upload-loading-img' style='margin-left:30px;margin-top:10px;display: none;'><i class='fa fa-spinner icon-spin orange bigger-125'></i></div>";
+    spin_img = "";
+    bootbox.dialog({
+        message: "<form id='rest-upload-form' action='/app/upload' method='post' enctype='multipart/form-data' acceptcharset='UTF-8'>\n<input id='rest-upload-file' type='file' name='file' size='50' />"+spin_img+"</form>",
+        buttons: {
+            "upload": {
+                "label": "<i class='fa fa-check'></i> 上传 ",
+                "className": "btn-sm btn-success",
+                "callback": function () {
+                    $('#rest-upload-form').ajaxSubmit(uploaduserFaceImageOptions);
                 }
             },
             "cancel": {
@@ -795,6 +985,10 @@ function SponsorOptionUploadImg(voteOption) {
                             } else {
                                 alert("上传失败！");
                             }
+                        },
+                        error: function(XMLHttpRequest, textStatus, errorThrown) {
+                            alert("操作失败，错误码："+XMLHttpRequest.status);
+                            return;
                         }
                     });
 

@@ -606,6 +606,10 @@ function updateIndex(){
                 alert("已经更新排列顺序！");
             else
                 alert("更新排列顺序失败"+ret.msg);
+        },
+        error: function(XMLHttpRequest, textStatus, errorThrown) {
+            alert("操作失败，错误码："+XMLHttpRequest.status);
+            return;
         }
     });
 }
@@ -656,6 +660,10 @@ function loadThisGroup(name,refresh){
                     $("#gn"+name).children("div").eq(0).children("p").eq(0).html("一共有"+$("#gn"+name+" > div > ul > li").length+"个用户属于"+name + btn_html);
                 }
             }
+        },
+        error: function(XMLHttpRequest, textStatus, errorThrown) {
+            alert("载入分组用户失败，错误码："+XMLHttpRequest.status);
+            return;
         }
     });
 }
@@ -729,6 +737,10 @@ function InitUserList(){
                 nSelectedText: ' 被选中了',
                 maxHeight:400
             });
+        },
+        error: function(XMLHttpRequest, textStatus, errorThrown) {
+            alert("无法载入用户列表，错误码："+XMLHttpRequest.status);
+            return;
         }
     });
 }
@@ -754,6 +766,7 @@ function removeAUser(){
         if (!confirm("确认要从分组"+cg+"中删除选中的"+got+"个用户?")) return;
 
         var suc = true;
+        var erro = false;
         $("#gn"+cg).find("ul").children("li").each(function(){
             if ($(this).html().indexOf("√") > -1){
                 //alert($(this).html());
@@ -778,11 +791,18 @@ function removeAUser(){
                                 //alert("操作失败，"+data.msg);
                             }
 
+                        },
+                        error: function(XMLHttpRequest, textStatus, errorThrown) {
+                            alert("操作失败，错误码："+XMLHttpRequest.status);
+                            erro = true;
+                            return;
                         }
                     });
                 }
             }
         });
+
+        if (erro) return;
 
         if (suc) alert("成功移除");
         else alert("移除失败");
@@ -804,6 +824,10 @@ function deleteCurrentGroup(){
                 else alert(data.msg);
 
                 window.location.reload();
+            },
+            error: function(XMLHttpRequest, textStatus, errorThrown) {
+                alert("操作失败，错误码："+XMLHttpRequest.status);
+                return;
             }
         });
     }
@@ -839,10 +863,11 @@ function addAUser(){
                     $( this ).dialog( "close" );
 
                     var uname = $("#add-user-name").val();
-                    if (!uname || uname == "") return;
+                    if (!uname || uname == ""||uname.length==0) return;
 
                     //alert($("#add-user-name").val());
                     var suc = true;
+                    var erro = false;
                     for (var i = 0; i < uname.length; i ++) {
                         $.ajax({
                             type: "POST",
@@ -854,10 +879,18 @@ function addAUser(){
                                     suc = false;
                                     alert(jsn.msg);
                                 }
+                            },
+                            error: function(XMLHttpRequest, textStatus, errorThrown) {
+                                alert("操作失败，错误码："+XMLHttpRequest.status);
+                                erro = true;
+                                return;
                             }
                         });
                         if (!suc) break;
                     }
+
+                    if (erro) return;
+
                         alert("添加成功");
                         loadThisGroup(cg, true);
                         //loadThisGroup(jsn.msg, true);
@@ -910,6 +943,10 @@ function addAGroup(){
                                 }else{
                                     alert(jsn.msg);
                                 }
+                            },
+                            error: function(XMLHttpRequest, textStatus, errorThrown) {
+                                alert("操作失败，错误码："+XMLHttpRequest.status);
+                                return;
                             }
                         })
                     }

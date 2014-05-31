@@ -304,20 +304,31 @@
                     </div>
 
                     <div class="space-4"></div>
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right" for="">  </label>
+
+                        <div class="col-sm-9">
+                            <div class="col-xs-10 col-sm-7 alert alert-warning" style="margin-bottom: 0">裁剪图片请到&nbsp;<a href="http://xiuxiu.web.meitu.com/main.html" target="_blank">http://xiuxiu.web.meitu.com/main.html</a></div>
+                        </div>
+                    </div>
+
+                    <div class="space-4"></div>
+
                 </form>
 
                 <div class="form-group">
-                    <label class="col-sm-3 control-label no-padding-right" for="form-input-readonly" style="text-align: right"> 上传图片 </label>
+                    <label class="col-sm-3 control-label no-padding-right" for="form-input-readonly" style="text-align: right;padding-right:7px !important"> 上传图片 </label>
 
-                    <div class="col-sm-9">
-                        <div id="dropzone" class="col-xs-10 col-sm-7" style="margin-bottom: 20px;">
+                    <div class="col-sm-9" style="padding:2px;">
+                        <div id="dropzone" class="col-xs-10 col-sm-7" style="margin-bottom: 20px; padding: 2px; margin-left: 4px;">
                             <form action="/app/upload" id="adminUploaded" class="dropzone" style="min-height: 180px;">
                                 <div class="fallback">
                                     <input name="file" type="file" multiple="" />
                                 </div>
                             </form>
                         </div>
-                        <div class="alert alert-info" style="display:none;float: left;padding: 2px 14px;margin-left: 15px;margin-top: 7px;"> 请上传572*364的图片 </div>
+                        <div class="alert alert-info" style="display:none;float: left;padding: 2px 14px;margin-left: 15px;margin-top: 7px;"> 请上传472*354的图片 </div>
                     </div>
                 </div>
 
@@ -344,7 +355,7 @@
                                     <i class="icon-cloud-upload bigger-110"></i>
                                     上传图片
                                 </button>
-                                <div class="alert alert-info" style="float: left;padding: 2px 14px;margin-left: 15px;margin-top: 7px;"> 请上传572*364的图片 </div>
+                                <div class="alert alert-info" style="float: left;padding: 2px 14px;margin-left: 15px;margin-top: 7px;"> 请上传472*354的图片 </div>
                             </#if>
 
                         </div>
@@ -724,6 +735,10 @@
                                 } else {
                                     alert("上传失败！");
                                 }
+                            },
+                            error: function(XMLHttpRequest, textStatus, errorThrown) {
+                                alert("操作失败，错误码："+XMLHttpRequest.status);
+                                return;
                             }
                         });
 
@@ -1125,7 +1140,7 @@ jQuery(function($){
             addRemoveLinks : true,
             dictDefaultMessage :
                     '<span class="bigger-150 bolder"> \
-                    <span style="font-size:16px;font-family:Microsoft YaHei" class="grey">拖拽/点击上传（图片建议尺寸572像素*354像素）<br>裁剪图片请到http://xiuxiu.web.meitu.com/main.html<br>您可通过移动文本框内[图片N]标签调整图片所在文本中的位置</span> <br /> \
+                    <span style="font-size:16px;font-family:Microsoft YaHei" class="grey">拖拽/点击上传（图片建议尺寸472像素*354像素）<br>您可通过移动文本框内[图片N]标签调整图片所在文本中的位置</span> <br /> \
                     <i class="upload-icon fa fa-cloud-upload blue icon-3x"></i>'
             ,
             dictResponseError: 'Error while uploading file!',
@@ -1228,6 +1243,10 @@ function voteOptionUploadImg(voteOption) {
                             } else {
                                 alert("上传失败！");
                             }
+                        },
+                        error: function(XMLHttpRequest, textStatus, errorThrown) {
+                            alert("操作失败，错误码："+XMLHttpRequest.status);
+                            return;
                         }
                     });
 
@@ -1329,12 +1348,20 @@ function voteInfo(voteId, callback) {
                             }
                             callback();
                         }
+                    },
+                    error: function(XMLHttpRequest, textStatus, errorThrown) {
+                        alert("载入错误，错误码："+XMLHttpRequest.status);
+                        return;
                     }
                 });
 
 
 
             }
+        },
+        error: function(XMLHttpRequest, textStatus, errorThrown) {
+            alert("载入错误，错误码："+XMLHttpRequest.status);
+            return;
         }
     });
 }
@@ -1430,6 +1457,10 @@ function postNewVote() {
             if(json.code == 200) {
                 window.location.href = '/app/bvote/list';
             }
+        },
+        error: function(XMLHttpRequest, textStatus, errorThrown) {
+            alert("操作失败，错误码："+XMLHttpRequest.status);
+            return;
         }
     });
 }
@@ -1468,6 +1499,10 @@ function postEditVote(voteId) {
             else {
                 alert("出错啦！\n请联系万能的技术人员");
             }
+        },
+        error: function(XMLHttpRequest, textStatus, errorThrown) {
+            alert("操作失败，错误码："+XMLHttpRequest.status);
+            return;
         }
     });
 }

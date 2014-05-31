@@ -709,6 +709,9 @@
                         }
                     }
                     window.scrollTo(0,0);
+                },
+                error: function(XMLHttpRequest, textStatus, errorThrown) {
+                    alert("‘ÿ»ÎªÓ∂ØÕº∆¨ ß∞‹£¨¥ÌŒÛ¬Î£∫"+XMLHttpRequest.status);
                 }
             });
         }

@@ -50,7 +50,7 @@ public class Group {
                 groupDAO.deleteById(g.get_id().toString());
                 {
                     Iterable<com.jieli.user.entity.User> users = userDAO.loadByGroup(IdentityUtils.getAssociationId(sessionId), group);
-                    for (User user : users) { user.group = ""; userDAO.save(user);}
+                    for (User user : users) { user.group = null; userDAO.save(user);}
 
                     responseEntity.code = 200;
                     return Response.status(200).entity(responseEntity).build();

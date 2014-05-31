@@ -12,6 +12,8 @@ import com.jieli.user.entity.User;
 import com.jieli.util.FTLrender;
 import com.jieli.util.IdentityUtils;
 import com.jieli.util.PasswordGenerator;
+import com.jieli.util.UploaderUtils;
+import com.mongodb.BasicDBObject;
 import com.sun.jersey.spi.resource.Singleton;
 import org.apache.commons.lang.StringUtils;
 import org.codehaus.jettison.json.JSONException;
@@ -20,6 +22,8 @@ import org.codehaus.jettison.json.JSONObject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.text.Collator;
+import java.text.RuleBasedCollator;
 import java.util.*;
 
 /**
@@ -69,8 +73,9 @@ public class Account {
             }
             current.state = account.state;
             accountDAO.save(current);
-            if (user!=null)
+            if (user!=null) {
                 userDAO.save(user);
+            }
 
             responseEntity.code = 200;
             return Response.status(200).entity(responseEntity).build();
@@ -201,8 +206,13 @@ public class Account {
         ResponseEntity responseEntity = new ResponseEntity();
         ObjectMapper om = new ObjectMapper();
         String associationId = null;
+
         //List<com.jieli.common.entity.Account> accounts = new ArrayList<com.jieli.common.entity.Account>();
-        String accountList = "[";
+        String testString = "" ;
+        Map<String,String> accountListStringMap = new LinkedHashMap<String, String>();
+
+//        String accountList = "[";
+        String accountList2 = "[";
         if (IdentityUtils.getState(sessionId) == AccountState.SUPPER) {
             Iterable<com.jieli.association.Association> associations = associationDAO.loadAll();
             for (com.jieli.association.Association association : associations) {
@@ -212,9 +222,14 @@ public class Account {
                     User user = userDAO.loadById(account.userId);
                     String phoneSub = "";
                     try{phoneSub = user.phone.substring(5, 11);}catch(Exception e){phoneSub="";}
-                    accountList += CommonUtil.ReplaceObjectId(account).replace("}",",\"name\":\""+ CommonUtil.TransferNull(user == null ? "" : user.name)
+                    String tmpString = CommonUtil.ReplaceObjectId(account).replace("}",",\"name\":\""+ CommonUtil.TransferNull(user == null ? "" : user.name)
                             + "\",\"identity\":\"" + CommonUtil.TransferNull(user == null ? "" : user.identity)
                             + "\",\"phone\":\"" + CommonUtil.TransferNull(user == null ? "" : phoneSub) + "\"},");
+
+//                    accountList += tmpString;
+
+
+                    accountList2 += tmpString;
                 }
 
                 Iterable<com.jieli.common.entity.Account> accountEnable = accountDAO.loadByAssociationId(association.get_id().toString(),AccountState.ENABLE);
@@ -224,9 +239,21 @@ public class Account {
 
                     /*remind this : any field added here must be deleted in account_list.ftl -> delete a['identity'] for example (line 576)*/
 					try{phoneSub = user.phone.substring(5, 11);}catch(Exception e){phoneSub="";}
-					accountList += CommonUtil.ReplaceObjectId(account).replace("}",",\"name\":\""+ CommonUtil.TransferNull(user == null ? "" : user.name)
+                    String tmpString = CommonUtil.ReplaceObjectId(account).replace("}",",\"name\":\""+ CommonUtil.TransferNull(user == null ? "" : user.name)
 							+ "\",\"identity\":\"" + CommonUtil.TransferNull(user == null ? "" : user.identity)
 					 + "\",\"phone\":\"" + CommonUtil.TransferNull(user == null ? "" : phoneSub) + "\"},");
+
+//                    accountList += tmpString;
+
+                    String uname =(user == null ? "" : (user.name == null ? "" : user.name + ","));
+                    if (uname != "") {
+                        if (accountListStringMap.containsKey(uname))
+                            accountListStringMap.put(uname,accountListStringMap.get(uname)+tmpString);
+                        else{
+                            accountListStringMap.put(uname,tmpString);
+                            testString += uname;
+                        }
+                    }
 				}
 				
             }
@@ -244,9 +271,11 @@ public class Account {
                 User user = userDAO.loadById(account.userId);
                 String phoneSub = "";
                 try{phoneSub = user.phone.substring(5, 11);}catch(Exception e){phoneSub="";}
-                accountList += CommonUtil.ReplaceObjectId(account).replace("}",",\"name\":\""+ CommonUtil.TransferNull(user == null ? "" : user.name)
+                String tmpString = CommonUtil.ReplaceObjectId(account).replace("}",",\"name\":\""+ CommonUtil.TransferNull(user == null ? "" : user.name)
                         + "\",\"identity\":\"" + CommonUtil.TransferNull(user == null ? "" : user.identity)
                         + "\",\"phone\":\"" + CommonUtil.TransferNull(user == null ? "" : phoneSub) + "\"},");
+
+                accountList2 += tmpString;
             }
 
             Iterable<com.jieli.common.entity.Account> accountEnable = accountDAO.loadByAssociationId(associationId.toString(),AccountState.ENABLE);
@@ -254,17 +283,38 @@ public class Account {
                 User user = userDAO.loadById(account.userId);
                 String phoneSub = "";
 				try{phoneSub = user.phone.substring(5, 11);}catch(Exception e){phoneSub="";}
-                accountList += CommonUtil.ReplaceObjectId(account).replace("}",",\"name\":\""+ CommonUtil.TransferNull(user == null ? "" : user.name)
+                String tmpString = CommonUtil.ReplaceObjectId(account).replace("}",",\"name\":\""+ CommonUtil.TransferNull(user == null ? "" : user.name)
                         + "\",\"identity\":\"" + CommonUtil.TransferNull(user == null ? "" : user.identity)
                  + "\",\"phone\":\"" + CommonUtil.TransferNull(user == null ? "" : phoneSub) + "\"},");
+
+//                accountList +=tmpString;
+
+                String uname =(user == null ? "" : (user.name == null ? "" : user.name + ","));
+                if (uname != "") {
+                    if (accountListStringMap.containsKey(uname))
+                        accountListStringMap.put(uname,accountListStringMap.get(uname)+tmpString);
+                    else {
+                        accountListStringMap.put(uname, tmpString);
+                        testString += uname;
+                    }
+                }
             }
         }
 
-        accountList = CommonUtil.RemoveLast(accountList, ",") + "]";
+        testString = CommonUtil.RemoveLast(testString, ",");
+        String [] test = testString.split(",");
+        Arrays.sort(test,(RuleBasedCollator) Collator.getInstance(Locale.CHINA));
+
+        for (String key : test){
+            accountList2 += accountListStringMap.get(key+",");
+        }
+
+//        accountList = CommonUtil.RemoveLast(accountList, ",") + "]";
+        accountList2 = CommonUtil.RemoveLast(accountList2, ",") + "]";
 
         com.jieli.common.entity.Account account = accountDAO.loadById(sessionId);
         Map<String, Object> params = CommonUtil.GenerateCommonParams(account);
-        params.put("jsonAccList",accountList);
+        params.put("jsonAccList",accountList2);
         params.put("username",accountDAO.loadById(sessionId).username);
 
         return FTLrender.getResult("account_list.ftl", params);
@@ -299,10 +349,30 @@ public class Account {
         Response response = CommonUtil.RoleCheckResponse(sessionId);
         if (response != null) return response;
 
+        Iterable<User> phoneUser = userDAO.find("{phone:\'"+user.phone+"\'}");
+        for (User usser : phoneUser){
+            String uid = user.get_id().toString();
+            User ouser = userDAO.loadById(uid);
+            if (ouser != null) {
+                userDAO.deleteById(uid);
+            }
+
+            com.jieli.common.entity.Account oaccount = accountDAO.loadByUserId(uid);
+            if (oaccount != null){
+                accountDAO.deleteById(oaccount.get_id().toString());
+            }
+
+            responseEntity.code = 1001;
+            responseEntity.msg = "此手机号码已经被用户 "+usser.name+" 注册使用了！";
+            return Response.status(200).entity(responseEntity).build();
+        }
         String id = user.get_id().toString();
         User u = userDAO.loadById(id);
         if (u != null){
             user.associationId = u.associationId;
+            if (user.birthday != null && user.birthday.getMonth() >= 0){
+                user.constellation = UploaderUtils.getConstellation(user.birthday.getMonth(),user.birthday.getDate());
+            }
             userDAO.save(user);
         }
         responseEntity.code = 200;
