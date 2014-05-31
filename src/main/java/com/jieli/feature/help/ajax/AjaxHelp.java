@@ -5,6 +5,7 @@ import com.jieli.association.Association;
 import com.jieli.association.AssociationDAO;
 import com.jieli.common.entity.ResponseEntity;
 import com.jieli.feature.help.dao.HelpDAO;
+import com.jieli.feature.help.entity.HelpStatus;
 import com.jieli.feature.help.entity.SimpleHelpInfo;
 import com.jieli.user.dao.UserDAO;
 import com.jieli.util.IdentityUtils;
@@ -61,6 +62,9 @@ public class AjaxHelp {
         }
         List<SimpleHelpInfo> simpleHelpInfoList = helpDAO.getHelpInfoList(page, size, associationId, type);
         for(SimpleHelpInfo h : simpleHelpInfoList) {
+            if(h.getStatus() <= 0) {
+                h.setStatus(HelpStatus.PENDING.getValue());
+            }
             h.setId(h.get_id().toString());
         }
         String jsonHelpList;

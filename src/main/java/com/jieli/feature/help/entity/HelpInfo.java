@@ -49,7 +49,7 @@ public class HelpInfo extends Model{
     /**
      * 0 需求 1 供给
      */
-    private int type;
+    private Integer type;
     /**
      * 0 人 1 物
      */
@@ -58,7 +58,7 @@ public class HelpInfo extends Model{
     /**
      * 是否紧急
      */
-    public boolean isEmergency;
+    public Boolean isEmergency;
     /**
      * 评论数
      */
@@ -161,11 +161,11 @@ public class HelpInfo extends Model{
         this.topCommentList = topCommentList;
     }
 
-    public int getType() {
+    public Integer getType() {
         return type;
     }
 
-    public void setType(int type) {
+    public void setType(Integer type) {
         this.type = type;
     }
 

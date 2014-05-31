@@ -9,6 +9,7 @@ import com.jieli.comment.TopicType;
 import com.jieli.common.dao.AccountDAO;
 import com.jieli.feature.help.dao.HelpDAO;
 import com.jieli.feature.help.entity.HelpInfo;
+import com.jieli.feature.help.entity.HelpStatus;
 import com.jieli.feature.help.entity.SimpleHelpInfo;
 import com.jieli.mongo.BaseDAO;
 import com.jieli.mongo.Collections;
@@ -76,6 +77,9 @@ public class HelpAction {
         List<SimpleHelpInfo> helpList = helpDAO.getHelpInfoList(pageNo, pageSize, associationId, type);
 
         for(SimpleHelpInfo h : helpList) {
+            if(h.getStatus() <= 0) {
+                h.setStatus(HelpStatus.PENDING.getValue());
+            }
             h.setId(h.get_id().toString());
         }
         String jsonHelpList;

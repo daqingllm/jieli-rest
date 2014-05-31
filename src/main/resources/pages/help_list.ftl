@@ -434,6 +434,16 @@ function parseHelpData(data){
             data[i].type = "供给";
         }
 
+        if(data[i].status == 1) {
+            data[i].status = "待审核";
+        }
+        else if(data[i].status == 2) {
+            data[i].status = "已通过";
+        }
+        else {
+            data[i].status = "未通过";
+        }
+
         var adt = data[i].addTime;
         // ..
         //adt = adt.substr(0,12);
@@ -580,7 +590,7 @@ jQuery(function($) {
         data: grid_data,
         datatype: "local",
         height: 330,
-        colNames:['id',<#if isSuper>'协会',</#if>'帮助标题','帮助类型', '帮助描述', '添加日期', '关注人数'],
+        colNames:['id',<#if isSuper>'协会',</#if>'帮助标题','帮助类型', '帮助描述', '添加日期', '关注人数', '状态', '审核'],
         colModel:[
             {name:"id",index:"id",width:10,editable:false,hidden:true},
             //{name:"associationId",index:"associationId",width:40,editable:false, hidden:true},
@@ -590,9 +600,30 @@ jQuery(function($) {
                 return url;
             }},
             {name:"type",index:"type",width:"45",editable:false},
-            {name:"content",index:"content",width:"270",editable:false},
-            {name:"addTime",index:"addTime",width:"75",editable:false,sorttype:"date"},
-            {name:"attentionNum",index:"attentionNum",width:"40",editable:false}
+            {name:"content",index:"content",width:"200",editable:false},
+            {name:"addTime",index:"addTime",width:"60",editable:false,sorttype:"date"},
+            {name:"attentionNum",index:"attentionNum",width:"35",editable:false},
+            {name:"status",index:"status",width:"30",editable:false},
+            {name:"audit",index:"audit",width:"30",editable:false,formatter:
+                    function(cellValue, options, rowObject) {
+                        if(rowObject.status == "待审核") {
+                            var id = rowObject.id;
+                            var url = "<button data-status=\"2\" class=\"btn btn-xs btn-info\" data-toggle=\"button\" id=\"" + id + "\">" + "通过</button>"
+                                    + "</br>"
+                                    + "</br>"
+                                    + "<button data-status=\"3\" class=\"btn btn-xs btn-info\" data-toggle=\"button\" id=\"" + id + "\">" + "不通过</button>";
+                            console.log(url);
+                        }
+                        else if(rowObject.status == "未通过") {
+                            var id = rowObject.id;
+                            var url = "<button data-status=\"2\" class=\"btn btn-xs btn-info\" data-toggle=\"button\" id=\"" + id + "\">" + "通过</button>";
+                        }
+                        else {
+                            url = "已通过，无需操作";
+                        }
+
+                return url;
+            }}
         ],
 
         viewrecords : true,
@@ -605,9 +636,19 @@ jQuery(function($) {
 
         loadComplete : function() {
             var table = this;
+            var passBtns = $("#grid-table").children("tbody").children("tr.jqgrow").children("td").children("button");//:nth-child(1)
+
+            for(var i = 0; i < passBtns.size(); i++) {
+                var btn = $(passBtns[i]);
+                var status = btn.data("status");
+                var id = btn.attr("id");
+
+                btn.attr(
+                        "onclick", "updateHelp(\"" + id + "\"," + status + ")");
+            }
+
             setTimeout(function(){
                 styleCheckbox(table);
-
                 updateActionIcons(table);
                 updatePagerIcons(table);
                 enableTooltips(table);
@@ -673,6 +714,28 @@ jQuery(function($) {
 
     $(".ui-jqgrid-htable").css("font-family","微软雅黑");
 });
+
+
+
+function updateHelp(id, status) {
+    var helpObject = {
+        "_id" : id,
+        "status" : status
+    };
+    $.ajax({
+        url : "/app/feature/help/update?helpId=" + id,
+        type : "POST",
+        contentType : "application/json",
+        data : JSON.stringify(helpObject),
+        success : function(json) {
+            if(json.code == 200) {
+                var associationId = $('#form-field-select-type').val();
+                updateGrid(associationId,1,20);
+            }
+        }
+    });
+
+}
 
 jQuery(function ($) {
     $('[data-rel=tooltip]').tooltip({container: 'body'});

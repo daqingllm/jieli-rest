@@ -206,7 +206,7 @@ public class FeatureService {
             responseEntity.msg = "非自己互帮互助帖，不能修改";
             return Response.status(200).entity(responseEntity).build();
         }
-        if(newHelp.getType() == 0 || newHelp.getType() == 1) {
+        if(newHelp.getType() != null && (newHelp.getType() == 0 || newHelp.getType() == 1)) {
             oldHelp.setType(newHelp.getType());
         }
         if(newHelp.getStatus() > 0) {
