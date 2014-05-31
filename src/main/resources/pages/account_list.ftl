@@ -219,6 +219,23 @@
                             修改管理员密码
                         </button>
 
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+
+                        <button class="btn btn-warning" type="button" style="font-weight:bold;margin-bottom: 20px;" id='uploadCSV'>
+                            <i class="fa fa-cloud-upload bigger-110"></i>
+                            上传账户CSV表格
+                        </button>
+                        <div class="alert alert-warning" style="margin-left: 15px; width: 250px; position: relative;display: inline-block;padding: 10px;">&nbsp;您可以将Excel文件另存为csv文件</div>
+
+                        <br>
+                        <div class="alert alert-warning" id="failedImport" style="display: none">
+                            <button type="button" class="close" data-dismiss="alert">
+                                <i class="fa fa-times"></i>
+                            </button>
+                            <strong id="failedImportNameList">导入失败的用户有：</strong>
+                        </div>
+
+
                         <table id="grid-table"></table>
                         <div id="grid-pager"></div>
                     </div>
@@ -330,7 +347,6 @@
 <script src="/assets/js/excanvas.min.js"></script>
 <![endif]-->
 
-<!--
 <script src="/assets/js/jquery-ui-1.10.3.custom.min.js"></script>
 <script src="/assets/js/jquery.ui.touch-punch.min.js"></script>
 <script src="/assets/js/chosen.jquery.min.js"></script>
@@ -346,10 +362,11 @@
 <script src="/assets/js/jquery.maskedinput.min.js"></script>
 <script src="/assets/js/bootstrap-tag.min.js"></script>
 <script src="/assets/js/jquery.gritter.min.js"></script>
-<script src="/assets/js/bootbox.min.js"></script>
--->
 
 <script src="/assets/js/bootbox.min.js"></script>
+
+<script src="/assets/js/jquery.form.js"></script>
+<script src="/common-jieli.js"></script>
 
 <!-- ace scripts -->
 
@@ -719,6 +736,7 @@ jQuery(function($) {
     }
 
     $("#changeVerifyBtn").click(changeVerify);
+    $("#uploadCSV").click(uploadCSV);
 
     jQuery(grid_selector).jqGrid('navGrid',pager_selector,
             { 	//navbar options

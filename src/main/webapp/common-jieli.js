@@ -440,6 +440,10 @@ var uploadArticleImageOptions = {
         } else {
             alert("上传失败");
         }
+    },
+    error: function(XMLHttpRequest, textStatus, errorThrown) {
+        alert("操作失败，错误码："+XMLHttpRequest.status);
+        return;
     }
 };
 
@@ -698,6 +702,10 @@ var uploadActivityImageOptions = {
         } else {
             alert("上传失败");
         }
+    },
+    error: function(XMLHttpRequest, textStatus, errorThrown) {
+        alert("操作失败，错误码："+XMLHttpRequest.status);
+        return;
     }
 }
 /*活动中上传图片*/
@@ -726,7 +734,56 @@ function uploadImgBox() {
     });
 }
 
+var uploadExcelOptions = {
+    url: '/app/uploadExcel',
+    type:'post',
+    dataType:'json',
+    contentType:'text/plain',
+    success:function( jsn ) {
+        var msg = jsn.msg;
+        alert(msg);
 
+        if (jsn.body) {
+            $("#failedImport").show();
+            while ($("#failedImportNameList").next().length > 0)
+                $("#failedImportNameList").next().remove();
+
+            $("#failedImportNameList").append($("<span>"+jsn.body+"</span>"));
+        } else {
+            $("#failedImport").hide();
+        }
+    },
+    error: function(XMLHttpRequest, textStatus, errorThrown) {
+        alert("操作失败，错误码："+XMLHttpRequest.status);
+        return;
+    }
+};
+
+/*Excel上传*/
+function uploadCSV() {
+    var spin_img = "<div id='upload-loading-img' style='margin-left:30px;margin-top:10px;display: none;'><i class='fa fa-spinner icon-spin orange bigger-125'></i></div>";
+    spin_img = "";
+    bootbox.dialog({
+        message: "<form id='rest-upload-form' action='/app/uploadExcel' method='post' enctype='multipart/form-data' acceptcharset='UTF-8'>\n<input id='rest-upload-file' type='file' name='file' size='50' />"+spin_img+"</form>",
+        buttons: {
+            "upload": {
+                "label": "<i class='fa fa-check'></i> 上传 ",
+                "className": "btn-sm btn-success",
+                "callback": function () {
+                    $('#rest-upload-form').ajaxSubmit(uploadExcelOptions);
+                }
+            },
+            "cancel": {
+                "label": "<i class='fa fa-times'></i> 取消",
+                "className": "btn-sm",
+                "callback": function () {
+                    var objFile = document.getElementById('rest-upload-file');
+                    objFile.outerHTML = objFile.outerHTML.replace(/(value=\").+\"/i, "$1\"");
+                }
+            }
+        }
+    });
+}
 function updatePreview(c)
 {
     if (parseInt(c.w) > 0)
@@ -806,6 +863,10 @@ var uploaduserFaceImageOptions = {
         } else {
             alert("上传失败");
         }
+    },
+    error: function(XMLHttpRequest, textStatus, errorThrown) {
+        alert("操作失败，错误码："+XMLHttpRequest.status);
+        return;
     }
 }
 

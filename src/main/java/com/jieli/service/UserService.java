@@ -21,6 +21,7 @@ import com.jieli.user.entity.UserBasicInfo;
 import com.jieli.util.CollectionUtils;
 import com.jieli.util.IdentityUtils;
 import com.jieli.util.MongoUtils;
+import com.jieli.util.UploaderUtils;
 import com.sun.jersey.spi.resource.Singleton;
 import org.apache.commons.lang.StringUtils;
 import org.bson.types.ObjectId;
@@ -102,6 +103,9 @@ public class UserService {
 
         /*xianxing*/
         if (user.identity == "普通会员") user.identity = null;
+        if (user.birthday != null && user.birthday.getMonth() >= 0) {
+            user.constellation = UploaderUtils.getConstellation(user.birthday.getMonth(), user.birthday.getDate());
+        }
 
         userDAO.save(user);
         responseEntity.code = 200;
@@ -492,6 +496,10 @@ public class UserService {
         oldUser.enterpriseFoundDate = user.enterpriseFoundDate;
         oldUser.enterpriseDescription = user.enterpriseDescription;
         oldUser.interests = user.interests;
+
+        if (user.birthday != null && user.birthday.getMonth() >= 0) {
+            oldUser.constellation = UploaderUtils.getConstellation(user.birthday.getMonth(), user.birthday.getDate());
+        }
 
         userDAO.save(oldUser);
 

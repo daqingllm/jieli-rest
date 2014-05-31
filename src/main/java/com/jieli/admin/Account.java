@@ -12,6 +12,7 @@ import com.jieli.user.entity.User;
 import com.jieli.util.FTLrender;
 import com.jieli.util.IdentityUtils;
 import com.jieli.util.PasswordGenerator;
+import com.jieli.util.UploaderUtils;
 import com.mongodb.BasicDBObject;
 import com.sun.jersey.spi.resource.Singleton;
 import org.apache.commons.lang.StringUtils;
@@ -350,6 +351,17 @@ public class Account {
 
         Iterable<User> phoneUser = userDAO.find("{phone:\'"+user.phone+"\'}");
         for (User usser : phoneUser){
+            String uid = user.get_id().toString();
+            User ouser = userDAO.loadById(uid);
+            if (ouser != null) {
+                userDAO.deleteById(uid);
+            }
+
+            com.jieli.common.entity.Account oaccount = accountDAO.loadByUserId(uid);
+            if (oaccount != null){
+                accountDAO.deleteById(oaccount.get_id().toString());
+            }
+
             responseEntity.code = 1001;
             responseEntity.msg = "此手机号码已经被用户 "+usser.name+" 注册使用了！";
             return Response.status(200).entity(responseEntity).build();
@@ -358,6 +370,9 @@ public class Account {
         User u = userDAO.loadById(id);
         if (u != null){
             user.associationId = u.associationId;
+            if (user.birthday != null && user.birthday.getMonth() >= 0){
+                user.constellation = UploaderUtils.getConstellation(user.birthday.getMonth(),user.birthday.getDate());
+            }
             userDAO.save(user);
         }
         responseEntity.code = 200;
