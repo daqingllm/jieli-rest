@@ -745,10 +745,7 @@ var uploadExcelOptions = {
 
         if (jsn.body) {
             $("#failedImport").show();
-            while ($("#failedImportNameList").next().length > 0)
-                $("#failedImportNameList").next().remove();
-
-            $("#failedImportNameList").append($("<span>"+jsn.body+"</span>"));
+            $("#failedImportNameList").html("导入失败的用户有："+jsn.body);
         } else {
             $("#failedImport").hide();
         }

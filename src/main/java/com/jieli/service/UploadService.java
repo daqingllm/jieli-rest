@@ -77,10 +77,16 @@ public class UploadService {
             } else if (result.length == 3){
                 responseEntity.code = 200;
                 responseEntity.msg = "从文件解析到" + result[0] + "条数据，成功导入" + result[1] + "条，失败" + result[2] + "条";
+
                 if (result[2] != 0){
                     responseEntity.msg += ". 可能的失败原因有：性别不是男/女，生日格式不对，分组不存在，职位不存在，该手机号码已被其他用户注册，信息不全！";
                 }
-                responseEntity.body = nameList;
+
+                if (result[0] != 0 && result[1] == 0){
+                    responseEntity.body = "所有用户！";
+                }else {
+                    responseEntity.body = nameList;
+                }
             } else {
                 responseEntity.code = 2003;
                 responseEntity.msg = "未知错误";

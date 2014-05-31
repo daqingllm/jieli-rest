@@ -286,6 +286,7 @@ public class UploaderUtils {
 
 
     public static String getConstellation(int month, int day) {
-        return day < dayArr[month - 1] ? constellationArr[month] : constellationArr[month + 1];
+        if (month<0 || month+2 > constellationArr.length) return "";
+        else return day < dayArr[month] ? constellationArr[month] : constellationArr[month + 1];
     }
 }

@@ -229,10 +229,10 @@
 
                         <br>
                         <div class="alert alert-warning" id="failedImport" style="display: none">
-                            <button type="button" class="close" data-dismiss="alert">
+                            <button type="button" class="close" onclick="$(this).parent().hide();" style="float: left;margin-right:10px;">
                                 <i class="fa fa-times"></i>
                             </button>
-                            <strong id="failedImportNameList">导入失败的用户有：</strong>
+                            <strong id="failedImportNameList"></strong>
                         </div>
 
 
