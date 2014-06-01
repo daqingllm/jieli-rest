@@ -20,3 +20,4 @@ maven-ant-tasks.jar
 test-output
 classes
 /target
+*/FeatureTest.java
