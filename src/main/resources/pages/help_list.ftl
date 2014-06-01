@@ -561,8 +561,9 @@ function deleteHelp() {
     }
 }
 function updateGrid(associationId, page, size) {
+    var helpType = $("#help-select").val();
     $.ajax({
-        url: "/app/feature/ajaxhelp/list?a="+associationId+"&page="+page+"&size="+size,
+        url: '/app/feature/ajaxhelp/list?a=' + associationId + '&t=' + helpType + '&page=1&size=20',
         type : 'GET',
         contentType: "application/json",
         success: function(response) {
