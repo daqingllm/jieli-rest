@@ -483,7 +483,7 @@ function parseArtData(data){
 
         data[i].state = states[data[i].state];
 
-        if (data[i].identity == undefined || data[i].identity == null || data[i].identity == "") data[i].identity = "ÆÕÍ¨»áÔ±";
+        if (data[i].identity == undefined || data[i].identity == null || data[i].identity == "") data[i].identity = "";
 
     }
     return data;

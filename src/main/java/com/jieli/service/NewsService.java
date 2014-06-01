@@ -202,8 +202,8 @@ public class NewsService {
         Iterable<Image> images = imageDAO.loadCoverImages();
         List<Image> imageList = new ArrayList<Image>();
         for (Image image : images){
-            if (image.url.indexOf("?imageView/4/w/472/h/354") < 0)
-                image.url += "?imageView/4/w/472/h/354";
+            if (image.url.indexOf("?imageView/4/w/500/h/300") < 0)
+                image.url += "?imageView/4/w/500/h/300";
 
             imageList.add(image);
         }
@@ -213,6 +213,45 @@ public class NewsService {
         responseEntity.body = imageList;
 
         return  Response.status(200).entity(responseEntity).build();
+    }
+
+
+    @POST
+    @Path("/uncover")
+    @Produces(MediaType.APPLICATION_JSON+ ";charset=utf-8")
+    public Response unCoverImage(@CookieParam("u")String sessionId, News news) {
+        if (!IdentityUtils.isAdmin(sessionId)) {
+            return Response.status(403).build();
+        }
+
+        ResponseEntity responseEntity = new ResponseEntity();
+        if (news == null) {
+            responseEntity.code = 4008;
+            responseEntity.msg = "缺少参数";
+            return Response.status(200).entity(responseEntity).build();
+        }
+
+        News oldNews = newsDAO.loadById(news.get_id().toString());
+
+        if (oldNews != null) {
+            if (oldNews.topPic) {
+                oldNews.topPic = false;
+                newsDAO.save(oldNews);
+            }
+
+            Iterable<Image> images = imageDAO.find("{newsId:\"" + news.get_id().toString() + "\"}");
+            for (Image image : images) {
+                imageDAO.deleteById(image.get_id().toString());
+            }
+
+            responseEntity.code = 200;
+            responseEntity.msg = "已取消置顶";
+            return Response.status(200).entity(responseEntity).build();
+        }else {
+            responseEntity.code = 200;
+            responseEntity.msg = "资讯不存在";
+            return Response.status(200).entity(responseEntity).build();
+        }
     }
 
     @POST

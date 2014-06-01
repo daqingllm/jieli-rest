@@ -264,20 +264,8 @@
             职位列表
         </h3>
 
-        <div id="accordion" class="accordion-style2">
-        <#list groups as group>
-            <div class="group" id="gn${group.name}">
-                <h3 class="accordion-header" onclick="loadThisGroup('${group.name}',false)">${group.name}</h3>
-                <div onclick="return false;">
-                    <p><p>
-                    <ul></ul>
-                </div>
-            </div>
-        </#list>
-        </div>
-
-        <div class="clearfix form-actions">
-            <div class="col-md-offset-1 col-md-9">
+        <div class="clearfix " style="height: 60px;">
+            <div class="col-md-offset-0 col-md-9">
                 <button class="btn btn-info" type="button" onclick="addAGroup()">
                     <i class="fa fa-plus bigger-110"></i>
                     添加一个分组
@@ -308,6 +296,18 @@
                 </button>
 
             </div>
+        </div>
+
+        <div id="accordion" class="accordion-style2">
+        <#list groups as group>
+            <div class="group" id="gn${group.name}">
+                <h3 class="accordion-header" onclick="loadThisGroup('${group.name}',false)">${group.name}</h3>
+                <div onclick="return false;">
+                    <p><p>
+                    <ul></ul>
+                </div>
+            </div>
+        </#list>
         </div>
 
     </div>

@@ -41,6 +41,12 @@ if (!Array.prototype.indexOf)
     };
 }
 
+function getAstro(month,day){
+    var s="魔羯水瓶双鱼牡羊金牛双子巨蟹狮子处女天秤天蝎射手魔羯";
+    var arr=[20,19,21,21,21,22,23,23,23,23,22,22];
+    return s.substr((month+1)*2-(day<arr[month]?2:0),2);
+}
+
 /*格式化日期*/
 Date.prototype.Format = function (fmt) { //author: meizz
     var o = {
@@ -302,12 +308,43 @@ function clearImgList(){
     $("#img-list-invisible").attr("style","border-width:0;display:block");
 }
 
+function unTitleImg(news){
+    var anews = news;
+    try {delete anews["associationName"];}catch (e){}
+    if (!anews.topPic) {alert("该资讯已经不是置顶资讯了"); return; }
+    if (anews.type=="协会动态") anews.type = "association";
+    if (anews.type=="小组风采") anews.type = "enterprise";
+
+    $.ajax({
+        type:"POST",
+        url:"/app/news/uncover",
+        async:false,
+        data:JSON.stringify(anews),
+        contentType:"application/json",
+        cache:false,
+        processData:false,
+        success:function(ret){
+            if (ret.code == 200) {
+                alert("已取消置顶");
+                window.location.reload();
+                return;
+            }
+            else
+                alert("取消置顶失败"+(ret.msg?ret.msg:""));
+        },
+        error: function(XMLHttpRequest, textStatus, errorThrown) {
+            alert("操作失败，错误码："+XMLHttpRequest.status);
+            return;
+        }
+    })
+}
+
 function setTitleImg(news){
     try {delete news["associationName"];}catch (e){}
-    if (news.type!="协会动态" && "合作展示"!=news.type && news.type != "association" && news.type != "enterprise") {alert("该类型无法设置头图"); return;}
-    if (news.topPic) {alert("该资讯已经设置过头图"); return; }
+    if (news.type!="协会动态" && "小组风采"!=news.type && news.type != "association" && news.type != "enterprise") {alert("该类型无法设置头图"); return;}
+    if (news.topPic) {alert("该资讯已经设置置顶"); return; }
     if (news.type=="协会动态") news.type = "association";
-    if (news.type=="合作展示") news.type = "enterprise";
+    if (news.type=="小组风采") news.type = "enterprise";
 
     if (!news.images || news.images.length == 0) {alert("该资讯中无图片"); return;}
 
@@ -322,30 +359,11 @@ function setTitleImg(news){
         success:function(ret){
             if (ret.code == 200) {
                 alert("已设置为头图");
+                window.location.reload();
                 return;
-
-                news.topPic = true;
-                $.ajax({
-                    url:"/app/news/?newsId="+news["_id"]+"&force=false",
-                    type:"POST",
-                    async:false,
-                    data:JSON.stringify(news),
-                    contentType:"application/json",
-                    cache:false,
-                    processData:false,
-                    success:function(ret){
-                        if (ret.code == 200)
-                            alert("已设置为头图");
-                        else
-                            alert("设置头图失败");
-                    },
-                    error:function(err){
-                        alert("设置头图失败");
-                    }
-                });
             }
             else
-                alert("设置头图失败");
+                alert("设置头图失败"+(ret.msg?ret.msg:""));
         },
         error: function(XMLHttpRequest, textStatus, errorThrown) {
             alert("操作失败，错误码："+XMLHttpRequest.status);
@@ -708,6 +726,54 @@ var uploadActivityImageOptions = {
         return;
     }
 }
+
+var uploadRegisterOptions = {
+    url: '/app/upload',
+    type:'post',
+    dataType:'json',
+    contentType:'text/plain',
+    async:false,
+    success:function( jsn ) {
+        var msg = jsn.msg;
+        if (jsn.code == 200) {
+            $("#register-u-userFace").attr("src", jsn.body + "");
+            $("#userFaceImage").show();
+        }
+        else
+            alert("上传失败"+(msg?","+msg:""));
+    },
+    error: function(XMLHttpRequest, textStatus, errorThrown) {
+        alert("操作失败，错误码："+XMLHttpRequest.status);
+        return;
+    }
+};
+
+/*注册中上传图片*/
+function uploadRegister() {
+    var spin_img = "<div id='upload-loading-img' style='margin-left:30px;margin-top:10px;display: none;'><i class='fa fa-spinner icon-spin orange bigger-125'></i></div>";
+    spin_img = "";
+    bootbox.dialog({
+        message: "<form id='rest-upload-form' action='/app/upload' method='post' enctype='multipart/form-data' acceptcharset='UTF-8'>\n<input id='rest-upload-file' type='file' name='file' size='50' />"+spin_img+"</form>",
+        buttons: {
+            "upload": {
+                "label": "<i class='fa fa-check'></i> 上传 ",
+                "className": "btn-sm btn-success",
+                "callback": function () {
+                    $('#rest-upload-form').ajaxSubmit(uploadRegisterOptions);
+                }
+            },
+            "cancel": {
+                "label": "<i class='fa fa-times'></i> 取消",
+                "className": "btn-sm",
+                "callback": function () {
+                    var objFile = document.getElementById('rest-upload-file');
+                    objFile.outerHTML = objFile.outerHTML.replace(/(value=\").+\"/i, "$1\"");
+                }
+            }
+        }
+    });
+}
+
 /*活动中上传图片*/
 function uploadImgBox() {
     var spin_img = "<div id='upload-loading-img' style='margin-left:30px;margin-top:10px;display: none;'><i class='fa fa-spinner icon-spin orange bigger-125'></i></div>";

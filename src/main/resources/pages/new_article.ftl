@@ -233,14 +233,12 @@
                     <select class="col-xs-10 col-sm-7" id="form-field-select-type"
                             style="padding: 5px 4px;font-size: 14px;" onchange="toggleShowTime();">
                     <#if isSuper>
-                        <option value="news" selected>每日头条</option>
+                        <option value="news" selected>有服同享</option>
                         <option value="association">协会动态</option>
-                        <option value="enterprise">合作展示</option>
-                        <option value="benefit">慈善公益</option>
+                        <option value="enterprise">小组风采</option>
                     <#else>
                         <option value="association" selected>协会动态</option>
-                        <option value="enterprise">合作展示</option>
-                        <option value="benefit">慈善公益</option>
+                        <option value="enterprise">小组风采</option>
                         <option value="history">协会事记</option>
                     </#if>
                     </select>

@@ -221,7 +221,13 @@
 
                         <button class="btn btn-warning" type="button" style="font-weight:bold;margin-bottom: 20px;" id="setTitleImgClick">
                             <i class="fa fa-search-plus bigger-110"></i>
-                            设置头图
+                            设置置顶
+                        </button>
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+
+                        <button class="btn" type="button" style="font-weight:bold;margin-bottom: 20px;" id="unTitleImgClick">
+                            <i class="fa fa-search-plus bigger-110"></i>
+                            取消置顶
                         </button>
                         &nbsp;&nbsp;&nbsp;&nbsp;
 
@@ -439,7 +445,16 @@ function setTitleImgClickFunc(){
     setTitleImg(news);
 }
 
+function unTitleImgClickFunc(){
+    var id = $("#grid-table").getGridParam("selrow") - 1;
+    //id = $("#grid-table > tbody > tr").eq(id).find("td").eq(1).attr("title");
+    var news = raw_data[id];
+
+    unTitleImg(news);
+}
+
 $("#setTitleImgClick").click(setTitleImgClickFunc);
+$("#unTitleImgClick").click(unTitleImgClickFunc);
 
 Date.prototype.Format = function (fmt) { //author: meizz
     var o = {
@@ -458,7 +473,7 @@ Date.prototype.Format = function (fmt) { //author: meizz
 }
 
 function parseArtData(data){
-    var types = {"news":"每日头条","association":"协会动态","enterprise":"合作展示","history":"协会事记","benefit":"慈善公益"};
+    var types = {"news":"有服同享","association":"协会动态","enterprise":"小组风采","history":"协会事记","benefit":"慈善公益"};
     for (var i = 0 ; i < data.length; i++){
         data[i].type = types[data[i].type];
         var adt = data[i].addTime;

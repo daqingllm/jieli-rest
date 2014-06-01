@@ -153,7 +153,9 @@
                         <div id="signup-box" class="signup-box visible widget-box no-border">
                             <div class="widget-body">
                                 <div class="widget-main">
-                                    <h4 class="header green lighter bigger"><i class="fa fa-users blue"></i> 新用户注册 </h4>
+                                    <h4 class="header green lighter bigger"><i class="fa fa-users blue"></i> 新用户注册
+                                        <small style="color: rgb(245, 130, 101);margin-left:10px;font-family:Microsoft Yahei">请先上传头像(400*400)</small>
+                                    </h4>
 
                                     <div class="space-6"></div>
 
@@ -185,16 +187,21 @@
                                                 </select>
 															<i class=""></i> </span> </label>
 
-                                            <#--<label class="block clearfix" style="display: none;"> <span class="block input-icon input-icon-right">-->
-                                                            <#--<input type="text" class="form-control" style="width: 40%;float: left;" placeholder="生日 年" id="register-u-birthday-y" />-->
-                                                            <#--<input type="text" class="form-control" style="width: 25%;float: left; margin-left: 5%;" placeholder="月" id="register-u-birthday-m" />-->
-                                                            <#--<input type="text" class="form-control" style="width: 25%;float: left; margin-left: 5%;" placeholder="日" id="register-u-birthday-d" />-->
-												<#--<!--			<input type="text" class="form-control" placeholder="生日" id="register-u-birthday" /> &ndash;&gt;-->
-                                                <#--<!--<input type="text" id="register-u-birthday" class="form-control hasDatepicker"/>-->
-                                                <#--<span class="input-group-addon">-->
-                                                    <#--<i class="fa fa-calendar"></i>-->
-                                                <#--</span>&ndash;&gt;-->
-															<#--<i class=""></i> </span> </label>-->
+                                            <label class="block clearfix" style="display: none;"> <span class="block input-icon input-icon-right">
+                                                            <input onblur="setConstellation()" type="text" class="form-control" style="width: 40%;float: left;" placeholder="生日 年" id="register-u-birthday-y" />
+                                                            <input onblur="setConstellation()" type="text" class="form-control" style="width: 25%;float: left; margin-left: 5%;" placeholder="月" id="register-u-birthday-m" />
+                                                            <input onblur="setConstellation()" type="text" class="form-control" style="width: 25%;float: left; margin-left: 5%;" placeholder="日" id="register-u-birthday-d" />
+												<!--			<input type="text" class="form-control" placeholder="生日" id="register-u-birthday" /> -->
+                                                <!--<input type="text" id="register-u-birthday" class="form-control hasDatepicker"/>
+                                                <span class="input-group-addon">
+                                                    <i class="fa fa-calendar"></i>
+                                                </span>-->
+															<i class=""></i> </span> </label>
+
+                                            <label class="block clearfix"> <span class="block input-icon input-icon-right">
+															<input type="text" class="form-control" placeholder="星座" id="register-u-constellation" />
+															<i class=""></i> </span> </label>
+
 
                                             <label class="block clearfix"> <span class="block input-icon input-icon-right">
 															<input type="text" class="form-control" placeholder="手机" id="register-u-phone" />
@@ -216,6 +223,7 @@
                                             <#--</label>-->
 
                                         <#if isSuper>
+                                            <!-- supper do not need this field -->
                                         <#else>
                                             <label class="block clearfix"> <span class="block input-icon input-icon-right">
 
@@ -226,12 +234,40 @@
                                             </label>
                                         </#if>
 
+                                        <#if isSuper>
+                                            <!-- supper do not need this field -->
+                                        <#else>
+                                            <label class="block clearfix"> <span class="block input-icon input-icon-right">
+
+							                            <select class="form-control" id="register-group">
+                                                        ${groupOps}
+                                                        </select>
+						                            </span>
+                                            </label>
+                                        </#if>
+
+                                            <label class="block clearfix"> <span class="block input-icon input-icon-right">
+															<input type="text" class="form-control" placeholder="公司名称" id="register-u-cname" />
+															<i class=""></i> </span> </label>
+
+                                            <label class="block clearfix"> <span class="block input-icon input-icon-right">
+															<input type="text" class="form-control" placeholder="公司职务" id="register-u-job" />
+															<i class=""></i> </span> </label>
+
+                                            <label class="clearfix" id="userFaceImage" style="display: none;"> <span class="block input-icon input-icon-right">
+															<img src="" width="290" id="register-u-userFace" />
+															<i id="register-u-userFaceHeight" class="fa fa-times" onclick="$(this).prev().attr('src','');$('#userFaceImage').hide();" style="font-size: 18px;cursor: pointer;"></i> </span> </label>
+
                                             <div class="clearfix">
                                                 <button class="btn btn-danger" type="reset" style="font-weight:bold" onclick="window.location.href='/app/baccount/list';return true;">
                                                     <i class="fa fa-mail-reply bigger-110"></i>
-                                                    返回账户列表
+                                                    返回
                                                 </button>
-                                                <button type="button" class="btn pull-right btn-success" style="width:137px" onclick="register();">
+                                                <button class="btn btn-info" type="reset" style="font-weight:bold" id="uploadUserFace">
+                                                    <i class="fa fa-cloud-upload bigger-110"></i>
+                                                    上传头像
+                                                </button>
+                                                <button type="button" class="btn pull-right btn-success" style="width:90px" onclick="register();">
                                                     注册
                                                     <i class="fa fa-arrow-right icon-on-right"></i>
                                                 </button>
@@ -278,18 +314,55 @@
 
 <!-- <![endif]-->
 
-<script src="/assets/js/jquery-ui-1.10.3.custom.min.js"></script>
-<script src="/assets/js/jquery.ui.touch-punch.min.js"></script>
-<script src="/assets/js/bootbox.min.js"></script>
-<script src="/assets/js/jquery.easy-pie-chart.min.js"></script>
-<script src="/assets/js/jquery.gritter.min.js"></script>
+<!--[if IE]>
+<script type="text/javascript">
+    window.jQuery || document.write("<script src='/assets/js/jquery-1.10.2.min.js'>" + "<" + "/script>");
+</script>
+<![endif]-->
 
+<script type="text/javascript">
+    if ("ontouchend" in document) document.write("<script src='/assets/js/jquery.mobile.custom.min.js'>" + "<" + "/script>");
+</script>
+<script src="/assets/js/bootstrap.min.js"></script>
+<script src="/assets/js/typeahead-bs2.min.js"></script>
+
+<!-- page specific plugin scripts -->
+<script src="/assets/js/jquery.colorbox-min.js"></script>
+<script src="/assets/js/bootstrap-multiselect.js"></script>
+
+<!--[if lte IE 8]>
+<script src="/assets/js/excanvas.min.js"></script>
+<![endif]-->
+
+<script src="/assets/js/jquery-ui-1.10.3.custom.min.js"></script>
+<script src="/assets/js/jquery-ui-1.10.3.full.min.js"></script>
+<script src="/assets/js/jquery.ui.touch-punch.min.js"></script>
+<script src="/assets/js/chosen.jquery.min.js"></script>
+<script src="/assets/js/fuelux/fuelux.spinner.min.js"></script>
 <script src="/assets/js/date-time/bootstrap-datepicker.min.js"></script>
+<script src="/assets/js/date-time/bootstrap-timepicker.min.js"></script>
+<script src="/assets/js/date-time/moment.min.js"></script>
+<script src="/assets/js/date-time/daterangepicker.min.js"></script>
+<script src="/assets/js/bootstrap-colorpicker.min.js"></script>
+<script src="/assets/js/jquery.knob.min.js"></script>
+<script src="/assets/js/jquery.autosize.min.js"></script>
+<script src="/assets/js/jquery.inputlimiter.1.3.1.min.js"></script>
+<script src="/assets/js/jquery.maskedinput.min.js"></script>
+<script src="/assets/js/bootstrap-tag.min.js"></script>
+<script src="/assets/js/jquery.gritter.min.js"></script>
+<script src="/assets/js/bootbox.min.js"></script>
+<script src="/assets/js/dropzone.min.js"></script>
+
+<script src="/assets/js/jquery.form.js"></script>
+<script src="/assets/js/jqGrid/jquery.jqGrid.min.js"></script>
+<script src="/assets/js/jqGrid/i18n/grid.locale-zh-art-cmt.js"></script>
 
 <!-- ace scripts -->
 
 <script src="/assets/js/ace-elements.min.js"></script>
 <script src="/assets/js/ace.min.js"></script>
+
+<script src="/common-jieli.js"></script>
 
 <!--[if IE]>
 <script type="text/javascript">
@@ -312,6 +385,25 @@
 </script>
 
 <script>
+    var birthd = null;
+    function setConstellation(){
+        var y = $("#register-u-birthday-y").val();
+        var m = $("#register-u-birthday-m").val();
+        var d = $("#register-u-birthday-d").val();
+
+        if (y != "" && m != "" && d != ""){
+            try {
+                birthd = new Date();
+                birthd.setFullYear(parseInt(y));
+                birthd.setMonth(parseInt(m)-1);
+                birthd.setDate(parseInt(d));
+
+                var c = getAstro(parseInt(m)-1, parseInt(d));
+                $("#register-u-constellation").val(c+"座");
+            }catch (err){birthd = null;}
+        }
+    }
+
     function showMsg(title, msg) {
         if (title == '注册成功') {
             $.gritter.add({
@@ -404,13 +496,16 @@
 
         u.birthday = y + "-" + m + "-" + d;
         */
-        u.birthday = null;
-        u.constellation = "";
-        u.identity = $("#register-identi").val() || "";
-        u.score = 0;
-        u.school = "";
-        u.degree = 3;
-        u.profession = $("#register-u-profession").val() || "";
+        if (birthd) {
+            u.birthday = birthd;
+            u.constellation = $("#register-u-constellation").val();
+        }
+
+        if ($("#register-identi").val() != "")
+            u.identity = $("#register-identi").val();
+        if ($("#register-group").val() != "")
+            u.group = $("#register-group").val();
+
         var pphone;
         try{
             pphone = parseInt($("#register-u-phone").val());
@@ -424,11 +519,13 @@
             alert("请输入手机号码！");
             return null;
         }
-        u.mail = "";
-        u.weixin = "";
-        u.interests = [];
-        u.enterpriseName = $("#register-u-enterprise").val() || "";
-        u.userFace = "";
+
+        if ($("#register-u-cname").val() != "")
+            u.enterpriseName = $("#register-u-cname").val();
+        if ($("#register-u-job").val() != "")
+            u.job = $("#register-u-job").val();
+
+        u.userFace = $("#register-u-userFace").attr("src") || "";
 
         return u;
     }
@@ -437,7 +534,7 @@
 <script>
 
     jQuery(function($){
-        <!--$('#register-u-birthday').datepicker({autoclose:true});-->
+        $("#uploadUserFace").click(uploadRegister);
     })
 </script>
 </body>
