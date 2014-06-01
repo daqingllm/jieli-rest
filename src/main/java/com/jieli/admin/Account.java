@@ -2,8 +2,8 @@ package com.jieli.admin;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jieli.association.AssociationDAO;
-import com.jieli.association.IdentityDAO;
+import com.jieli.association.*;
+import com.jieli.association.Group;
 import com.jieli.common.dao.AccountDAO;
 import com.jieli.common.entity.AccountState;
 import com.jieli.common.entity.ResponseEntity;
@@ -39,6 +39,8 @@ public class Account {
     private UserDAO userDAO = new UserDAO();
     private AccountDAO accountDAO = new AccountDAO();
     private AssociationDAO associationDAO = new AssociationDAO();
+    private IdentityDAO identityDAO = new IdentityDAO();
+    private GroupDAO groupDAO = new GroupDAO();
 
     @GET
     @Path("/login")
@@ -104,19 +106,27 @@ public class Account {
         boolean isSuper = IdentityUtils.isSuper(sessionId);
         params.put("isSuper",isSuper);
         String associationOps = "";
-        String identityOps = "<option value='' selected='selected'>普通会员</option>";
+        String identityOps = "<option value='' selected disabled>请选择身份</option>";
+        String groupOps = "<option value='' selected disabled>请选择分组</option>";
         List<Association> associationList = new ArrayList<Association>();
         if (isSuper) {
             Iterable<com.jieli.association.Association> iterable = associationDAO.loadAll();
             for(com.jieli.association.Association association : iterable)
                 associationOps += "<option value='"+association.get_id() + "'>"+association.name +"</option>";
         } else {
-            Iterable<com.jieli.association.Identity> identities = new IdentityDAO().loadAll(IdentityUtils.getAssociationId(sessionId));
+            Iterable<com.jieli.association.Identity> identities = identityDAO.loadAll(IdentityUtils.getAssociationId(sessionId));
             for (com.jieli.association.Identity identity : identities)
                 identityOps += "<option value='"+identity.name + "'>"+identity.name + "</option>";
+
+            Iterable<com.jieli.association.Group> groups = groupDAO.loadAll(IdentityUtils.getAssociationId(sessionId));
+            for (Group group : groups){
+                groupOps +=  "<option value='"+group.name + "'>"+group.name + "</option>";
+            }
         }
+
         params.put("associationOps",associationOps);
         params.put("identityOps",identityOps);
+        params.put("groupOps",groupOps);
 
         return FTLrender.getResult("register.ftl", params);
     }
@@ -171,12 +181,22 @@ public class Account {
         ResponseEntity responseEntity = new ResponseEntity();
         Map<String, Object> params = CommonUtil.GenerateCommonParams(account);
 
-        String identityOps = "<option value='' selected='selected'>普通会员</option>";
-        Iterable<com.jieli.association.Identity> identities = new IdentityDAO().loadAll(IdentityUtils.getAssociationId(sessionId));
+        String identityOps = "<option value='' selected disabled>请选择身份</option>";
+        String groupOps = "<option value='' selected disabled>请选择分组</option>";
+
+        Iterable<com.jieli.association.Identity> identities = identityDAO.loadAll(IdentityUtils.getAssociationId(sessionId));
         for (com.jieli.association.Identity identity : identities) {
             identityOps += "<option value='" + identity.name + "'>" + identity.name + "</option>";
         }
         params.put("identityOps", identityOps);
+
+        Iterable<Group> groups = groupDAO.loadAll(IdentityUtils.getAssociationId(sessionId));
+        for (Group group : groups) {
+            groupOps += "<option value='" + group.name + "'>" + group.name + "</option>";
+        }
+        params.put("groupOps", groupOps);
+
+
 
         com.jieli.common.entity.Account targetAccount = accountDAO.loadById(u);
         if (targetAccount == null || targetAccount.userId == null){
@@ -373,6 +393,9 @@ public class Account {
             if (user.birthday != null && user.birthday.getMonth() >= 0){
                 user.constellation = UploaderUtils.getConstellation(user.birthday.getMonth(),user.birthday.getDate());
             }
+            if (user.identity == "") user.identity = null;
+            if (user.group == "") user.group = null;
+
             userDAO.save(user);
         }
         responseEntity.code = 200;

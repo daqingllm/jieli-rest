@@ -9,6 +9,7 @@ import com.jieli.common.dao.AccountDAO;
 import com.jieli.common.entity.*;
 import com.jieli.mongo.*;
 import com.jieli.news.Image;
+import com.jieli.news.ImageDAO;
 import com.jieli.news.NewsDAO;
 import com.jieli.news.NewsType;
 import com.jieli.user.dao.UserDAO;
@@ -330,12 +331,17 @@ public class News {
             return Response.status(200).entity(responseEntity).build();
         }
 
+        Iterable<Image> images = imageDAO.find("{newsId:\""+artid+"\"");
+        for (Image image : images){
+            imageDAO.deleteById(image.get_id().toString());
+        }
+
         newsDAO.deleteById(artid);
         responseEntity.code = 200;
         responseEntity.msg = "删除成功";
         return Response.status(200).entity(responseEntity).build();
     }
-
+private ImageDAO imageDAO = new ImageDAO();
     @GET
     @Path("/edit")
     @Produces(MediaType.TEXT_HTML)

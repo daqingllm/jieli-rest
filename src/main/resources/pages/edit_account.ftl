@@ -747,7 +747,7 @@
             success:function(ret){
                 if (ret.code == 200){
                     alert("用户修改成功！");
-                    window.location.href = "/app/baccount/list";
+                    window.location.reload();
                 }else{
                     alert("用户修改失败 " + (ret.msg || ""));
                 }
