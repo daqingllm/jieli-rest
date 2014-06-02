@@ -97,4 +97,5 @@ public class AccountTest {
     public void testPassword() {
         System.out.println(PasswordGenerator.md5Encode("syea"));
     }
+
 }

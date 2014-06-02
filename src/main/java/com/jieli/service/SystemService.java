@@ -1,18 +1,24 @@
 package com.jieli.service;
 
 import com.jieli.association.AssociationDAO;
+import com.jieli.common.dao.AccountDAO;
 import com.jieli.common.dao.FeedbackDAO;
+import com.jieli.common.entity.Account;
 import com.jieli.common.entity.Feedback;
 import com.jieli.common.entity.ResponseEntity;
 import com.jieli.common.entity.SystemInfo;
 import com.jieli.mongo.BaseDAO;
+import com.jieli.user.dao.UserDAO;
+import com.jieli.user.entity.User;
 import com.jieli.util.IdentityUtils;
+import com.jieli.util.SmsUtils;
 import com.sun.jersey.spi.resource.Singleton;
 import org.apache.commons.lang.StringUtils;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.io.IOException;
 
 /**
  * Created with IntelliJ IDEA.
@@ -24,6 +30,10 @@ import javax.ws.rs.core.Response;
 @Singleton
 @Path("/sys")
 public class SystemService {
+
+    UserDAO userDAO = new UserDAO();
+
+    AccountDAO accountDAO = new AccountDAO();
 
     FeedbackDAO feedbackDAO = new FeedbackDAO();
 
@@ -133,6 +143,34 @@ public class SystemService {
         responseEntity.code = 200;
         responseEntity.body = content;
         return Response.status(200).entity(responseEntity).build();
+    }
+
+    @GET
+    @Path("/sms")
+    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+    public Response sendPassword(@QueryParam("name")String name, @QueryParam("phone")String phone) {
+        ResponseEntity responseEntity = new ResponseEntity();
+        if (StringUtils.isEmpty(phone) || StringUtils.isEmpty(name)) {
+            responseEntity.code = 101;
+            responseEntity.msg = "姓名或手机号为空";
+            return Response.status(200).entity(responseEntity).build();
+        }
+        User user = userDAO.findLoginUser(name, phone);
+        if (user == null) {
+            responseEntity.code = 1001;
+            responseEntity.msg = "用户不存在";
+            return Response.status(200).entity(responseEntity).build();
+        }
+        Account account = accountDAO.loadByUserId(user.get_id().toString());
+        String password = account.password;
+        try {
+            SmsUtils.sendPassword(phone, password);
+        } catch (IOException e) {
+            responseEntity.code = 102;
+            responseEntity.msg = "验证码发送失败";
+            return Response.status(200).entity(responseEntity).build();
+        }
+        return Response.status(200).build();
     }
 
 }
