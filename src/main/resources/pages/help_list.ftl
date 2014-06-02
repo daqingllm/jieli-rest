@@ -632,7 +632,7 @@ jQuery(function($) {
                             var url = "<button data-status=\"2\" class=\"btn btn-xs btn-info\" data-toggle=\"button\" id=\"" + id + "\">" + "通过</button>";
                         }
                         else {
-                            url = "已通过，无需操作";
+                            url = "已通过";
                         }
 
                 return url;

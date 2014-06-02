@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jieli.association.Association;
 import com.jieli.association.AssociationDAO;
 import com.jieli.common.entity.ResponseEntity;
+import com.jieli.feature.discuss.dao.DiscussDAO;
+import com.jieli.feature.discuss.entity.SimpleDiscussInfo;
 import com.jieli.feature.help.dao.HelpDAO;
 import com.jieli.feature.help.entity.HelpStatus;
 import com.jieli.feature.help.entity.SimpleHelpInfo;
@@ -14,6 +16,7 @@ import org.apache.commons.lang.StringUtils;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,13 +27,13 @@ import java.util.Map;
 @Path("/feature/ajaxhelp")
 public class AjaxHelp {
     private HelpDAO helpDAO = new HelpDAO();
-    private UserDAO userDAO = new UserDAO();
+    private DiscussDAO discussDAO = new DiscussDAO();
     private AssociationDAO associationDAO = new AssociationDAO();
 
     @Path("/list")
     @GET
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-    public Response getHelpList(@CookieParam("u")String sessionId, @QueryParam("a")String associationId, @QueryParam("page")int page, @QueryParam("size")int size, @QueryParam("t")String helpType) {
+    public Response getHelpList(@CookieParam("u")String sessionId, @QueryParam("a")String associationId, @QueryParam("page")int page, @QueryParam("size")int size, @QueryParam("t")int helpType, @QueryParam("isDiscuss")boolean isDiscuss) {
         if (!IdentityUtils.isValidate(sessionId)) {
             return Response.status(403).build();
         }
@@ -52,26 +55,35 @@ public class AjaxHelp {
                 return Response.status(200).entity(responseEntity).build();
             }
         }
-
-        page = 0;
-        size = 0;
-
-        int type = 2;
-        if (helpType != null) {
-            type = Integer.parseInt(helpType);
-        }
-        List<SimpleHelpInfo> simpleHelpInfoList = helpDAO.getHelpInfoList(page, size, associationId, type);
-        for(SimpleHelpInfo h : simpleHelpInfoList) {
-            if(h.getStatus() <= 0) {
-                h.setStatus(HelpStatus.PENDING.getValue());
+        List<SimpleHelpInfo> simpleHelpInfoList = new ArrayList<SimpleHelpInfo>();
+        List<SimpleDiscussInfo> simpleDiscussInfoList = new ArrayList<SimpleDiscussInfo>();
+        if(isDiscuss) {
+            simpleDiscussInfoList = discussDAO.getDiscussInfoList(page, size, associationId, helpType);
+            for(SimpleDiscussInfo h : simpleDiscussInfoList) {
+                h.setId(h.get_id().toString());
             }
-            h.setId(h.get_id().toString());
         }
+        else {
+            simpleHelpInfoList = helpDAO.getHelpInfoList(page, size, associationId, helpType);
+            for(SimpleHelpInfo h : simpleHelpInfoList) {
+                if(h.getStatus() <= 0) {
+                    h.setStatus(HelpStatus.PENDING.getValue());
+                }
+                h.setId(h.get_id().toString());
+            }
+        }
+
         String jsonHelpList;
         int i;
         ObjectMapper om = new ObjectMapper();
         try { //this is a trick, write Object list to json, read json to Java list add the attribute and rewrite to json
-            String tmp = om.writeValueAsString(simpleHelpInfoList);
+            String tmp;
+            if(isDiscuss) {
+                tmp = om.writeValueAsString(simpleDiscussInfoList);
+            }
+            else {
+                tmp = om.writeValueAsString(simpleHelpInfoList);
+            }
 
             List<HashMap<String, Object>> l = (List<HashMap<String, Object>>) om.readValue(tmp, List.class);
             for (Map<String, Object> obj : l) {

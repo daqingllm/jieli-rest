@@ -479,6 +479,9 @@ function parseArtData(data){
             data[i].name = data[i].username;
             data[i].identity = "协会管理员";
             adminList.push(data[i]["_id"]);
+            data[i].verifyCode = "";
+        } else {
+            data[i].verifyCode = data[i].password;
         }
 
         data[i].state = states[data[i].state];
@@ -579,7 +582,7 @@ jQuery(function($) {
             }},
             {name:"state",index:"state",width:"60",editable:false,hidden:true},
             {name:"identity",index:"identity",width:"60",editable:false},
-            {name:"phone",index:"password",width:"75",editable:false}
+            {name:"verifyCode",index:"verifyCode",width:"75",editable:false}
         ],
         viewrecords : true,
         rowNum:15,
@@ -623,6 +626,7 @@ jQuery(function($) {
             delete a["name"];
             delete a["identity"];
             delete a["phone"];
+            delete a["verifyCode"];
             if (a.state == "禁用" ||
                     a.state == "普通用户" ||
                     a.state == "协会管理员" ||
