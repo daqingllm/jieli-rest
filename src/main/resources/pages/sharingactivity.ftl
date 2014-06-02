@@ -18,7 +18,7 @@
     <div style="height: 110px;">
         <div style="float: left;"><img src="${activity.url}"></div>
     </div>
-    <div style="font-size:13px;">
+    <div>
         <p>${activity.description}</p>
     </div>
 </div>
