@@ -40,4 +40,64 @@ public class News extends Model {
     public List<String> interestTags = new ArrayList<String>();
 
     public boolean topPic = false;
+
+    public String getAssociationId() {
+        return associationId;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public Date getTime() {
+        return time;
+    }
+
+    public String getOverview() {
+        return overview;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public List<Image> getImages() {
+        return images;
+    }
+
+    public int getImagesCount() {
+        return imagesCount;
+    }
+
+    public List<String> getAppreciateUserIds() {
+        return appreciateUserIds;
+    }
+
+    public int getAppreciateCount() {
+        return appreciateCount;
+    }
+
+    public Date getAddTime() {
+        return addTime;
+    }
+
+    public int getCommentCount() {
+        return commentCount;
+    }
+
+    public String getProfessionTag() {
+        return professionTag;
+    }
+
+    public List<String> getInterestTags() {
+        return interestTags;
+    }
+
+    public boolean isTopPic() {
+        return topPic;
+    }
 }

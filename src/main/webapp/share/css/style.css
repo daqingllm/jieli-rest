@@ -1,0 +1,48 @@
+@charset "utf-8";
+* {
+	margin:0;
+	padding:0;
+}
+body {
+	-webkit-text-size-adjust:none;
+	background: #EEE8D8; 
+	min-width:320px;
+	margin:0;
+	padding:0;
+	font-family:"microsoft yahei", Verdana, Arial, Helvetica, sans-serif;
+	font-size:1em;
+}
+ul, li {
+	list-style:none;
+}
+a {
+	text-decoration:none;
+	color:#67738A;
+}
+img, img a {
+	vertical-align:middle;
+}
+
+.wap_wrap {
+	margin: 10px;
+}
+
+/*information*/
+.wap_inf_title {
+	font-size: 20px;
+	margin-bottom: 5px;
+}
+.wap_inf_time {
+	font-size: 12px;
+	margin-bottom: 5px;
+	color: gray;
+}
+.wap_inf_content_pic {
+	margin-bottom: 18px;
+}
+
+/*activity*/
+.wap_act_title {
+	font-size: 17px;
+	margin-bottom: 5px;
+}

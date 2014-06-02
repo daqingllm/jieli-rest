@@ -170,7 +170,8 @@ public class SystemService {
             responseEntity.msg = "验证码发送失败";
             return Response.status(200).entity(responseEntity).build();
         }
-        return Response.status(200).build();
+        responseEntity.code = 200;
+        return Response.status(200).entity(responseEntity).build();
     }
 
 }
