@@ -7,6 +7,7 @@ import com.jieli.comment.Comment;
 import com.jieli.common.dao.AccountDAO;
 import com.jieli.feature.discuss.dao.DiscussDAO;
 import com.jieli.feature.discuss.entity.DiscussInfo;
+import com.jieli.feature.discuss.entity.DiscussType;
 import com.jieli.feature.discuss.entity.SimpleDiscussInfo;
 import com.jieli.feature.help.entity.HelpInfo;
 import com.jieli.feature.help.entity.HelpStatus;
@@ -75,7 +76,7 @@ public class DiscussAction {
         }
         Integer pageNo = 1;
         Integer pageSize = 20;
-        Integer type = 2;
+        int type = DiscussType.ALL.getType();
         List<SimpleDiscussInfo> discussList = discussDAO.getDiscussInfoList(pageNo, pageSize, associationId, type);
 
         for(SimpleDiscussInfo h : discussList) {

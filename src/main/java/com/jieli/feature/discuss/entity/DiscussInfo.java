@@ -48,7 +48,7 @@ public class DiscussInfo extends Model{
     /**
      * 根据DiscussType
      */
-    private String type;
+    private int type;
     /**
      * 0 人 1 物
      */
@@ -175,11 +175,11 @@ public class DiscussInfo extends Model{
         this.commentCount = commentCount;
     }
 
-    public String getType() {
+    public int getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(int type) {
         this.type = type;
     }
 }

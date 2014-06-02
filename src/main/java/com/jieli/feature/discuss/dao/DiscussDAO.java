@@ -2,6 +2,7 @@ package com.jieli.feature.discuss.dao;
 
 import com.jieli.comment.Comment;
 import com.jieli.feature.discuss.entity.DiscussInfo;
+import com.jieli.feature.discuss.entity.DiscussType;
 import com.jieli.feature.discuss.entity.SimpleDiscussInfo;
 import com.jieli.mongo.GenericDAO;
 
@@ -24,7 +25,7 @@ public class DiscussDAO extends GenericDAO<DiscussInfo> {
     public List<SimpleDiscussInfo> getDiscussInfoList(int pageNo, int pageSize, String associationId, int type) {
         Iterable<SimpleDiscussInfo> iterable;
         if(pageNo == 0 || pageSize == 0) {
-            if(type == 0 || type == 1) {
+            if(type != DiscussType.ALL.getType()) {
                 iterable = col.find("{associationId:#, type:#}", associationId, type)
                         .sort("{addTime:-1}").as(SimpleDiscussInfo.class);
             }
@@ -34,7 +35,7 @@ public class DiscussDAO extends GenericDAO<DiscussInfo> {
             }
         }
         else {
-            if(type == 0 || type == 1) {
+            if(type != DiscussType.ALL.getType()) {
                 iterable = col.find("{associationId:#, type:#}", associationId, type)
                         .sort("{addTime:-1}").skip((pageNo - 1) * pageSize).limit(pageSize).as(SimpleDiscussInfo.class);
             }

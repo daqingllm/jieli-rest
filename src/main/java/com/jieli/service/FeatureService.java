@@ -25,12 +25,14 @@ import com.jieli.util.CollectionUtils;
 import com.jieli.util.IdentityUtils;
 import com.jieli.util.MongoUtils;
 import com.sun.jersey.spi.resource.Singleton;
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.bson.types.ObjectId;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 /**
@@ -52,17 +54,18 @@ public class FeatureService {
     private VoteResultDAO voteResultDAO = new VoteResultDAO();
     private MatchDAO matchDAO = new MatchDAO();
     /**
-     * 获取互帮互助列表
+     * 获取列表
      * @param sessionId
      * @param page
      * @param size
      * @param type 0-供给 1-需求 2-全部
+     * @param isDiscuss true 讨论 false 供需
      * @return
      */
     @Path("/help")
     @GET
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-    public Response getHelpList(@CookieParam("u")String sessionId, @QueryParam("page")int page, @QueryParam("size")int size, @QueryParam("type")int type) {
+    public Response getHelpList(@CookieParam("u")String sessionId, @QueryParam("page")int page, @QueryParam("size")int size, @QueryParam("type")int type, @QueryParam("isDiscuss")boolean isDiscuss) {
         if(!IdentityUtils.isValidate(sessionId)) {
             return Response.status(403).build();
         }
@@ -91,22 +94,31 @@ public class FeatureService {
         if(size <= 0) {
             size = 20;
         }
-        List<SimpleHelpInfo> simpleHelpInfoList = helpDAO.getHelpInfoList(page, size, associationId, type);
-
-        responseEntity.code = 200;
-        responseEntity.body = simpleHelpInfoList;
-        return Response.status(200).entity(responseEntity).build();
+        if(isDiscuss) {
+            List<SimpleDiscussInfo> simpleDiscussInfoList = discussDAO
+                    .getDiscussInfoList(page, size, associationId, type);
+            responseEntity.code = 200;
+            responseEntity.body = simpleDiscussInfoList;
+            return Response.status(200).entity(responseEntity).build();
+        }
+        else {
+            List<SimpleHelpInfo> simpleHelpInfoList = helpDAO.getHelpInfoList(page, size, associationId, type);
+            responseEntity.code = 200;
+            responseEntity.body = simpleHelpInfoList;
+            return Response.status(200).entity(responseEntity).build();
+        }
     }
 
     /**
-     * 获取互帮互助详情
+     * 获取详情
      * @param helpId
+     * @param isDiscuss true 讨论 false 供需
      * @return
      */
     @Path("/help/detail")
     @GET
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-    public Response getDetailHelpInfo(@CookieParam("u")String sessionId, @QueryParam("helpId")String helpId) {
+    public Response getDetailHelpInfo(@CookieParam("u")String sessionId, @QueryParam("helpId")String helpId, @QueryParam("isDiscuss")boolean isDiscuss) {
         if(!IdentityUtils.isValidate(sessionId)) {
             return Response.status(403).build();
         }
@@ -116,21 +128,33 @@ public class FeatureService {
             responseEntity.msg = "缺少参数";
             return Response.status(200).entity(responseEntity).build();
         }
-        HelpInfo helpInfo = helpDAO.loadById(helpId);
-        if(helpInfo == null) {
-            responseEntity.code = 1201;
-            responseEntity.msg = "互帮互助信息不存在";
-            return  Response.status(200).entity(responseEntity).build();
+        if(isDiscuss) {
+            DiscussInfo discuss = discussDAO.loadById(helpId);
+            if(discuss == null) {
+                responseEntity.code = 1201;
+                responseEntity.msg = "讨论帖不存在";
+                return  Response.status(200).entity(responseEntity).build();
+            }
+            responseEntity.code = 200;
+            responseEntity.body = discuss;
         }
-        responseEntity.code = 200;
-        responseEntity.body = helpInfo;
+        else {
+            HelpInfo helpInfo = helpDAO.loadById(helpId);
+            if(helpInfo == null) {
+                responseEntity.code = 1201;
+                responseEntity.msg = "互帮互助信息不存在";
+                return  Response.status(200).entity(responseEntity).build();
+            }
+            responseEntity.code = 200;
+            responseEntity.body = helpInfo;
+        }
         return Response.status(200).entity(responseEntity).build();
     }
 
     @Path("/help/add")
     @POST
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-    public Response addHelpInfo(@CookieParam("u") String sessionId, HelpInfo help) {
+    public Response addHelpInfo(@CookieParam("u") String sessionId, @QueryParam("isDiscuss") boolean isDiscuss, HelpInfo help) {
         if(!IdentityUtils.isValidate(sessionId)) {
             return Response.status(403).build();
         }
@@ -151,8 +175,31 @@ public class FeatureService {
         help.setUserFace(user.userFace);
         help.setStatus(HelpStatus.PENDING.getValue());
 
-        if(help.getType() != 0 && help.getType() != 1) {
-            help.setType(0);
+        if(isDiscuss) {
+            DiscussInfo discussInfo = new DiscussInfo();
+            try {
+                BeanUtils.copyProperties(discussInfo, help);
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (InvocationTargetException e) {
+                e.printStackTrace();
+            }
+            if(discussInfo.getType() >= DiscussType.ALL.getType()) {
+                discussInfo.setType(DiscussType.LIFE.getType());
+            }
+            DiscussInfo result = discussDAO.addDiscuss(discussInfo);
+            if(result == null) {
+                responseEntity.code = 1210;
+                responseEntity.msg = "讨论帖子添加失败";
+                return Response.status(200).entity(responseEntity).build();
+            }
+            responseEntity.code = 200;
+            responseEntity.body = "{\"_id\":\"" + result.get_id() + "\"}";
+            return Response.status(200).entity(responseEntity).build();
+        }
+
+        if(help.getType() >= HelpType.ALL.getType()) {
+            help.setType(HelpType.OFFER.getType());
         }
         HelpInfo result = helpDAO.addHelp(help);
         if(result == null) {
@@ -186,15 +233,17 @@ public class FeatureService {
     }
 
     /**
-     * 更新互帮互助
+     * 更新帖子
      * @param sessionId
+     * @param helpId
+     * @param isDiscuss true 讨论 false 供需
      * @param newHelp
      * @return
      */
     @Path("/help/update")
     @POST
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-    public Response updateHelpInfo(@CookieParam("u") String sessionId, @QueryParam("helpId")String helpId, HelpInfo newHelp) {
+    public Response updateHelpInfo(@CookieParam("u") String sessionId, @QueryParam("helpId")String helpId, @QueryParam("isDiscuss") boolean isDiscuss, HelpInfo newHelp) {
         if(!IdentityUtils.isValidate(sessionId)) {
             return Response.status(403).build();
         }
@@ -205,6 +254,27 @@ public class FeatureService {
             return Response.status(200).entity(responseEntity).build();
         }
         String userId = IdentityUtils.getUserId(sessionId);
+        if(isDiscuss) {
+            DiscussInfo oldDiscuss = discussDAO.loadById(helpId);
+            if(!oldDiscuss.getUserId().equals(userId) && !IdentityUtils.isAdmin(sessionId)) {
+                responseEntity.code = 1403;
+                responseEntity.msg = "非自己互帮互助帖，不能修改";
+                return Response.status(200).entity(responseEntity).build();
+            }
+            if(newHelp.getType() > 0 && newHelp.getType() < HelpType.ALL.getType()) {
+                oldDiscuss.setType(newHelp.getType());
+            }
+            if(newHelp.getTitle() != null) {
+                oldDiscuss.setTitle(newHelp.getTitle());
+            }
+            if(newHelp.getContent() != null) {
+                oldDiscuss.setContent(newHelp.getContent());
+            }
+            discussDAO.save(oldDiscuss);responseEntity.code = 200;
+            responseEntity.body = "{\"_id\":\"" + oldDiscuss.get_id() + "\"}";
+            return Response.status(200).entity(responseEntity).build();
+        }
+
         HelpInfo oldHelp = helpDAO.loadById(helpId);
         if(!oldHelp.getUserId().equals(userId) && !IdentityUtils.isAdmin(sessionId)) {
             responseEntity.code = 1403;
@@ -232,7 +302,7 @@ public class FeatureService {
     @Path("/help/delete")
     @POST
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-    public Response deleteHelpInfo(@CookieParam("u") String sessionId, List<String> helpIdList) {
+    public Response deleteHelpInfo(@CookieParam("u") String sessionId, @QueryParam("isDiscuss")boolean isDiscuss, List<String> helpIdList) {
         if(!IdentityUtils.isValidate(sessionId)) {
             return Response.status(403).build();
         }
@@ -246,6 +316,26 @@ public class FeatureService {
         if(StringUtils.isEmpty(userId)) {
             responseEntity.code = 1103;
             responseEntity.msg = "账户出错";
+            return Response.status(200).entity(responseEntity).build();
+        }
+        if(isDiscuss) {
+            for(String discussId : helpIdList) {
+                DiscussInfo discussInfo = discussDAO.loadById(discussId);
+                if(discussInfo == null) {
+                    responseEntity.code = 1201;
+                    responseEntity.msg = "讨论帖不存在, id=" + discussId;
+                    return  Response.status(200).entity(responseEntity).build();
+                }
+                if (IdentityUtils.isAdmin(sessionId) || IdentityUtils.getUserId(sessionId).equals(discussInfo.getUserId())) {
+                    removeHelpDynamic(userId, discussId, HelpDynamicType.SPONSER);
+                    discussDAO.deleteById(discussId);
+                } else {
+                    responseEntity.code = 1203;
+                    responseEntity.msg = "权限不足, id=" + discussId;
+                    return  Response.status(200).entity(responseEntity).build();
+                }
+            }
+            responseEntity.code = 200;
             return Response.status(200).entity(responseEntity).build();
         }
         for(String helpId : helpIdList) {
@@ -299,14 +389,16 @@ public class FeatureService {
     }*/
 
     /**
-     * 增加供需评论
+     * 增加评论
      * @param sessionId
+     * @param isDiscuss
+     * @param commentInfo
      * @return
      */
     @Path("/help/detail/comment/add")
     @POST
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-    public Response addHelpComment(@CookieParam("u")String sessionId, Map<String, String> commentInfo) {
+    public Response addHelpComment(@CookieParam("u")String sessionId, @QueryParam("isDiscuss")boolean isDiscuss, Map<String, String> commentInfo) {
         //commentInfo内字段：content topicId commentedUserId(回复评论)
         if(!IdentityUtils.isValidate(sessionId)) {
             return Response.status(403).build();
@@ -325,38 +417,57 @@ public class FeatureService {
             responseEntity.msg = "回复内容不能为空";
             return Response.status(200).entity(responseEntity).build();
         }
-        String helpId = commentInfo.get("topicId");
-        if (StringUtils.isEmpty(helpId) || !MongoUtils.isValidObjectId(helpId)) {
+        String topicId = commentInfo.get("topicId");
+        if (StringUtils.isEmpty(topicId) || !MongoUtils.isValidObjectId(topicId)) {
             responseEntity.code = 1105;
             responseEntity.msg = "参数Id无效";
             return Response.status(200).entity(responseEntity).build();
         }
-        HelpInfo helpInfo = helpDAO.loadById(helpId);
-        if (helpInfo == null) {
-            responseEntity.code = 3000;
-            responseEntity.msg = "帖子不存在";
-            return Response.status(200).entity(responseEntity).build();
-        }
-
         Comment comment = new Comment();
         comment.commentUserId = userId;
         comment.commentedUserId = commentInfo.get("commentedUserId");
         comment.content = content;
         comment.topicType = TopicType.Help;
         comment.addTime = new Date();
-        comment.topicId = helpId;
-        comment.topicTitle = helpInfo.getTitle();
-        commentDAO.save(comment);
-        CommentMessageUtil.addCommentMessage(comment);
+        comment.topicId = topicId;
 
-        if (!helpInfo.getUserId().equals(userId)) {
-            CommentMessageUtil.addCommentAuthorMessage(comment, helpInfo.getUserId());
+        if(isDiscuss) {
+            DiscussInfo discussInfo = discussDAO.loadById(topicId);
+            if(discussInfo == null) {
+                responseEntity.code = 3000;
+                responseEntity.msg = "帖子不存在";
+                return Response.status(200).entity(responseEntity).build();
+            }
+            comment.topicTitle = discussInfo.getTitle();
+            commentDAO.save(comment);
+            CommentMessageUtil.addCommentMessage(comment);
+            if (!discussInfo.getUserId().equals(userId)) {
+                CommentMessageUtil.addCommentAuthorMessage(comment, discussInfo.getUserId());
+            }
+            discussInfo.setCommentCount(discussInfo.getCommentCount() + 1);
+            discussDAO.save(discussInfo);
         }
+        else {
+            HelpInfo helpInfo = helpDAO.loadById(topicId);
+            if (helpInfo == null) {
+                responseEntity.code = 3000;
+                responseEntity.msg = "帖子不存在";
+                return Response.status(200).entity(responseEntity).build();
+            }
 
-        helpInfo.setCommentCount(helpInfo.getCommentCount() + 1);
-        helpDAO.save(helpInfo);
+            comment.topicTitle = helpInfo.getTitle();
+            commentDAO.save(comment);
+            CommentMessageUtil.addCommentMessage(comment);
 
-        insertHelpDynamic(userId, helpId, HelpDynamicType.REPLY);
+            if (!helpInfo.getUserId().equals(userId)) {
+                CommentMessageUtil.addCommentAuthorMessage(comment, helpInfo.getUserId());
+            }
+
+            helpInfo.setCommentCount(helpInfo.getCommentCount() + 1);
+            helpDAO.save(helpInfo);
+
+            insertHelpDynamic(userId, topicId, HelpDynamicType.REPLY);
+        }
 
         responseEntity.code = 200;
         responseEntity.msg = "评论成功";
@@ -413,12 +524,13 @@ public class FeatureService {
     /**
      * 供需加关注
      * @param helpId
+     * @param isDiscuss
      * return HelpInfo 用于刷新更新关注数
      */
     @Path("/help/detail/comment/focus")
     @POST
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-    public Response addFocus(@CookieParam("u")String sessionId, @QueryParam("helpId")String helpId){
+    public Response addFocus(@CookieParam("u")String sessionId, @QueryParam("helpId")String helpId, @QueryParam("isDiscuss")boolean isDiscuss){
         if(!IdentityUtils.isValidate(sessionId)) {
             return Response.status(403).build();
         }
@@ -440,51 +552,71 @@ public class FeatureService {
             responseEntity.msg = "参数Id无效";
             return Response.status(200).entity(responseEntity).build();
         }
-        HelpInfo helpInfo = helpDAO.loadById(helpId);
-        if(helpInfo == null) {
-            responseEntity.code = 1205;
-            responseEntity.msg = "帖子不存在";
-            return Response.status(200).entity(responseEntity).build();
-        }
-        //已关注过不能再次关注
-        if(helpInfo.getFocusList() != null) {
-            if (helpInfo.getFocusList().contains(userId)) {
-                responseEntity.code = 1209;
-                responseEntity.msg = "已关注过";
+        if(isDiscuss) {
+            DiscussInfo discussInfo = discussDAO.loadById(helpId);
+            if(discussInfo == null) {
+                responseEntity.code = 1205;
+                responseEntity.msg = "帖子不存在";
                 return Response.status(200).entity(responseEntity).build();
             }
-        }
-        //自己不能关注自己
-        if(helpInfo.getUserId().equals(userId)) {
-            responseEntity.code = 1200;
-            responseEntity.msg = "不能关注自己";
-            return Response.status(200).entity(responseEntity).build();
-        }
+            if(discussInfo.getFocusList() != null) {
+                if (discussInfo.getFocusList().contains(userId)) {
+                    responseEntity.code = 1209;
+                    responseEntity.msg = "已关注过";
+                    return Response.status(200).entity(responseEntity).build();
+                }
+            }
+            if(discussInfo.getUserId().equals(userId)) {
+                responseEntity.code = 1200;
+                responseEntity.msg = "不能关注自己";
+                return Response.status(200).entity(responseEntity).build();
+            }
+            DiscussInfo result = discussDAO.addFocus(helpId, userId);
 
-        HelpInfo result = helpDAO.addFocus(helpId, userId);
+            responseEntity.code = 200;
+            responseEntity.body = "{\"_id\":\"" + result.get_id() + "\"}";
+        }
+        else {
+            HelpInfo helpInfo = helpDAO.loadById(helpId);
+            if(helpInfo == null) {
+                responseEntity.code = 1205;
+                responseEntity.msg = "帖子不存在";
+                return Response.status(200).entity(responseEntity).build();
+            }
+            //已关注过不能再次关注
+            if(helpInfo.getFocusList() != null) {
+                if (helpInfo.getFocusList().contains(userId)) {
+                    responseEntity.code = 1209;
+                    responseEntity.msg = "已关注过";
+                    return Response.status(200).entity(responseEntity).build();
+                }
+            }
+            //自己不能关注自己
+            if(helpInfo.getUserId().equals(userId)) {
+                responseEntity.code = 1200;
+                responseEntity.msg = "不能关注自己";
+                return Response.status(200).entity(responseEntity).build();
+            }
 
-//        Message message = new Message();
-//        message.messageType = MessageType.HELP;
-//        message.importance = 0;
-//        message.content = "帖子已经被我回复啦";
-//        message.set_id(new ObjectId(result.get_id().toString()));
-//        message.addTime = new Date();
-//        messageDAO.save(message);
-        responseEntity.code = 200;
-        responseEntity.body = "{\"_id\":\"" + result.get_id() + "\"}";
+            HelpInfo result = helpDAO.addFocus(helpId, userId);
+
+            responseEntity.code = 200;
+            responseEntity.body = "{\"_id\":\"" + result.get_id() + "\"}";
+        }
         return Response.status(200).entity(responseEntity).build();
     }
 
     /**
-     * 供需评论置顶
+     * 评论置顶
      * @param helpId
      * @param commentId
+     * @param isDiscuss
      * @return
      */
     @Path("/help/detail/comment/top")
     @POST
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-    public Response addTop(@CookieParam("u")String sessionId, @QueryParam("helpId")String helpId, @QueryParam("commentId")String commentId) {
+    public Response addTop(@CookieParam("u")String sessionId, @QueryParam("helpId")String helpId, @QueryParam("commentId")String commentId, @QueryParam("isDiscuss")boolean isDiscuss) {
         if(!IdentityUtils.isValidate(sessionId)) {
             return Response.status(403).build();
         }
@@ -500,20 +632,42 @@ public class FeatureService {
             responseEntity.msg = "缺少参数";
             return Response.status(200).entity(responseEntity).build();
         }
-        HelpInfo help = helpDAO.loadById(helpId);
-        if(help == null || !MongoUtils.isValidObjectId(commentId)) {
-            responseEntity.code = 1205;
-            responseEntity.msg = "参数错误";
-            return Response.status(200).entity(responseEntity).build();
+        HelpInfo help = new HelpInfo();
+        DiscussInfo discussInfo = new DiscussInfo();
+        if(isDiscuss) {
+            discussInfo = discussDAO.loadById(helpId);
+            if(discussInfo == null || !MongoUtils.isValidObjectId(commentId)) {
+                responseEntity.code = 1205;
+                responseEntity.msg = "参数错误";
+                return Response.status(200).entity(responseEntity).build();
+            }
+            if(!discussInfo.getUserId().equals(userId) && !IdentityUtils.isAdmin(sessionId)) {
+                responseEntity.code = 1403;
+                responseEntity.msg = "权限不足";
+                return Response.status(403).entity(responseEntity).build();
+            }
+            try {
+                BeanUtils.copyProperties(help, discussInfo);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
-        if(!help.getUserId().equals(userId) && !IdentityUtils.isAdmin(sessionId)) {
-            responseEntity.code = 1403;
-            responseEntity.msg = "权限不足";
-            return Response.status(403).entity(responseEntity).build();
+        else {
+            help = helpDAO.loadById(helpId);
+            if(help == null || !MongoUtils.isValidObjectId(commentId)) {
+                responseEntity.code = 1205;
+                responseEntity.msg = "参数错误";
+                return Response.status(200).entity(responseEntity).build();
+            }
+            if(!help.getUserId().equals(userId) && !IdentityUtils.isAdmin(sessionId)) {
+                responseEntity.code = 1403;
+                responseEntity.msg = "权限不足";
+                return Response.status(403).entity(responseEntity).build();
+            }
         }
         Comment top = getTopComment(help, commentId);
-        if (top == null) {
 
+        if (top == null) {
             Comment comment = commentDAO.findOne("{_id:#}", new ObjectId(commentId));
             if (comment == null) {
                 responseEntity.code = 1003;
@@ -523,17 +677,41 @@ public class FeatureService {
             comment.commentUserInfo = CommentUserInfoUtil.generate(comment.commentUserId);
             comment.commentedUserInfo = CommentUserInfoUtil.generate(comment.commentedUserId);
             help.getTopCommentList().add(comment);
-            helpDAO.save(help);
+            if(isDiscuss) {
+                try {
+                    BeanUtils.copyProperties(discussInfo, help);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                discussDAO.save(discussInfo);
+
+                responseEntity.body = discussInfo;
+            }
+            else{
+                helpDAO.save(help);
+                responseEntity.body = help;
+            }
             responseEntity.code = 200;
             responseEntity.msg = "评论已置顶";
-            responseEntity.body = help;
             return Response.status(200).entity(responseEntity).build();
         } else {
             help.getTopCommentList().remove(top);
-            helpDAO.save(help);
+            if(isDiscuss) {
+                try {
+                    BeanUtils.copyProperties(discussInfo, help);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                discussDAO.save(discussInfo);
+                responseEntity.body = discussInfo;
+            }
+            else {
+                helpDAO.save(help);
+                responseEntity.body = help;
+            }
+
             responseEntity.code = 200;
             responseEntity.msg = "置顶已取消";
-            responseEntity.body = help;
             return Response.status(200).entity(responseEntity).build();
         }
 
@@ -545,374 +723,6 @@ public class FeatureService {
             return null;
         }
         for (Comment comment : helpInfo.getTopCommentList()) {
-            if (comment == null) {
-                continue;
-            }
-            if (comment.get_id().toString().equals(commentId)) {
-                return comment;
-            }
-        }
-        return null;
-    }
-
-    /**
-     * 获取讨论列表
-     * @param sessionId
-     * @param page
-     * @param size
-     * @param type 0-供给 1-需求 2-全部
-     * @return
-     */
-    @Path("/discuss")
-    @GET
-    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-    public Response getDiscussList(@CookieParam("u")String sessionId, @QueryParam("page")int page, @QueryParam("size")int size, @QueryParam("type")int type) {
-        if(!IdentityUtils.isValidate(sessionId)) {
-            return Response.status(403).build();
-        }
-        String userId = IdentityUtils.getUserId(sessionId);
-        ResponseEntity responseEntity = new ResponseEntity();
-        if (StringUtils.isEmpty(userId)) {
-            responseEntity.code = 1103;
-            responseEntity.msg = "账户出错";
-            return Response.status(200).entity(responseEntity).build();
-        }
-        User user = userDAO.loadById(userId);
-        if(user == null) {
-            responseEntity.code = 1104;
-            responseEntity.msg = "账户已被删除";
-            return  Response.status(200).entity(responseEntity).build();
-        }
-        String associationId = IdentityUtils.getAssociationId(sessionId);
-        if(StringUtils.isEmpty(associationId)) {
-            responseEntity.code = 1105;
-            responseEntity.msg = "未加入协会";
-            return Response.status(200).entity(responseEntity).build();
-        }
-        if(page <= 0) {
-            page = 1;
-        }
-        if(size <= 0) {
-            size = 20;
-        }
-        List<SimpleDiscussInfo> simpleDiscussList = discussDAO.getDiscussInfoList(page, size, associationId, type);
-
-        responseEntity.code = 200;
-        responseEntity.body = simpleDiscussList;
-        return Response.status(200).entity(responseEntity).build();
-    }
-
-    /**
-     * 获取讨论帖详情
-     * @param discussId
-     * @return
-     */
-    @Path("/discuss/detail")
-    @GET
-    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-    public Response getDetailDiscussInfo(@CookieParam("u")String sessionId, @QueryParam("discussId")String discussId) {
-        if(!IdentityUtils.isValidate(sessionId)) {
-            return Response.status(403).build();
-        }
-        ResponseEntity responseEntity = new ResponseEntity();
-        if (StringUtils.isEmpty(discussId)) {
-            responseEntity.code = 1101;
-            responseEntity.msg = "缺少参数";
-            return Response.status(200).entity(responseEntity).build();
-        }
-        DiscussInfo discussInfo = discussDAO.loadById(discussId);
-        if(discussInfo == null) {
-            responseEntity.code = 1201;
-            responseEntity.msg = "互帮互助信息不存在";
-            return  Response.status(200).entity(responseEntity).build();
-        }
-        responseEntity.code = 200;
-        responseEntity.body = discussInfo;
-        return Response.status(200).entity(responseEntity).build();
-    }
-
-    @Path("/discuss/add")
-    @POST
-    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-    public Response addDiscussInfo(@CookieParam("u") String sessionId, DiscussInfo discuss) {
-        if(!IdentityUtils.isValidate(sessionId)) {
-            return Response.status(403).build();
-        }
-        ResponseEntity responseEntity = new ResponseEntity();
-        if (discuss == null) {
-            responseEntity.code = 1101;
-            responseEntity.msg = "缺少参数";
-            return Response.status(200).entity(responseEntity).build();
-        }
-        String associationId = IdentityUtils.getAssociationId(sessionId);
-        String userId = IdentityUtils.getUserId(sessionId);
-        discuss.setAssociationId(associationId);
-        discuss.setAddTime(new Date());
-        discuss.setAttentionNum(0);
-        discuss.setUserId(userId);
-        User user = userDAO.loadById(userId);
-        discuss.setUserName(user.name);
-        discuss.setUserFace(user.userFace);
-
-        if(discuss.getType() == null) {
-            discuss.setType(DiscussType.NEWS.getType());
-        }
-        DiscussInfo result = discussDAO.addDiscuss(discuss);
-        if(result == null) {
-            responseEntity.code = 1210;
-            responseEntity.msg = "讨论帖子添加失败";
-            return Response.status(200).entity(responseEntity).build();
-        }
-
-        List<String> concernedUserIds = IdentityUtils.getConcerned(userId);
-        for (String concernedUserId : concernedUserIds) {
-            Message message = new Message();
-            message.messageType = MessageType.FRIEND;
-            message.userId = concernedUserId;
-
-            FriendMsg friendMsg = new FriendMsg();
-            friendMsg.topicType = TopicType.Help;
-            friendMsg.topicId = discuss.get_id().toString();
-            friendMsg.msg = "您关注的 " + IdentityUtils.getUserName(userId) + " 发起了一个帖子 " + discuss.getTitle();
-            message.content = friendMsg;
-            message.addTime = new Date();
-            messageDAO.save(message);
-        }
-        responseEntity.code = 200;
-        responseEntity.body = "{\"_id\":\"" + result.get_id() + "\"}";
-        return Response.status(200).entity(responseEntity).build();
-    }
-
-    @Path("/discuss/delete")
-    @POST
-    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-    public Response deleteDiscussInfo(@CookieParam("u") String sessionId, List<String> discussIdList) {
-        if(!IdentityUtils.isValidate(sessionId)) {
-            return Response.status(403).build();
-        }
-        ResponseEntity responseEntity = new ResponseEntity();
-        if (discussIdList  == null) {
-            responseEntity.code = 1101;
-            responseEntity.msg = "缺少参数";
-            return Response.status(200).entity(responseEntity).build();
-        }
-        String userId = IdentityUtils.getUserId(sessionId);
-        if(StringUtils.isEmpty(userId)) {
-            responseEntity.code = 1103;
-            responseEntity.msg = "账户出错";
-            return Response.status(200).entity(responseEntity).build();
-        }
-        for(String discussId : discussIdList) {
-            DiscussInfo discuss = discussDAO.loadById(discussId);
-            if(discuss == null) {
-                responseEntity.code = 1201;
-                responseEntity.msg = "帖子信息不存在, id=" + discussId;
-                return  Response.status(200).entity(responseEntity).build();
-            }
-            if (IdentityUtils.isAdmin(sessionId) || IdentityUtils.getUserId(sessionId).equals(discuss.getUserId())) {
-                discussDAO.deleteById(discussId);
-            } else {
-                responseEntity.code = 1203;
-                responseEntity.msg = "权限不足, id=" + discussId;
-                return  Response.status(200).entity(responseEntity).build();
-            }
-        }
-
-        responseEntity.code = 200;
-        return Response.status(200).entity(responseEntity).build();
-    }
-    /**
-     * 增加讨论帖评论
-     * @param sessionId
-     * @return
-     */
-    @Path("/discuss/detail/comment/add")
-    @POST
-    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-    public Response addDiscussComment(@CookieParam("u")String sessionId, Map<String, String> commentInfo) {
-        //commentInfo内字段：content topicId commentedUserId(回复评论)
-        if(!IdentityUtils.isValidate(sessionId)) {
-            return Response.status(403).build();
-        }
-        String userId = IdentityUtils.getUserId(sessionId);
-        ResponseEntity responseEntity = new ResponseEntity();
-        User user = userDAO.loadById(userId);
-        if (StringUtils.isEmpty(userId) ) {
-            responseEntity.code = 1103;
-            responseEntity.msg = "账户出错";
-            return Response.status(200).entity(responseEntity).build();
-        }
-        String content = commentInfo.get("content");
-        if (StringUtils.isEmpty(content)) {
-            responseEntity.code = 3104;
-            responseEntity.msg = "回复内容不能为空";
-            return Response.status(200).entity(responseEntity).build();
-        }
-        String discussId = commentInfo.get("topicId");
-        if (StringUtils.isEmpty(discussId) || !MongoUtils.isValidObjectId(discussId)) {
-            responseEntity.code = 1105;
-            responseEntity.msg = "参数Id无效";
-            return Response.status(200).entity(responseEntity).build();
-        }
-        DiscussInfo discuss = discussDAO.loadById(discussId);
-        if (discuss == null) {
-            responseEntity.code = 3000;
-            responseEntity.msg = "帖子不存在";
-            return Response.status(200).entity(responseEntity).build();
-        }
-
-        Comment comment = new Comment();
-        comment.commentUserId = userId;
-        comment.commentedUserId = commentInfo.get("commentedUserId");
-        comment.content = content;
-        comment.topicType = TopicType.Help;
-        comment.addTime = new Date();
-        comment.topicId = discussId;
-        comment.topicTitle = discuss.getTitle();
-        commentDAO.save(comment);
-        CommentMessageUtil.addCommentMessage(comment);
-
-        if (!discuss.getUserId().equals(userId)) {
-            CommentMessageUtil.addCommentAuthorMessage(comment, discuss.getUserId());
-        }
-
-        discuss.setCommentCount(discuss.getCommentCount() + 1);
-        discussDAO.save(discuss);
-
-        responseEntity.code = 200;
-        responseEntity.msg = "评论成功";
-        responseEntity.body = comment;
-        return Response.status(200).entity(responseEntity).build();
-    }
-
-    /**
-     * 供需加关注
-     * @param discussId
-     * return DiscussInfo 用于刷新更新关注数
-     */
-    @Path("/discuss/detail/comment/focus")
-    @POST
-    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-    public Response addDiscussFocus(@CookieParam("u")String sessionId, @QueryParam("discussId")String discussId){
-        if(!IdentityUtils.isValidate(sessionId)) {
-            return Response.status(403).build();
-        }
-        String userId = IdentityUtils.getUserId(sessionId);
-        ResponseEntity responseEntity = new ResponseEntity();
-        if (StringUtils.isEmpty(userId)) {
-            responseEntity.code = 1103;
-            responseEntity.msg = "账户出错";
-            return Response.status(200).entity(responseEntity).build();
-        }
-        User user = userDAO.loadById(userId);
-        if (StringUtils.isEmpty(discussId)) {
-            responseEntity.code = 1101;
-            responseEntity.msg = "缺少参数";
-            return Response.status(200).entity(responseEntity).build();
-        }
-        if (!MongoUtils.isValidObjectId(discussId)) {
-            responseEntity.code = 1105;
-            responseEntity.msg = "参数Id无效";
-            return Response.status(200).entity(responseEntity).build();
-        }
-        DiscussInfo discussInfo = discussDAO.loadById(discussId);
-        if(discussInfo == null) {
-            responseEntity.code = 1205;
-            responseEntity.msg = "帖子不存在";
-            return Response.status(200).entity(responseEntity).build();
-        }
-        //已关注过不能再次关注
-        if(discussInfo.getFocusList() != null) {
-            if (discussInfo.getFocusList().contains(userId)) {
-                responseEntity.code = 1209;
-                responseEntity.msg = "已关注过";
-                return Response.status(200).entity(responseEntity).build();
-            }
-        }
-        //自己不能关注自己
-        if(discussInfo.getUserId().equals(userId)) {
-            responseEntity.code = 1200;
-            responseEntity.msg = "不能关注自己";
-            return Response.status(200).entity(responseEntity).build();
-        }
-
-        DiscussInfo result = discussDAO.addFocus(discussId, userId);
-
-        responseEntity.code = 200;
-        responseEntity.body = "{\"_id\":\"" + result.get_id() + "\"}";
-        return Response.status(200).entity(responseEntity).build();
-    }
-
-    /**
-     * 供需评论置顶
-     * @param discussId
-     * @param commentId
-     * @return
-     */
-    @Path("/discuss/detail/comment/top")
-    @POST
-    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-    public Response discussAddTop(@CookieParam("u")String sessionId, @QueryParam("discussId")String discussId, @QueryParam("commentId")String commentId) {
-        if(!IdentityUtils.isValidate(sessionId)) {
-            return Response.status(403).build();
-        }
-        String userId = IdentityUtils.getUserId(sessionId);
-        ResponseEntity responseEntity = new ResponseEntity();
-        if (StringUtils.isEmpty(userId)) {
-            responseEntity.code = 1103;
-            responseEntity.msg = "账户出错";
-            return Response.status(200).entity(responseEntity).build();
-        }
-        if (StringUtils.isEmpty(discussId) || commentId == null) {
-            responseEntity.code = 1101;
-            responseEntity.msg = "缺少参数";
-            return Response.status(200).entity(responseEntity).build();
-        }
-        DiscussInfo discuss = discussDAO.loadById(discussId);
-        if(discuss == null || !MongoUtils.isValidObjectId(commentId)) {
-            responseEntity.code = 1205;
-            responseEntity.msg = "参数错误";
-            return Response.status(200).entity(responseEntity).build();
-        }
-        if(!discuss.getUserId().equals(userId) && !IdentityUtils.isAdmin(sessionId)) {
-            responseEntity.code = 1403;
-            responseEntity.msg = "权限不足";
-            return Response.status(403).entity(responseEntity).build();
-        }
-        Comment top = getDiscussTopComment(discuss, commentId);
-        if (top == null) {
-
-            Comment comment = commentDAO.findOne("{_id:#}", new ObjectId(commentId));
-            if (comment == null) {
-                responseEntity.code = 1003;
-                responseEntity.msg = "评论不存在";
-                return Response.status(200).entity(responseEntity).build();
-            }
-            comment.commentUserInfo = CommentUserInfoUtil.generate(comment.commentUserId);
-            comment.commentedUserInfo = CommentUserInfoUtil.generate(comment.commentedUserId);
-            discuss.getTopCommentList().add(comment);
-            discussDAO.save(discuss);
-            responseEntity.code = 200;
-            responseEntity.msg = "评论已置顶";
-            responseEntity.body = discuss;
-            return Response.status(200).entity(responseEntity).build();
-        } else {
-            discuss.getTopCommentList().remove(top);
-            discussDAO.save(discuss);
-            responseEntity.code = 200;
-            responseEntity.msg = "置顶已取消";
-            responseEntity.body = discuss;
-            return Response.status(200).entity(responseEntity).build();
-        }
-    }
-
-    //TODO 与上面那个getTopComment合并
-    private Comment getDiscussTopComment(DiscussInfo discussInfo, String commentId) {
-        if (CollectionUtils.isEmpty(discussInfo.getTopCommentList())) {
-            discussInfo.setTopCommentList(new ArrayList<Comment>());
-            return null;
-        }
-        for (Comment comment : discussInfo.getTopCommentList()) {
             if (comment == null) {
                 continue;
             }
