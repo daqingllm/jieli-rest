@@ -45,6 +45,26 @@ public class MessageService {
         return Response.status(200).entity(responseEntity).build();
     }
 
+    @GET
+    @Path("/count")
+    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+    public Response getMessageCount(@CookieParam("u")String sessionId) {
+        if (!IdentityUtils.isValidate(sessionId)) {
+            return Response.status(403).build();
+        }
+
+        ResponseEntity responseEntity = new ResponseEntity();
+        String userId = IdentityUtils.getUserId(sessionId);
+        Iterable<Message> messages = messageDAO.getMessagesByUserId(userId);
+        int count = 0;
+        for (Message message : messages) {
+            count ++;
+        }
+        responseEntity.code = 200;
+        responseEntity.body = count;
+        return Response.status(200).entity(responseEntity).build();
+    }
+
     @POST
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     public Response consume(@CookieParam("u")String sessionId, List<String> messageIds) {
