@@ -97,4 +97,28 @@ public class AccountTest {
     public void testPassword() {
         System.out.println(PasswordGenerator.md5Encode("syea"));
     }
+
+    @Test
+    public void testSms() throws IOException {
+        Response response = Request.Get("http://sh.ipyy.com:8888/sms.aspx?action=send&userid=1462&account=sh100563&password=jielimag1107&mobile=15216717002&content=你好")
+                .execute();
+        System.out.println(response.returnContent().asString());
+    }
+
+    @Test
+    public void testlocal() throws IOException {
+        Response response = Request.Get("http://localhost:8080/app/sys/sms?name=刘力名&phone=15216717002")
+                .execute();
+
+        System.out.println(response.returnContent().asString());
+    }
+
+    @Test
+    public void testApploginin() throws IOException {
+        Response response = Request.Post("http://localhost:8080/app/account/applogin")
+                .bodyString("{\"name\":\"刘力名\", \"phone\":\"15216717002\", \"password\":\"nbp0gka6\"}", ContentType.APPLICATION_JSON)
+                .execute();
+
+        System.out.println(response.returnContent().asString());
+    }
 }
