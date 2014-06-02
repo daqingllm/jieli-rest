@@ -2,7 +2,7 @@
 <html lang="zh">
 <head>
     <meta charset="utf-8"/>
-    <title>${associationName} 互帮互助管理</title>
+    <title>${associationName} 讨论管理</title>
     <meta name="description" content="接力"/>
     <!-- basic styles -->
 
@@ -191,10 +191,10 @@
                     </li>
 
                     <li>
-                        <a href="/app/bhelp/list"> 互帮互助管理 </a>
+                        <a href="/app/bdiscuss/list"> 讨论管理 </a>
                     </li>
 
-                    <li class="active"> 互帮互助列表 </li>
+                    <li class="active"> 讨论帖列表 </li>
                 </ul>
                 <!-- .breadcrumb -->
 
@@ -213,7 +213,7 @@
             <div class="page-content">
                 <div class="page-header">
                     <h1>
-                        互帮互助列表
+                        讨论帖列表
                     </h1>
                 </div>
                 <!-- /.page-header -->
@@ -230,12 +230,15 @@
                     </div>
                     <div class="space-4"></div>
                 </#if>
-                    <label class="col-sm-3 control-label no-padding-right" for="form-field-select-type"> 请选择帮助类型 </label>
+                    <label class="col-sm-3 control-label no-padding-right" for="form-field-select-type"> 请选择帖子类型 </label>
                     <div class="col-sm-9">
                         <select class="col-xs-10 col-sm-7" id="help-select" style="padding: 5px 4px;font-size: 14px;">
-                            <option value="2" selected="selected">全部</option>
-                            <option value="1">供给</option>
-                            <option value="0">需求</option>
+                            <option value="6" selected="selected">全部</option>
+                            <option value="1">生活</option>
+                            <option value="2">活动</option>
+                            <option value="3">健康</option>
+                            <option value="4">读书</option>
+                            <option value="5">新闻</option>
                         </select>
                     </div>
                     <div class="space-4"></div>
@@ -249,7 +252,7 @@
 
                         <button class="btn btn-danger" type="button" style="font-weight:bold;margin-bottom: 20px;" onclick="deleteHelp()" id="deleteArtBtn">
                             <i class="fa fa-trash-o bigger-110"></i>
-                            删除互帮互助
+                            删除
                         </button>
                         &nbsp;&nbsp;&nbsp;&nbsp;
 
@@ -431,21 +434,25 @@ Date.prototype.Format = function (fmt) { //author: meizz
 function parseHelpData(data){
 
     for (var i = 0 ; i < data.length; i++){
-        if(data[i].type == 0) {
-            data[i].type = "需求";
-        }
-        else {
-            data[i].type = "供给";
-        }
-
-        if(data[i].status == 1) {
-            data[i].status = "待审核";
-        }
-        else if(data[i].status == 2) {
-            data[i].status = "已通过";
-        }
-        else {
-            data[i].status = "未通过";
+        switch(data[i].type) {
+            case 1:
+                data[i].type = "生活";
+                break;
+            case 2:
+                data[i].type = "活动";
+                break;
+            case 3:
+                data[i].type = "健康";
+                break;
+            case 4:
+                data[i].type = "读书";
+                break;
+            case 5:
+                data[i].type = "新闻";
+                break;
+            case 6:
+                data[i].type = "全部";
+                break;
         }
 
         var adt = data[i].addTime;
@@ -526,23 +533,23 @@ function viewHelp() {
     var selectIds = $("#grid-table").getGridParam("selarrrow");
 
     if(typeof selectIds.length == 0) {
-        alert("请选择互助贴");
+        alert("请选择贴子");
     }
     else {
-        window.location.href = '/app/bhelp/view?h=' + selectIds[0];
+        window.location.href = '/app/bdiscuss/view?d=' + selectIds[0];
     }
 }
 
 function deleteHelp() {
-    var flag=window.confirm("确定要删除互帮互助帖吗?");
+    var flag=window.confirm("确定要删除讨论帖吗?");
     if(flag) {
         var selectedIds = $("#grid-table").getGridParam("selarrrow");
         if(selectedIds.length == 0) {
-            alert("请选择互助贴");
+            alert("请选择贴子");
         }
         else {
             $.ajax({
-                url: '/app/feature/help/delete',
+                url: '/app/feature/help/delete?isDiscuss=true',
                 data: JSON.stringify(selectedIds),
                 type: 'POST',
                 contentType: 'application/json',
@@ -563,7 +570,7 @@ function deleteHelp() {
 function updateGrid(associationId, page, size) {
     var helpType = $("#help-select").val();
     $.ajax({
-        url: '/app/feature/ajaxhelp/list?a=' + associationId + '&t=' + helpType + '&page=1&size=20',
+        url: '/app/feature/ajaxhelp/list?a=' + associationId + '&t=' + helpType + '&page=1&size=20&isDiscuss=true',
         type : 'GET',
         contentType: "application/json",
         success: function(response) {
@@ -591,7 +598,7 @@ jQuery(function($) {
     ];
 
     //raw_data.empty();
-    raw_data = ${jsonHelpList};
+    raw_data = ${jsonDiscussList};
 
 
     var grid_data = parseHelpData(raw_data);
@@ -603,40 +610,19 @@ jQuery(function($) {
         data: grid_data,
         datatype: "local",
         height: 330,
-        colNames:['id',<#if isSuper>'协会',</#if>'帮助标题','帮助类型', '帮助描述', '添加日期', '关注人数', '状态', '审核'],
+        colNames:['id',<#if isSuper>'协会',</#if>'标题','类型', '描述', '添加日期', '关注人数'],
         colModel:[
             {name:"id",index:"id",width:10,editable:false,hidden:true},
             //{name:"associationId",index:"associationId",width:40,editable:false, hidden:true},
             <#if isSuper>{name:"associationName",index:"associationName",width:40,editable:false,hidden:true},</#if>
             {name:"title",index:"title",width:"100",editable:false, formatter:function getUrl(cellValue, options, rowObject) {
-                var url = "<a href=\"/app/bhelp/view?h=" + rowObject.id + "\">" + cellValue + "</a>";
+                var url = "<a href=\"/app/bdiscuss/view?isDiscuss=true&d=" + rowObject.id + "\">" + cellValue + "</a>";
                 return url;
             }},
             {name:"type",index:"type",width:"45",editable:false},
             {name:"content",index:"content",width:"200",editable:false},
             {name:"addTime",index:"addTime",width:"60",editable:false,sorttype:"date"},
-            {name:"attentionNum",index:"attentionNum",width:"35",editable:false},
-            {name:"status",index:"status",width:"30",editable:false},
-            {name:"audit",index:"audit",width:"30",editable:false,formatter:
-                    function(cellValue, options, rowObject) {
-                        if(rowObject.status == "待审核") {
-                            var id = rowObject.id;
-                            var url = "<button data-status=\"2\" class=\"btn btn-xs btn-info\" data-toggle=\"button\" id=\"" + id + "\">" + "通过</button>"
-                                    + "</br>"
-                                    + "</br>"
-                                    + "<button data-status=\"3\" class=\"btn btn-xs btn-info\" data-toggle=\"button\" id=\"" + id + "\">" + "不通过</button>";
-                            console.log(url);
-                        }
-                        else if(rowObject.status == "未通过") {
-                            var id = rowObject.id;
-                            var url = "<button data-status=\"2\" class=\"btn btn-xs btn-info\" data-toggle=\"button\" id=\"" + id + "\">" + "通过</button>";
-                        }
-                        else {
-                            url = "已通过，无需操作";
-                        }
-
-                return url;
-            }}
+            {name:"attentionNum",index:"attentionNum",width:"35",editable:false}
         ],
 
         viewrecords : true,
@@ -668,7 +654,7 @@ jQuery(function($) {
             }, 0);
         },
 
-        caption: "帮助列表",
+        caption: "讨论帖列表",
         autowidth: true
     });
 
@@ -740,7 +726,7 @@ function updateHelp(id, status) {
         "status" : status
     };
     $.ajax({
-        url : "/app/feature/help/update?helpId=" + id,
+        url : "/app/feature/help/update?helpId=" + id + "&isDiscuss=true",
         type : "POST",
         contentType : "application/json",
         data : JSON.stringify(helpObject),
@@ -795,7 +781,7 @@ jQuery(function ($) {
         var association = $("#association-select").val();
         var helpType = $("#help-select").val();
         $.ajax({
-            url : '/app/feature/ajaxhelp/list?a=' + association + '&t=' + helpType + '&page=1&size=20',
+            url : '/app/feature/ajaxhelp/list?a=' + association + '&t=' + helpType + '&page=1&size=20&isDiscuss=true',
             type : 'GET',
             contentType: "application/json",
             success: function(data) {

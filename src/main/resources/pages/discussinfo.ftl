@@ -2,7 +2,7 @@
 <html lang="zh">
 <head>
     <meta charset="utf-8"/>
-    <title>${associationName} 互帮互助管理</title>
+    <title>${associationName} 讨论管理</title>
     <meta name="description" content="接力"/>
     <!-- basic styles -->
 
@@ -191,10 +191,10 @@
         </li>
 
         <li>
-            <a href="/app/bhelp/list"> 互帮互助管理 </a>
+            <a href="/app/bdiscuss/list"> 讨论管理 </a>
         </li>
 
-        <li class="active">查看互帮互助</li>
+        <li class="active">查看讨论帖</li>
     </ul>
     <!-- .breadcrumb -->
 
@@ -213,7 +213,7 @@
 <div class="page-content">
     <div class="page-header">
         <h1>
-        查看互帮互助
+        查看讨论
         </h1>
     </div>
     <!-- /.page-header -->
@@ -225,10 +225,10 @@
             <form class="form-horizontal" role="form">
 
                 <div class="form-group">
-                    <label class="col-sm-3 control-label no-padding-right" for="form-field-title"> 帮助标题 </label>
+                    <label class="col-sm-3 control-label no-padding-right" for="form-field-title"> 标题 </label>
 
                     <div class="col-sm-9">
-                        <input readonly="true" type="text" id="form-field-title" value="${help.title}"
+                        <input readonly="true" type="text" id="form-field-title" value="${discuss.title}"
                                class="col-xs-10 col-sm-7"
                                style="padding-left: 7px;"/>
                     </div>
@@ -237,12 +237,15 @@
                 <div class="space-4"></div>
 
                 <div class="form-group">
-                    <label class="col-sm-3 control-label no-padding-right" for="form-field-select-type"> 帮助类型 </label>
+                    <label class="col-sm-3 control-label no-padding-right" for="form-field-select-type"> 类型 </label>
 
                     <div class="col-sm-9">
                         <input readonly="true" type="text" id="form-field-type"
-                        <#if help.type==0>value="需求"
-                        <#else>value="供给"
+                        <#if discuss.type==1>value="生活"
+                        <#elseif discuss.type == 2>value="活动"
+                        <#elseif discuss.type == 3>value="健康"
+                        <#elseif discuss.type == 4>value="读书"
+                        <#else>value="新闻"
                         </#if>
                                class="col-xs-10 col-sm-7"
                                style="padding-left: 7px;"/>
@@ -254,7 +257,7 @@
                 <div class="form-group">
                     <label class="col-sm-3 control-label no-padding-right" for="form-field-textarea"> 发起时间 </label>
                     <div class="col-sm-9">
-                        <input type="text" id="form-field-addtime" readOnly='true' value="${help.addTime?string('yyyy-MM-dd HH:mm:ss')}"
+                        <input type="text" id="form-field-addtime" readOnly='true' value="${discuss.addTime?string('yyyy-MM-dd HH:mm:ss')}"
                                class="col-xs-10 col-sm-7"
                                style="padding-left: 7px;"/>
                     </div>
@@ -262,11 +265,11 @@
                 <div class="space-4"></div>
 
                 <div class="form-group">
-                    <label class="col-sm-3 control-label no-padding-right" for="form-field-textarea"> 帮助正文 </label>
+                    <label class="col-sm-3 control-label no-padding-right" for="form-field-textarea"> 正文 </label>
 
                     <div class="col-sm-9">
                         <textarea id="form-field-textarea" readOnly='true' class="autosize-transition col-xs-10 col-sm-7 textarea-no-resize"
-                                  style="min-height: 140px;">${help.content}</textarea>
+                                  style="min-height: 140px;">${discuss.content}</textarea>
                     </div>
 
                 </div>
@@ -277,7 +280,7 @@
                     <label class="col-sm-3 control-label no-padding-right" for="form-field-textarea"> 关注人数 </label>
 
                     <div class="col-sm-9">
-                        <input type="text" id="form-field-addtime" readOnly='true' value="${help.attentionNum}"
+                        <input type="text" id="form-field-addtime" readOnly='true' value="${discuss.attentionNum}"
                                class="col-xs-10 col-sm-7"
                                style="padding-left: 7px;"/>
                     </div>

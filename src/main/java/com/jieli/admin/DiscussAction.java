@@ -55,10 +55,8 @@ public class DiscussAction {
         }
         Map<String, Object> params = CommonUtil.GenerateCommonParams(account);
         //String associationId = IdentityUtils.getAssociationId(sessionId);
-        boolean isSuper = false;
+        boolean isSuper = Boolean.valueOf(params.get("isSuper").toString());
         String associationId = "";
-        if(IdentityUtils.isSuper(sessionId))
-            isSuper = true;
         if(isSuper) {
             List<com.jieli.association.Association> associationList = new ArrayList<com.jieli.association.Association>();
             Iterable<com.jieli.association.Association> associationIte = associationDAO.loadAll();
