@@ -71,7 +71,8 @@ public class AccountService {
             responseEntity.msg = "用户不存在";
             return Response.status(200).entity(responseEntity).build();
         }
-        String temPassword = generateTempPassword(phone);
+//        String temPassword = generateTempPassword(phone);
+        String temPassword = account.password;
         if (!password.equals(temPassword)) {
             responseEntity.code = 1002;
             responseEntity.msg = "密码不正确";
