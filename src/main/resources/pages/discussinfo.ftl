@@ -458,11 +458,11 @@ jQuery(function ($) {
 <#if isSuper>
     $("#sidebar-shortcuts-navlist").load("/sidebar_super.html",function(){
         $("#nav_list_5_1").addClass("active open");
-    $("#nav_list_5").addClass("active");});
+    $("#nav_list_6").addClass("active");});
 <#else>
     $("#sidebar-shortcuts-navlist").load("/sidebar_admin.html",function(){
     $("#nav_list_5_1").addClass("active open");
-    $("#nav_list_5").addClass("active");});
+    $("#nav_list_6").addClass("active");});
 </#if>
 
     var colorbox_params = {
