@@ -486,7 +486,7 @@ function parseArtData(data){
 
         //data[i].content = data[i].overview;
         if (data[i].topPic){
-            data[i].title = "<span style='color:rgb(226, 64, 64)'>[Õ∑Õº]</span>&nbsp;" + data[i].title;
+            data[i].title = "<span style='color:rgb(226, 64, 64)'>[÷√∂•]</span>&nbsp;" + data[i].title;
         }
 
     }
