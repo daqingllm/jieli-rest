@@ -98,4 +98,11 @@ public class AccountTest {
         System.out.println(PasswordGenerator.md5Encode("syea"));
     }
 
+    @Test
+    public void testSms() throws IOException {
+        Response response = Request.Get("http://localhost:8080/app/sys/sms?name=刘力名&phone=15216717002").execute();
+
+        System.out.println(response.returnContent().asString());
+    }
+
 }

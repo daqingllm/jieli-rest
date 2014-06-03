@@ -11,6 +11,7 @@ import com.jieli.mongo.BaseDAO;
 import com.jieli.user.dao.UserDAO;
 import com.jieli.user.entity.User;
 import com.jieli.util.IdentityUtils;
+import com.jieli.util.PasswordGenerator;
 import com.jieli.util.SmsUtils;
 import com.sun.jersey.spi.resource.Singleton;
 import org.apache.commons.lang.StringUtils;
@@ -161,10 +162,13 @@ public class SystemService {
             responseEntity.msg = "用户不存在";
             return Response.status(200).entity(responseEntity).build();
         }
+        String newPassword = PasswordGenerator.getRandomString(8);
         Account account = accountDAO.loadByUserId(user.get_id().toString());
-        String password = account.password;
+//        String password = account.password;
+        account.password = newPassword;
+        accountDAO.save(account);
         try {
-            SmsUtils.sendPassword(phone, password);
+            SmsUtils.sendPassword(phone, newPassword);
         } catch (IOException e) {
             responseEntity.code = 102;
             responseEntity.msg = "验证码发送失败";
