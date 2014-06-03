@@ -202,11 +202,31 @@
 
 							<i class="fa fa-check green"></i>
 
-							欢迎使用
+							欢迎进入
 							<strong class="green">
 								${associationName} 后台管理系统
 							</strong>
 						</div>
+
+                        <div class="alert alert-info" style="padding-left: 35px;">
+                            <button type="button" class="close" data-dismiss="alert">
+                                <i class="icon-remove"></i>
+                            </button>
+                            <strong></strong>
+                            <p style="line-height: 200%;">点击右上角的头像可以退出账户。点击下方齿轮可以调整页面样式。左侧导航栏可以对各个App端功能进行发布、编辑、删除操作。</p>
+                            <hr style="margin-top : 5px; margin-bottom: 5px;">
+                            <p style="line-height: 200%;">1. 如果您需要发布、编辑、删除资讯（协会动态、小组风采、有服同享）、活动、投票，请相应进入“资讯管理”、“活动管理”、“投票管理”；</p>
+                            <hr style="margin-top : 5px; margin-bottom: 5px;">
+                            <p style="line-height: 200%;">2. 如果您需要审核、删除App端发布的互帮互助帖子，请进入“互帮互助管理”；</p>
+                            <hr style="margin-top : 5px; margin-bottom: 5px;">
+                            <p style="line-height: 200%;">3. 如果您需要查看、删除App端发布的讨论版帖子，请进入“讨论版管理”；</p>
+                            <hr style="margin-top : 5px; margin-bottom: 5px;">
+                            <p style="line-height: 200%;">4. 如果您需要增加、编辑、删除会员，请进入“账户管理”。其中“[管理员]syea”是后台管理员账号，不可删除，点击可以修改管理后台登入密码；</p>
+                            <hr style="margin-top : 5px; margin-bottom: 5px;">
+                            <p style="line-height: 200%;">5. 如果您需要对会员的分组、协会身份进行编辑，请进入分组管理和组织架构；</p>
+                            <hr style="margin-top : 5px; margin-bottom: 5px;">
+                            <p style="line-height: 200%;">6. 如果您需要编辑App端的青企协介绍，请进入关于上海市青企协。</p>
+                        </div>
                     </div>
                     <!-- /.col -->
                 </div>
