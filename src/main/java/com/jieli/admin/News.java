@@ -331,9 +331,11 @@ public class News {
             return Response.status(200).entity(responseEntity).build();
         }
 
-        Iterable<Image> images = imageDAO.find("{newsId:\""+artid+"\"");
-        for (Image image : images){
-            imageDAO.deleteById(image.get_id().toString());
+        if (artid != "" && artid != null) {
+            Iterable<Image> images = imageDAO.find("{newsId:\"" + artid + "\"}");
+            for (Image image : images) {
+                imageDAO.deleteById(image.get_id().toString());
+            }
         }
 
         newsDAO.deleteById(artid);
