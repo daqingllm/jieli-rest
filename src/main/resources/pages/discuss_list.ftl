@@ -442,15 +442,9 @@ function parseHelpData(data){
                 data[i].type = "活动";
                 break;
             case 3:
-                data[i].type = "健康";
-                break;
-            case 4:
                 data[i].type = "读书";
                 break;
-            case 5:
-                data[i].type = "新闻";
-                break;
-            case 6:
+            case 4:
                 data[i].type = "全部";
                 break;
         }
