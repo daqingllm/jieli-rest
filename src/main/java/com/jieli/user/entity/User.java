@@ -76,4 +76,6 @@ public class User extends Model {
 
     //公司简介
     public String enterpriseDescription;
+	
+	public String weibo;
 }
