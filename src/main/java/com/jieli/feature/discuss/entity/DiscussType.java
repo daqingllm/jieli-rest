@@ -6,10 +6,8 @@ package com.jieli.feature.discuss.entity;
 public enum  DiscussType {
     LIFE(1),
     ACTIVITY(2),
-    HEALTH(3),
-    READING(4),
-    NEWS(5),
-    ALL(6);
+    READING(3),
+    ALL(4);
 
     private int type;
     private DiscussType(int type) {
