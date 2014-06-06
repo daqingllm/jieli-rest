@@ -3,13 +3,16 @@ package com.jieli.service;
 import com.jieli.common.entity.ResponseEntity;
 import com.jieli.message.Message;
 import com.jieli.message.MessageDAO;
+import com.jieli.message.MessageType;
 import com.jieli.util.IdentityUtils;
 import com.sun.jersey.spi.resource.Singleton;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.
@@ -57,11 +60,18 @@ public class MessageService {
         String userId = IdentityUtils.getUserId(sessionId);
         Iterable<Message> messages = messageDAO.getMessagesByUserId(userId);
         int count = 0;
+        int commentCount = 0;
         for (Message message : messages) {
+            if (message.messageType == MessageType.COMMENT) {
+                commentCount++;
+            }
             count ++;
         }
+        Map<String, Integer> resultMap = new HashMap<String, Integer>();
+        resultMap.put("total", count);
+        resultMap.put("comment", commentCount);
         responseEntity.code = 200;
-        responseEntity.body = count;
+        responseEntity.body = resultMap;
         return Response.status(200).entity(responseEntity).build();
     }
 
