@@ -215,6 +215,7 @@ public class UserService {
                 display.name2 = user2.name;
                 display.userFace2 = user2.userFace;
                 display.score = match.score;
+                display.infos = match.matchInfos;
                 matchMsg.display = display;
                 if (match.score < 100) {
                     matchMsg.msg = "您和 " + name + " 的匹配值达到 " + match.score + " ，查看详情";
