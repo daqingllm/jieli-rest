@@ -16,17 +16,13 @@ import com.qiniu.api.io.IoApi;
 import com.qiniu.api.io.PutExtra;
 import com.qiniu.api.io.PutRet;
 import com.qiniu.api.rs.PutPolicy;
-import org.apache.commons.lang.StringUtils;
 
-import javax.ws.rs.core.Response;
 import java.io.*;
-import java.lang.reflect.Array;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Iterator;
 
 /**
  * Created by xianxing on 2014/3/22.
@@ -240,7 +236,7 @@ public class UploaderUtils {
                 return false;
             }
 
-            String password = PasswordGenerator.getRandomString(8);
+            String password = PasswordGenerator.getRandomString(6);
             User user = new User();
             user.associationId = associationId;
 

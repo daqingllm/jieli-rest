@@ -14,7 +14,8 @@ import java.util.Random;
 public abstract class PasswordGenerator {
 
     public static String getRandomString(int length) {
-        StringBuffer buffer = new StringBuffer("0123456789abcdefghijklmnopqrstuvwxyz");
+//        StringBuffer buffer = new StringBuffer("0123456789abcdefghijklmnopqrstuvwxyz");
+        StringBuffer buffer = new StringBuffer("0123456789");
         StringBuffer sb = new StringBuffer();
         Random r = new Random();
         int range = buffer.length();

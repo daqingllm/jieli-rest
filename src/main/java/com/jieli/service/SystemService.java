@@ -162,7 +162,7 @@ public class SystemService {
             responseEntity.msg = "用户不存在";
             return Response.status(200).entity(responseEntity).build();
         }
-        String newPassword = PasswordGenerator.getRandomString(8);
+        String newPassword = PasswordGenerator.getRandomString(6);
         Account account = accountDAO.loadByUserId(user.get_id().toString());
 //        String password = account.password;
         account.password = newPassword;

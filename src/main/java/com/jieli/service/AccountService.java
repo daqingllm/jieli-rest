@@ -157,7 +157,7 @@ public class AccountService {
             responseEntity.msg = "用户名已存在";
             return Response.status(200).entity(responseEntity).build();
         } else {
-            String password = PasswordGenerator.getRandomString(8);
+            String password = PasswordGenerator.getRandomString(6);
             User user = new User();
             user.associationId = associationId;
             String userId = userDAO.save(user).get_id().toString();
@@ -201,7 +201,7 @@ public class AccountService {
             responseEntity.msg = "用户名已存在";
             return Response.status(200).entity(responseEntity).build();
         } else {
-            String password = PasswordGenerator.getRandomString(8);
+            String password = PasswordGenerator.getRandomString(6);
             User user = new User();
             user.associationId = associationId;
             String userId = userDAO.save(user).get_id().toString();
