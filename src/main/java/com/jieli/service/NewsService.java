@@ -1,9 +1,13 @@
 package com.jieli.service;
 
+import com.jieli.activity.AcivityTag;
+import com.jieli.activity.ActivityMsg;
 import com.jieli.comment.Comment;
 import com.jieli.comment.TopicType;
 import com.jieli.common.entity.ResponseEntity;
 import com.jieli.message.CommentMessageUtil;
+import com.jieli.message.MessageType;
+import com.jieli.message.Send2AllTask;
 import com.jieli.mongo.BaseDAO;
 import com.jieli.news.*;
 import com.jieli.util.CollectionUtils;
@@ -126,6 +130,7 @@ public class NewsService {
             news.associationId = associationId;
         }
 
+        boolean needForcePost = false;
         if(news!=null){
             if( !CollectionUtils.isEmpty(news.images) ){
                 news.imagesCount = news.images.size();
@@ -141,9 +146,29 @@ public class NewsService {
                     news.appreciateUserIds = oldNews.appreciateUserIds;
                     news.commentCount = oldNews.commentCount;
                 }
+            } else if (StringUtils.isEmpty(newsId)){
+                needForcePost = true;
             }
 
             newsDAO.save(news);
+
+            if (needForcePost){
+                NewsMsg newsMsg = new NewsMsg();
+                String preOrPost = "";
+                if (news.type.compareTo(NewsType.newsType)==0){
+                    preOrPost = " 同舟发布";
+                } else if (news.type.compareTo(NewsType.associationType)==0){
+                    preOrPost = " 协会动态发布";
+                } else if (news.type.compareTo(NewsType.enterpriseType)==0){
+                    preOrPost = " 小组风采发布";
+                }
+
+                newsMsg.msg = news.title + preOrPost;
+                newsMsg.newsId = news.get_id().toString();
+
+                Send2AllTask task = new Send2AllTask(newsMsg, news.associationId, MessageType.OTHER);
+                task.start();
+            }
         }
 
         responseEntity.code = 200;
