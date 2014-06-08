@@ -282,6 +282,7 @@ public class NewsService {
         Iterable<Image> images = imageDAO.loadCoverImages();
         int count = 1;
         for (Image image_ : images){
+            // delete last one
             if (count == 4){
                 String newsId = image_.newsId;
                 News news_ = newsDAO.loadById(newsId);
@@ -289,6 +290,8 @@ public class NewsService {
                     news_.topPic = false;
                     newsDAO.save(news_);
                 }
+
+                imageDAO.deleteById(image_.get_id().toString());
                 break;
             }
             count ++;
