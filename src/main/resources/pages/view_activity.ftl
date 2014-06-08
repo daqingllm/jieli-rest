@@ -722,7 +722,7 @@
 
         $("#form-field-textarea-sponsor").val(data.sponsorInfo);
         $("#form-field-dlDate").val(new Date(data.beginDate).Format("yyyy-MM-dd"));
-        $("#form-field-fee").val(data.fee);
+        $("#form-field-fee").val(data.feeDescription);
         $("#form-field-max").val(data.maxMembers);
         if (data.url && data.url.length > 0){
             $("#form-field-imgurl").attr("src",data.url);

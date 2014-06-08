@@ -547,7 +547,7 @@ function finishActivity(type){
     act.officialAlbum = [];
     act.beginDate=new Date($("#form-field-dlDate").val());
     //act.beginDate=null;
-    act.fee=$("#form-field-fee").val();
+    act.feeDescription=$("#form-field-fee").val();
     act.maxMembers=$("#form-field-max").val();
     act.url=$("#form-field-imgurl").attr("src");
 
@@ -615,7 +615,7 @@ function check(act) {
         return "必须填类型";
     if (act.description == '')
         return "必须填简介";
-    if (act.fee == '')
+    if (act.feeDescription == '')
         return "必须填费用";
     if (act.maxMembers == '')
         return "必须填最大人数";

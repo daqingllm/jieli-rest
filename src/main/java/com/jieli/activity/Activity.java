@@ -25,6 +25,8 @@ public class Activity extends Model {
 
     public int fee;
 
+    public String feeDescription;
+
     public int maxMembers;
 
     public String arrangement;
@@ -113,6 +115,8 @@ public class Activity extends Model {
     public int getFee() {
         return fee;
     }
+
+    public String getFeeDescription() { return feeDescription; }
 
     public int getMaxMembers() {
         return maxMembers;
