@@ -735,6 +735,7 @@
         for (var i = 0 ; i < imagesUploadAdmin.length; i ++){
             imageArray.push(imagesUploadAdmin[i].url);
         }
+        if (imageArray.length == 0) window.location.href = "/app/bactivity/list";
 
         $.ajax({
             type:"POST",
