@@ -214,6 +214,9 @@
             <div class="col-xs-12">
                 <!-- PAGE CONTENT BEGINS -->
 
+                <div id="dialog-message-preview" class="hide">
+                </div><!-- #dialog-message -->
+
                 <form class="form-horizontal" role="form">
 
                     <div class="form-group">
@@ -379,12 +382,10 @@
 
                 </form>
 
-                <div id="dialog-message-preview" class="hide">
-                </div><!-- #dialog-message -->
-
+                <script>var first = true;</script>
                 <div class="clearfix form-actions">
                     <div class="col-md-offset-3 col-md-9">
-                        <button class="btn btn-success" type="button" style="font-weight:bold" onclick="previewThisArticle(textAreaId,imagesUpload)">
+                        <button class="btn btn-success" type="button" style="font-weight:bold" onclick="previewThisArticle(textAreaId,imagesUpload,first)">
                             <i class="fa fa-question bigger-110"></i>
                             ‘§¿¿
                         </button>

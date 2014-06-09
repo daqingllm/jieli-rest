@@ -114,7 +114,10 @@ function previewJieLi(){
 }
 
 // 点击预览按钮
-function previewThisArticle(textObj,images) {
+function previewThisArticle(textObj,images,first) {
+    // the most important thing !
+    window.scrollTo(0,0);
+
     var previewinpage = $("#form-field-textarea").val() || "";
     var previewinlist;
     var inpg = false;
@@ -159,8 +162,8 @@ function previewThisArticle(textObj,images) {
         ]
     });
 
-    if (inpg) setTimeout(function(){window.scrollTo(0,300);},100);
-    else setTimeout(function(){window.scrollTo(0,0);},100);
+    if (first || !inpg) {first = false; setTimeout(function(){window.scrollTo(0,0);},100);}
+
     //$(".ui-dialog").css("top","-600px");
     //alert($(".ui-dialog").css("top"));
     //window.scrollTo(0,300);
