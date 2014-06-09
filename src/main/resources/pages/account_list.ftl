@@ -221,11 +221,17 @@
 
                         &nbsp;&nbsp;&nbsp;&nbsp;
 
+                        <button class="btn btn-purple" type="button" style="font-weight:bold;margin-bottom: 20px;">
+                            <i class="fa fa-cloud-download bigger-110"></i>
+                            <a href="/assets/Template.csv" style="color: #ffffff">下载CSV表格模板</a>
+                        </button>
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+
                         <button class="btn btn-warning" type="button" style="font-weight:bold;margin-bottom: 20px;" id='uploadCSV'>
                             <i class="fa fa-cloud-upload bigger-110"></i>
                             上传账户CSV表格
                         </button>
-                        <div class="alert alert-warning" style="margin-left: 15px; width: 250px; position: relative;display: inline-block;padding: 10px;">&nbsp;您可以将Excel文件另存为csv文件</div>
+                        <div class="alert alert-warning" style="margin-left: 15px; width: 300px; position: relative;display: inline-block;padding: 10px;">&nbsp;小提示:&nbsp;您可以将Excel文件另存为csv文件</div>
 
                         <br>
                         <div class="alert alert-warning" id="failedImport" style="display: none">
@@ -487,6 +493,7 @@ function parseArtData(data){
         data[i].state = states[data[i].state];
 
         if (data[i].identity == undefined || data[i].identity == null || data[i].identity == "") data[i].identity = "";
+        if (data[i].group == undefined || data[i].group == null || data[i].group == "") data[i].group = "";
 
     }
     return data;
@@ -570,7 +577,7 @@ jQuery(function($) {
         data: grid_data,
         datatype: "local",
         height: 490,
-        colNames:['_id','协会','用户名','姓名','状态','协会身份','验证码'],
+        colNames:['_id','协会','用户名','姓名','状态','协会身份','验证码','分组'],
         colModel:[
             {name:"_id",index:"_id",width:10,editable:false,hidden:true},
             {name:"associationId",index:"associationId",width:40,editable:false,hidden:true},
@@ -582,7 +589,8 @@ jQuery(function($) {
             }},
             {name:"state",index:"state",width:"60",editable:false,hidden:true},
             {name:"identity",index:"identity",width:"60",editable:false},
-            {name:"verifyCode",index:"verifyCode",width:"75",editable:false}
+            {name:"verifyCode",index:"verifyCode",width:"75",editable:false,hidden:true},
+            {name:"group",index:"group",width:"75",editable:false}
         ],
         viewrecords : true,
         rowNum:15,
@@ -625,6 +633,7 @@ jQuery(function($) {
             var a = raw_data[realIndex];
             delete a["name"];
             delete a["identity"];
+            delete a["group"];
             delete a["phone"];
             delete a["verifyCode"];
             if (a.state == "禁用" ||

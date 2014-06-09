@@ -473,7 +473,7 @@ Date.prototype.Format = function (fmt) { //author: meizz
 }
 
 function parseArtData(data){
-    var types = {"news":"有服同享","association":"协会动态","enterprise":"小组风采","history":"协会事记","benefit":"慈善公益"};
+    var types = {"news":"同舟发布","association":"协会动态","enterprise":"小组风采","history":"协会事记","benefit":"慈善公益"};
     for (var i = 0 ; i < data.length; i++){
         data[i].type = types[data[i].type];
         var adt = data[i].addTime;

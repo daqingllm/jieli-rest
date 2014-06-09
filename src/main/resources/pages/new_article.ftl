@@ -233,7 +233,7 @@
                     <select class="col-xs-10 col-sm-7" id="form-field-select-type"
                             style="padding: 5px 4px;font-size: 14px;" onchange="toggleShowTime();">
                     <#if isSuper>
-                        <option value="news" selected>有服同享</option>
+                        <option value="news" selected>同舟发布</option>
                         <option value="association">协会动态</option>
                         <option value="enterprise">小组风采</option>
                     <#else>

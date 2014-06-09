@@ -335,6 +335,19 @@
 <div class="space-4"></div>
 
 
+<div class="form-group">
+    <label class="col-sm-3 control-label no-padding-right" for="form-field-group"> 分组 </label>
+
+    <div class="col-sm-9">
+        <select class="col-xs-10 col-sm-7" id="form-field-group"
+                style="padding: 5px 4px;font-size: 14px;">
+        ${groupOps}
+        </select>
+    </div>
+</div>
+
+<div class="space-4"></div>
+
 
 
 <div class="form-group">
@@ -437,6 +450,17 @@
 
     <div class="col-sm-9">
         <input type="text" id="form-field-weixin" placeholder="微信号" class="col-xs-10 col-sm-7"
+               style="padding-left: 7px;" value=""/>
+    </div>
+</div>
+
+<div class="space-4"></div>
+
+<div class="form-group">
+    <label class="col-sm-3 control-label no-padding-right" for="form-field-weibo"> 微博号 </label>
+
+    <div class="col-sm-9">
+        <input type="text" id="form-field-weibo" placeholder="微博号" class="col-xs-10 col-sm-7"
                style="padding-left: 7px;" value=""/>
     </div>
 </div>
@@ -693,6 +717,7 @@
         data["name"] = $("#form-field-name").val();
         data["sex"] = $("#form-field-select-sex").val();
         data["identity"] = $("#form-field-identity").val();
+        data["group"] = $("#form-field-group").val();
         var pn =$("#form-field-phone").val();
         if (pn && pn.length != "13888888888".length){if (!confirm("确定手机号码为"+pn+"?")) return;}
         data["phone"] = $("#form-field-phone").val();
@@ -720,6 +745,7 @@
         data["profession"] = $("#form-field-profession").val();
         data["mail"] = $("#form-field-mail").val();
         data["weixin"] = $("#form-field-weixin").val();
+        data["weibo"] = $("#form-field-weibo").val();
         data["enterpriseName"] = $("#form-field-enterpriseName").val();
         data["job"] = $("#form-field-job").val();
         data["school"] = $("#form-field-school").val();
@@ -766,6 +792,7 @@
         $("#form-field-userFace").attr("src",data["userFace"] || "");
         if (data["sex"] == 1) $("#form-field-select-sex").val("1");
         $("#form-field-identity").val(data["identity"] || "");
+        $("#form-field-group").val(data["group"] || "");
         $("#form-field-phone").val(data["phone"] || "");
         try {
             if (data["birthday"])  $("#form-field-birthday").val(new Date(data["birthday"]).Format("yyyy-MM-dd"));
@@ -785,6 +812,7 @@
         $("#form-field-profession").val(data["profession"] || "");
         $("#form-field-mail").val(data["mail"] || "");
         $("#form-field-weixin").val(data["weixin"] || "");
+        $("#form-field-weibo").val(data["weibo"] || "");
         $("#form-field-enterpriseName").val(data["enterpriseName"] || "");
         $("#form-field-job").val(data["job"] || "");
         $("#form-field-school").val(data["school"] || "");

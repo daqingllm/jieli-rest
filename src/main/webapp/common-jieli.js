@@ -107,7 +107,9 @@ function previewJieLi(){
         ]
     });
 
-    window.scrollTo(0,0);
+    //setTimeout(function(){var top = $(".ui-dialog").css("top");$(".ui-dialog").css("top",top-200)},100);
+    //$(".ui-dialog").css("top","-600px");
+    //window.scrollTo(0,0);
 }
 
 // 点击预览按钮
@@ -153,7 +155,9 @@ function previewThisArticle(textObj,images) {
         ]
     });
 
-    window.scrollTo(0,0);
+    //setTimeout(function(){var top = $(".ui-dialog").css("top");$(".ui-dialog").css("top",top-200)},100);
+    //$(".ui-dialog").css("top","-600px");
+    //window.scrollTo(0,0);
 }
 
 // 点击完成按钮

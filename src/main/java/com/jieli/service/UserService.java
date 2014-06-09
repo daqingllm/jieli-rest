@@ -482,6 +482,8 @@ public class UserService {
         oldUser.phone = user.phone;
         oldUser.identity = user.identity;
         if (oldUser.identity == "") oldUser.identity = null;
+        oldUser.group = user.group;
+        if (oldUser.group == "") oldUser.group = null;
         oldUser.sex = user.sex;
         oldUser.degree = user.degree;
         oldUser.userFace = user.userFace;
@@ -491,6 +493,7 @@ public class UserService {
         oldUser.mail = user.mail;
         oldUser.job = user.job;
         oldUser.weixin = user.weixin;
+        oldUser.weibo = user.weibo;
         oldUser.enterpriseName = user.enterpriseName;
         oldUser.school = user.school;
         oldUser.enterpriseWebsite = user.enterpriseWebsite;
