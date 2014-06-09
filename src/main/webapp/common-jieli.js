@@ -109,13 +109,15 @@ function previewJieLi(){
 
     //setTimeout(function(){var top = $(".ui-dialog").css("top");$(".ui-dialog").css("top",top-200)},100);
     //$(".ui-dialog").css("top","-600px");
-    //window.scrollTo(0,0);
+    //alert($(".ui-dialog").css("top"));
+    //window.scrollTo(0,300);
 }
 
 // 点击预览按钮
 function previewThisArticle(textObj,images) {
     var previewinpage = $("#form-field-textarea").val() || "";
     var previewinlist;
+    var inpg = false;
     try {
         previewinlist = $("#grid-table").getGridParam("selrow");
         if (previewinlist) previewinlist = $("#grid-table > tbody > tr").eq(previewinlist).find("td").eq(9).html();
@@ -126,8 +128,10 @@ function previewThisArticle(textObj,images) {
     var regbr = new RegExp("\n","g");
     var regns = new RegExp(" ","g");
     var regimg = new RegExp("<img src","g");
-    if (previewinpage && previewinpage.length >= previewinlist.length)
-        $("#dialog-message-preview").html(previewinpage.replace(regbr,"<br/>").replace(regimg,"<img width='576' style='padding:3px;' src"));
+    if (previewinpage && previewinpage.length >= previewinlist.length) {
+        inpg = true;
+        $("#dialog-message-preview").html(previewinpage.replace(regbr, "<br/>").replace(regimg, "<img width='576' style='padding:3px;' src"));
+    }
     else
         $("#dialog-message-preview").html(previewinlist.replace(regbr,"<br/>").replace(regimg,"<img width='576' style='padding:3px;' src"));
 
@@ -155,9 +159,11 @@ function previewThisArticle(textObj,images) {
         ]
     });
 
-    //setTimeout(function(){var top = $(".ui-dialog").css("top");$(".ui-dialog").css("top",top-200)},100);
+    if (inpg) setTimeout(function(){window.scrollTo(0,300);},100);
+    else setTimeout(function(){window.scrollTo(0,0);},100);
     //$(".ui-dialog").css("top","-600px");
-    //window.scrollTo(0,0);
+    //alert($(".ui-dialog").css("top"));
+    //window.scrollTo(0,300);
 }
 
 // 点击完成按钮

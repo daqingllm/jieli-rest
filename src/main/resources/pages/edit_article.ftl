@@ -727,7 +727,7 @@
 
             try {
                 $("#form-field-occDate").val(new Date(data.time).Format("yyyy-MM-dd"));
-                $("#form-field-occDate-parent").show();
+                //$("#form-field-occDate-parent").show();
             }catch (err){
                 $("#form-field-occDate").val(GetDate10(new Date(),0));
             }
