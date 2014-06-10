@@ -60,7 +60,7 @@
 
     <div class="navbar-container" id="navbar-container">
         <div class="navbar-header pull-left">
-            <a href="index.html" class="navbar-brand">
+            <a href="#" class="navbar-brand">
                 <small>
                     <i class="fa fa-leaf"></i>
                 ${associationName} 后台管理系统

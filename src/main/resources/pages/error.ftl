@@ -58,7 +58,7 @@
 
     <div class="navbar-container" id="navbar-container">
         <div class="navbar-header pull-left">
-            <a href="index.html" class="navbar-brand">
+            <a href="/index.html" class="navbar-brand">
                 <small>
                     <i class="icon-leaf"></i>
                     上海市青企协 后台管理系统
