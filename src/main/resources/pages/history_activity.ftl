@@ -2,7 +2,7 @@
 <html lang="zh">
 <head>
     <meta charset="utf-8"/>
-    <title>${associationName} 活动管理</title>
+    <title>${associationName} 活动</title>
     <meta name="description" content="接力"/>
     <!-- basic styles -->
 
@@ -203,7 +203,7 @@
         </li>
 
         <li>
-            <a href="/app/bactivity/list"> 活动管理 </a>
+            <a href="/app/bactivity/list"> 活动 </a>
         </li>
 
         <li class="active"> 编辑活动</li>

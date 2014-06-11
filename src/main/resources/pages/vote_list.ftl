@@ -2,7 +2,7 @@
 <html lang="zh">
 <head>
     <meta charset="utf-8"/>
-    <title>${associationName} 资讯管理</title>
+    <title>${associationName} 同舟表决 </title>
     <meta name="description" content="接力"/>
     <!-- basic styles -->
 
@@ -189,10 +189,10 @@
                     </li>
 
                     <li>
-                        <a href="/app/bvote/list"> 投票管理 </a>
+                        <a href="/app/bvote/list"> 同舟表决 </a>
                     </li>
 
-                    <li class="active"> 投票列表 </li>
+                    <li class="active"> 同舟表决列表 </li>
                 </ul>
                 <!-- .breadcrumb -->
 
@@ -211,7 +211,7 @@
             <div class="page-content">
                 <div class="page-header">
                     <h1>
-                        投票列表
+                        同舟表决列表
                     </h1>
                 </div>
                 <!-- /.page-header -->
@@ -231,26 +231,26 @@
                         <!-- PAGE CONTENT BEGINS -->
                         <button class="btn btn-success" type="button" style="font-weight:bold;margin-bottom: 20px;" onclick="window.location.href = '/app/bvote/new'">
                             <i class="fa fa-plus bigger-110"></i>
-                            发布投票
+                            发布同舟表决
                         </button>
                         &nbsp;&nbsp;&nbsp;&nbsp;
 
                         <!--<button class="btn btn-info" type="button" style="font-weight:bold;margin-bottom: 20px;" onclick="viewVote()">
                             <i class="fa fa-search-plus bigger-110"></i>
-                            查看投票
+                            查看同舟表决
                         </button>
                         &nbsp;&nbsp;&nbsp;&nbsp;
 
                         <button class="btn btn-warning" type="button" style="font-weight:bold;margin-bottom: 20px;"
                                 onclick="editVote()" id="editVote">
                             <i class="fa fa-search-plus bigger-110"></i>
-                            编辑投票
+                            编辑同舟表决
                         </button>
                         &nbsp;&nbsp;&nbsp;&nbsp;-->
 
                         <button class="btn btn-danger" type="button" style="font-weight:bold;margin-bottom: 20px;" onclick="deleteVote()" id="deleteArtBtn">
                             <i class="fa fa-trash-o bigger-110"></i>
-                            删除投票
+                            删除同舟表决
                         </button>
                         &nbsp;&nbsp;&nbsp;&nbsp;
 
@@ -528,7 +528,7 @@ function editVote(){
     var selectIds = $("#grid-table").getGridParam("selarrrow");
         //var id=$("#grid-table > tbody > tr").eq(index).find("td").eq(1).attr("id");
     if(selectIds.length == 0){
-        alert("请选择投票！");
+        alert("请选择同舟表决！");
     }
     else {
         window.location.href = '/app/bvote/edit?voteId=' + selectIds[0];
@@ -538,7 +538,7 @@ function viewVote() {
     var selectIds = $("#grid-table").getGridParam("selarrrow");
 
     if(selectIds.length == 0){
-        alert("请选择投票！");
+        alert("请选择同舟表决！");
     }
     else {
         window.location.href = '/app/bvote/view?v=' + selectIds[0];
@@ -546,11 +546,11 @@ function viewVote() {
 }
 
 function deleteVote() {
-    var flag=window.confirm("确定要删除投票吗?");
+    var flag=window.confirm("确定要删除同舟表决吗?");
     if(flag) {
         var selectedIds = $("#grid-table").getGridParam("selarrrow");
         if(selectedIds.length == 0){
-            alert("请选择投票！");
+            alert("请选择同舟表决！");
         }
         else {
             $.ajax({
@@ -588,7 +588,7 @@ jQuery(function($) {
         datatype: 'local',
         data: data,
         height: 330,
-        colNames:['id',<#if isSuper>'协会',</#if>'投票标题','投票类型', '投票描述', '添加日期', '截止日期', '参加人数'],
+        colNames:['id',<#if isSuper>'协会',</#if>'标题','类型', '描述', '添加日期', '截止日期', '参加人数'],
         colModel:[
             {name:"id",index:"_id",width:10,editable:false,hidden:true},
             //{name:"associationId",index:"associationId",width:40,editable:false, hidden:true},
@@ -625,7 +625,7 @@ jQuery(function($) {
 
         },
 
-        caption: "投票列表",
+        caption: "同舟表决列表",
         autowidth: true
     });
 
@@ -634,11 +634,11 @@ jQuery(function($) {
             { 	//navbar options
                 add: false,
                 addicon : 'fa fa-plus-circle purple',
-                addtitle : '添加投票',
+                addtitle : '添加同舟表决',
                 addfunc : (function(){window.location.href="/app/bvote/new";/*alert("添加操作!");*/return false;}),
 
                 edit: false,
-                edittitle : '编辑投票',
+                edittitle : '编辑同舟表决',
                 editicon : 'fa fa-pencil blue',
                 editfunc : (function(){
                     var index = $("#grid-table").getGridParam("selrow");
@@ -649,9 +649,9 @@ jQuery(function($) {
                 <#else>del: false,
                 </#if>
                 delicon : 'fa fa-trash-o red',
-                deltitle : '删除选中投票',
+                deltitle : '删除选中同舟表决',
                 delfunc : (function(){
-                    var flag=window.confirm("确定要删除投票吗?");
+                    var flag=window.confirm("确定要删除同舟表决吗?");
                     if(flag) {
                         var selectedIds = $("#grid-table").getGridParam("selarrrow");
                         $.ajax({
@@ -681,7 +681,7 @@ jQuery(function($) {
                 refresh: false,
 
                 view: false,
-                viewtitle : '查看投票',
+                viewtitle : '查看同舟表决',
                 viewicon : 'fa fa-search-plus grey',
                 viewfunc: (
                         function(){

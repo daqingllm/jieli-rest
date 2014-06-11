@@ -2,7 +2,7 @@
 <html lang="zh">
 <head>
     <meta charset="utf-8"/>
-    <title>${associationName} 互帮互助管理</title>
+    <title>${associationName} 同舟共济 </title>
     <meta name="description" content="接力"/>
     <!-- basic styles -->
 
@@ -191,10 +191,10 @@
                     </li>
 
                     <li>
-                        <a href="/app/bhelp/list"> 互帮互助管理 </a>
+                        <a href="/app/bhelp/list"> 同舟共济 </a>
                     </li>
 
-                    <li class="active"> 互帮互助列表 </li>
+                    <li class="active"> 同舟共济列表 </li>
                 </ul>
                 <!-- .breadcrumb -->
 
@@ -213,7 +213,7 @@
             <div class="page-content">
                 <div class="page-header">
                     <h1>
-                        互帮互助列表
+                        同舟共济列表
                     </h1>
                 </div>
                 <!-- /.page-header -->
@@ -230,7 +230,7 @@
                     </div>
                     <div class="space-4"></div>
                 </#if>
-                    <label class="col-sm-3 control-label no-padding-right" for="form-field-select-type"> 请选择帮助类型 </label>
+                    <label class="col-sm-3 control-label no-padding-right" for="form-field-select-type"> 请选择同舟共济类型 </label>
                     <div class="col-sm-9">
                         <select class="col-xs-10 col-sm-7" id="help-select" style="padding: 5px 4px;font-size: 14px;">
                             <option value="2" selected="selected">全部</option>
@@ -249,7 +249,7 @@
 
                         <button class="btn btn-danger" type="button" style="font-weight:bold;margin-bottom: 20px;" onclick="deleteHelp()" id="deleteArtBtn">
                             <i class="fa fa-trash-o bigger-110"></i>
-                            删除互帮互助
+                            删除同舟共济
                         </button>
                         &nbsp;&nbsp;&nbsp;&nbsp;
 
@@ -534,7 +534,7 @@ function viewHelp() {
 }
 
 function deleteHelp() {
-    var flag=window.confirm("确定要删除互帮互助帖吗?");
+    var flag=window.confirm("确定要删除同舟共济帖吗?");
     if(flag) {
         var selectedIds = $("#grid-table").getGridParam("selarrrow");
         if(selectedIds.length == 0) {
@@ -603,7 +603,7 @@ jQuery(function($) {
         data: grid_data,
         datatype: "local",
         height: 330,
-        colNames:['id',<#if isSuper>'协会',</#if>'帮助标题','帮助类型', '帮助描述', '添加日期', '关注人数', '状态', '审核'],
+        colNames:['id',<#if isSuper>'协会',</#if>'标题','类型', '描述', '添加日期', '关注人数', '状态', '审核'],
         colModel:[
             {name:"id",index:"id",width:10,editable:false,hidden:true},
             //{name:"associationId",index:"associationId",width:40,editable:false, hidden:true},
@@ -668,7 +668,7 @@ jQuery(function($) {
             }, 0);
         },
 
-        caption: "帮助列表",
+        caption: "同舟共济列表",
         autowidth: true
     });
 
@@ -687,10 +687,10 @@ jQuery(function($) {
 
                 del: false,
                 delicon : 'fa fa-trash-o red',
-                deltitle : '删除选中帮助',
+                deltitle : '删除选中同舟共济',
                 delfunc : (
                         function(){
-                            var flag=window.confirm("确定要删除互帮互助帖吗?");
+                            var flag=window.confirm("确定要删除同舟共济帖吗?");
                             if(flag) {
                                 var selectedIds = $("#grid-table").getGridParam("selarrrow");
                                 $.ajax({
@@ -720,7 +720,7 @@ jQuery(function($) {
 
                 view: false,
                 viewicon : 'fa fa-search-plus grey',
-                viewtitle : '查看帮助',
+                viewtitle : '查看同舟共济',
                 viewfunc: (function(){
                     var selectIds = $("#grid-table").getGridParam("selarrrow");
 

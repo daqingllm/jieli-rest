@@ -2,7 +2,7 @@
     <html lang="zh">
             <head>
             <meta charset="utf-8"/>
-            <title>${associationName} 投票管理</title>
+            <title>${associationName} 同舟表决 </title>
     <meta name="description" content="接力"/>
         <!-- basic styles -->
 
@@ -192,15 +192,15 @@
             </li>
 
             <li>
-                <a href="/app/bvote/list"> 投票管理 </a>
+                <a href="/app/bvote/list"> 同舟表决 </a>
             </li>
 
             <li class="active">
             <#if newVote>
-                发布投票
+                发布同舟表决
             <#else>
-                <#if isEditable>编辑投票
-                <#else>查看投票
+                <#if isEditable>编辑同舟表决
+                <#else>查看同舟表决
                 </#if>
             </#if>
             </li>
@@ -223,10 +223,10 @@
         <div class="page-header">
             <h1>
             <#if newVote>
-                发布投票
+                发布同舟表决
             <#else>
-                <#if isEditable>编辑投票
-                <#else>查看投票
+                <#if isEditable>编辑同舟表决
+                <#else>查看同舟表决
                 </#if>
             </#if>
             </h1>
@@ -240,7 +240,7 @@
                 <form class="form-horizontal" role="form">
 
                     <div class="form-group">
-                        <label class="col-sm-3 control-label no-padding-right" for="form-field-title"> 投票标题 </label>
+                        <label class="col-sm-3 control-label no-padding-right" for="form-field-title"> 标题 </label>
 
                         <div class="col-sm-9">
                             <input type="text" id="form-field-title"
@@ -252,7 +252,7 @@
                     <div class="space-4"></div>
 
                     <div class="form-group">
-                        <label class="col-sm-3 control-label no-padding-right" for="form-field-select-type"> 投票类型 </label>
+                        <label class="col-sm-3 control-label no-padding-right" for="form-field-select-type"> 类型 </label>
 
                         <div class="col-sm-9">
                             <select class="col-xs-10 col-sm-7" id="form-field-select-type"
@@ -294,7 +294,7 @@
                     <div class="space-4"></div>
 
                     <div class="form-group">
-                        <label class="col-sm-3 control-label no-padding-right" for="form-field-textarea"> 投票正文 </label>
+                        <label class="col-sm-3 control-label no-padding-right" for="form-field-textarea"> 正文 </label>
 
                         <div class="col-sm-9">
                             <textarea id="form-field-textarea" class="autosize-transition col-xs-10 col-sm-7 textarea-no-resize"
@@ -364,7 +364,7 @@
                     <div class="space-4"></div>
 
                     <div class="form-group">
-                        <label class="col-sm-3 control-label no-padding-right" for="form-field-title"> 投票选项 </label>
+                        <label class="col-sm-3 control-label no-padding-right" for="form-field-title"> 选项 </label>
 
                         <div id="vote-choices" class="col-sm-9">
                             <div>

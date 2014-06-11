@@ -243,9 +243,9 @@
                         <input readonly="true" type="text" id="form-field-type"
                         <#if discuss.type==1>value="生活"
                         <#elseif discuss.type == 2>value="活动"
-                        <#elseif discuss.type == 3>value="健康"
-                        <#elseif discuss.type == 4>value="读书"
-                        <#else>value="新闻"
+                        <#elseif discuss.type == 6>value="健康"
+                        <#elseif discuss.type == 3>value="读书"
+                        <#else>value="全部"
                         </#if>
                                class="col-xs-10 col-sm-7"
                                style="padding-left: 7px;"/>

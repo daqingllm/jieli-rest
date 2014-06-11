@@ -2,7 +2,7 @@
 <html lang="zh">
 <head>
     <meta charset="utf-8"/>
-    <title>${associationName} 资讯管理</title>
+    <title>${associationName} 资讯</title>
     <meta name="description" content="接力"/>
     <!-- basic styles -->
 
@@ -179,7 +179,7 @@
             </li>
 
             <li>
-                <a href="/app/bnews/list"> 资讯管理 </a>
+                <a href="/app/bnews/list"> 资讯 </a>
             </li>
 
             <li class="active"> 编辑资讯</li>

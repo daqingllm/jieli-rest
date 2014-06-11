@@ -740,7 +740,10 @@
                 ;
             }
         }
-        data["interests"] = $("#form-field-interests").val().replace(new RegExp("£¬","g"),",").split(",");
+        var _interests = $("#form-field-interests").val().replace(new RegExp("£¬","g"),",").split(",");
+        if (_interests && (_interests.length == 0 || _interests[0] == "")) data["interests"] = [];
+        if (_interests && _interests.length > 0 && _interests[0] != "") data["interests"] = _interests;
+
         data["constellation"] = $("#form-field-constellation").val();
         data["profession"] = $("#form-field-profession").val();
         data["mail"] = $("#form-field-mail").val();

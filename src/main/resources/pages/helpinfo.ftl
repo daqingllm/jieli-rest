@@ -2,7 +2,7 @@
 <html lang="zh">
 <head>
     <meta charset="utf-8"/>
-    <title>${associationName} 互帮互助管理</title>
+    <title>${associationName} 同舟共济</title>
     <meta name="description" content="接力"/>
     <!-- basic styles -->
 
@@ -191,10 +191,10 @@
         </li>
 
         <li>
-            <a href="/app/bhelp/list"> 互帮互助管理 </a>
+            <a href="/app/bhelp/list"> 同舟共济 </a>
         </li>
 
-        <li class="active">查看互帮互助</li>
+        <li class="active">查看同舟共济</li>
     </ul>
     <!-- .breadcrumb -->
 
@@ -213,7 +213,7 @@
 <div class="page-content">
     <div class="page-header">
         <h1>
-        查看互帮互助
+        查看同舟共济
         </h1>
     </div>
     <!-- /.page-header -->
@@ -225,7 +225,7 @@
             <form class="form-horizontal" role="form">
 
                 <div class="form-group">
-                    <label class="col-sm-3 control-label no-padding-right" for="form-field-title"> 帮助标题 </label>
+                    <label class="col-sm-3 control-label no-padding-right" for="form-field-title"> 标题 </label>
 
                     <div class="col-sm-9">
                         <input readonly="true" type="text" id="form-field-title" value="${help.title}"
@@ -237,7 +237,7 @@
                 <div class="space-4"></div>
 
                 <div class="form-group">
-                    <label class="col-sm-3 control-label no-padding-right" for="form-field-select-type"> 帮助类型 </label>
+                    <label class="col-sm-3 control-label no-padding-right" for="form-field-select-type"> 类型 </label>
 
                     <div class="col-sm-9">
                         <input readonly="true" type="text" id="form-field-type"
@@ -262,7 +262,7 @@
                 <div class="space-4"></div>
 
                 <div class="form-group">
-                    <label class="col-sm-3 control-label no-padding-right" for="form-field-textarea"> 帮助正文 </label>
+                    <label class="col-sm-3 control-label no-padding-right" for="form-field-textarea"> 正文 </label>
 
                     <div class="col-sm-9">
                         <textarea id="form-field-textarea" readOnly='true' class="autosize-transition col-xs-10 col-sm-7 textarea-no-resize"

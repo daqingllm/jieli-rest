@@ -2,7 +2,7 @@
 <html lang="zh">
 <head>
     <meta charset="utf-8"/>
-    <title>${associationName} 讨论管理</title>
+    <title>${associationName} 同舟论剑 </title>
     <meta name="description" content="接力"/>
     <!-- basic styles -->
 
@@ -191,10 +191,10 @@
                     </li>
 
                     <li>
-                        <a href="/app/bdiscuss/list"> 讨论管理 </a>
+                        <a href="/app/bdiscuss/list"> 同舟论剑 </a>
                     </li>
 
-                    <li class="active"> 讨论帖列表 </li>
+                    <li class="active"> 同舟论剑列表 </li>
                 </ul>
                 <!-- .breadcrumb -->
 
@@ -213,7 +213,7 @@
             <div class="page-content">
                 <div class="page-header">
                     <h1>
-                        讨论帖列表
+                        同舟论剑列表
                     </h1>
                 </div>
                 <!-- /.page-header -->
@@ -233,12 +233,12 @@
                     <label class="col-sm-3 control-label no-padding-right" for="form-field-select-type"> 请选择帖子类型 </label>
                     <div class="col-sm-9">
                         <select class="col-xs-10 col-sm-7" id="help-select" style="padding: 5px 4px;font-size: 14px;">
-                            <option value="6" selected="selected">全部</option>
+                            <option value="4" selected="selected">全部</option>
                             <option value="1">生活</option>
                             <option value="2">活动</option>
-                            <option value="3">健康</option>
-                            <option value="4">读书</option>
-                            <option value="5">新闻</option>
+                            <option value="6" style="display: none;">健康</option>
+                            <option value="3">读书</option>
+                            <option value="5" style="display: none;">新闻</option>
                         </select>
                     </div>
                     <div class="space-4"></div>
@@ -252,7 +252,7 @@
 
                         <button class="btn btn-danger" type="button" style="font-weight:bold;margin-bottom: 20px;" onclick="deleteHelp()" id="deleteArtBtn">
                             <i class="fa fa-trash-o bigger-110"></i>
-                            删除
+                            删除同舟论剑
                         </button>
                         &nbsp;&nbsp;&nbsp;&nbsp;
 
@@ -535,7 +535,7 @@ function viewHelp() {
 }
 
 function deleteHelp() {
-    var flag=window.confirm("确定要删除讨论帖吗?");
+    var flag=window.confirm("确定要删除同舟论剑吗?");
     if(flag) {
         var selectedIds = $("#grid-table").getGridParam("selarrrow");
         if(selectedIds.length == 0) {
@@ -648,7 +648,7 @@ jQuery(function($) {
             }, 0);
         },
 
-        caption: "讨论帖列表",
+        caption: "同舟论剑列表",
         autowidth: true
     });
 
