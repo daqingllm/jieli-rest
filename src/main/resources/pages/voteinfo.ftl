@@ -368,7 +368,7 @@
 
                         <div id="vote-choices" class="col-sm-9">
                             <div>
-                                <div class="icon-plus"></div>
+                                <div class="fa fa-plus"></div>
                             </div>
                         </div>
                     </div>
@@ -1235,8 +1235,8 @@ function voteOptionUploadImg(voteOption) {
 
                                 //newImgHtml += "<div class='tools tools-right' style='height:30px;'>";
                                 // must be " , ' no use
-                                //newImgHtml += "<a href='#' onclick='deletePic(\""+"\")'><i class='icon-remove red'></i></a></div></div>";
-                                $(newImgHtml).insertAfter(voteOption.children('.icon-remove'));
+                                //newImgHtml += "<a href='#' onclick='deletePic(\""+"\")'><i class='fa fa-times red'></i></a></div></div>";
+                                $(newImgHtml).insertAfter(voteOption.children('.fa-times'));
                                 voteOption.children('.vote-choice-img').hide();
                                 voteOption.css({height : '200px'});
 
@@ -1254,7 +1254,7 @@ function voteOptionUploadImg(voteOption) {
                 }
             },
             "cancel": {
-                "label": "<i class='icon-remove'></i> 取消",
+                "label": "<i class='fa fa-times'></i> 取消",
                 "className": "btn-sm",
                 "callback": function () {
                     //Example.show("uh oh, look out!");
@@ -1281,11 +1281,11 @@ function addVoteOption(value, percent) {
             '<div class="col-xs-5"><div class="progress" data-percent="'+percent+'%"><div class="progress-bar" style="width:'+percent+'%;"></div></div></div>' +
             </#if>
             '<button type="button" class="btn btn-xs btn-info vote-choice-img">Pic</button>' +
-            '<div class="icon-remove"></div>' +
+            '<div class="fa fa-times"></div>' +
             '</div>');
-    voteOption.insertBefore($('.icon-plus').parent());
+    voteOption.insertBefore($('.fa-plus').parent());
     <#if newVote>
-    voteOption.children('.icon-remove').click(deleteVoteOption);
+    voteOption.children('.fa-times').click(deleteVoteOption);
     voteOption.children('.vote-choice-img').click(function() {
         voteOptionUploadImg(voteOption);
     });
@@ -1368,7 +1368,7 @@ function voteInfo(voteId, callback) {
 
 function newSettings() {
     enableDatePicker();
-    $('.icon-plus').click(function (){ addVoteOption(); });
+    $('.fa-plus').click(function (){ addVoteOption(); });
     $('.progress-bar').hide();
     addVoteOption();
     addVoteOption();
@@ -1378,8 +1378,8 @@ function newSettings() {
 function editSettings() {
     $('#form-field-select-type').attr({disabled : true});
     $('.vote-choice-img').hide();
-    $('.icon-remove').remove();
-    $('.icon-plus').hide();
+    $('.fa-times').remove();
+    $('.fa-plus').hide();
     $('.vote-choice-text').attr({readOnly : true});
     $('.progress-bar').hide();
     enableDatePicker();
@@ -1389,8 +1389,8 @@ function viewSettings() {
     $('#form-field-select-type').attr({disabled : true});
     $('#force-type').attr({disabled : true});
     $('.vote-choice-img').hide();
-    $('.icon-remove').remove();
-    $('.icon-plus').hide();
+    $('.fa-times').remove();
+    $('.fa-plus').hide();
     $('#form-field-title').attr({readOnly : true});
     $('#form-field-textarea').attr({readOnly : true});
     $('#form-field-date').attr({readOnly : true});
