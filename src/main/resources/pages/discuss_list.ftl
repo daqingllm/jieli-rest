@@ -551,6 +551,7 @@ function deleteHelp() {
                     if(json.code == 200) {
                         var associationId = $('#form-field-select-type').val();
                         updateGrid(associationId,1,20);
+                        window.location.reload();
                     }
                 },
                 error: function(XMLHttpRequest, textStatus, errorThrown) {

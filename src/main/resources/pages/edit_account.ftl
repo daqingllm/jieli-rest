@@ -392,7 +392,20 @@
     <label class="col-sm-3 control-label no-padding-right" for="form-field-interests"> 兴趣 </label>
 
     <div class="col-sm-9">
-        <input type="text" id="form-field-interests" placeholder="用逗号分隔" class="col-xs-10 col-sm-7"
+        <input type="text" id="form-field-interests3" placeholder="用逗号分隔" class="col-xs-10 col-sm-7"
+               style="padding-left: 7px; display: none;" value="" />
+        <select id="form-field-interests" multiple="multiple" class="multiselect">${interestList}</select>
+    </div>
+</div>
+
+<div class="space-4"></div>
+
+
+<div class="form-group" style="display: none;">
+    <label class="col-sm-3 control-label no-padding-right" for="form-field-interests2"> 兴趣 </label>
+
+    <div class="col-sm-9">
+        <input type="text" id="form-field-interests2" placeholder="用逗号分隔" class="col-xs-10 col-sm-7"
                style="padding-left: 7px;" value=""/>
     </div>
 </div>
@@ -419,13 +432,24 @@
 
 <div class="space-4"></div>
 
-
-
 <div class="form-group">
     <label class="col-sm-3 control-label no-padding-right" for="form-field-profession"> 专业行业 </label>
 
     <div class="col-sm-9">
-        <input type="text" id="form-field-profession" placeholder="专业行业" class="col-xs-10 col-sm-7"
+        <input type="text" id="form-field-profession3" placeholder="专业行业" class="col-xs-10 col-sm-7"
+               style="padding-left: 7px; display: none" value=""/>
+        <select id="form-field-profession" class="multiselect col-xs-10 col-sm-7">${professionList}</select>
+    </div>
+</div>
+
+
+<div class="space-4"></div>
+
+<div class="form-group" style="display: none;">
+    <label class="col-sm-3 control-label no-padding-right" for="form-field-profession2"> 专业行业 </label>
+
+    <div class="col-sm-9">
+        <input type="text" id="form-field-profession2" placeholder="专业行业" class="col-xs-10 col-sm-7"
                style="padding-left: 7px;" value=""/>
     </div>
 </div>
@@ -695,6 +719,15 @@
 
 <script type="text/javascript">
     jQuery(function($){
+        $('#form-field-interests').multiselect({
+            numberDisplayed:10,
+            buttonClass: 'btn-link btn ',
+            selectAllText: '全选',
+            selectAllValue: '全部',
+            nonSelectedText: '请选择',
+            nSelectedText: ' 被选中了',
+            maxHeight:400
+        });
 
         //console.log('init',[xsize,ysize]);
 
@@ -740,9 +773,12 @@
                 ;
             }
         }
-        var _interests = $("#form-field-interests").val().replace(new RegExp("，","g"),",").split(",");
+
+        /*var _interests = $("#form-field-interests").val().replace(new RegExp("，","g"),",").split(",");
         if (_interests && (_interests.length == 0 || _interests[0] == "")) data["interests"] = [];
-        if (_interests && _interests.length > 0 && _interests[0] != "") data["interests"] = _interests;
+        if (_interests && _interests.length > 0 && _interests[0] != "") data["interests"] = _interests;*/
+        //alert($("#form-field-interests").val());
+        data["interests"] = $("#form-field-interests").val();
 
         data["constellation"] = $("#form-field-constellation").val();
         data["profession"] = $("#form-field-profession").val();
@@ -807,9 +843,10 @@
             intlist += data["interests"][i] + ",";
         if (intlist.length > 0) intlist = intlist.substring(0,intlist.length-1);
 
-        $("#form-field-interests").val(intlist);
+//        $("#form-field-interests").val(intlist);
 //        var degrees = ["EMBA","MBA","学士","硕士","博士","其他"];
 //        if (data["degree"]) $("#form-field-degree").val(degrees[data["degree"]]);
+        $("#form-field-interests").val(data["interests"]);
         $("#form-field-degree").val(data["degree"]);
 
         $("#form-field-profession").val(data["profession"] || "");

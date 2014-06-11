@@ -6,6 +6,7 @@ import com.jieli.association.*;
 import com.jieli.association.Group;
 import com.jieli.common.dao.AccountDAO;
 import com.jieli.common.entity.AccountState;
+import com.jieli.common.entity.InterestTag;
 import com.jieli.common.entity.ResponseEntity;
 import com.jieli.user.dao.UserDAO;
 import com.jieli.user.entity.User;
@@ -213,6 +214,12 @@ public class Account {
             params.put("user","");
             params.put("got","无此用户");
         }
+
+        String interestList = CommonUtil.MakeInterestOptionList();
+        String professionList = CommonUtil.MakeProfessionOptionList();
+        params.put("interestList",interestList);
+        params.put("professionList",professionList);
+
         return FTLrender.getResult("edit_account.ftl", params);
     }
 
