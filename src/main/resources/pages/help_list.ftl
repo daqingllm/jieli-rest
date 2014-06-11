@@ -526,7 +526,7 @@ function viewHelp() {
     var selectIds = $("#grid-table").getGridParam("selarrrow");
 
     if(typeof selectIds.length == 0) {
-        alert("请选择互助贴");
+        alert("请选择同舟共济贴");
     }
     else {
         window.location.href = '/app/bhelp/view?h=' + selectIds[0];
@@ -538,7 +538,7 @@ function deleteHelp() {
     if(flag) {
         var selectedIds = $("#grid-table").getGridParam("selarrrow");
         if(selectedIds.length == 0) {
-            alert("请选择互助贴");
+            alert("请选择同舟共济贴");
         }
         else {
             $.ajax({
@@ -550,6 +550,7 @@ function deleteHelp() {
                     if(json.code == 200) {
                         var associationId = $('#form-field-select-type').val();
                         updateGrid(associationId,1,20);
+                        window.location.reload();
                     }
                 },
                 error: function(XMLHttpRequest, textStatus, errorThrown) {
@@ -748,6 +749,7 @@ function updateHelp(id, status) {
             if(json.code == 200) {
                 var associationId = $('#form-field-select-type').val();
                 updateGrid(associationId,1,20);
+                window.location.reload();
             }
         }
     });
