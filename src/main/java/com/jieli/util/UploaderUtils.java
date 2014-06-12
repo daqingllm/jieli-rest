@@ -1,6 +1,7 @@
 package com.jieli.util;
 
 import au.com.bytecode.opencsv.CSVReader;
+import com.jieli.admin.CommonUtil;
 import com.jieli.association.Group;
 import com.jieli.association.GroupDAO;
 import com.jieli.association.Identity;
@@ -8,6 +9,7 @@ import com.jieli.association.IdentityDAO;
 import com.jieli.common.dao.AccountDAO;
 import com.jieli.common.entity.Account;
 import com.jieli.common.entity.AccountState;
+import com.jieli.common.entity.ProfessionTag;
 import com.jieli.user.dao.UserDAO;
 import com.jieli.user.entity.User;
 import com.qiniu.api.auth.digest.Mac;
@@ -23,6 +25,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by xianxing on 2014/3/22.
@@ -129,6 +132,7 @@ public class UploaderUtils {
         nameList.clear();
         groupList.clear();
         identityList.clear();
+        professionList.clear();
 
 
         Iterable<Group> groups = groupDAO.loadAll(associationId);
@@ -141,6 +145,10 @@ public class UploaderUtils {
             identityList.add(identity.name);
         }
 
+        String []sProfession = ProfessionTag.ALL;
+        for (String s : sProfession) {
+            professionList.add(s);
+        }
 
         int totalItemsInExcel = 0;
         int successItems = 0;
@@ -154,21 +162,24 @@ public class UploaderUtils {
             //    System.out.println(nextLine[i]);
             String name = InitByLine(nextLine,associationId);
 
-            if (name != null)
-                totalItemsInExcel ++;
+            if (name != null) {
+                totalItemsInExcel++;
 
-            if (name == "")
-                successItems ++;
+                if (name == "")
+                    successItems++;
 
-            if (name != "")
-                nameList.add(name);
-
+                if (name != "")
+                    nameList.add(name);
+            }
         }
 
         return new int[] {totalItemsInExcel,successItems,totalItemsInExcel - successItems};
     }
 
     private static String InitByLine(String [] nextLine,String associationId){
+        if (nextLine.length == 0) return null;
+        if (nextLine[0].length() == 0) return null;
+
         // 至少要有前三列的内容
         if (nextLine.length < 3) {
             // 如果有名字，记录下来
@@ -200,11 +211,16 @@ public class UploaderUtils {
             String job = (nextLine.length >= 7 ? nextLine[6] : "");
             String group = (nextLine.length >= 8 ? nextLine[7] : null);
 
+            /*2014年6月12日21:10:57*/
+            String mail = (nextLine.length >= 9 ? nextLine[8] : null);
+            String profession = (nextLine.length >= 10 ? nextLine[9] : null);
+
             if (!identityList.contains(identity)) identity = null;
             if (!groupList.contains(group)) group = null;
+            if (!professionList.contains(profession)) profession = null;
 
             boolean initSuc = checkInitUser(sex, birthday, identity, group,(nextLine.length >= 4))
-                    && InitAUser(name, sex, phone, birthday, identity, entName, job, group, associationId);
+                    && InitAUser(name, sex, phone, birthday, identity, entName, job, group, mail, profession, associationId);
 
             if (initSuc) {
                 return "";
@@ -220,7 +236,7 @@ public class UploaderUtils {
         return (sex.compareTo("男") == 0 || sex.compareTo("女")==0) && (!birthdayNotNull || (birthdayNotNull && birthday !=null)) && (identity == null || identityList.contains(identity)) && (group == null || groupList.contains(group));
     }
 
-    private static boolean InitAUser(String name,String sex, String phone,Date birthday,String identity,String entName,String job,String group,String associationId) {
+    private static boolean InitAUser(String name,String sex, String phone,Date birthday,String identity,String entName,String job,String group,String mail,String profession,String associationId) {
         if (UserNameIndex == Integer.MAX_VALUE) UserNameIndex = 0;
 
         String username = System.nanoTime() + "" + UserNameIndex;
@@ -249,6 +265,8 @@ public class UploaderUtils {
             }
             user.enterpriseName = entName;
             user.job = job;
+            user.mail = mail;
+            user.profession = profession;
 
             user.identity = identity;
             user.group = group;
@@ -274,6 +292,7 @@ public class UploaderUtils {
     private static UserDAO userDAO = new UserDAO();
     private static ArrayList<String> identityList = new ArrayList<String>();
     private static ArrayList<String> groupList = new ArrayList<String>();
+    private static List<String> professionList = new ArrayList<String>();
     private static GroupDAO groupDAO = new GroupDAO();
     private static IdentityDAO identityDAO = new IdentityDAO();
 

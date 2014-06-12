@@ -223,7 +223,7 @@
 
                         <button class="btn btn-purple" type="button" style="font-weight:bold;margin-bottom: 20px;">
                             <i class="fa fa-cloud-download bigger-110"></i>
-                            <a href="/assets/Template.csv" style="color: #ffffff">下载CSV表格模板</a>
+                            <a href="/assets/Template.xlsx" style="color: #ffffff">下载XLSX表格模板</a>
                         </button>
                         &nbsp;&nbsp;&nbsp;&nbsp;
 
@@ -231,7 +231,7 @@
                             <i class="fa fa-cloud-upload bigger-110"></i>
                             上传账户CSV表格
                         </button>
-                        <div class="alert alert-warning" style="margin-left: 15px; width: 300px; position: relative;display: inline-block;padding: 10px;">&nbsp;小提示:&nbsp;您可以将Excel文件另存为csv文件</div>
+                        <div class="alert alert-warning" style="margin-left: 15px; width: 300px; position: relative;display: inline-block;padding: 10px;">&nbsp;小提示:&nbsp;您可以将XLSX文件另存为CSV文件</div>
 
                         <br>
                         <div class="alert alert-warning" id="failedImport" style="display: none">

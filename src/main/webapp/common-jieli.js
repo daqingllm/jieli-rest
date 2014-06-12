@@ -824,7 +824,10 @@ var uploadExcelOptions = {
 
         if (jsn.body) {
             $("#failedImport").show();
-            $("#failedImportNameList").html("导入失败的用户有："+jsn.body);
+            if (jsn.body.length > 0)
+                $("#failedImportNameList").html("导入失败的用户有："+jsn.body + "<p style='margin-top: 10px;'><a style='color: rgb(192, 152, 83); margin-left: 10px;' href='#' onclick='window.location.reload();'>刷新列表</a></p>");
+            else
+                $("#failedImportNameList").html("无导入失败的用户" + "<p style='margin-top: 10px;'><a style='color: rgb(192, 152, 83); margin-left: 10px;' href='#' onclick='window.location.reload();'>刷新列表</a></p>");
         } else {
             $("#failedImport").hide();
         }
