@@ -367,7 +367,7 @@
     <label class="col-sm-3 control-label no-padding-right" for="form-field-birthday"> 生日 </label>
 
     <div class="col-sm-9">
-        <input type="text" id="form-field-birthday" placeholder="格式1990-01-01" class="col-xs-10 col-sm-7"
+        <input onblur="GenXinZuo();" type="text" id="form-field-birthday" placeholder="格式1990-01-01" class="col-xs-10 col-sm-7"
                style="padding-left: 7px;" value=""/>
     </div>
 </div>
@@ -878,6 +878,18 @@
     });
 
     $("#uploadTitleImageClick").click(uploadImgUserface);
+
+    function GenXinZuo(){
+        var dateStr = $("#form-field-birthday").val();
+        dateStr = dateStr.replace(new RegExp("-","g"),"/");
+        var birthd = new Date(dateStr);
+
+        if (Date.parse(dateStr) == Date.parse(dateStr)){
+            var c = getAstro(birthd.getMonth(), birthd.getDate());
+            $("#form-field-constellation").val(c+"座");
+        }
+    }
+
 </script>
 </body>
 </html>
