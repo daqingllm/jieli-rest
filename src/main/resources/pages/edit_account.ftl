@@ -803,6 +803,8 @@
             }
         }
 
+        data["enterpriseIndustry"] = data["profession"];
+
         $.ajax({
             type:"POST",
             url:"/app/user/edit?userId="+data["_id"],

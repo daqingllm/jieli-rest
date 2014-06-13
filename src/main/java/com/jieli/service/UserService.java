@@ -76,6 +76,7 @@ public class UserService {
 
         /*xianxing*/
         if (user.identity == "" || user.identity == null) user.identity = "普通会员";
+        if (user.profession != null && user.profession.length() >0 && (user.enterpriseIndustry == null ||user.enterpriseIndustry.length() == 0)) user.enterpriseIndustry = user.profession;
 
         responseEntity.code = 200;
         responseEntity.body = user;
@@ -106,6 +107,7 @@ public class UserService {
         if (user.birthday != null && user.birthday.getMonth() >= 0) {
             user.constellation = UploaderUtils.getConstellation(user.birthday.getMonth(), user.birthday.getDate());
         }
+        if (user.profession != null && user.profession.length() >0 && (user.enterpriseIndustry == null ||user.enterpriseIndustry.length() == 0)) user.enterpriseIndustry = user.profession;
 
         userDAO.save(user);
         responseEntity.code = 200;
@@ -499,6 +501,7 @@ public class UserService {
         oldUser.enterpriseWebsite = user.enterpriseWebsite;
         oldUser.enterpriseFoundDate = user.enterpriseFoundDate;
         oldUser.enterpriseDescription = user.enterpriseDescription;
+        oldUser.enterpriseIndustry = user.profession;
         oldUser.interests = user.interests;
 
         if (user.birthday != null && user.birthday.getMonth() >= 0) {

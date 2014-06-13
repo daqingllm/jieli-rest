@@ -267,6 +267,7 @@ public class UploaderUtils {
             user.job = job;
             user.mail = mail;
             user.profession = profession;
+            user.enterpriseIndustry = profession;
 
             user.identity = identity;
             user.group = group;
