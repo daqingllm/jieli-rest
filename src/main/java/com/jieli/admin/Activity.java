@@ -221,16 +221,18 @@ public class Activity {
         String associationList = "";
 
         String targetFTL = "edit_activity.ftl";
-        if (activity == null) {
-            params.put("got", "无此活动！");
-        }
-        else if(activity.beginDate != null
-         && activity.beginDate.compareTo(new Date()) < 0) {
-            params.put("got", "old");
-            targetFTL = "history_activity.ftl";
-        }
-        else {
-            params.put("got", "");
+        try {
+            if (activity == null) {
+                params.put("got", "无此活动！");
+            } else if (activity.beginDate != null
+                    && activity.beginDate.compareTo(new Date()) < 0) {
+                params.put("got", "old");
+                targetFTL = "history_activity.ftl";
+            } else {
+                params.put("got", "");
+            }
+        } catch (Exception e){
+            params.put("username","测试"+e.toString());
         }
 
         // 判断用户是否已经登录
