@@ -207,6 +207,10 @@
 															<input type="text" class="form-control" placeholder="手机" id="register-u-phone" />
 															<i class=""></i> </span> </label>
 
+                                            <label class="block clearfix"> <span class="block input-icon input-icon-right">
+															<input type="text" class="form-control" placeholder="邮箱" id="register-u-mail" />
+															<i class=""></i> </span> </label>
+
                                             <#--<label class="block clearfix" style="display: none;"> <span class="block input-icon input-icon-right">-->
 															<#--<input type="text" class="form-control" placeholder="行业" id="register-u-profession" />-->
 															<#--<i class=""></i> </span> </label>-->
@@ -245,6 +249,15 @@
 						                            </span>
                                             </label>
                                         </#if>
+
+
+                                            <label class="block clearfix"> <span class="block input-icon input-icon-right">
+							                            <select class="form-control" id="register-profession">
+                                                        ${professionOpt}
+                                                        </select>
+						                            </span>
+                                            </label>
+
 
                                             <label class="block clearfix"> <span class="block input-icon input-icon-right">
 															<input type="text" class="form-control" placeholder="公司名称" id="register-u-cname" />
@@ -505,6 +518,8 @@
             u.identity = $("#register-identi").val();
         if ($("#register-group").val() != "")
             u.group = $("#register-group").val();
+        if ($("#register-profession").val() != "")
+            u.profession = $("#register-profession").val();
 
         var pphone;
         try{
@@ -519,6 +534,8 @@
             alert("请输入手机号码！");
             return null;
         }
+
+        u.mail = $("#register-u-mail").val();
 
         if ($("#register-u-cname").val() != "")
             u.enterpriseName = $("#register-u-cname").val();

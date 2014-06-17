@@ -109,6 +109,8 @@ public class Account {
         String associationOps = "";
         String identityOps = "<option value='' selected disabled>请选择身份</option>";
         String groupOps = "<option value='' selected disabled>请选择分组</option>";
+        String professionOpt = "<option value='' selected disabled>请选择行业</option>" + CommonUtil.MakeProfessionOptionList();
+
         List<Association> associationList = new ArrayList<Association>();
         if (isSuper) {
             Iterable<com.jieli.association.Association> iterable = associationDAO.loadAll();
@@ -128,6 +130,7 @@ public class Account {
         params.put("associationOps",associationOps);
         params.put("identityOps",identityOps);
         params.put("groupOps",groupOps);
+        params.put("professionOpt",professionOpt);
 
         return FTLrender.getResult("register.ftl", params);
     }
