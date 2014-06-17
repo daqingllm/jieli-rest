@@ -224,15 +224,30 @@ public class Activity {
         try {
             if (activity == null) {
                 params.put("got", "无此活动！");
+
+                params.put("act_data","");
+                params.put("topicId","");
+                params.put("jsonCommentList","");
+                params.put("associationList","");
+                return FTLrender.getResult(targetFTL,params);
+
             } else if (activity.beginDate != null
                     && activity.beginDate.compareTo(new Date()) < 0) {
                 params.put("got", "old");
                 targetFTL = "history_activity.ftl";
+
             } else {
                 params.put("got", "");
             }
         } catch (Exception e){
-            params.put("username","测试"+e.toString());
+            params.put("got", "遇到问题了，"+e.toString());
+
+            params.put("act_data","");
+            params.put("topicId","");
+            params.put("jsonCommentList","");
+            params.put("associationList","");
+            return FTLrender.getResult(targetFTL,params);
+
         }
 
         // 判断用户是否已经登录

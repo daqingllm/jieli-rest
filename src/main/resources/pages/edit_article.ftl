@@ -727,7 +727,11 @@
         $("#form-field-select-type").val(data["type"]);
 
             try {
-                $("#form-field-occDate").val(new Date(data.time).Format("yyyy-MM-dd"));
+
+                if (data.time && data.time.length >= 10)
+                    $("#form-field-occDate").val(new Date(data.time.substr(0,10).replace(new RegExp("-","g"),"/")).Format("yyyy-MM-dd"));
+
+                //$("#form-field-occDate").val(new Date(data.time).Format("yyyy-MM-dd"));
                 //$("#form-field-occDate-parent").show();
             }catch (err){
                 $("#form-field-occDate").val(GetDate10(new Date(),0));

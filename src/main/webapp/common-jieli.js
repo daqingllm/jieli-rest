@@ -567,6 +567,11 @@ function finishActivity(type){
 
     var p_assid = $("#selectAssociationIds").val();
 
+    if ((!p_assid || p_assid.length == 0)){
+        alert("请指定协会");
+        return;
+    }
+
     act.addTime=null;
     //act.tag=null;
     act.followMembers=[];
@@ -587,6 +592,7 @@ function finishActivity(type){
     var suc = true;
     var url = "/app/activity/?activityId="+(isEdit?act["_id"]:"")+"&force="+$("#form-field-checkbox").is(':checked');
     var erro = false;
+
     for (var i = 0; i <p_assid.length;i++) {
         act.associationId = p_assid[i];
         $.ajax({

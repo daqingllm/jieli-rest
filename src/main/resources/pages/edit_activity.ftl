@@ -820,7 +820,7 @@
 
         $("#form-field-title").val(data.title);
         if (data.actDate && data.actDate.length >= 10)
-            $("#form-field-actDate").val(new Date(data.actDate.substr(0,10)).Format("yyyy-MM-dd"));
+            $("#form-field-actDate").val(new Date(data.actDate.substr(0,10).replace(new RegExp("-","g"),"/")).Format("yyyy-MM-dd"));
         else
             $("#form-field-actDate").val(GetDate10(new Date(),0));
 
@@ -1035,7 +1035,12 @@
 
 
         $("#form-field-textarea-sponsor").val(data.sponsorInfo);
-        $("#form-field-dlDate").val(new Date(data.beginDate).Format("yyyy-MM-dd"));
+
+        //$("#form-field-dlDate").val(new Date(data.beginDate).Format("yyyy-MM-dd"));
+
+        if (data.beginDate && data.beginDate.length >= 10)
+            $("#form-field-dlDate").val(new Date(data.beginDate.substr(0,10).replace(new RegExp("-","g"),"/")).Format("yyyy-MM-dd"));
+
         $("#form-field-fee").val(data.feeDescription);
         $("#form-field-max").val(data.maxMembers);
         if (data.url && data.url.length > 0){
