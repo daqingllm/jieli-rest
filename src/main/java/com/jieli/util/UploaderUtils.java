@@ -205,8 +205,15 @@ public class UploaderUtils {
                 try {
                     birthday = dt1.parse(nextLine[3]);
                 } catch (ParseException e) {
-                    // 生日不对
-                    return name;
+                    DateFormat dt2 = new SimpleDateFormat("yyyy/M/d");
+                    dt2.setTimeZone(TimeZone.getTimeZone("GMT+08:00"));
+
+                    try {
+                        birthday = dt2.parse(nextLine[3]);
+                    } catch (Exception ee) {
+                        // 生日不对
+                        return name;
+                    }
                 }
             }
 
