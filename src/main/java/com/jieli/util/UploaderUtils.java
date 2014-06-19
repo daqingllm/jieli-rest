@@ -222,6 +222,8 @@ public class UploaderUtils {
             boolean initSuc = checkInitUser(sex, birthday, identity, group,(nextLine.length >= 4))
                     && InitAUser(name, sex, phone, birthday, identity, entName, job, group, mail, profession, associationId);
 
+            System.out.println("123x" + sex + birthday + identity + group + name + phone + profession);
+
             if (initSuc) {
                 return "";
             } else {
