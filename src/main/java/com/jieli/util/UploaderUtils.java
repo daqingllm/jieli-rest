@@ -158,8 +158,8 @@ public class UploaderUtils {
         // first line omit
         nextLine = reader.readNext();
         while ((nextLine = reader.readNext()) != null) {
-            //for (int i = 0; i < nextLine.length; i ++)
-            //    System.out.println(nextLine[i]);
+            for (int i = 0; i < nextLine.length; i ++)
+                System.out.println(nextLine[i]);
             String name = InitByLine(nextLine,associationId);
 
             if (name != null) {
