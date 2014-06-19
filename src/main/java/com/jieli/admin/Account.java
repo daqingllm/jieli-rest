@@ -340,7 +340,8 @@ public class Account {
         Arrays.sort(test,(RuleBasedCollator) Collator.getInstance(Locale.CHINA));
 
         for (String key : test){
-            accountList2 += accountListStringMap.get(key+",");
+            if (accountListStringMap.get(key+",") != null && accountListStringMap.get(key+",") != "null")
+                accountList2 += accountListStringMap.get(key+",");
         }
 
 //        accountList = CommonUtil.RemoveLast(accountList, ",") + "]";
