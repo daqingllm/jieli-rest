@@ -345,6 +345,7 @@ public class Account {
 
 //        accountList = CommonUtil.RemoveLast(accountList, ",") + "]";
         accountList2 = CommonUtil.RemoveLast(accountList2, ",") + "]";
+        while (accountList2.endsWith(",null]")) accountList2 = accountList2.substring(0,accountList2.length()-6) + "]";
 
         com.jieli.common.entity.Account account = accountDAO.loadById(sessionId);
         Map<String, Object> params = CommonUtil.GenerateCommonParams(account);
