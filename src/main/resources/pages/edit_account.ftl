@@ -420,10 +420,11 @@
         <input readonly="readonly" type="text" id="form-field-degree2" placeholder="教育程度" class="col-xs-10 col-sm-7"
                style="padding-left: 7px;display: none" value=""/>
         <select id="form-field-degree" class="col-xs-10 col-sm-7" style="padding-left: 7px;">
+            <option value="" disabled="disabled" selected="selected">选择教育程度</option>
             <option value="0">EMBA</option>
             <option value="1">MBA</option>
             <option value="2">学士</option>
-            <option value="3" selected="selected">硕士</option>
+            <option value="3">硕士</option>
             <option value="4">博士</option>
             <option value="5">其他</option>
         </select>
@@ -755,7 +756,8 @@
         if (pn && pn.length != "13888888888".length){if (!confirm("确定手机号码为"+pn+"?")) return;}
         data["phone"] = $("#form-field-phone").val();
 
-        data["degree"] = $("#form-field-degree").val();
+        if ($("#form-field-degree").val() && $("#form-field-degree").val().length > 0)
+            data["degree"] = $("#form-field-degree").val();
 
         data["userFace"] = $("#form-field-userFace").attr("src");
         var dd = $("#form-field-birthday").val();
@@ -849,7 +851,9 @@
 //        var degrees = ["EMBA","MBA","学士","硕士","博士","其他"];
 //        if (data["degree"]) $("#form-field-degree").val(degrees[data["degree"]]);
         $("#form-field-interests").val(data["interests"]);
-        $("#form-field-degree").val(data["degree"]);
+
+        if (data["degree"])
+            $("#form-field-degree").val(data["degree"]);
 
         $("#form-field-profession").val(data["profession"] || "");
         $("#form-field-mail").val(data["mail"] || "");

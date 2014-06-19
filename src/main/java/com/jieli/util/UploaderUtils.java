@@ -197,8 +197,6 @@ public class UploaderUtils {
             String sex = nextLine[1];
             String phone = nextLine[2];
 
-            System.out.print("3-4-");
-
             Date birthday = null;
             if (nextLine.length >= 4 && nextLine[3].length() >= 8){
                 DateFormat dt1 = new SimpleDateFormat("yyyy-M-d");
@@ -209,8 +207,6 @@ public class UploaderUtils {
                     return name;
                 }
             }
-
-            System.out.print("5-6-");
 
             String identity = (nextLine.length >= 5 ? nextLine[4] : null);
             String entName = (nextLine.length >= 6 ? nextLine[5] : "");
@@ -228,7 +224,7 @@ public class UploaderUtils {
             boolean initSuc = checkInitUser(sex, birthday, identity, group,(nextLine.length >= 4))
                     && InitAUser(name, sex, phone, birthday, identity, entName, job, group, mail, profession, associationId);
 
-            System.out.println("123x" + sex + birthday + identity + group + name + phone + profession);
+            System.out.println("sexIs:" + sex);
 
             if (initSuc) {
                 return "";
