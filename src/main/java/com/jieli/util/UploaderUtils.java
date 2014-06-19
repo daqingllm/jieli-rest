@@ -153,13 +153,15 @@ public class UploaderUtils {
         int totalItemsInExcel = 0;
         int successItems = 0;
 
-        CSVReader reader = new CSVReader(new FileReader(FilePath));
+        InputStreamReader inputStreamReader = new InputStreamReader(new FileInputStream(FilePath),"GBK");
+
+        CSVReader reader = new CSVReader(inputStreamReader);
         String [] nextLine;
         // first line omit
         nextLine = reader.readNext();
         while ((nextLine = reader.readNext()) != null) {
-            for (int i = 0; i < nextLine.length; i ++)
-                System.out.println(nextLine[i]);
+//            for (int i = 0; i < nextLine.length; i ++)
+//                System.out.println(nextLine[i]);
             String name = InitByLine(nextLine,associationId);
 
             if (name != null) {
@@ -179,8 +181,6 @@ public class UploaderUtils {
     private static String InitByLine(String [] nextLine,String associationId){
         if (nextLine.length == 0) return null;
         if (nextLine[0].length() == 0) return null;
-
-        System.out.print("1-2-");
 
         // 至少要有前三列的内容
         if (nextLine.length < 3) {
@@ -224,9 +224,10 @@ public class UploaderUtils {
             boolean initSuc = checkInitUser(sex, birthday, identity, group,(nextLine.length >= 4))
                     && InitAUser(name, sex, phone, birthday, identity, entName, job, group, mail, profession, associationId);
 
-            System.out.println("sexIs:" + nextLine[1]);
+            //System.out.println("sexIs:" + nextLine[1]);
 
             if (initSuc) {
+                System.out.println("成功导入用户" + name + "-" + sex + "-" + phone);
                 return "";
             } else {
                 return name;
