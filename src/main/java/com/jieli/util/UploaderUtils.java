@@ -26,6 +26,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 /**
  * Created by xianxing on 2014/3/22.
@@ -200,6 +201,7 @@ public class UploaderUtils {
             Date birthday = null;
             if (nextLine.length >= 4 && nextLine[3].length() >= 8){
                 DateFormat dt1 = new SimpleDateFormat("yyyy-M-d");
+                dt1.setTimeZone(TimeZone.getTimeZone("GMT+08:00"));
                 try {
                     birthday = dt1.parse(nextLine[3]);
                 } catch (ParseException e) {
