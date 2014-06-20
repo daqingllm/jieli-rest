@@ -230,7 +230,7 @@ public class UploaderUtils {
             if (!groupList.contains(group)) group = null;
             if (!professionList.contains(profession)) profession = null;
 
-            boolean initSuc = checkInitUser(sex, birthday, identity, group,(nextLine.length >= 4))
+            boolean initSuc = checkInitUser(sex, birthday, identity, group,(nextLine.length >= 4 && nextLine[3].length() >= 8))
                     && InitAUser(name, sex, phone, birthday, identity, entName, job, group, mail, profession, associationId);
 
             //System.out.println("sexIs:" + nextLine[1]);
