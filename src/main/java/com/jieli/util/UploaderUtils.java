@@ -195,6 +195,8 @@ public class UploaderUtils {
             }
         } else {
             String name = nextLine[0];
+			name = name.replace("  ","");
+			name = name.replace(" ","");
             String sex = nextLine[1];
             String phone = nextLine[2];
 
