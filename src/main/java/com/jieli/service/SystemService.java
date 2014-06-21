@@ -62,6 +62,34 @@ public class SystemService {
         return Response.status(200).entity(responseEntity).build();
     }
 
+    @GET
+    @Path("/feedback")
+    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+    public Response getFeedback(@CookieParam("u")String sessionId, @QueryParam("associationId")String associationId) {
+        if (!IdentityUtils.isAdmin(sessionId)) {
+            return Response.status(403).build();
+        }
+        ResponseEntity responseEntity = new ResponseEntity();
+
+        String assoId = IdentityUtils.getAssociationId(sessionId);
+        if (StringUtils.isEmpty(assoId)) {
+            if (StringUtils.isEmpty(associationId)) {
+                Iterable<Feedback> feedbacks = feedbackDAO.loadAll();
+                responseEntity.code = 200;
+                responseEntity.body = feedbacks;
+                return Response.status(200).entity(responseEntity).build();
+            }
+            Iterable<Feedback> feedbacks = feedbackDAO.loadByAssociationId(associationId);
+            responseEntity.code = 200;
+            responseEntity.body = feedbacks;
+            return Response.status(200).entity(responseEntity).build();
+        }
+        Iterable<Feedback> feedbacks = feedbackDAO.loadByAssociationId(assoId);
+        responseEntity.code = 200;
+        responseEntity.body = feedbacks;
+        return Response.status(200).entity(responseEntity).build();
+    }
+
     @POST
     @Path("/aboutSystem")
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")

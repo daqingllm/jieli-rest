@@ -641,4 +641,30 @@ public class ActivityService {
         return Response.status(200).entity(responseEntity).build();
     }
 
+    @GET
+    @Path("/delete")
+    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+    public Response delete(@CookieParam("u")String sessionId, @QueryParam("activityId")String activityId) {
+        if (!IdentityUtils.isValidate(sessionId)) {
+            return Response.status(403).build();
+        }
+
+        ResponseEntity responseEntity = new ResponseEntity();
+        if (StringUtils.isEmpty(activityId)) {
+            responseEntity.code = 3101;
+            responseEntity.msg = "缺少参数";
+            return Response.status(200).entity(responseEntity).build();
+        }
+        Activity activity = activityDAO.loadById(activityId);
+        String userId = IdentityUtils.getUserId(sessionId);
+        if (activity == null || !activity.sponsorUserId.equals(userId)) {
+            responseEntity.code = 403;
+            responseEntity.msg = "权限不足";
+            return Response.status(200).entity(responseEntity).build();
+        }
+        activityDAO.deleteById(activityId);
+        responseEntity.code = 200;
+        return Response.status(200).entity(responseEntity).build();
+    }
+
 }
