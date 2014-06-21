@@ -10,5 +10,6 @@ package com.jieli.activity;
 public class ActivityMsg {
 
     public String activityId;
+    public AcivityTag tag;
     public String msg;
 }

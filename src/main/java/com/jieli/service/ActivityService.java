@@ -170,6 +170,7 @@ public class ActivityService {
 
                 ActivityMsg activityMsg = new ActivityMsg();
                 activityMsg.activityId = activityId;
+                activityMsg.tag = activity.tag;
                 activityMsg.msg = activity.title + " 活动内容有改变";
 
                 message.content = activityMsg;
@@ -187,6 +188,7 @@ public class ActivityService {
                         activityMsg.msg = activity.title + " 推荐活动发布";
                     }
                     activityMsg.activityId = activityId;
+                    activityMsg.tag = activity.tag;
                     Send2AllTask task = new Send2AllTask(activityMsg, activity.associationId, MessageType.OTHER);
                     task.start();
                 }
@@ -207,6 +209,7 @@ public class ActivityService {
 
             ActivityMsg activityMsg = new ActivityMsg();
             activityMsg.activityId = activityId;
+            activityMsg.tag = activity.tag;
             activityMsg.msg = IdentityUtils.getUserName(activity.sponsorUserId) + "邀请你参加" + activity.title;
 
             message.content = activityMsg;
@@ -631,6 +634,7 @@ public class ActivityService {
 
             ActivityMsg activityMsg = new ActivityMsg();
             activityMsg.activityId = activityId;
+            activityMsg.tag = activity.tag;
             activityMsg.msg = IdentityUtils.getUserName(userId) + "邀请你参加" + activity.title;
 
             message.content = activityMsg;
