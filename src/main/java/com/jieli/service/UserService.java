@@ -136,6 +136,9 @@ public class UserService {
             responseEntity.msg = "账户已被删除";
             return  Response.status(200).entity(responseEntity).build();
         }
+        if (StringUtils.isEmpty(user.enterpriseIndustry)) {
+            user.enterpriseIndustry = user.profession;
+        }
 
         responseEntity.code = 200;
         responseEntity.body = user;
@@ -159,6 +162,9 @@ public class UserService {
         for (String userId : userIds) {
             if (StringUtils.isNotEmpty(userId) && MongoUtils.isValidObjectId(userId)) {
                 User user = userDAO.loadById(userId);
+                if (StringUtils.isEmpty(user.enterpriseIndustry)) {
+                    user.enterpriseIndustry = user.profession;
+                }
                 users.add(user);
             }
         }
