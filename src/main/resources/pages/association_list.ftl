@@ -203,6 +203,13 @@
                 <div class="row">
                     <div class="col-xs-12">
                         <!-- PAGE CONTENT BEGINS -->
+                        <button class="btn btn-success" type="button" style="font-weight:bold;margin-bottom: 20px;" onclick="window.location.href = '/app/bassociation/new'">
+                            <i class="fa fa-plus bigger-110"></i>
+                            Ìí¼ÓÐ­»á
+                        </button>
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+
+                        <!-- PAGE CONTENT BEGINS -->
                         <table id="grid-table"></table>
                         <div id="grid-pager"></div>
                     </div>
@@ -580,6 +587,7 @@ jQuery(function ($) {
      */
 
 });
+
 
 </script>
 </body>

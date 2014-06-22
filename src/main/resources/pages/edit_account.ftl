@@ -568,10 +568,13 @@
 
 <div class="clearfix form-actions">
     <div class="col-md-offset-3 col-md-9">
+        <#if isSuper>
+        <#else>
         <button class="btn btn-info" type="button" style="font-weight:bold" onclick="updateUser()">
             <i class="fa fa-check bigger-110"></i>
             确认
         </button>
+        </#if>
 
         &nbsp; &nbsp; &nbsp;
         <button class="btn btn-danger" type="reset" style="font-weight:bold" onclick="window.location.href='/app/baccount/list';return true;">
@@ -742,6 +745,8 @@
     var data = null;
 </script>
 <script>
+    <#if isSuper>
+    <#else>
     function updateUser(){
         if ($("#form-field-name").val().length == 0) {alert("姓名不能为空");return;}
         if ($("#form-field-phone").val().length == 0) {alert("手机号码不能为空");return;}
@@ -827,6 +832,7 @@
             }
         });
     }
+    </#if>
 
     <#if got?length==0>
     try{data = ${user};
