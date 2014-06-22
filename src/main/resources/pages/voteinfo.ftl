@@ -2,7 +2,7 @@
     <html lang="zh">
             <head>
             <meta charset="utf-8"/>
-            <title>${associationName} 同舟表决 </title>
+            <title replaceflg="${associationName}">${associationName} 投票 </title>
     <meta name="description" content="接力"/>
         <!-- basic styles -->
 
@@ -98,7 +98,7 @@
                         <li class="divider"></li>-->
 
                         <li>
-                            <a href="#">
+                            <a href="#" onclick="document.cookie='u=;path=/';window.location.href='/app/baccount/login'">
                                 <i class="fa fa-power-off"></i>
                                 退出
                             </a>
@@ -192,15 +192,15 @@
             </li>
 
             <li>
-                <a href="/app/bvote/list"> 同舟表决 </a>
+                <a href="/app/bvote/list" replaceflg="${associationName}"> 投票 </a>
             </li>
 
-            <li class="active">
+            <li class="active" replaceflg="${associationName}">
             <#if newVote>
-                发布同舟表决
+                发布投票
             <#else>
-                <#if isEditable>编辑同舟表决
-                <#else>查看同舟表决
+                <#if isEditable>编辑投票
+                <#else>查看投票
                 </#if>
             </#if>
             </li>
@@ -221,12 +221,12 @@
 
     <div class="page-content">
         <div class="page-header">
-            <h1>
+            <h1 replaceflg="${associationName}">
             <#if newVote>
-                发布同舟表决
+                发布投票
             <#else>
-                <#if isEditable>编辑同舟表决
-                <#else>查看同舟表决
+                <#if isEditable>编辑投票
+                <#else>查看投票
                 </#if>
             </#if>
             </h1>
@@ -781,10 +781,10 @@
 <script type="text/javascript">
 jQuery(function ($) {
 <#if isSuper>
-    $("#sidebar-shortcuts-navlist").load("/sidebar_super.html",function(){
+    $("#sidebar-shortcuts-navlist").load("/sidebar_super.html",function(){updateByAID("${associationName}","投票");
         $("#nav_list_4").addClass("active");});
 <#else>
-    $("#sidebar-shortcuts-navlist").load("/sidebar_admin.html",function(){
+    $("#sidebar-shortcuts-navlist").load("/sidebar_admin.html",function(){updateByAID("${associationName}","投票");
             <#if newVote>$("#nav_list_4_1")<#elseif isEditable>$("#nav_list_4_3")<#else>$("#nav_list_4_2")</#if>.addClass("active open");
         $("#nav_list_4").addClass("active");});
 </#if>

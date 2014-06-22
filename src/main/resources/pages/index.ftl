@@ -213,19 +213,40 @@
                                 <i class="icon-remove"></i>
                             </button>
                             <strong></strong>
-                            <p style="line-height: 200%;">点击右上角的头像<img src="/assets/images/welcome.png" height="35" style="margin:3px;">可以退出账户。点击下方齿轮<img src="/assets/images/cl.png" height="35" style="margin:3px;">可以调整页面样式。左侧导航栏可以对各个手机端功能进行发布、编辑、删除操作。</p>
-                            <hr style="margin-top : 5px; margin-bottom: 5px;">
-                            <p style="line-height: 200%;">1. 如果您需要发布、编辑、删除资讯（包含协会动态、小组风采、同舟发布）、活动、投票，请相应进入【资讯】、【活动】、【同舟表决】；</p>
-                            <hr style="margin-top : 5px; margin-bottom: 5px;">
-                            <p style="line-height: 200%;">2. 如果您需要审核、删除会员使用手机端发布的同舟共济帖子，请进入【同舟共济】；</p>
-                            <hr style="margin-top : 5px; margin-bottom: 5px;">
-                            <p style="line-height: 200%;">3. 如果您需要查看、删除会员使用手机端发布的同舟论剑帖子，请进入【同舟论剑】；</p>
-                            <hr style="margin-top : 5px; margin-bottom: 5px;">
-                            <p style="line-height: 200%;">4. 如果您需要增加、编辑、删除会员，请进入【账户管理】。其中&nbsp;<span style="color:red">[管理员]syea</span>&nbsp;是后台管理员账号，不可删除，点击<img src="/assets/images/pw.png" height="35" style="margin:3px;">可以修改管理后台登入密码；</p>
-                            <hr style="margin-top : 5px; margin-bottom: 5px;">
-                            <p style="line-height: 200%;">5. 如果您需要对会员的分组、协会身份进行编辑，请进入【分组管理】和【组织架构】；</p>
-                            <hr style="margin-top : 5px; margin-bottom: 5px;">
-                            <p style="line-height: 200%;">6. 如果您需要编辑手机端的青企协介绍，请进入【关于上海市青企协】。</p>
+                            <#if associationName="上海市青年企业家协会">
+
+                                <p style="line-height: 200%;">点击右上角的头像<img src="/assets/images/welcome.png" height="35" style="margin:3px;">可以退出账户。点击下方齿轮<img src="/assets/images/cl.png" height="35" style="margin:3px;">可以调整页面样式。左侧导航栏可以对各个手机端功能进行发布、编辑、删除操作。</p>
+                                <hr style="margin-top : 5px; margin-bottom: 5px;">
+                                <p style="line-height: 200%;">1. 如果您需要发布、编辑、删除资讯（包含协会动态、小组风采、同舟发布）、活动、投票，请相应进入【资讯】、【活动】、【同舟表决】；</p>
+                                <hr style="margin-top : 5px; margin-bottom: 5px;">
+                                <p style="line-height: 200%;">2. 如果您需要审核、删除会员使用手机端发布的同舟共济帖子，请进入【同舟共济】；</p>
+                                <hr style="margin-top : 5px; margin-bottom: 5px;">
+                                <p style="line-height: 200%;">3. 如果您需要查看、删除会员使用手机端发布的同舟论剑帖子，请进入【同舟论剑】；</p>
+                                <hr style="margin-top : 5px; margin-bottom: 5px;">
+                                <p style="line-height: 200%;">4. 如果您需要增加、编辑、删除会员，请进入【账户管理】。其中&nbsp;<span style="color:red">[管理员]syea</span>&nbsp;是后台管理员账号，不可删除，点击<img src="/assets/images/pw.png" height="35" style="margin:3px;">可以修改管理后台登入密码；</p>
+                                <hr style="margin-top : 5px; margin-bottom: 5px;">
+                                <p style="line-height: 200%;">5. 如果您需要对会员的分组、协会身份进行编辑，请进入【分组管理】和【组织架构】；</p>
+                                <hr style="margin-top : 5px; margin-bottom: 5px;">
+                                <p style="line-height: 200%;">6. 如果您需要编辑手机端的青企协介绍，请进入【关于上海市青企协】。</p>
+
+                            <#else>
+
+                                <p style="line-height: 200%;">点击右上角的头像<img src="/assets/images/welcome-common.png" height="35" style="margin:3px;">可以退出账户。点击下方齿轮<img src="/assets/images/cl.png" height="35" style="margin:3px;">可以调整页面样式。左侧导航栏可以对各个手机端功能进行发布、编辑、删除操作。</p>
+                                <hr style="margin-top : 5px; margin-bottom: 5px;">
+                                <p style="line-height: 200%;">1. 如果您需要发布、编辑、删除资讯（包含协会动态、小组风采、同舟发布）、活动、投票，请相应进入【资讯】、【活动】、【投票】；</p>
+                                <hr style="margin-top : 5px; margin-bottom: 5px;">
+                                <p style="line-height: 200%;">2. 如果您需要审核、删除会员使用手机端发布的同舟共济帖子，请进入【互帮互助】；</p>
+                                <hr style="margin-top : 5px; margin-bottom: 5px;">
+                                <p style="line-height: 200%;">3. 如果您需要查看、删除会员使用手机端发布的同舟论剑帖子，请进入【讨论】；</p>
+                                <hr style="margin-top : 5px; margin-bottom: 5px;">
+                                <p style="line-height: 200%;">4. 如果您需要增加、编辑、删除会员，请进入【账户管理】。其中&nbsp;<span style="color:red">[管理员]****</span>&nbsp;是后台管理员账号，不可删除，点击<img src="/assets/images/pw.png" height="35" style="margin:3px;">可以修改管理后台登入密码；</p>
+                                <hr style="margin-top : 5px; margin-bottom: 5px;">
+                                <p style="line-height: 200%;">5. 如果您需要对会员的分组、协会身份进行编辑，请进入【分组管理】和【组织架构】；</p>
+                                <hr style="margin-top : 5px; margin-bottom: 5px;">
+                                <p style="line-height: 200%;">6. 如果您需要编辑手机端的青企协介绍，请进入【关于协会】。</p>
+
+                            </#if>
+
                         </div>
                     </div>
                     <!-- /.col -->
@@ -328,6 +349,7 @@
 <!-- page specific plugin scripts -->
 <script src="/assets/js/jquery.colorbox-min.js"></script>
 <script src="/assets/js/date-time/bootstrap-datepicker.min.js"></script>
+<script src="/common-jieli.js"></script>
 
 
 <!--[if lte IE 8]>
@@ -365,9 +387,9 @@
 <script type="text/javascript">
 jQuery(function ($) {
 <#if isSuper>
-    $("#sidebar-shortcuts-navlist").load("/sidebar_super.html",function(){$("#nav_list_1").addClass("active");});
+    $("#sidebar-shortcuts-navlist").load("/sidebar_super.html",function(){updateByAID();$("#nav_list_1").addClass("active");});
 <#else>
-    $("#sidebar-shortcuts-navlist").load("/sidebar_admin.html",function(){$("#nav_list_1").addClass("active");});
+    $("#sidebar-shortcuts-navlist").load("/sidebar_admin.html",function(){updateByAID();$("#nav_list_1").addClass("active");});
 </#if>
 
     var colorbox_params = {

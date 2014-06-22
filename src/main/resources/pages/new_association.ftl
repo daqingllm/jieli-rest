@@ -73,7 +73,7 @@
 
                                     <div class="space-6"></div>
                                     <p>
-                                        请输入协会名称
+                                        请输入协会信息
                                     </p>
 
                                     <form>
@@ -81,6 +81,12 @@
                                             <label class="block clearfix"> <span class="block input-icon input-icon-right">
 															<input type="text" class="form-control" placeholder="协会名称" id="association-name" />
 															<i class="icon-envelope"></i> </span> </label>
+                                            <label class="block clearfix"> <span class="block input-icon input-icon-right">
+															<input type="text" class="form-control" placeholder="协会管理员账号" id="association-admin-name" />
+															<i class="icon-user"></i> </span> </label>
+                                            <label class="block clearfix"> <span class="block input-icon input-icon-right">
+															<input type="password" class="form-control" placeholder="协会管理员密码" id="association-admin-password" />
+															<i class="icon-edit"></i> </span> </label>
 
                                             <div class="clearfix">
                                                 <button type="button" class="width-35 pull-right btn btn-sm btn-danger" onclick="createAssociation();">
@@ -180,20 +186,25 @@
 
     function createAssociation(){
         var name = $("#association-name").val();
+        var uname = $("#association-admin-name").val();
+        var pword = $("#association-admin-password").val();
+        if (name.length < 2 || uname.length < 3 || pword.length < 3) {alert("请确保协会名称长度大于2，管理员账号长度大于3，密码长度大于3"); return;}
+
 		if (name && name.length > 0){
 			var _d = {"name":name};
 			var _sd = JSON.stringify(_d);
 			$.ajax({
 				type:"POST",
-				url:"/app/association/",
+				url:"/app/association/?"+"un="+uname+"&pw="+pword,
 				data:_sd,
                 contentType:"application/json; charset=utf-8",
 				dataType:"json",
 				success:function(jsn){
 					if (jsn.code == 200) {
-						showMsg("创建成功","已经成功创建"+name+"协会");
+                        var aname = JSON.parse(jsn.body).aname;
+						showMsg("创建成功","已经成功创建"+name+"协会" + ((aname && aname.length > 0 && aname != uname) ? "，由于您填写的管理员账号已经存在，我们为您创建了账号"+aname+"，密码不变。":""));
 					}else{
-						showMsg("创建失败",jsn_body.msg||"");
+						showMsg("创建失败",jsn.msg||"");
 					}
 				},
 				error:function(){

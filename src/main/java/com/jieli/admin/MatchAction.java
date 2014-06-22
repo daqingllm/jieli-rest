@@ -47,17 +47,17 @@ public class MatchAction {
         ObjectMapper om = new ObjectMapper();
         String associationId = null;
         List<Account> accountList = new ArrayList<Account>();
-            Iterable<com.jieli.association.Association> associations = associationDAO.loadAll();
-            for (com.jieli.association.Association association : associations) {
-                Iterable<Account> accountEnable = accountDAO.loadByAssociationId(association.get_id().toString(),
-                        AccountState.ENABLE);
-                for (Account b : accountEnable) {
-                    if(b.username == null) {
-                        b.username = "";
-                    }
-                    accountList.add(b);
+        Iterable<com.jieli.association.Association> associations = associationDAO.loadAll();
+        for (com.jieli.association.Association association : associations) {
+            Iterable<Account> accountEnable = accountDAO.loadByAssociationId(association.get_id().toString(),
+                    AccountState.ENABLE);
+            for (Account b : accountEnable) {
+                if(b.username == null) {
+                    b.username = "";
                 }
+                accountList.add(b);
             }
+        }
 
 
         //trick, save _id str in password, to make url in jqgrid

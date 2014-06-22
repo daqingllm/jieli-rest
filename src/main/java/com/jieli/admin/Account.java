@@ -255,6 +255,7 @@ public class Account {
                     String tmpString = CommonUtil.ReplaceObjectId(account).replace("}",",\"name\":\""+ CommonUtil.TransferNull(user == null ? "" : user.name)
                             + "\",\"identity\":\"" + CommonUtil.TransferNull(user == null ? "" : user.identity)
                             + "\",\"group\":\"" + CommonUtil.TransferNull(user == null ? "" : user.group)
+                            + "\",\"association\":\"" + association.name
                             + "\",\"phone\":\"" + CommonUtil.TransferNull(user == null ? "" : phoneSub) + "\"},");
 
 //                    accountList += tmpString;
@@ -273,7 +274,8 @@ public class Account {
                     String tmpString = CommonUtil.ReplaceObjectId(account).replace("}",",\"name\":\""+ CommonUtil.TransferNull(user == null ? "" : user.name)
 							+ "\",\"identity\":\"" + CommonUtil.TransferNull(user == null ? "" : user.identity)
                             + "\",\"group\":\"" + CommonUtil.TransferNull(user == null ? "" : user.group)
-					 + "\",\"phone\":\"" + CommonUtil.TransferNull(user == null ? "" : phoneSub) + "\"},");
+                            + "\",\"association\":\"" + association.name
+                            + "\",\"phone\":\"" + CommonUtil.TransferNull(user == null ? "" : phoneSub) + "\"},");
 
 //                    accountList += tmpString;
 
@@ -306,6 +308,7 @@ public class Account {
                 String tmpString = CommonUtil.ReplaceObjectId(account).replace("}",",\"name\":\""+ CommonUtil.TransferNull(user == null ? "" : user.name)
                         + "\",\"identity\":\"" + CommonUtil.TransferNull(user == null ? "" : user.identity)
                         + "\",\"group\":\"" + CommonUtil.TransferNull(user == null ? "" : user.group)
+                        + "\",\"association\":\"" + association.name
                         + "\",\"phone\":\"" + CommonUtil.TransferNull(user == null ? "" : phoneSub) + "\"},");
 
                 accountList2 += tmpString;
@@ -319,7 +322,8 @@ public class Account {
                 String tmpString = CommonUtil.ReplaceObjectId(account).replace("}",",\"name\":\""+ CommonUtil.TransferNull(user == null ? "" : user.name)
                         + "\",\"identity\":\"" + CommonUtil.TransferNull(user == null ? "" : user.identity)
                         + "\",\"group\":\"" + CommonUtil.TransferNull(user == null ? "" : user.group)
-                 + "\",\"phone\":\"" + CommonUtil.TransferNull(user == null ? "" : phoneSub) + "\"},");
+                        + "\",\"association\":\"" + association.name
+                        + "\",\"phone\":\"" + CommonUtil.TransferNull(user == null ? "" : phoneSub) + "\"},");
 
 //                accountList +=tmpString;
 

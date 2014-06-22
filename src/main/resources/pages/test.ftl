@@ -212,6 +212,35 @@
 <div class="col-xs-12">
     <!-- PAGE CONTENT BEGINS -->
 
+    <div class="col-md-offset-2 col-md-8" id="feedback">
+        <#--<div class="panel panel-primary">-->
+            <#--<div class="panel-heading" style="font-family: 'Microsoft YaHei'">-->
+                <#--<h3>贤星&nbsp;&nbsp;&nbsp;&nbsp;[2014年6月22日16:05:01]</h3>-->
+            <#--</div>-->
+            <#--<div class="panel-body" style="font-family: 'Microsoft YaHei'">-->
+                <#--向“青企协”提出反馈意见 ： 反馈内容-->
+            <#--</div>-->
+        <#--</div>-->
+
+    </div>
+
+    <script>
+        var data = [{"userId":"1","name":"贤星","associationId":"1","associationName":"青企协","Content":"反馈内容","date":new Date()},
+            {"userId":"1","name":"贤星","associationId":"1","associationName":"青企协","Content":"反馈内容","date":new Date()},
+            {"userId":"1","name":"贤星","associationId":"1","associationName":"青企协","Content":"反馈内容","date":new Date()},
+            {"userId":"1","name":"贤星","associationId":"1","associationName":"青企协","Content":"反馈内容","date":new Date()},
+            {"userId":"1","name":"贤星","associationId":"1","associationName":"青企协","Content":"反馈内容","date":new Date()}];
+
+        var panelClassArray = ["panel-primary","panel-success","panel-info","panel-warning","panel-danger"];
+
+        for (var i = 0; i < data.length; i ++){
+            $("#feedback").append($("<div class='panel "+panelClassArray[i%panelClassArray.length]+"'>" +
+                    "<div class='panel-heading' style='font-family: \"Microsoft YaHei\"'>" +
+                    "<h3>"+data[i].name+"&nbsp;&nbsp;&nbsp;&nbsp;["+data[i].date.Format('yyyy年M月d日 HH:mm:ss')+"] </h3></div>" +
+                    "<div class='panel-body' style='font-family: \"Microsoft YaHei\"'>" +
+                    "<#if isSuper>向“"+data[i].associationName+"”</#if>提出反馈意见 ： "+data[i].Content+"</div> "));
+        }
+    </script>
     <form class="form-horizontal" role="form">
 
         <div class="form-group">

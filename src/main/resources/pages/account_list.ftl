@@ -424,11 +424,9 @@
 <script type="text/javascript">
 jQuery(function ($) {
 <#if isSuper>
-    $("#sidebar-shortcuts-navlist").load("/sidebar_super.html",function(){$("#nav_list_7_1").addClass("active open");$("#nav_list_7").addClass("active");
-        $("#nav_list_7_1 i").css({"position":"absolute","left":"10px","top":"11px","font-size":"12px","width":"18px","text-align":"center","color":"#c86139","display":"inline"});});
+    $("#sidebar-shortcuts-navlist").load("/sidebar_super.html",function(){updateByAID();$("#nav_list_8").addClass("active");});
 <#else>
-    $("#sidebar-shortcuts-navlist").load("/sidebar_admin.html",function(){$("#nav_list_7_1").addClass("active open");$("#nav_list_7").addClass("active");
-        $("#nav_list_7_1 i").css({"position":"absolute","left":"10px","top":"11px","font-size":"12px","width":"18px","text-align":"center","color":"#c86139","display":"inline"});});
+    $("#sidebar-shortcuts-navlist").load("/sidebar_admin.html",function(){updateByAID();$("#nav_list_7").addClass("active");});
 </#if>
     var colorbox_params = {
         reposition: true,
@@ -580,12 +578,12 @@ jQuery(function($) {
         colNames:['_id','协会','用户名','姓名','状态','协会身份','验证码','分组'],
         colModel:[
             {name:"_id",index:"_id",width:10,editable:false,hidden:true},
-            {name:"associationId",index:"associationId",width:40,editable:false,hidden:true},
+            {name:"association",index:"association",width:40,editable:false,<#if isSuper><#else>hidden:true</#if>},
             {name:"username",index:"username",width:"100",editable:false,hidden:true},
             {name:"name",index:"name",width:"75",editable:false,formatter:function getUrl(cellValue, options, rowObject) {
-                var url = "<a href=\"/app/baccount/edit?u=" + rowObject._id + "\">" + cellValue + "</a>";
-                if (adminList.indexOf(rowObject._id) > -1) return "<span style='color:rgb(226, 64, 64)'>[管理员]</span>&nbsp;<span style='color:#428bca'>" + cellValue + "</span>";
-                else return url;
+                    var url = "<a href=\"/app/baccount/edit?u=" + rowObject._id + "\">" + cellValue + "</a>";
+                    if (adminList.indexOf(rowObject._id) > -1) return "<span style='color:rgb(226, 64, 64)'>[管理员]</span>&nbsp;<span style='color:#428bca'>" + cellValue + "</span>";
+                    else return url;
             }},
             {name:"state",index:"state",width:"60",editable:false,hidden:true},
             {name:"identity",index:"identity",width:"60",editable:false},
@@ -636,6 +634,7 @@ jQuery(function($) {
             delete a["group"];
             delete a["phone"];
             delete a["verifyCode"];
+            delete a["association"];
             if (a.state == "禁用" ||
                     a.state == "普通用户" ||
                     a.state == "协会管理员" ||

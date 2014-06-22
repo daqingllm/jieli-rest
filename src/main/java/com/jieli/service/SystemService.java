@@ -20,6 +20,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
+import java.util.Date;
 
 /**
  * Created with IntelliJ IDEA.
@@ -56,6 +57,8 @@ public class SystemService {
         feedback.name = IdentityUtils.getUserName(feedback.userId);
         feedback.associationId = IdentityUtils.getAssociationId(sessionId);
         feedback.associationName = associationDAO.loadById(feedback.associationId).name;
+        feedback.date = new Date();
+        feedback.Content = content;
         feedbackDAO.save(feedback);
 
         responseEntity.code = 200;

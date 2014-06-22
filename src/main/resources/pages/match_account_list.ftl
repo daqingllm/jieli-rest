@@ -355,6 +355,7 @@
 
 <script src="/assets/js/ace-elements.min.js"></script>
 <script src="/assets/js/ace.min.js"></script>
+<script src="/common-jieli.js"></script>
 
 <!-- inline scripts related to this page -->
 <script>
@@ -391,9 +392,9 @@
 jQuery(function ($) {
 
 <#if isSuper>
-    $("#sidebar-shortcuts-navlist").load("/sidebar_super.html",function(){$("#nav_list_6_1").addClass("active open");$("#nav_list_6").addClass("active");});
+    $("#sidebar-shortcuts-navlist").load("/sidebar_super.html",function(){updateByAID();$("#nav_list_6").addClass("active");});
 <#else>
-    $("#sidebar-shortcuts-navlist").load("/sidebar_admin.html",function(){$("#nav_list_6_1").addClass("active open");$("#nav_list_6").addClass("active");});
+    $("#sidebar-shortcuts-navlist").load("/sidebar_admin.html",function(){updateByAID();$("#nav_list_6").addClass("active");});
 </#if>
 
     var colorbox_params = {
@@ -530,11 +531,10 @@ jQuery(function($) {
         data: grid_data,
         datatype: "local",
         height: 330,
-        colNames:['id','协会','用户名','姓名','状态','匹配'],
+        colNames:['id','协会','姓名','状态','匹配'],
         colModel:[
             {name:"password",index:"password",width:10,editable:false,hidden:true},
             {name:"associationName",index:"associationName",width:40,editable:false},
-            {name:"username",index:"username",width:"80",editable:false},
             {name:"name",index:"name",width:"80",editable:false},
             {name:"state",index:"state",width:"50",editable:false},
             {name:"match",index:"match",width:"75",editable:false, formatter:

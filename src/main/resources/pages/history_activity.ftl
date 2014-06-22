@@ -1412,9 +1412,9 @@ function loadThisActivity(){
 <script type="text/javascript">
     jQuery(function ($) {
     <#if isSuper>
-        $("#sidebar-shortcuts-navlist").load("/sidebar_super.html",function(){$("#nav_list_3").addClass("active");});
+        $("#sidebar-shortcuts-navlist").load("/sidebar_super.html",function(){updateByAID();$("#nav_list_3").addClass("active");});
     <#else>
-        $("#sidebar-shortcuts-navlist").load("/sidebar_admin.html",function(){$("#nav_list_3").addClass("active");});
+        $("#sidebar-shortcuts-navlist").load("/sidebar_admin.html",function(){updateByAID();$("#nav_list_3").addClass("active");});
     </#if>
 
         $('#selectAssociationIds').multiselect({

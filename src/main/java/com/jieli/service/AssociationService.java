@@ -8,6 +8,7 @@ import com.jieli.common.entity.ResponseEntity;
 import com.jieli.user.dao.UserDAO;
 import com.jieli.user.entity.User;
 import com.jieli.util.IdentityUtils;
+import com.jieli.util.PasswordGenerator;
 import com.sun.jersey.spi.resource.Singleton;
 import org.apache.commons.lang.StringUtils;
 import org.codehaus.jettison.json.JSONException;
@@ -73,7 +74,7 @@ public class AssociationService {
 
     @POST
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-    public Response upsert(@CookieParam("u")String sessionId, Association association) throws JSONException {
+    public Response upsert(@CookieParam("u")String sessionId, Association association,@QueryParam("un") String username,@QueryParam("pw") String password) throws JSONException {
         if (!IdentityUtils.isSuper(sessionId)) {
             return Response.status(403).build();
         }
@@ -85,8 +86,30 @@ public class AssociationService {
             return Response.status(200).entity(responseEntity).build();
         }
         String id = associationDAO.save(association).get_id().toString();
+        String uname = username;
+
+        if (StringUtils.isEmpty(username) || StringUtils.isEmpty(password)){
+            responseEntity.code = 2104;
+            responseEntity.msg = "未填写管理员账号或密码";
+            return Response.status(200).entity(responseEntity).build();
+        } else {
+            Account accountt = accountDAO.loadByUsername(username);
+            int idx = 0;
+            while (accountt != null) {accountt = accountDAO.loadByUsername(username + (idx++));}
+
+            Account account = new Account();
+            account.username = username + (idx == 0 ? "" : (idx+""));
+            account.password = PasswordGenerator.md5Encode(password);
+            account.associationId = id;
+            account.state = AccountState.ADMIN;
+
+            accountDAO.save(account);
+            uname = account.username;
+        }
+
         JSONObject json = new JSONObject();
         json.put("associationId", id);
+        json.put("aname", uname);
         responseEntity.code = 200;
         responseEntity.body = json.toString();
         return Response.status(200).entity(responseEntity).build();
