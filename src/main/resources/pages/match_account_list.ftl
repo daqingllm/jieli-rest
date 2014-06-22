@@ -530,11 +530,10 @@ jQuery(function($) {
         data: grid_data,
         datatype: "local",
         height: 330,
-        colNames:['id','协会','用户名','姓名','状态','匹配'],
+        colNames:['id','协会','姓名','状态','匹配'],
         colModel:[
             {name:"password",index:"password",width:10,editable:false,hidden:true},
             {name:"associationName",index:"associationName",width:40,editable:false},
-            {name:"username",index:"username",width:"80",editable:false},
             {name:"name",index:"name",width:"80",editable:false},
             {name:"state",index:"state",width:"50",editable:false},
             {name:"match",index:"match",width:"75",editable:false, formatter:
