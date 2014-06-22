@@ -490,6 +490,7 @@ public class ActivityService {
         comment.topicId = activityId;
         comment.topicType = TopicType.Activity;
         comment.topicTitle = activity.title;
+        comment.tag = activity.tag.toString();
         comment.commentUserId = IdentityUtils.getUserId(sessionId);
         comment.commentedUserId = commentInfo.get("commentedUserId");
         comment.content = content;

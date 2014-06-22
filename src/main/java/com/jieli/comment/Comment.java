@@ -17,6 +17,7 @@ public class Comment extends Model {
     public String topicId; // 评论内容id
     public String topicType; // 被评论内容类型
     public String topicTitle;
+    public String tag; // 为串局添加
 
     public String commentUserId;  // 回复者id
     public String commentedUserId; // 被回复者id
