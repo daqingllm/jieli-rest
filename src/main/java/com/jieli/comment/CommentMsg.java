@@ -19,6 +19,7 @@ public class CommentMsg {
 
     public String topicId; // 评论内容id
     public String topicType; // 被评论内容类型
+    public String tag; //为串局添加
 
     public String commentId;
     public String commentContent;

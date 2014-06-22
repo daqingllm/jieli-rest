@@ -61,6 +61,7 @@ public abstract class CommentMessageUtil {
         commentMsg.commentUser = commentUserInfo;
         commentMsg.commentContent = comment.content;
         commentMsg.commentTime = comment.addTime;
+        commentMsg.tag = comment.tag;
         commentMsg.commentType = 0;
         commentMsg.topicType = comment.topicType;
         commentMsg.topicId = comment.topicId;
