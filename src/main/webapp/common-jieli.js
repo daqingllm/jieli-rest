@@ -1,6 +1,41 @@
 var imageHead = "<center><img width='576' style='padding:3px;' src='";
 var imageTail = "?imageView/4/w/572/h/432"+"'></center>";
 
+function getCookie(c_name)
+{
+    if (document.cookie.length>0)
+    {
+        c_start=document.cookie.indexOf(c_name + "=")
+        if (c_start!=-1)
+        {
+            c_start=c_start + c_name.length+1
+            c_end=document.cookie.indexOf(";",c_start)
+            if (c_end==-1) c_end=document.cookie.length
+            return unescape(document.cookie.substring(c_start,c_end))
+        }
+    }
+    return ""
+}
+
+function updateByAID(associationName,name){
+    var rep = {"上海市青年企业家协会":{"讨论":"同舟论剑","投票":"同舟表决","互帮互助":"同舟共济"}};
+    if (associationName && rep[associationName]) {
+        $("[replaceflg=" + associationName + "]").each(function () {
+            //alert($(this).html());
+            $(this).html($(this).html().replace(new RegExp(name, "g"), rep[associationName][name]));
+        });
+    }
+
+    var aid = getCookie("a");
+    if (!aid || aid == "") return;
+    $("li[id^=nav_list]").find("span[id^="+aid+"]").each(function(){
+        //alert($(this).attr("id"));
+        var p = $(this).parent();
+        p.children("span").eq(0).hide();
+        $(this).show();
+    });
+}
+
 /* 选中target(应该是一个textarea)的部分内容：第一个str */
 function focusTextareaPart(target,str) {
     if (!target || !str || str.length == 0) return;

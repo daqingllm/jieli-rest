@@ -2,7 +2,7 @@
 <html lang="zh">
 <head>
     <meta charset="utf-8"/>
-    <title>${associationName} 同舟表决 </title>
+    <title replaceflg="${associationName}">${associationName} 投票 </title>
     <meta name="description" content="接力"/>
     <!-- basic styles -->
 
@@ -189,10 +189,10 @@
                     </li>
 
                     <li>
-                        <a href="/app/bvote/list"> 同舟表决 </a>
+                        <a href="/app/bvote/list" replaceflg="${associationName}"> 投票 </a>
                     </li>
 
-                    <li class="active"> 同舟表决列表 </li>
+                    <li class="active hide" replaceflg="${associationName}"> 投票列表 </li>
                 </ul>
                 <!-- .breadcrumb -->
 
@@ -210,8 +210,8 @@
 
             <div class="page-content">
                 <div class="page-header">
-                    <h1>
-                        同舟表决列表
+                    <h1 replaceflg="${associationName}">
+                        投票列表
                     </h1>
                 </div>
                 <!-- /.page-header -->
@@ -229,28 +229,28 @@
                 </#if>
                     <div class="col-xs-12">
                         <!-- PAGE CONTENT BEGINS -->
-                        <button class="btn btn-success" type="button" style="font-weight:bold;margin-bottom: 20px;" onclick="window.location.href = '/app/bvote/new'">
+                        <button class="btn btn-success" type="button" style="font-weight:bold;margin-bottom: 20px;" onclick="window.location.href = '/app/bvote/new'" replaceflg="${associationName}">
                             <i class="fa fa-plus bigger-110"></i>
-                            发布同舟表决
+                            发布投票
                         </button>
                         &nbsp;&nbsp;&nbsp;&nbsp;
 
                         <!--<button class="btn btn-info" type="button" style="font-weight:bold;margin-bottom: 20px;" onclick="viewVote()">
                             <i class="fa fa-search-plus bigger-110"></i>
-                            查看同舟表决
+                            查看投票
                         </button>
                         &nbsp;&nbsp;&nbsp;&nbsp;
 
                         <button class="btn btn-warning" type="button" style="font-weight:bold;margin-bottom: 20px;"
                                 onclick="editVote()" id="editVote">
                             <i class="fa fa-search-plus bigger-110"></i>
-                            编辑同舟表决
+                            编辑投票
                         </button>
                         &nbsp;&nbsp;&nbsp;&nbsp;-->
 
-                        <button class="btn btn-danger" type="button" style="font-weight:bold;margin-bottom: 20px;" onclick="deleteVote()" id="deleteArtBtn">
+                        <button class="btn btn-danger" type="button" style="font-weight:bold;margin-bottom: 20px;" onclick="deleteVote()" id="deleteArtBtn" replaceflg="${associationName}">
                             <i class="fa fa-trash-o bigger-110"></i>
-                            删除同舟表决
+                            删除投票
                         </button>
                         &nbsp;&nbsp;&nbsp;&nbsp;
 
@@ -349,15 +349,16 @@
 
 <script src="/assets/js/ace-elements.min.js"></script>
 <script src="/assets/js/ace.min.js"></script>
+<script src="/common-jieli.js"></script>
 
 <!-- inline scripts related to this page -->
 
 <script type="text/javascript">
 jQuery(function ($) {
 <#if isSuper>
-    $("#sidebar-shortcuts-navlist").load("/sidebar_super.html",function(){$("#nav_list_4").addClass("active");});
+    $("#sidebar-shortcuts-navlist").load("/sidebar_super.html",function(){updateByAID("${associationName}","投票");$("#nav_list_4").addClass("active");});
 <#else>
-    $("#sidebar-shortcuts-navlist").load("/sidebar_admin.html",function(){$("#nav_list_4").addClass("active");});
+    $("#sidebar-shortcuts-navlist").load("/sidebar_admin.html",function(){updateByAID("${associationName}","投票");$("#nav_list_4").addClass("active");});
 </#if>
     var colorbox_params = {
         reposition: true,
@@ -528,7 +529,7 @@ function editVote(){
     var selectIds = $("#grid-table").getGridParam("selarrrow");
         //var id=$("#grid-table > tbody > tr").eq(index).find("td").eq(1).attr("id");
     if(selectIds.length == 0){
-        alert("请选择同舟表决！");
+        alert("请选择投票！");
     }
     else {
         window.location.href = '/app/bvote/edit?voteId=' + selectIds[0];
@@ -538,7 +539,7 @@ function viewVote() {
     var selectIds = $("#grid-table").getGridParam("selarrrow");
 
     if(selectIds.length == 0){
-        alert("请选择同舟表决！");
+        alert("请选择投票！");
     }
     else {
         window.location.href = '/app/bvote/view?v=' + selectIds[0];
@@ -546,11 +547,11 @@ function viewVote() {
 }
 
 function deleteVote() {
-    var flag=window.confirm("确定要删除同舟表决吗?");
+    var flag=window.confirm("确定要删除投票吗?");
     if(flag) {
         var selectedIds = $("#grid-table").getGridParam("selarrrow");
         if(selectedIds.length == 0){
-            alert("请选择同舟表决！");
+            alert("请选择投票！");
         }
         else {
             $.ajax({
@@ -625,7 +626,7 @@ jQuery(function($) {
 
         },
 
-        caption: "同舟表决列表",
+        caption: "列表",
         autowidth: true
     });
 
@@ -634,11 +635,11 @@ jQuery(function($) {
             { 	//navbar options
                 add: false,
                 addicon : 'fa fa-plus-circle purple',
-                addtitle : '添加同舟表决',
+                addtitle : '添加投票',
                 addfunc : (function(){window.location.href="/app/bvote/new";/*alert("添加操作!");*/return false;}),
 
                 edit: false,
-                edittitle : '编辑同舟表决',
+                edittitle : '编辑投票',
                 editicon : 'fa fa-pencil blue',
                 editfunc : (function(){
                     var index = $("#grid-table").getGridParam("selrow");
@@ -649,9 +650,9 @@ jQuery(function($) {
                 <#else>del: false,
                 </#if>
                 delicon : 'fa fa-trash-o red',
-                deltitle : '删除选中同舟表决',
+                deltitle : '删除选中投票',
                 delfunc : (function(){
-                    var flag=window.confirm("确定要删除同舟表决吗?");
+                    var flag=window.confirm("确定要删除投票吗?");
                     if(flag) {
                         var selectedIds = $("#grid-table").getGridParam("selarrrow");
                         $.ajax({
@@ -682,7 +683,7 @@ jQuery(function($) {
                 refresh: false,
 
                 view: false,
-                viewtitle : '查看同舟表决',
+                viewtitle : '查看投票',
                 viewicon : 'fa fa-search-plus grey',
                 viewfunc: (
                         function(){

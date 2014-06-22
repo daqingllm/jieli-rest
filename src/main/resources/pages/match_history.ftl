@@ -351,6 +351,7 @@
 
 <script src="/assets/js/ace-elements.min.js"></script>
 <script src="/assets/js/ace.min.js"></script>
+<script src="/common-jieli.js"></script>
 
 <!-- inline scripts related to this page -->
 <script>
@@ -375,12 +376,10 @@
 <script type="text/javascript">
 jQuery(function ($) {
 <#if isSuper>
-    $("#sidebar-shortcuts-navlist").load("/sidebar_super.html",function(){
-        $("#nav_list_6_2").addClass("active open");
+    $("#sidebar-shortcuts-navlist").load("/sidebar_super.html",function(){updateByAID();
         $("#nav_list_6").addClass("active");});
 <#else>
-    $("#sidebar-shortcuts-navlist").load("/sidebar_admin.html",function(){
-        $("#nav_list_6_2").addClass("active open");
+    $("#sidebar-shortcuts-navlist").load("/sidebar_admin.html",function(){updateByAID();
         $("#nav_list_6").addClass("active");});
 </#if>
 

@@ -442,6 +442,7 @@
 
 <script src="/assets/js/ace-elements.min.js"></script>
 <script src="/assets/js/ace.min.js"></script>
+<script src="/common-jieli.js"></script>
 
 <!-- inline scripts related to this page -->
 
@@ -449,11 +450,9 @@
 jQuery(function ($) {
     /* sidebar */
 <#if isSuper>
-    $("#sidebar-shortcuts-navlist").load("/sidebar_super.html",function(){$("#nav_list_10_1").addClass("active open");$("#nav_list_10").addClass("active");
-        $("#nav_list_10_1 i").css({"position":"absolute","left":"10px","top":"11px","font-size":"12px","width":"18px","text-align":"center","color":"#c86139","display":"inline"});});
+    $("#sidebar-shortcuts-navlist").load("/sidebar_super.html",function(){updateByAID();$("#nav_list_10").addClass("active");});
 <#else>
-    $("#sidebar-shortcuts-navlist").load("/sidebar_admin.html",function(){$("#nav_list_10_1").addClass("active open");$("#nav_list_10").addClass("active");
-        $("#nav_list_10_1 i").css({"position":"absolute","left":"10px","top":"11px","font-size":"12px","width":"18px","text-align":"center","color":"#c86139","display":"inline"});});
+    $("#sidebar-shortcuts-navlist").load("/sidebar_admin.html",function(){updateByAID();$("#nav_list_10").addClass("active");});
 </#if>
     var colorbox_params = {
         reposition: true,

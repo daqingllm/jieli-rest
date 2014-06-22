@@ -2,7 +2,7 @@
 <html lang="zh">
 <head>
     <meta charset="utf-8"/>
-    <title>${associationName} 同舟论剑 </title>
+    <title replaceflg="${associationName}">${associationName} 讨论 </title>
     <meta name="description" content="接力"/>
     <!-- basic styles -->
 
@@ -191,10 +191,10 @@
                     </li>
 
                     <li>
-                        <a href="/app/bdiscuss/list"> 同舟论剑 </a>
+                        <a href="/app/bdiscuss/list" replaceflg="${associationName}"> 讨论 </a>
                     </li>
 
-                    <li class="active"> 同舟论剑列表 </li>
+                    <li class="active" replaceflg="${associationName}"> 讨论列表 </li>
                 </ul>
                 <!-- .breadcrumb -->
 
@@ -212,8 +212,8 @@
 
             <div class="page-content">
                 <div class="page-header">
-                    <h1>
-                        同舟论剑列表
+                    <h1 replaceflg="${associationName}">
+                        讨论列表
                     </h1>
                 </div>
                 <!-- /.page-header -->
@@ -250,9 +250,9 @@
 
                     <div class="col-xs-12">
 
-                        <button class="btn btn-danger" type="button" style="font-weight:bold;margin-bottom: 20px;" onclick="deleteHelp()" id="deleteArtBtn">
+                        <button class="btn btn-danger" type="button" style="font-weight:bold;margin-bottom: 20px;" onclick="deleteHelp()" id="deleteArtBtn" replaceflg="${associationName}">
                             <i class="fa fa-trash-o bigger-110"></i>
-                            删除同舟论剑
+                            删除讨论
                         </button>
                         &nbsp;&nbsp;&nbsp;&nbsp;
 
@@ -351,6 +351,7 @@
 
 <script src="/assets/js/ace-elements.min.js"></script>
 <script src="/assets/js/ace.min.js"></script>
+<script src="/common-jieli.js"></script>
 
 <!-- inline scripts related to this page -->
 <script>
@@ -377,10 +378,10 @@
 <script type="text/javascript">
 jQuery(function ($) {
 <#if isSuper>
-    $("#sidebar-shortcuts-navlist").load("/sidebar_super.html",function(){$("#nav_list_5_1").addClass("active open");
+    $("#sidebar-shortcuts-navlist").load("/sidebar_super.html",function(){updateByAID("${associationName}","讨论");$("#nav_list_5_1").addClass("active open");
     $("#nav_list_6").addClass("active");});
 <#else>
-    $("#sidebar-shortcuts-navlist").load("/sidebar_admin.html",function(){$("#nav_list_5_1").addClass("active open");
+    $("#sidebar-shortcuts-navlist").load("/sidebar_admin.html",function(){updateByAID("${associationName}","讨论");$("#nav_list_5_1").addClass("active open");
     $("#nav_list_6").addClass("active");});
 </#if>
     var colorbox_params = {
@@ -535,7 +536,7 @@ function viewHelp() {
 }
 
 function deleteHelp() {
-    var flag=window.confirm("确定要删除同舟论剑吗?");
+    var flag=window.confirm("确定删除?");
     if(flag) {
         var selectedIds = $("#grid-table").getGridParam("selarrrow");
         if(selectedIds.length == 0) {
@@ -649,7 +650,7 @@ jQuery(function($) {
             }, 0);
         },
 
-        caption: "同舟论剑列表",
+        caption: "列表",
         autowidth: true
     });
 

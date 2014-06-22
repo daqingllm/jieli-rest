@@ -361,6 +361,7 @@
 
 <script src="/assets/js/ace-elements.min.js"></script>
 <script src="/assets/js/ace.min.js"></script>
+<script src="/common-jieli.js"></script>
 
 <!-- inline scripts related to this page -->
 <script>
@@ -393,7 +394,7 @@ jQuery(function ($) {
             $("#nav_list_6_3").addClass("active open");
         </#if>});
 <#else>
-    $("#sidebar-shortcuts-navlist").load("/sidebar_admin.html",function(){
+    $("#sidebar-shortcuts-navlist").load("/sidebar_admin.html",function(){updateByAID();
         $("#nav_list_6").addClass("active");
         <#if isHistory>
             $("#nav_list_6_1").addClass("active open");

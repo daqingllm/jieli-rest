@@ -2,7 +2,7 @@
 <html lang="zh">
 <head>
     <meta charset="utf-8"/>
-    <title>${associationName} 同舟共济</title>
+    <title replaceflg="${associationName}">${associationName} 互帮互助</title>
     <meta name="description" content="接力"/>
     <!-- basic styles -->
 
@@ -191,10 +191,10 @@
         </li>
 
         <li>
-            <a href="/app/bhelp/list"> 同舟共济 </a>
+            <a href="/app/bhelp/list" replaceflg="${associationName}"> 互帮互助 </a>
         </li>
 
-        <li class="active">查看同舟共济</li>
+        <li class="active" replaceflg="${associationName}">查看互帮互助</li>
     </ul>
     <!-- .breadcrumb -->
 
@@ -212,8 +212,8 @@
 
 <div class="page-content">
     <div class="page-header">
-        <h1>
-        查看同舟共济
+        <h1 replaceflg="${associationName}">
+        查看互帮互助
         </h1>
     </div>
     <!-- /.page-header -->
@@ -429,6 +429,7 @@
 
 <script src="/assets/js/ace-elements.min.js"></script>
 <script src="/assets/js/ace.min.js"></script>
+<script src="/common-jieli.js"></script>
 
 <!-- inline scripts related to this page -->
 <script>
@@ -453,12 +454,10 @@
 <script type="text/javascript">
 jQuery(function ($) {
 <#if isSuper>
-    $("#sidebar-shortcuts-navlist").load("/sidebar_super.html",function(){
-        $("#nav_list_5_1").addClass("active open");
+    $("#sidebar-shortcuts-navlist").load("/sidebar_super.html",function(){updateByAID();
     $("#nav_list_5").addClass("active");});
 <#else>
-    $("#sidebar-shortcuts-navlist").load("/sidebar_admin.html",function(){
-    $("#nav_list_5_1").addClass("active open");
+    $("#sidebar-shortcuts-navlist").load("/sidebar_admin.html",function(){updateByAID();
     $("#nav_list_5").addClass("active");});
 </#if>
 

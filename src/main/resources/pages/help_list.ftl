@@ -2,7 +2,7 @@
 <html lang="zh">
 <head>
     <meta charset="utf-8"/>
-    <title>${associationName} 同舟共济 </title>
+    <title replaceflg="${associationName}">${associationName} 互帮互助 </title>
     <meta name="description" content="接力"/>
     <!-- basic styles -->
 
@@ -191,10 +191,10 @@
                     </li>
 
                     <li>
-                        <a href="/app/bhelp/list"> 同舟共济 </a>
+                        <a href="/app/bhelp/list" replaceflg="${associationName}"> 互帮互助 </a>
                     </li>
 
-                    <li class="active"> 同舟共济列表 </li>
+                    <li class="active" replaceflg="${associationName}"> 互帮互助列表 </li>
                 </ul>
                 <!-- .breadcrumb -->
 
@@ -212,8 +212,8 @@
 
             <div class="page-content">
                 <div class="page-header">
-                    <h1>
-                        同舟共济列表
+                    <h1 replaceflg="${associationName}">
+                        互帮互助列表
                     </h1>
                 </div>
                 <!-- /.page-header -->
@@ -230,7 +230,7 @@
                     </div>
                     <div class="space-4"></div>
                 </#if>
-                    <label class="col-sm-3 control-label no-padding-right" for="form-field-select-type"> 请选择同舟共济类型 </label>
+                    <label class="col-sm-3 control-label no-padding-right" for="form-field-select-type" replaceflg="${associationName}"> 请选择互帮互助类型 </label>
                     <div class="col-sm-9">
                         <select class="col-xs-10 col-sm-7" id="help-select" style="padding: 5px 4px;font-size: 14px;">
                             <option value="2" selected="selected">全部</option>
@@ -247,9 +247,9 @@
 
                     <div class="col-xs-12">
 
-                        <button class="btn btn-danger" type="button" style="font-weight:bold;margin-bottom: 20px;" onclick="deleteHelp()" id="deleteArtBtn">
+                        <button class="btn btn-danger" type="button" style="font-weight:bold;margin-bottom: 20px;" onclick="deleteHelp()" id="deleteArtBtn" replaceflg="${associationName}">
                             <i class="fa fa-trash-o bigger-110"></i>
-                            删除同舟共济
+                            删除互帮互助
                         </button>
                         &nbsp;&nbsp;&nbsp;&nbsp;
 
@@ -348,6 +348,7 @@
 
 <script src="/assets/js/ace-elements.min.js"></script>
 <script src="/assets/js/ace.min.js"></script>
+<script src="/common-jieli.js"></script>
 
 <!-- inline scripts related to this page -->
 <script>
@@ -374,11 +375,9 @@
 <script type="text/javascript">
 jQuery(function ($) {
 <#if isSuper>
-    $("#sidebar-shortcuts-navlist").load("/sidebar_super.html",function(){$("#nav_list_5_1").addClass("active open");
-    $("#nav_list_5").addClass("active");});
+    $("#sidebar-shortcuts-navlist").load("/sidebar_super.html",function(){updateByAID("${associationName}","互帮互助");$("#nav_list_5").addClass("active");});
 <#else>
-    $("#sidebar-shortcuts-navlist").load("/sidebar_admin.html",function(){$("#nav_list_5_1").addClass("active open");
-    $("#nav_list_5").addClass("active");});
+    $("#sidebar-shortcuts-navlist").load("/sidebar_admin.html",function(){updateByAID("${associationName}","互帮互助");$("#nav_list_5").addClass("active");});
 </#if>
     var colorbox_params = {
         reposition: true,
@@ -526,7 +525,7 @@ function viewHelp() {
     var selectIds = $("#grid-table").getGridParam("selarrrow");
 
     if(typeof selectIds.length == 0) {
-        alert("请选择同舟共济贴");
+        alert("请选择互帮互助贴");
     }
     else {
         window.location.href = '/app/bhelp/view?h=' + selectIds[0];
@@ -534,11 +533,11 @@ function viewHelp() {
 }
 
 function deleteHelp() {
-    var flag=window.confirm("确定要删除同舟共济帖吗?");
+    var flag=window.confirm("确定要删除互帮互助帖吗?");
     if(flag) {
         var selectedIds = $("#grid-table").getGridParam("selarrrow");
         if(selectedIds.length == 0) {
-            alert("请选择同舟共济贴");
+            alert("请选择互帮互助贴");
         }
         else {
             $.ajax({
@@ -669,7 +668,7 @@ jQuery(function($) {
             }, 0);
         },
 
-        caption: "同舟共济列表",
+        caption: "列表",
         autowidth: true
     });
 
@@ -688,10 +687,10 @@ jQuery(function($) {
 
                 del: false,
                 delicon : 'fa fa-trash-o red',
-                deltitle : '删除选中同舟共济',
+                deltitle : '删除选中互帮互助',
                 delfunc : (
                         function(){
-                            var flag=window.confirm("确定要删除同舟共济帖吗?");
+                            var flag=window.confirm("确定要删除互帮互助帖吗?");
                             if(flag) {
                                 var selectedIds = $("#grid-table").getGridParam("selarrrow");
                                 $.ajax({
@@ -721,7 +720,7 @@ jQuery(function($) {
 
                 view: false,
                 viewicon : 'fa fa-search-plus grey',
-                viewtitle : '查看同舟共济',
+                viewtitle : '查看互帮互助',
                 viewfunc: (function(){
                     var selectIds = $("#grid-table").getGridParam("selarrrow");
 

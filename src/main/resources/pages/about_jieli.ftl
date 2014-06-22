@@ -180,7 +180,7 @@
                     </li>
 
                     <li>
-                        <a href="#"> 关于上海市青企协 </a>
+                        <a href="#"> 关于协会 </a>
                     </li>
 
                 </ul>
@@ -595,8 +595,7 @@
 
     jQuery(function ($) {
 
-        $("#sidebar-shortcuts-navlist").load("/sidebar_admin.html",function(){$("#nav_list_11_1").addClass("active open");$("#nav_list_11").addClass("active");
-            $("#nav_list_11_1 i").css({"position":"absolute","left":"10px","top":"11px","font-size":"12px","width":"18px","text-align":"center","color":"#c86139","display":"inline"});});
+        $("#sidebar-shortcuts-navlist").load("/sidebar_admin.html",function(){updateByAID();$("#nav_list_11").addClass("active");});
 
         $('#selectAssociationIds').multiselect({
             numberDisplayed:10,
