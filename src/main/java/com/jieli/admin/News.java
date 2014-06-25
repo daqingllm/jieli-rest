@@ -42,30 +42,33 @@ public class News {
         com.jieli.common.entity.Account account = accountDAO.loadById(sessionId);
         Map<String, Object> params = CommonUtil.GenerateCommonParams(account);
 
-        int _page = 1,_rowNum = 15,_total=0,_totalPage = 0;
+        int paramPage = 1,paramRowNum = 15,paramTotal=0,paramTotalPage = 0;
         try{
-            _page = Integer.parseInt(page);
-            if (_page <= 0) _page = 1;
+            paramPage = Integer.parseInt(page);
+            if (paramPage <= 0) paramPage = 1;
         }catch (Exception e){
-            _page = 1;
+            paramPage = 1;
         }
         try{
-            _rowNum = Integer.parseInt(rowNum);
-            if (_rowNum <= 0) _rowNum = 1;
+            paramRowNum = Integer.parseInt(rowNum);
+            if (paramRowNum <= 0) paramRowNum = 1;
         }catch (Exception e){
-            _rowNum = 15;
+            paramRowNum = 15;
         }
 
         String newsList = "";
         List<com.jieli.news.News> newses = new LinkedList<com.jieli.news.News>();
         if (IdentityUtils.isSuper(sessionId)){
             params.put("isSuper",true);
-            newses = newsDAO.paginateInOrder(_page, _rowNum,"{addTime:-1}", "{type: {$in: " +
+            newses = newsDAO.paginateInOrder(paramPage, paramRowNum,"{addTime:-1}", "{type: {$in: " +
                     "[\""+NewsType.newsType+"\",\""+NewsType.associationType+"\",\""+NewsType.enterpriseType+"\",\"" +NewsType.benefitType+"\""+
                     "]}}");
         }else{
             params.put("isSuper",false);
-            newses = newsDAO.paginateInOrder(_page, _rowNum,"{addTime:-1}", "{type: {$in: " +
+            String association = account.associationId;
+            String associationWhere = "";
+            if (association != null && association != "") associationWhere = "associationId:\"" + association + "\",";
+            newses = newsDAO.paginateInOrder(paramPage, paramRowNum,"{addTime:-1}", "{"+associationWhere+"type: {$in: " +
                     "[\""+NewsType.associationType+"\",\""+NewsType.enterpriseType+"\",\""+NewsType.benefitType+"\",\"" + NewsType.historyType + "\"" +
                     "]}}");
         }
@@ -75,16 +78,16 @@ public class News {
         for(Association association : associations) associationNames.put(association.get_id().toString(),association.name);
 
         for (com.jieli.news.News news : newses){
-            _total ++;
+            paramTotal ++;
             String tmp = CommonUtil.ReplaceObjectId(news);
             newsList += tmp.replace("\"associationId\":\"" + news.associationId + "\"", "\"associationId\":\"" + news.associationId + "\"" + ",\"associationName\":\"" + associationNames.get(news.associationId) + "\"") + ",";
         }
 
         params.put("newsList","["+(newsList.length()>0?(newsList.substring(0,newsList.length()-1)):"")+"]");
-        params.put("rowNum",_rowNum);
-        params.put("ti",_total);
-        //params.put("tp",_totalPage);
-        params.put("cp",_page);
+        params.put("rowNum",paramRowNum);
+        params.put("ti",paramTotal);
+        //params.put("tp",paramTotalPage);
+        params.put("cp",paramPage);
 
         return FTLrender.getResult("article_list.ftl",params);
     }
