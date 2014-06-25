@@ -19,4 +19,6 @@ public class Image extends Model {
 
     public String newsId;
 
+    public String associationId;
+
 }

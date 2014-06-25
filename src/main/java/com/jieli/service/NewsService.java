@@ -1,7 +1,5 @@
 package com.jieli.service;
 
-import com.jieli.activity.AcivityTag;
-import com.jieli.activity.ActivityMsg;
 import com.jieli.comment.Comment;
 import com.jieli.comment.TopicType;
 import com.jieli.common.entity.ResponseEntity;
@@ -223,8 +221,9 @@ public class NewsService {
         if (!IdentityUtils.isValidate(sessionId)) {
             return Response.status(403).build();
         }
+        String associationId = IdentityUtils.getAssociationId(sessionId);
 
-        Iterable<Image> images = imageDAO.loadCoverImages();
+        Iterable<Image> images = imageDAO.loadCoverImages(associationId);
         List<Image> imageList = new ArrayList<Image>();
         for (Image image : images){
             if (image.url.indexOf("?imageView/4/w/500/h/300") < 0)
@@ -303,8 +302,9 @@ public class NewsService {
             responseEntity.msg = "缺少图片";
             return Response.status(200).entity(responseEntity).build();
         }
+        String associationId = IdentityUtils.getAssociationId(sessionId);
 
-        Iterable<Image> images = imageDAO.loadCoverImages();
+        Iterable<Image> images = imageDAO.loadCoverImages(associationId);
         int count = 1;
         for (Image image_ : images){
             // delete last one
@@ -324,6 +324,7 @@ public class NewsService {
 
         Image image = news.images.get(0);
         image.newsId = news.get_id().toString();
+        image.associationId = news.getAssociationId();
         imageDAO.save(image);
 
         News news_ = newsDAO.loadById(image.newsId);

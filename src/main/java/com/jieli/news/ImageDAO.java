@@ -11,7 +11,7 @@ import com.jieli.mongo.GenericDAO;
  */
 public class ImageDAO extends GenericDAO<Image> {
 
-    public Iterable<Image> loadCoverImages() {
-        return col.find().sort("{_id:-1}").limit(4).as(Image.class);
+    public Iterable<Image> loadCoverImages(String associationId) {
+        return col.find("{associationId:#}", associationId).sort("{_id:-1}").limit(4).as(Image.class);
     }
 }
