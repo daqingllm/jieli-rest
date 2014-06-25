@@ -39,6 +39,7 @@ public abstract class CommentMessageUtil {
             commentMsg.commentType = 1;
             commentMsg.topicType = comment.topicType;
             commentMsg.topicId = comment.topicId;
+            commentMsg.tag = comment.tag;
             commentMsg.msg = "你在 " + comment.topicTitle + " 中的评论被 " + commentUserInfo.name + " 回复了";
 
             message.content = commentMsg;
@@ -61,6 +62,7 @@ public abstract class CommentMessageUtil {
         commentMsg.commentUser = commentUserInfo;
         commentMsg.commentContent = comment.content;
         commentMsg.commentTime = comment.addTime;
+        commentMsg.tag = comment.tag;
         commentMsg.commentType = 0;
         commentMsg.topicType = comment.topicType;
         commentMsg.topicId = comment.topicId;
