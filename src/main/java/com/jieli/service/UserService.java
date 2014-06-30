@@ -1,5 +1,6 @@
 package com.jieli.service;
 
+import com.jieli.admin.CommonUtil;
 import com.jieli.association.Group;
 import com.jieli.association.GroupDAO;
 import com.jieli.common.dao.AccountDAO;
@@ -512,6 +513,12 @@ public class UserService {
 
         if (user.birthday != null && user.birthday.getMonth() >= 0) {
             oldUser.constellation = UploaderUtils.getConstellation(user.birthday.getMonth(), user.birthday.getDate());
+        }
+
+        String customizedUserFace = CommonUtil.MakeCustomizedUserFace(user.userFace, user.associationId);
+        if (!StringUtils.isEmpty(customizedUserFace) &&
+                !customizedUserFace.equals(user.userFace)){
+            oldUser.userFace = customizedUserFace;
         }
 
         userDAO.save(oldUser);

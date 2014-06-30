@@ -11,6 +11,7 @@ import com.jieli.mongo.Model;
 import com.jieli.user.dao.UserDAO;
 import com.jieli.user.entity.*;
 import com.jieli.util.IdentityUtils;
+import org.apache.commons.lang.StringUtils;
 
 import javax.ws.rs.core.Response;
 import java.util.*;
@@ -207,5 +208,25 @@ public class CommonUtil {
             params.put("associationName","接力");
 
         return params;
+    }
+
+    public static String MakeCustomizedUserFace(String originalUserFace, String associationId){
+        // 不判断associationId是否为空（因为超级管理员associationId为空）
+        if (StringUtils.isEmpty(originalUserFace)) {
+            return null;
+        }
+
+        String newUserFace = originalUserFace;
+        int positionOfParameter = originalUserFace.indexOf("?");
+        if (positionOfParameter > 0){
+            newUserFace = originalUserFace.substring(0,positionOfParameter);
+        }
+
+        // syea协会
+        if ("5348205ce4b00b2ae52d3f5a".equals(associationId)){
+            newUserFace += "?imageMogr/v2/gravity/Center/crop/780x780";
+        }
+
+        return newUserFace;
     }
 }
