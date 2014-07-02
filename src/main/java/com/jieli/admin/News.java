@@ -430,9 +430,10 @@ private ImageDAO imageDAO = new ImageDAO();
             e.printStackTrace();
             got = "获取资讯失败。";
         }
+        /*
         if (tmp != null && tmp.indexOf("{\"time\":") > -1){
             tmp = tmp.substring(0,7) + "\"" + n.get_id().toString() + "\"" + tmp.substring(tmp.indexOf("},",7)+1);
-        }
+        }*/
 
         List<com.jieli.comment.Comment> commentList = new LinkedList<com.jieli.comment.Comment>();
         String commentListString = "[";

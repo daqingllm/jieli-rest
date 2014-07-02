@@ -391,7 +391,7 @@
                         </button>
 
                         &nbsp; &nbsp; &nbsp;
-                        <button class="btn btn-info" type="button" style="font-weight:bold" onclick="postThisArticle(imagesUpload)">
+                        <button class="btn btn-info" type="button" style="font-weight:bold" id="postThisArticleBt">
                             <i class="fa fa-check bigger-110"></i>
                             х╥хо
                         </button>
@@ -993,6 +993,11 @@
     });
 
     loadThisArticle();
+    $("#postThisArticleBt").click(function(){
+        if (data && data.topPic != null) {
+            postThisArticle(imagesUpload, data.topPic);
+        }
+    })
 
 </script>
 </body>

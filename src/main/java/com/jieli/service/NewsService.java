@@ -10,6 +10,7 @@ import com.jieli.mongo.BaseDAO;
 import com.jieli.news.*;
 import com.jieli.util.CollectionUtils;
 import com.jieli.util.IdentityUtils;
+import com.jieli.util.ImageCount;
 import com.jieli.util.MongoUtils;
 import com.sun.jersey.spi.resource.Singleton;
 import org.apache.commons.lang.StringUtils;
@@ -18,10 +19,7 @@ import org.bson.types.ObjectId;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -217,13 +215,13 @@ public class NewsService {
     @GET
     @Path("/cover")
     @Produces(MediaType.APPLICATION_JSON+ ";charset=utf-8")
-    public Response loadCoverImages(@CookieParam("u")String sessionId){
+    public Response loadCoverImages(@CookieParam("u")String sessionId,@QueryParam("type") String type){
         if (!IdentityUtils.isValidate(sessionId)) {
             return Response.status(403).build();
         }
         String associationId = IdentityUtils.getAssociationId(sessionId);
 
-        Iterable<Image> images = imageDAO.loadCoverImages(associationId);
+        Iterable<Image> images = imageDAO.loadCoverImages(associationId,type);
         List<Image> imageList = new ArrayList<Image>();
         for (Image image : images){
             if (image.url.indexOf("?imageView/4/w/500/h/300") < 0)
@@ -249,33 +247,21 @@ public class NewsService {
         }
 
         ResponseEntity responseEntity = new ResponseEntity();
-        if (news == null) {
+        if (news == null || StringUtils.isEmpty(news.type) || StringUtils.isEmpty(news.associationId)) {
             responseEntity.code = 4008;
             responseEntity.msg = "缺少参数";
             return Response.status(200).entity(responseEntity).build();
         }
 
-        News oldNews = newsDAO.loadById(news.get_id().toString());
+        ImageCount imageCount = new ImageCount(0);
+        SetNewsTopPicTo(news, UnTopPicState);
+        DeleteImageByNews(news);
+        HandleExtraNewsThroughCurrentNewsAndCount(news, imageCount, TopPicState, DoNotDeleteExtraImage);
+        //SetReplenishNewsTopPicToTrueAfterDeleteImageFromNews(news, imageCount);
 
-        if (oldNews != null) {
-            if (oldNews.topPic) {
-                oldNews.topPic = false;
-                newsDAO.save(oldNews);
-            }
-
-            Iterable<Image> images = imageDAO.find("{newsId:\"" + news.get_id().toString() + "\"}");
-            for (Image image : images) {
-                imageDAO.deleteById(image.get_id().toString());
-            }
-
-            responseEntity.code = 200;
-            responseEntity.msg = "已取消置顶";
-            return Response.status(200).entity(responseEntity).build();
-        }else {
-            responseEntity.code = 200;
-            responseEntity.msg = "资讯不存在";
-            return Response.status(200).entity(responseEntity).build();
-        }
+        responseEntity.code = 200;
+        responseEntity.msg = "已取消置顶, 目前此类资讯共有"+imageCount.count+"个置顶图片";
+        return Response.status(200).entity(responseEntity).build();
     }
 
     @POST
@@ -287,7 +273,7 @@ public class NewsService {
         }
 
         ResponseEntity responseEntity = new ResponseEntity();
-        if (news == null) {
+        if (news == null || StringUtils.isEmpty(news.associationId)) {
             responseEntity.code = 4008;
             responseEntity.msg = "缺少参数";
             return Response.status(200).entity(responseEntity).build();
@@ -302,38 +288,15 @@ public class NewsService {
             responseEntity.msg = "缺少图片";
             return Response.status(200).entity(responseEntity).build();
         }
-        String associationId = IdentityUtils.getAssociationId(sessionId);
 
-        Iterable<Image> images = imageDAO.loadCoverImages(associationId);
-        int count = 1;
-        for (Image image_ : images){
-            // delete last one
-            if (count == 4){
-                String newsId = image_.newsId;
-                News news_ = newsDAO.loadById(newsId);
-                if (news_ != null) {
-                    news_.topPic = false;
-                    newsDAO.save(news_);
-                }
-
-                imageDAO.deleteById(image_.get_id().toString());
-                break;
-            }
-            count ++;
-        }
-
-        Image image = news.images.get(0);
-        image.newsId = news.get_id().toString();
-        image.associationId = news.getAssociationId();
-        imageDAO.save(image);
-
-        News news_ = newsDAO.loadById(image.newsId);
-        if (news_ != null){
-            news_.topPic = true;
-            newsDAO.save(news_);
-        }
+        ImageCount imageCount = new ImageCount(0);
+        HandleExtraNewsThroughCurrentNewsAndCount(news, imageCount, UnTopPicState, DeleteExtraImage);
+        //SetEdgedOutNewsTopPicToFalseBeforeInsertImageFromNews(news,imageCount);
+        InsertImageByNews(news);
+        SetNewsTopPicTo(news,TopPicState);
 
         responseEntity.code = 200;
+        responseEntity.msg = "已置顶, 目前此类资讯共有"+(imageCount.count>3?4:imageCount.count+1)+"个置顶图片";
         return  Response.status(200).entity(responseEntity).build();
     }
 
@@ -385,5 +348,104 @@ public class NewsService {
         responseEntity.body = comment;
         return Response.status(200).entity(responseEntity).build();
     }
+
+    private void SetNewsTopPicTo(News news, boolean state){
+        if (news == null) return;
+
+        if (news.topPic != state){
+            news.topPic = state;
+            newsDAO.save(news);
+        }
+    }
+
+    // ExtraImage : 增加头图时候可能挤掉原头图,删除的时候可能增补老头图。这两种头图为ExtraImage
+    private void HandleExtraNewsThroughCurrentNewsAndCount(News currentNews, ImageCount imageCount, boolean state, boolean deleteExtraNews){
+        if (currentNews == null) return;
+
+        Iterable<Image> images = imageDAO.loadCoverImages(currentNews.associationId,currentNews.type);
+        Image extraImage = (Image)(CollectionUtils.getByIndexAndCount(images, 3, imageCount));
+
+        if (extraImage != null){
+            String newsId = extraImage.newsId;
+            News extraNews = newsDAO.loadById(newsId);
+
+            if (extraNews == null){
+                return;
+            }
+
+            extraNews.topPic = state;
+            newsDAO.save(extraNews);
+
+            if (deleteExtraNews){
+                imageDAO.deleteByNewsId(extraNews.get_id().toString());
+            }
+        }
+    }
+
+    /*
+    private void SetEdgedOutNewsTopPicToFalseBeforeInsertImageFromNews(News news, ImageCount imageCount){
+        if (news==null) return;
+
+        Iterable<Image> images = imageDAO.loadCoverImages(news.associationId,news.type);
+        Image edgedOutImage = (Image)(CollectionUtils.getByIndexAndCount(images, 3, imageCount));
+
+        if (edgedOutImage != null) {
+            String newsId = edgedOutImage.newsId;
+            News edgedOutNews = newsDAO.loadById(newsId);
+            if (edgedOutNews != null) {
+                edgedOutNews.topPic = false;
+                newsDAO.save(edgedOutNews);
+
+                imageDAO.deleteById(edgedOutImage.get_id().toString());
+            }
+        }
+    }
+
+    private void SetReplenishNewsTopPicToTrueAfterDeleteImageFromNews(News news,ImageCount imageCount){
+        if (news==null) return;
+
+        Iterable<Image> newImages = imageDAO.loadCoverImages(news.associationId,news.type);
+        Image replenishImage = (Image)(CollectionUtils.getByIndexAndCount(newImages, 3, imageCount));
+
+        if (replenishImage != null) {
+            String newsId = replenishImage.newsId;
+            News replenishNews = newsDAO.loadById(newsId);
+            if (replenishNews != null) {
+                replenishNews.topPic = true;
+                newsDAO.save(replenishNews);
+            }
+        }
+    }
+    */
+
+    private void InsertImageByNews(News news){
+        if (news == null || news.images == null || news.images.size() == 0) return;
+
+        Image imageIn = news.images.get(0);
+
+        Image image = new Image();
+        image.url = imageIn.url;
+        image.description = imageIn.description;
+        image.placeholder = imageIn.placeholder;
+        image.newsId = news.get_id().toString();
+        image.associationId = news.associationId;
+        image.type = news.type;
+        imageDAO.save(image);
+    }
+
+    private void DeleteImageByNews(News news){
+        if (news == null) return;
+
+        Iterable<Image> images = imageDAO.find("{newsId:\"" + news.get_id().toString() + "\"}");
+        if (images == null) return;
+        for (Image image : images) {
+            imageDAO.deleteById(image.get_id().toString());
+        }
+    }
+
+    private static final boolean TopPicState = true;
+    private static final boolean UnTopPicState = false;
+    private static final boolean DeleteExtraImage = true;
+    private static final boolean DoNotDeleteExtraImage = false;
 
 }

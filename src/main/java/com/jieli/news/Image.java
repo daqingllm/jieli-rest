@@ -21,4 +21,6 @@ public class Image extends Model {
 
     public String associationId;
 
+    public String type;
+
 }

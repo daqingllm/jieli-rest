@@ -391,7 +391,7 @@
                 </button>
 
                 &nbsp; &nbsp; &nbsp;
-                <button class="btn btn-info" type="button" style="font-weight:bold" onclick="postThisArticle(imagesUpload)">
+                <button class="btn btn-info" type="button" style="font-weight:bold" onclick="postThisArticle(imagesUpload,false)">
                     <i class="fa fa-check bigger-110"></i>
                     ·¢²¼
                 </button>

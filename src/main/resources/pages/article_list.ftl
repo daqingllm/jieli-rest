@@ -237,6 +237,8 @@
                         </button>
                         &nbsp;&nbsp;&nbsp;&nbsp;
 
+                        <div class="alert alert-warning" style="margin-left: 15px; width: 450px; position: relative;display: inline-block;padding: 10px;">&nbsp;小提示:&nbsp;如果您修改了置顶资讯的第一张图片，请重新将此资讯置顶</div>
+
                         <table id="grid-table"></table>
                         <div id="grid-pager"></div>
                     </div>
@@ -439,6 +441,7 @@ function setTitleImgClickFunc(){
     var id = $("#grid-table").getGridParam("selrow") - 1;
     //id = $("#grid-table > tbody > tr").eq(id).find("td").eq(1).attr("title");
     var news = raw_data[id];
+    if (news.title) news.title=news.title.replace("<span style='color:rgb(226, 64, 64)'>[置顶]</span>&nbsp;","");
 
     setTitleImg(news);
 }
@@ -447,6 +450,7 @@ function unTitleImgClickFunc(){
     var id = $("#grid-table").getGridParam("selrow") - 1;
     //id = $("#grid-table > tbody > tr").eq(id).find("td").eq(1).attr("title");
     var news = raw_data[id];
+    if (news.title) news.title=news.title.replace("<span style='color:rgb(226, 64, 64)'>[置顶]</span>&nbsp;","");
 
     unTitleImg(news);
 }

@@ -205,7 +205,7 @@ function previewThisArticle(textObj,images,first) {
 }
 
 // 点击完成按钮
-function postThisArticle(images){
+function postThisArticle(images,topPic){
     // content 是内容 in html
     // overview 是列表页中使用的预览-需要生产一下 ： 去掉img，center表情
 
@@ -313,6 +313,7 @@ function postThisArticle(images){
     json["appreciateUserIds"] = [];
     json["appreciateCount"] = 0;
     json["addTime"] = null;
+    json["topPic"] = topPic;
 
     var p_addurl = "/app/news/?newsId="+(isEdit?json["_id"]:"")+"&force="+$("#form-field-checkbox").is(':checked');
     var suc = true;
@@ -373,7 +374,8 @@ function unTitleImg(news){
         processData:false,
         success:function(ret){
             if (ret.code == 200) {
-                alert("已取消置顶");
+                if (ret.msg) alert(ret.msg);
+                else alert("已取消置顶");
                 window.location.reload();
                 return;
             }
@@ -406,7 +408,8 @@ function setTitleImg(news){
         processData:false,
         success:function(ret){
             if (ret.code == 200) {
-                alert("已设置为头图");
+                if (ret.msg) alert(ret.msg);
+                else alert("已置顶");
                 window.location.reload();
                 return;
             }
