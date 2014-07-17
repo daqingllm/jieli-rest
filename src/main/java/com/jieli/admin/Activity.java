@@ -240,7 +240,8 @@ public class Activity {
                 params.put("got", "");
             }
         } catch (Exception e){
-            params.put("got", "遇到问题了，"+e.toString());
+            e.printStackTrace();
+            params.put("got", "遇到未知错误。");
 
             params.put("act_data","");
             params.put("topicId","");
