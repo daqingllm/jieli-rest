@@ -571,7 +571,7 @@ function finishActivity(type){
     $(".sponsor-choice").each(function(){
         var text =$(this).children("input") ? $(this).children("input").val() || "" : "";
         var img = $(this).children("img") ? $(this).children("img").attr("src") || "" : "";
-        if (text != "" && img != "")
+        if (text != "")
             sponsorPuTong[text] = img;
     });
     act["sponsorInfo2"] = sponsorPuTong;
@@ -581,7 +581,7 @@ function finishActivity(type){
     $(".diamond-choice").each(function(){
         var text =$(this).children("input") ? $(this).children("input").val() || "" : "";
         var img = $(this).children("img") ? $(this).children("img").attr("src") || "" : "";
-        if (text != "" && img != "")
+        if (text != "")
             sponsorZshi[text] = img;
     });
     act["diamondInfo"] = sponsorZshi;
