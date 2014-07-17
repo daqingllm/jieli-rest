@@ -960,12 +960,23 @@ function loadThisActivity(){
             if (!o || o.length == 0 ||!data.diamondInfo || data.diamondInfo.length == 0) continue;
             count++;
 
-            var voteOption = $('<div class="diamond-choice" style="height: 180px;">' +
-                    '<input readonly="readonly" type="text" value="'+o+'" placeholder="ÔÞÖúÃû³Æ" class="col-xs-10 col-sm-5 vote-choice-text" style="padding-left: 7px;margin-right: 7px;">' +
-                    '<button type="button" class="btn btn-xs btn-info vote-choice-img" style="margin-left: 5px;margin-right: 5px;display: none">Pic</button>' +
-                    '<img style="margin-top: 0" class="vote-img" width="150" height="150" src="'+data.diamondInfo[o]+'" />'+
+            var voteOption;
+            var dis1 = (o && o!="");
+            if (dis1) {
+                voteOption = $('<div class="diamond-choice" style="height: 180px;">' +
+                        '<input readonly="readonly" type="text" value="' + o + '" placeholder="ÔÞÖúÃû³Æ" class="col-xs-10 col-sm-5 vote-choice-text" style="padding-left: 7px;margin-right: 7px;">' +
+                        '<button type="button" class="btn btn-xs btn-info vote-choice-img" style="margin-left: 5px;margin-right: 5px;display: none">Pic</button>' +
+                        '<img style="margin-top: 0" class="vote-img" width="150" height="150" src="' + data.diamondInfo[o] + '" />' +
 //                    '<div class="fa fa-times fa-times-bigger"></div>' +
-                    '</div>');
+                        '</div>');
+            } else {
+                voteOption = $('<div class="diamond-choice">' +
+                        '<input readonly="readonly" type="text" value="' + o + '" placeholder="ÔÞÖúÃû³Æ" class="col-xs-10 col-sm-5 vote-choice-text" style="padding-left: 7px;margin-right: 7px;">' +
+                        '<button type="button" class="btn btn-xs btn-info vote-choice-img" style="margin-left: 5px;margin-right: 5px;">Pic</button>' +
+                        '<img style="margin-top: 0;display: none" class="vote-img" width="150" height="150" src="' + data.diamondInfo[o] + '" />' +
+//                    '<div class="fa fa-times fa-times-bigger"></div>' +
+                        '</div>');
+            }
             voteOption.insertBefore($('.icon-plus-di').parent());
 //            voteOption.children('.fa-times-bigger').click(deleteDiamondOption);
             voteOption.children('.vote-choice-img').click(function() {;
@@ -987,12 +998,24 @@ function loadThisActivity(){
             if (!o || o.length == 0 ||!data.sponsorInfo2 || data.sponsorInfo2.length == 0) continue;
             count++;
 
-            var voteOption = $('<div class="sponsor-choice" style="height: 180px;">' +
-                    '<input readonly="readonly" type="text" value="'+o+'" placeholder="ÔÞÖúÃû³Æ" class="col-xs-10 col-sm-5 vote-choice-text" style="padding-left: 7px;margin-right: 7px;">' +
-                    '<button type="button" class="btn btn-xs btn-info vote-choice-img" style="margin-left: 5px;margin-right: 5px;display: none">Pic</button>' +
-                    '<img style="margin-top: 0" class="vote-img" width="150" height="150" src="'+data.sponsorInfo2[o]+'" />'+
+
+            var voteOption;
+            var dis2 = (o && o!="");
+            if (dis2) {
+                voteOption = $('<div class="sponsor-choice" style="height: 180px;">' +
+                        '<input readonly="readonly" type="text" value="' + o + '" placeholder="ÔÞÖúÃû³Æ" class="col-xs-10 col-sm-5 vote-choice-text" style="padding-left: 7px;margin-right: 7px;">' +
+                        '<button type="button" class="btn btn-xs btn-info vote-choice-img" style="margin-left: 5px;margin-right: 5px;display: none">Pic</button>' +
+                        '<img style="margin-top: 0" class="vote-img" width="150" height="150" src="' + data.sponsorInfo2[o] + '" />' +
 //                    '<div class="fa fa-times fa-times-bigger"></div>' +
-                    '</div>');
+                        '</div>');
+            } else {
+                voteOption = $('<div class="sponsor-choice">' +
+                        '<input readonly="readonly" type="text" value="' + o + '" placeholder="ÔÞÖúÃû³Æ" class="col-xs-10 col-sm-5 vote-choice-text" style="padding-left: 7px;margin-right: 7px;">' +
+                        '<button type="button" class="btn btn-xs btn-info vote-choice-img" style="margin-left: 5px;margin-right: 5px;">Pic</button>' +
+                        '<img style="margin-top: 0;display: none" class="vote-img" width="150" height="150" src="' + data.sponsorInfo2[o] + '" />' +
+//                    '<div class="fa fa-times fa-times-bigger"></div>' +
+                        '</div>');
+            }
             voteOption.insertBefore($('.icon-plus-sp').parent());
 //            voteOption.children('.fa-times-bigger').click(deleteSponsorOption);
             voteOption.children('.vote-choice-img').click(function() {;
@@ -1143,7 +1166,8 @@ function loadThisActivity(){
 
 
     $("#form-field-textarea-sponsor").val(data.sponsorInfo);
-    $("#form-field-dlDate").val(new Date(data.beginDate).Format("yyyy-MM-dd"));
+    if (data.beginDate && data.beginDate.length >= 10)
+        $("#form-field-dlDate").val(new Date(data.beginDate.substr(0,10)).Format("yyyy-MM-dd"));
     $("#form-field-fee").val(data.feeDescription);
     $("#form-field-max").val(data.maxMembers);
     if (data.url && data.url.length > 0){

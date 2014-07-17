@@ -1019,17 +1019,33 @@ function uploadImgUserface() {
     });
 }
 
-function addSponsorOption() {
-    var voteOption = $('<div class="sponsor-choice">' +
-        '<input type="text" value="" placeholder="赞助名称" class="col-xs-10 col-sm-5 vote-choice-text" style="padding-left: 7px;margin-right: 7px;">' +
-        '<button type="button" class="btn btn-xs btn-info vote-choice-img" style="margin-left: 5px;margin-right: 5px;">Pic</button>' +
-        '<div class="fa fa-times fa-times-bigger"></div>' +
-        '</div>');
-    voteOption.insertBefore($('.icon-plus-sp').parent());
-    voteOption.children('.fa-times-bigger').click(deleteSponsorOption);
-    voteOption.children('.vote-choice-img').click(function() {
-        SponsorOptionUploadImg(voteOption);
-    });
+function addSponsorOption(val,img) {
+    if (!val || typeof val == "object") val = "";
+    if (!img) img = "";
+    if (img == "") {
+        var voteOption = $('<div class="sponsor-choice">' +
+            '<input type="text" value="' + val + '" placeholder="赞助名称" class="col-xs-10 col-sm-5 vote-choice-text" style="padding-left: 7px;margin-right: 7px;">' +
+            '<button type="button" class="btn btn-xs btn-info vote-choice-img" style="margin-left: 5px;margin-right: 5px;">Pic</button>' +
+            '<div class="fa fa-times fa-times-bigger"></div>' +
+            '</div>');
+        voteOption.insertBefore($('.icon-plus-sp').parent());
+        voteOption.children('.fa-times-bigger').click(deleteSponsorOption);
+        voteOption.children('.vote-choice-img').click(function () {
+            SponsorOptionUploadImg(voteOption);
+        });
+    } else {
+        var voteOption = $('<div class="sponsor-choice">' +
+            '<input type="text" value="' + val + '" placeholder="赞助名称" class="col-xs-10 col-sm-5 vote-choice-text" style="padding-left: 7px;margin-right: 7px;">' +
+            '<button type="button" class="btn btn-xs btn-info vote-choice-img" style="margin-left: 5px;margin-right: 5px;display: none;">Pic</button>' +
+            '<img width="150" height="150" class="vote-img" style="margin-top: 0px;" src="'+img+'">' +
+            '<div class="fa fa-times fa-times-bigger"></div>' +
+            '</div>');
+        voteOption.insertBefore($('.icon-plus-sp').parent());
+        voteOption.children('.fa-times-bigger').click(deleteSponsorOption);
+        voteOption.children('.vote-choice-img').click(function () {
+            SponsorOptionUploadImg(voteOption);
+        });
+    }
 }
 
 function deleteSponsorOption(){
@@ -1043,17 +1059,33 @@ function deleteSponsorOption(){
     }
 }
 
-function addDiamondOption() {
-    var voteOption = $('<div class="diamond-choice">' +
-        '<input type="text" value="" placeholder="赞助名称" class="col-xs-10 col-sm-5 vote-choice-text" style="padding-left: 7px;margin-right: 7px;">' +
-        '<button type="button" class="btn btn-xs btn-info vote-choice-img" style="margin-left: 5px;margin-right: 5px;">Pic</button>' +
-        '<div class="fa fa-times fa-times-bigger"></div>' +
-        '</div>');
-    voteOption.insertBefore($('.icon-plus-di').parent());
-    voteOption.children('.fa-times-bigger').click(deleteDiamondOption);
-    voteOption.children('.vote-choice-img').click(function() {
-        SponsorOptionUploadImg(voteOption);
-    });
+function addDiamondOption(val,img) {
+    if (!val || typeof val == "object") val = "";
+    if (!img) img = "";
+    if (img == "") {
+        var voteOption = $('<div class="diamond-choice">' +
+            '<input type="text" value="' + val + '" placeholder="赞助名称" class="col-xs-10 col-sm-5 vote-choice-text" style="padding-left: 7px;margin-right: 7px;">' +
+            '<button type="button" class="btn btn-xs btn-info vote-choice-img" style="margin-left: 5px;margin-right: 5px;">Pic</button>' +
+            '<div class="fa fa-times fa-times-bigger"></div>' +
+            '</div>');
+        voteOption.insertBefore($('.icon-plus-di').parent());
+        voteOption.children('.fa-times-bigger').click(deleteDiamondOption);
+        voteOption.children('.vote-choice-img').click(function () {
+            SponsorOptionUploadImg(voteOption);
+        });
+    }else {
+        var voteOption = $('<div class="diamond-choice">' +
+            '<input type="text" value="' + val + '" placeholder="赞助名称" class="col-xs-10 col-sm-5 vote-choice-text" style="padding-left: 7px;margin-right: 7px;">' +
+            '<button type="button" class="btn btn-xs btn-info vote-choice-img" style="margin-left: 5px;margin-right: 5px;display: none;">Pic</button>' +
+            '<img width="150" height="150" class="vote-img" style="margin-top: 0px;" src="'+img+'">'+
+            '<div class="fa fa-times fa-times-bigger"></div>' +
+            '</div>');
+        voteOption.insertBefore($('.icon-plus-di').parent());
+        voteOption.children('.fa-times-bigger').click(deleteDiamondOption);
+        voteOption.children('.vote-choice-img').click(function () {
+            SponsorOptionUploadImg(voteOption);
+        });
+    }
 }
 
 function deleteDiamondOption(){

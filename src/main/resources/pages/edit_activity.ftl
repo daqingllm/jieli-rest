@@ -857,17 +857,14 @@
                 if (!o || o.length == 0 ||!data.diamondInfo || data.diamondInfo.length == 0) continue;
                 count++;
 
-                var voteOption = $('<div class="diamond-choice" style="height: 180px;">' +
-                        '<input type="text" value="'+o+'" placeholder="ÔÞÖúÃû³Æ" class="col-xs-10 col-sm-5 vote-choice-text" style="padding-left: 7px;margin-right: 7px;">' +
-                        '<button type="button" class="btn btn-xs btn-info vote-choice-img" style="margin-left: 5px;margin-right: 5px;display: none">Pic</button>' +
-                        '<img style="margin-top: 0" class="vote-img" width="150" height="150" src="'+data.diamondInfo[o]+'" />'+
-                        '<div class="fa fa-times fa-times-bigger"></div>' +
-                        '</div>');
-                voteOption.insertBefore($('.icon-plus-di').parent());
-                voteOption.children('.fa-times-bigger').click(deleteDiamondOption);
-                voteOption.children('.vote-choice-img').click(function() {
-                    SponsorOptionUploadImg(voteOption);
-                });
+                var voteOption;
+                var dis1 = (o && o!= "");
+                if (dis1){
+                    addDiamondOption(o,data.diamondInfo[o]);
+                } else {
+                    addDiamondOption();
+                }
+
             }
             if (count == 0) {
                 addDiamondOption();
@@ -884,17 +881,14 @@
                 if (!o || o.length == 0 ||!data.sponsorInfo2 || data.sponsorInfo2.length == 0) continue;
                 count++;
 
-                var voteOption = $('<div class="sponsor-choice" style="height: 180px;">' +
-                        '<input type="text" value="'+o+'" placeholder="ÔÞÖúÃû³Æ" class="col-xs-10 col-sm-5 vote-choice-text" style="padding-left: 7px;margin-right: 7px;">' +
-                        '<button type="button" class="btn btn-xs btn-info vote-choice-img" style="margin-left: 5px;margin-right: 5px;display: none">Pic</button>' +
-                        '<img style="margin-top: 0" class="vote-img" width="150" height="150" src="'+data.sponsorInfo2[o]+'" />'+
-                        '<div class="fa fa-times fa-times-bigger"></div>' +
-                        '</div>');
-                voteOption.insertBefore($('.icon-plus-sp').parent());
-                voteOption.children('.fa-times-bigger').click(deleteSponsorOption);
-                voteOption.children('.vote-choice-img').click(function() {
-                    SponsorOptionUploadImg(voteOption);
-                });
+                var dis2 = (o && o != "");
+
+                var voteOption;
+                if (dis2) {
+                    addSponsorOption(o,data.sponsorInfo2[o]);
+                } else {
+                    addSponsorOption();
+                }
             }
             if (count == 0) {
                 addSponsorOption();
