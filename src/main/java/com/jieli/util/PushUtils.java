@@ -31,8 +31,6 @@ public class PushUtils {
 
         try {
             PushResult result = jPushClient.sendPush(payload);
-            System.out.println(result.msg_id);
-            System.out.println(result.sendno);
             LOG.info("Push Success , msg_id : " + result.msg_id + " , sendno : " + result.sendno);
         } catch (APIConnectionException e) {
             LOG.error("Connection error. Should retry later. ", e);
