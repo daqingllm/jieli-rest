@@ -9,14 +9,12 @@ import cn.jpush.api.push.model.PushPayload;
 import cn.jpush.api.push.model.audience.Audience;
 import cn.jpush.api.push.model.notification.Notification;
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Created by 95 on 2014/7/19.
  */
 public class PushUtils {
-    public static final Logger LOG = LoggerFactory.getLogger(PushUtils.class);
+    //public static final Logger LOG = LoggerFactory.getLogger(PushUtils.class);
 
     private static final String appKey ="dd1066407b044738b6479275";
     private static final String masterSecret = "2b38ce69b1de2a7fa95706ea";
@@ -39,14 +37,14 @@ public class PushUtils {
 
         try {
             PushResult result = jPushClient.sendPush(payload);
-            LOG.info("Push Success , msg_id : " + result.msg_id + " , sendno : " + result.sendno);
+            //LOG.info("Push Success , msg_id : " + result.msg_id + " , sendno : " + result.sendno);
         } catch (APIConnectionException e) {
-            LOG.error("Connection error. Should retry later. ", e);
+            //LOG.error("Connection error. Should retry later. ", e);
         } catch (APIRequestException e) {
-            LOG.error("Error response from JPush server. Should review and fix it. ", e);
-            LOG.info("HTTP Status: " + e.getStatus());
-            LOG.info("Error Code: " + e.getErrorCode());
-            LOG.info("Error Message: " + e.getErrorMessage());
+            //LOG.error("Error response from JPush server. Should review and fix it. ", e);
+            //LOG.info("HTTP Status: " + e.getStatus());
+            //LOG.info("Error Code: " + e.getErrorCode());
+            //LOG.info("Error Message: " + e.getErrorMessage());
         }
     }
 
