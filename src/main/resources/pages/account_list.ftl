@@ -202,6 +202,16 @@
                 <div class="row">
                     <div class="col-xs-12">
                         <!-- PAGE CONTENT BEGINS -->
+
+
+                        <div class="form-group  <#if isSuper==false>hidden</#if>" style="height: 40px;">
+                            <label class="col-sm-1 control-label no-padding-right" for="selectAssociationIds" style="min-width: 70px;"> 选择协会 </label>
+
+                            <div class="col-sm-4">
+                                <select class="form-control" id="selectAssociationIds" onchange="window.location.href='/app/baccount/list?aid=' + (this.value)">${assIdOptionList}</select>
+                            </div>
+                        </div>
+
                         <button class="btn btn-success" type="button" style="font-weight:bold;margin-bottom: 20px;" onclick="window.location.href = '/app/baccount/register'">
                             <i class="fa fa-plus bigger-110"></i>
                             添加账号

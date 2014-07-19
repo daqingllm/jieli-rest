@@ -305,7 +305,7 @@
 
                     <div class="space-4"></div>
 
-                    <div class="form-group">
+                    <div class="form-group" style="display: none;">
                         <label class="col-sm-3 control-label no-padding-right" for="">  </label>
 
                         <div class="col-sm-9">
@@ -317,7 +317,7 @@
 
                 </form>
 
-                <div class="form-group">
+                <div class="form-group" style="display: none;">
                     <label class="col-sm-3 control-label no-padding-right" for="form-input-readonly" style="text-align: right;padding-right:7px !important"> ÉÏ´«Í¼Æ¬ </label>
 
                     <div class="col-sm-9" style="padding:2px;">

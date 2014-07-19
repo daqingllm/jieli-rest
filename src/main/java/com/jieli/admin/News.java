@@ -16,6 +16,7 @@ import com.jieli.user.dao.UserDAO;
 import com.jieli.util.FTLrender;
 import com.jieli.util.IdentityUtils;
 import com.sun.jersey.spi.resource.Singleton;
+import org.apache.commons.lang.StringUtils;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -35,7 +36,7 @@ public class News {
     @GET
     @Path("/list")
     @Produces(MediaType.TEXT_HTML)
-    public String GetNewsList(@CookieParam("u")String sessionId,@QueryParam("page") String page, @QueryParam("rowNum") String rowNum, @QueryParam("pl") String preload) throws JsonProcessingException {
+    public String GetNewsList(@CookieParam("u")String sessionId,@QueryParam("page") String page, @QueryParam("rowNum") String rowNum, @QueryParam("pl") String preload,@QueryParam("aid") String associationId) throws JsonProcessingException {
         String response = CommonUtil.RoleCheckString(sessionId);
         if (response != null) return response;
 
@@ -57,15 +58,32 @@ public class News {
         }
 
         String newsList = "";
+        String assIdOptionList = "";
         List<com.jieli.news.News> newses = new LinkedList<com.jieli.news.News>();
         if (IdentityUtils.isSuper(sessionId)){
+
+            assIdOptionList = "<option value='' selected disabled>请选择协会</option>";
+            Iterable<com.jieli.association.Association> associations = associationDAO.loadAll();
+            for (com.jieli.association.Association association : associations) {
+                if (!StringUtils.isEmpty(associationId) && associationId.equals(association.get_id().toString())) {
+                    assIdOptionList += "<option value='"+association.get_id()+"' selected>"+association.name+"</option>";
+                } else{
+                    assIdOptionList += "<option value='"+association.get_id()+"'>"+association.name+"</option>";
+                    if (!StringUtils.isEmpty(associationId)) continue;
+                }
+            }
+
+            params.put("assIdOptionList",assIdOptionList);
             params.put("isSuper",true);
-            newses = newsDAO.paginateInOrder(paramPage, paramRowNum,"{addTime:-1}", "{type: {$in: " +
+
+            String associationIdPointedBySuper = (!StringUtils.isEmpty(associationId) ? "associationId:\"" + associationId + "\"," : "");
+            newses = newsDAO.paginateInOrder(paramPage, paramRowNum,"{addTime:-1}", "{"+associationIdPointedBySuper+"type: {$in: " +
                     "[\""+NewsType.newsType+"\",\""+NewsType.associationType+"\",\""+NewsType.enterpriseType+"\",\"" +NewsType.benefitType+"\""+
                     "]}}");
         }else{
             params.put("isSuper",false);
             String association = account.associationId;
+            params.put("assIdOptionList","<option value='"+association+"' selected>&nbsp;</option>");
             String associationWhere = "";
             if (association != null && association != "") associationWhere = "associationId:\"" + association + "\",";
             newses = newsDAO.paginateInOrder(paramPage, paramRowNum,"{addTime:-1}", "{"+associationWhere+"type: {$in: " +
@@ -91,96 +109,6 @@ public class News {
 
         return FTLrender.getResult("article_list.ftl",params);
     }
-//
-//    @POST
-//    @Path("/list")
-//    @Produces(MediaType.TEXT_HTML)
-//    public String NewsList(@CookieParam("u")String sessionId,@CookieParam("a")String associationId,@CookieParam("r")String role,@QueryParam("pl") String preload){
-//        if (preload != "y") preload = "n";
-//
-//        // 判断用户是否已经登录
-//        if (!IdentityUtils.isValidate(sessionId)) {
-//            return CommonUtil.errorReturn;
-//        }
-//
-//        // 载入用户
-//        //String userId = IdentityUtils.getUserId(sessionId);
-//        //com.jieli.user.entity.User user = userDAO.loadById(userId);
-//
-//        //com.jieli.common.entity.Account account = accountDAO.getCollection().findOne("{username:#}",userId).as(com.jieli.common.entity.Account.class);
-//        com.jieli.common.entity.Account account = accountDAO.loadById(sessionId);
-//
-//        // 判断用户是否有效
-//        //if (user == null || user.name == null || user.name == "") {
-//        //    return errorReturn;
-//        //}
-//
-//        if (account == null || account.username == null || account.username == "" || account.state == AccountState.ENABLE || account.state == AccountState.DISABLE){
-//            return CommonUtil.errorReturn;
-//        }
-//
-//
-//        Map<String, Object> params = new HashMap<String, Object>();
-//        // 这里用 user name ， 还是 account username ？
-//        // 目前super user name 是空的
-//
-//        params.put("username",account.username);
-//        //params.put("username",user.name);
-//
-//
-//        boolean isSuper = false;
-//
-//        boolean b1 = associationId.equals("undefined");
-//        boolean b2 = PasswordGenerator.md5Encode(AccountState.SUPPER+"").equals(role);
-//
-//        String artListString = "[";
-//        List<com.jieli.news.News> newsList = new LinkedList<com.jieli.news.News>();
-//
-//        if (b1 && b2) {
-//            params.put("isSuper",true);
-//            newsList = newsDAO.paginateInOrder(0,100,"{addTime:-1}","{type: {$in: [\""+ NewsType.newsType+"\",\""+NewsType.associationType+"\",\""+NewsType.enterpriseType+"\"]}}");
-//        }else {
-//            params.put("isSuper",false);
-//            newsList = newsDAO.paginateInOrder(0,100,"{addTime:-1}","{type: {$in: [\""+NewsType.associationType+"\",\""+NewsType.enterpriseType+"\"]}}");
-//        }
-//
-//        int i;
-//        ObjectMapper om = new ObjectMapper();
-//        for (i = 0; i < newsList.size(); i++){
-//            com.jieli.news.News n = newsList.get(i);
-//            try {
-//                //artListString += om.writeValueAsString(n);
-//                String tmp = om.writeValueAsString(n);
-//
-//                String tmpObjectId = om.writeValueAsString(n.get_id()).toString();
-//                String tmpId = n.get_id().toString();
-//
-//                tmp = tmp.replace(tmpObjectId,"\""+tmpId+"\"").replace("\"associationId\":\""+n.associationId+"\"","\"associationId\":\""+associationDAO.loadById(n.associationId).name+"\"");
-//
-//                /*
-//                if (tmp.indexOf("{\"time\":") > -1){
-//                    tmp = tmp.substring(0,7) + "\"" + n.get_id().toString() + "\"" + tmp.substring(tmp.indexOf("},",7)+1);
-//
-//                    String assid = n.associationId;
-//                    Association association = associationDAO.loadById(assid);
-//
-//                    tmp = tmp.replace(assid,association.name);
-//
-//                    //tmp = tmp.replace("_id","id");
-//                }*/
-//                artListString += tmp;
-//            } catch (JsonProcessingException e) {
-//                e.printStackTrace();
-//                continue;
-//            }
-//            if (i != newsList.size() - 1) artListString += ",";
-//        }
-//        artListString += "]";
-//
-//        params.put("jsonArtList",artListString);
-//        return FTLrender.getResult("article_list.ftl", params);
-//    }
-//
 
     @GET
     @Path("/new")

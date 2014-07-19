@@ -719,7 +719,7 @@
         catch (err){data = {};}
 
         //$("#seletAssociationIds").multiselect('select',data["associationId"]);
-        $("#seletAssociationIds option[value="+data["associationId"]+"]").attr("selected","selected");
+        $("#selectAssociationIds option[value="+data["associationId"]+"]").attr("selected","selected");
         for (var i = 0; i < data["interestTags"].length; i++)
             $("#selectInterest option[value="+data["interestTags"][i]+"]").attr("selected","selected");
         $("#form-field-select-pro").val(data["professionTag"]);

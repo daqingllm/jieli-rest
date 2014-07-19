@@ -13,6 +13,7 @@ import com.jieli.mongo.BaseDAO;
 import com.jieli.util.FTLrender;
 import com.jieli.util.IdentityUtils;
 import com.sun.jersey.spi.resource.Singleton;
+import org.apache.commons.lang.StringUtils;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -107,7 +108,7 @@ public class Activity {
     @GET
     @Path("/list")
     @Produces(MediaType.TEXT_HTML)
-    public String ActivityList(@CookieParam("u")String sessionId,@QueryParam("page") String page, @QueryParam("rowNum") String rowNum, @QueryParam("pl") String preload) throws JsonProcessingException {
+    public String ActivityList(@CookieParam("u")String sessionId,@QueryParam("page") String page, @QueryParam("rowNum") String rowNum, @QueryParam("pl") String preload,@QueryParam("aid") String associationId) throws JsonProcessingException {
         String response = CommonUtil.RoleCheckString(sessionId);
         if (response != null) return response;
 
@@ -132,9 +133,21 @@ public class Activity {
         // 以后可能要做两个tab，分别显示进行中的和历史活动
         // List<com.jieli.activity.Activity> activityListHistory = new ArrayList<com.jieli.activity.Activity>();
         String activityList = "";
+        String assIdOptionList = "";
 
         if (IdentityUtils.isSuper(sessionId)){
-            Iterable<com.jieli.activity.Activity> activities = activityDAO.getCollection().find().sort("{beginDate:-1}").as(com.jieli.activity.Activity.class);
+            assIdOptionList = "<option value='' selected disabled>请选择协会</option>";Iterable<com.jieli.association.Association> associations = associationDAO.loadAll();
+            for (com.jieli.association.Association association : associations) {
+                if (!StringUtils.isEmpty(associationId) && associationId.equals(association.get_id().toString())) {
+                    assIdOptionList += "<option value='"+association.get_id()+"' selected>"+association.name+"</option>";
+                } else{
+                    assIdOptionList += "<option value='"+association.get_id()+"'>"+association.name+"</option>";
+                    if (!StringUtils.isEmpty(associationId)) continue;
+                }
+            }
+
+            String associationIdPointedBySuper = (!StringUtils.isEmpty(associationId) ? "{associationId:\"" + associationId + "\"}" : "");
+            Iterable<com.jieli.activity.Activity> activities = activityDAO.getCollection().find(associationIdPointedBySuper).sort("{beginDate:-1}").as(com.jieli.activity.Activity.class);
             for (com.jieli.activity.Activity activity : activities){
                 if (_total >= (_page-1)*_rowNum && _total < _page*_rowNum) {
                     String tmp = CommonUtil.ReplaceObjectId(activity);
@@ -145,6 +158,7 @@ public class Activity {
         }
         else {
             ObjectMapper objectMapper = new ObjectMapper();
+            params.put("assIdOptionList","<option value='"+account.associationId+"' selected>&nbsp;</option>");
 
             String associationName = associationDAO.loadById(account.associationId).name;
             // 找所有的官方进行中的活动，这段以后可能改，可能直接用find函数
@@ -178,6 +192,7 @@ public class Activity {
         params.put("ti",_total);
         params.put("tp",_totalPage);
         params.put("cp",_page);
+        params.put("assIdOptionList",assIdOptionList);
 
         return FTLrender.getResult("activity_list.ftl",params);
     }

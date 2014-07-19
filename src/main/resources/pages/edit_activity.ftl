@@ -224,7 +224,7 @@
 <div class="page-content">
 <div class="page-header">
     <h1>
-        在这里编辑<#if isSuper>推荐活动<#else>官方活动</#if>
+        如果您想修改活动信息，请在活动列表中删除原有活动，然后再创建新的活动
     </h1>
 </div>
 <!-- /.page-header -->
@@ -516,13 +516,14 @@
 
 
         &nbsp; &nbsp; &nbsp;
-        <button class="btn btn-info" type="button" style="font-weight:bold" onclick="<#if isSuper>finishActivity(0)<#else>finishActivity(1)</#if>;">
+        <#if isSuper><#else>
+        <button class="btn btn-info" type="button" style="font-weight:bold;display: none;" onclick="return false;">
             <i class="fa fa-check bigger-110"></i>
             确定
-        </button>
+        </button></#if>
 
         &nbsp; &nbsp; &nbsp;
-        <button class="btn" type="reset" style="font-weight:bold" onclick="deleteTitleImage();return true;">
+        <button class="btn" type="reset" style="font-weight:bold;display: none" onclick="return false;">
             <i class="fa fa-undo bigger-110"></i>
             清空
         </button>

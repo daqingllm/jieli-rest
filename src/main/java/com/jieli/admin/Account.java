@@ -229,13 +229,13 @@ public class Account {
     @GET
     @Path("/list")
     @Produces(MediaType.TEXT_HTML)
-    public String loadUsers(@CookieParam("u")String sessionId,@QueryParam("id")String id /*,@QueryParam("state")int state*/) throws JsonProcessingException {
-        if (!IdentityUtils.isAdmin(sessionId) && !IdentityUtils.isSuper(sessionId)) {
+    public String loadUsers(@CookieParam("u")String sessionId,@QueryParam("id")String id ,@QueryParam("aid") String associationId) throws JsonProcessingException {
+        AccountState accountState = IdentityUtils.getState(sessionId);
+        if (!AccountState.ADMIN.equals(accountState) && !AccountState.SUPPER.equals(accountState)) {
             return CommonUtil.errorReturn;
         }
         ResponseEntity responseEntity = new ResponseEntity();
         ObjectMapper om = new ObjectMapper();
-        String associationId = null;
 
         //List<com.jieli.common.entity.Account> accounts = new ArrayList<com.jieli.common.entity.Account>();
         String testString = "" ;
@@ -243,9 +243,17 @@ public class Account {
 
 //        String accountList = "[";
         String accountList2 = "[";
-        if (IdentityUtils.getState(sessionId) == AccountState.SUPPER) {
+        String assIdOptionList = "";
+        if (AccountState.SUPPER.equals(accountState)) {
+            assIdOptionList = "<option value='' selected disabled>请选择协会</option>";
             Iterable<com.jieli.association.Association> associations = associationDAO.loadAll();
             for (com.jieli.association.Association association : associations) {
+                if (!StringUtils.isEmpty(associationId) && associationId.equals(association.get_id().toString())) {
+                    assIdOptionList += "<option value='"+association.get_id()+"' selected>"+association.name+"</option>";
+                } else{
+                    assIdOptionList += "<option value='"+association.get_id()+"'>"+association.name+"</option>";
+                    if (!StringUtils.isEmpty(associationId)) continue;
+                }
 
                 Iterable<com.jieli.common.entity.Account> accountMyself = accountDAO.loadByAssociationId(association.get_id().toString(),AccountState.ADMIN);
                 for (com.jieli.common.entity.Account account : accountMyself) {
@@ -292,8 +300,11 @@ public class Account {
 				
             }
         } else {
+
             associationId = IdentityUtils.getAssociationId(sessionId);
             com.jieli.association.Association association = associationDAO.loadById(associationId);
+            assIdOptionList += "<option value='"+ associationId+"' selected>"+association.name+"</option>";
+
             if (association == null) {
                 responseEntity.code = 2102;
                 responseEntity.msg = "协会不存在";
@@ -355,6 +366,7 @@ public class Account {
         com.jieli.common.entity.Account account = accountDAO.loadById(sessionId);
         Map<String, Object> params = CommonUtil.GenerateCommonParams(account);
         params.put("jsonAccList",accountList2);
+        params.put("assIdOptionList",assIdOptionList);
         params.put("username",accountDAO.loadById(sessionId).username);
 
         return FTLrender.getResult("account_list.ftl", params);
