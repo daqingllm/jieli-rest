@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jieli.activity.AcivityTag;
 import com.jieli.activity.Activity;
 import com.jieli.activity.Arrangement;
+import com.jieli.util.PushUtils;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.client.fluent.Response;
 import org.apache.http.entity.ContentType;
@@ -135,5 +136,10 @@ public class ActivityTest {
                 .execute();
 
         System.out.println(response.returnContent().asString());
+    }
+
+    @Test
+    public void testPush() throws IOException {
+        PushUtils.pushMessage("123");
     }
 }
