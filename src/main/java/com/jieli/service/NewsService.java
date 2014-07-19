@@ -2,16 +2,14 @@ package com.jieli.service;
 
 import com.jieli.comment.Comment;
 import com.jieli.comment.TopicType;
+import com.jieli.common.entity.PushMessageResult;
 import com.jieli.common.entity.ResponseEntity;
 import com.jieli.message.CommentMessageUtil;
 import com.jieli.message.MessageType;
 import com.jieli.message.Send2AllTask;
 import com.jieli.mongo.BaseDAO;
 import com.jieli.news.*;
-import com.jieli.util.CollectionUtils;
-import com.jieli.util.IdentityUtils;
-import com.jieli.util.ImageCount;
-import com.jieli.util.MongoUtils;
+import com.jieli.util.*;
 import com.sun.jersey.spi.resource.Singleton;
 import org.apache.commons.lang.StringUtils;
 import org.bson.types.ObjectId;
@@ -148,7 +146,7 @@ public class NewsService {
 
             newsDAO.save(news);
 
-            if (needForcePost){
+            if (force){
                 NewsMsg newsMsg = new NewsMsg();
                 String preOrPost = "";
                 if (news.type.compareTo(NewsType.newsType)==0){
@@ -162,8 +160,13 @@ public class NewsService {
                 newsMsg.msg = news.title + preOrPost;
                 newsMsg.newsId = news.get_id().toString();
 
-                Send2AllTask task = new Send2AllTask(newsMsg, news.associationId, MessageType.OTHER);
-                task.start();
+
+                PushMessageResult pushMessageResult = PushUtils.pushMessageToAssociation(newsMsg.msg, news.associationId);
+                if (!PushMessageResult.SUCCESS.equals(pushMessageResult)){
+                    responseEntity.code = 3102;
+                    responseEntity.msg = "推送失败";
+                    return Response.status(200).entity(responseEntity).build();
+                }
             }
         }
 

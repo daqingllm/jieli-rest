@@ -324,6 +324,7 @@ function postThisArticle(images,topPic){
     var p_addurl = "/app/news/?newsId="+(isEdit?json["_id"]:"")+"&force="+$("#form-field-checkbox").is(':checked');
     var suc = true;
     var erro = false;
+    var errmsg = "";
     // if edit , there is only one element in p_assid
     for (var i = 0; i <p_assid.length;i++) {
         json["associationId"] = p_assid[i];
@@ -335,7 +336,13 @@ function postThisArticle(images,topPic){
             dataType: 'json',
             async: false,
             success: function (ret) {
-                if (ret.code != 200) suc = false;
+                if (ret.code != 200) {
+                    suc = false;
+
+                    if (ret.code == 3102){
+                        errmsg = "资讯添加或编辑成功,但是推送失败";
+                    }
+                }
             },
             error: function(XMLHttpRequest, textStatus, errorThrown) {
                 alert("操作失败，错误码："+XMLHttpRequest.status);
@@ -351,7 +358,10 @@ function postThisArticle(images,topPic){
         if (p_id > -1) {alert("已经成功编辑此资讯");window.location.href = "/app/bnews/list";}
         else {alert("已经成功添加此资讯");window.location.href = "/app/bnews/list";}
     }
-    else  alert("添加资讯失败");
+    else {
+        if (errmsg != "") alert(errmsg)
+        else alert("添加或编辑资讯失败");
+    }
 }
 
 // 清空图片列表
@@ -636,6 +646,7 @@ function finishActivity(type){
     var suc = true;
     var url = "/app/activity/?activityId="+(isEdit?act["_id"]:"")+"&force="+$("#form-field-checkbox").is(':checked');
     var erro = false;
+    var errmsg = "";
 
     for (var i = 0; i <p_assid.length;i++) {
         act.associationId = p_assid[i];
@@ -650,6 +661,9 @@ function finishActivity(type){
             success:function(data){
                 if (data.code != 200){
                     suc = false;
+                    if (data.code == 3102){
+                        errmsg = "活动添加或编辑成功,但是推送失败";
+                    }
                 }
             },
             error: function(XMLHttpRequest, textStatus, errorThrown) {
@@ -666,7 +680,10 @@ function finishActivity(type){
         if (p_id > -1) {alert("已经成功编辑此活动");window.location.href = "/app/bactivity/list";}
         else {alert("已经成功添加此活动");window.location.href = "/app/bactivity/list";}
     }
-    else  alert("添加活动失败");
+    else  {
+        if (errmsg != "") alert(errmsg)
+        else alert("添加或编辑活动失败");
+    }
 }
 
 function check(act) {

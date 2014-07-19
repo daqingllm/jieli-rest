@@ -3,6 +3,7 @@ package com.jieli.service;
 import com.jieli.activity.*;
 import com.jieli.comment.Comment;
 import com.jieli.comment.TopicType;
+import com.jieli.common.entity.PushMessageResult;
 import com.jieli.common.entity.ResponseEntity;
 import com.jieli.message.*;
 import com.jieli.mongo.BaseDAO;
@@ -10,6 +11,7 @@ import com.jieli.user.entity.FriendMsg;
 import com.jieli.util.CollectionUtils;
 import com.jieli.util.IdentityUtils;
 import com.jieli.util.MongoUtils;
+import com.jieli.util.PushUtils;
 import com.sun.jersey.spi.resource.Singleton;
 import org.apache.commons.lang.StringUtils;
 import org.bson.types.ObjectId;
@@ -189,8 +191,13 @@ public class ActivityService {
                     }
                     activityMsg.activityId = activityId;
                     activityMsg.tag = activity.tag;
-                    Send2AllTask task = new Send2AllTask(activityMsg, activity.associationId, MessageType.OTHER);
-                    task.start();
+
+                    PushMessageResult pushMessageResult = PushUtils.pushMessageToAssociation(activityMsg.msg, activity.associationId);
+                    if (!PushMessageResult.SUCCESS.equals(pushMessageResult)){
+                        responseEntity.code = 3102;
+                        responseEntity.msg = "推送失败";
+                        return Response.status(200).entity(responseEntity).build();
+                    }
                 }
             }
         }

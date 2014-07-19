@@ -3,6 +3,7 @@ package com.jieli.service;
 import com.jieli.comment.Comment;
 import com.jieli.comment.CommentUserInfoUtil;
 import com.jieli.comment.TopicType;
+import com.jieli.common.entity.PushMessageResult;
 import com.jieli.common.entity.ResponseEntity;
 import com.jieli.feature.discuss.dao.DiscussDAO;
 import com.jieli.feature.discuss.entity.DiscussInfo;
@@ -24,6 +25,7 @@ import com.jieli.user.entity.User;
 import com.jieli.util.CollectionUtils;
 import com.jieli.util.IdentityUtils;
 import com.jieli.util.MongoUtils;
+import com.jieli.util.PushUtils;
 import com.sun.jersey.spi.resource.Singleton;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang.StringUtils;
@@ -874,8 +876,15 @@ public class FeatureService {
             voteMsg.voteId = result.get_id().toString();
             voteMsg.msg = result.getTitle() + " 投票发起";
 
-            Send2AllTask task = new Send2AllTask(voteMsg, result.getAssociationId(), MessageType.OTHER);
-            task.run();
+            //Send2AllTask task = new Send2AllTask(voteMsg, result.getAssociationId(), MessageType.OTHER);
+            //task.run();
+
+            PushMessageResult pushMessageResult = PushUtils.pushMessageToAssociation(voteMsg.msg, associationId);
+            if (!PushMessageResult.SUCCESS.equals(pushMessageResult)){
+                responseEntity.code = 3102;
+                responseEntity.msg = "推送失败";
+                return Response.status(200).entity(responseEntity).build();
+            }
         }
 
 

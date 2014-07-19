@@ -8,6 +8,7 @@ import cn.jpush.api.push.model.Platform;
 import cn.jpush.api.push.model.PushPayload;
 import cn.jpush.api.push.model.audience.Audience;
 import cn.jpush.api.push.model.notification.Notification;
+import com.jieli.common.entity.PushMessageResult;
 import org.apache.commons.lang.StringUtils;
 
 /**
@@ -27,9 +28,9 @@ public class PushUtils {
     public static final String TAG = "tag_api";
     */
 
-    public static void pushMessageToAssociation(String message,String associationId) {
+    public static PushMessageResult pushMessageToAssociation(String message,String associationId) {
         if (StringUtils.isEmpty(message) || StringUtils.isEmpty(associationId)){
-            return;
+            return PushMessageResult.SKIP;
         }
 
         JPushClient jPushClient = new JPushClient(masterSecret, appKey, 3);
@@ -37,10 +38,13 @@ public class PushUtils {
 
         try {
             PushResult result = jPushClient.sendPush(payload);
+            return PushMessageResult.SUCCESS;
             //LOG.info("Push Success , msg_id : " + result.msg_id + " , sendno : " + result.sendno);
         } catch (APIConnectionException e) {
+            return PushMessageResult.NETWORK;
             //LOG.error("Connection error. Should retry later. ", e);
         } catch (APIRequestException e) {
+            return PushMessageResult.OTHER_ERROR;
             //LOG.error("Error response from JPush server. Should review and fix it. ", e);
             //LOG.info("HTTP Status: " + e.getStatus());
             //LOG.info("Error Code: " + e.getErrorCode());
@@ -55,4 +59,5 @@ public class PushUtils {
                 .setNotification(Notification.android(alertMessage, alertMessage, null))
                 .build();
     }
+
 }
