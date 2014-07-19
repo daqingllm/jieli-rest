@@ -4,7 +4,11 @@ import cn.jpush.api.JPushClient;
 import cn.jpush.api.common.APIConnectionException;
 import cn.jpush.api.common.APIRequestException;
 import cn.jpush.api.push.PushResult;
+import cn.jpush.api.push.model.Platform;
 import cn.jpush.api.push.model.PushPayload;
+import cn.jpush.api.push.model.audience.Audience;
+import cn.jpush.api.push.model.notification.Notification;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,9 +29,13 @@ public class PushUtils {
     public static final String TAG = "tag_api";
     */
 
-    public static void pushMessage(String message) {
+    public static void pushMessageToAssociation(String message,String associationId) {
+        if (StringUtils.isEmpty(message) || StringUtils.isEmpty(associationId)){
+            return;
+        }
+
         JPushClient jPushClient = new JPushClient(masterSecret, appKey, 3);
-        PushPayload payload = buildPushObject(message);
+        PushPayload payload = buildPushObject(message,associationId);
 
         try {
             PushResult result = jPushClient.sendPush(payload);
@@ -42,7 +50,11 @@ public class PushUtils {
         }
     }
 
-    public static PushPayload buildPushObject(String alertMessage){
-        return PushPayload.alertAll(alertMessage);
+    public static PushPayload buildPushObject(String alertMessage,String associationId){
+        return PushPayload.newBuilder()
+                .setPlatform(Platform.all())
+                .setAudience(Audience.tag(associationId))
+                .setNotification(Notification.android(alertMessage, alertMessage, null))
+                .build();
     }
 }

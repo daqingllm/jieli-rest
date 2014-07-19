@@ -140,6 +140,6 @@ public class ActivityTest {
 
     @Test
     public void testPush() throws IOException {
-        PushUtils.pushMessage("123");
+        PushUtils.pushMessageToAssociation("123","5348205ce4b00b2ae52d3f5a");
     }
 }
