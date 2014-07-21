@@ -17,8 +17,8 @@ import org.apache.commons.lang.StringUtils;
 public class PushUtils {
     //public static final Logger LOG = LoggerFactory.getLogger(PushUtils.class);
 
-    private static final String appKey ="dd1066407b044738b6479275";
-    private static final String masterSecret = "2b38ce69b1de2a7fa95706ea";
+    private static final String appKey ="8b0672e88ad20bab12da5dfa";
+    private static final String masterSecret = "81181342c7b0f1e19c8c3ea2";
 
     /*
     public static final String TITLE = "Test from API example";

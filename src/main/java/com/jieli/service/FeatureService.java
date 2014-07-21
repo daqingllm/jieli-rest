@@ -36,6 +36,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * 功能列表页接口
@@ -801,7 +803,7 @@ public class FeatureService {
     @Path("/vote/detail")
     @GET
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-    public Response getVoteInfo(@CookieParam("u")String sessionId, @QueryParam("voteId")String voteId) {
+    public Response getVoteInfo(@CookieParam("u")String sessionId, @QueryParam("voteId")String voteId, @QueryParam("htmlDesc") String htmlDesc) {
         if(!IdentityUtils.isValidate(sessionId)) {
             return Response.status(403).build();
         }
@@ -817,6 +819,7 @@ public class FeatureService {
             responseEntity.msg = "投票信息不存在";
             return  Response.status(200).entity(responseEntity).build();
         }
+
         responseEntity.code = 200;
         responseEntity.body = voteInfo;
         return Response.status(200).entity(responseEntity).build();
@@ -931,6 +934,9 @@ public class FeatureService {
         }
         if(newVote.getDescription() != null) {
             oldVote.setDescription(newVote.getDescription());
+        }
+        if(newVote.getPicture() != null){
+            oldVote.setPicture(newVote.getPicture());
         }
         voteDAO.save(oldVote);
         responseEntity.code = 200;

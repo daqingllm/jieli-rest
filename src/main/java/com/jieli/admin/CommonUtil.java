@@ -15,6 +15,8 @@ import org.apache.commons.lang.StringUtils;
 
 import javax.ws.rs.core.Response;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by 95 on 2014/4/16.
@@ -229,4 +231,19 @@ public class CommonUtil {
 
         return newUserFace;
     }
+
+
+    public static String RemoveHtmlTags(String srcText){
+        if (StringUtils.isEmpty(srcText))
+            return "";
+
+        String regEx_html = "<[^>]+>";
+        String dstText = "";
+
+        Pattern p_html = Pattern.compile(regEx_html, Pattern.CASE_INSENSITIVE);
+        Matcher m_html = p_html.matcher(srcText);
+        dstText = m_html.replaceAll(""); // 过滤html标签
+        return dstText;
+    }
+
 }

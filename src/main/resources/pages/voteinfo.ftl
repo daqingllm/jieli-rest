@@ -252,6 +252,36 @@
                     <div class="space-4"></div>
 
                     <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right" for="form-field-imgurl"> 标题图 </label>
+
+                        <div class="col-sm-9">
+                            <div class="col-sm-9">
+                                <img width="150" height="150" src="" id="form-field-imgurl" style="display: none;float:left">
+                                <i id="delTitleImage" class="fa fa-times fa-times-bigger" onclick="deleteTitleImage()" style="display: none;"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="space-4"></div>
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right" for=""></label>
+
+                        <div class="col-sm-9" id="service-info">
+                            <!--<textarea id="form-field-textarea-service" class="autosize-transition col-xs-10 col-sm-7"
+                                      style="min-height: 140px;" placeholder="请用冒号和回车分隔服务信息"></textarea>-->
+                            <div><div class="btn btn-success btn-purple" style="float: left" id="uploadTitleImageClick">
+                                <i class="fa fa-cloud-upload bigger-110"></i>
+                                上传标题图片
+                            </div>
+                                <div class="alert alert-info" style="float: left;padding: 2px 14px;margin-left: 15px;margin-top: 7px;"> 请上传572*364的图片 </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="space-4"></div>
+
+                    <div class="form-group">
                         <label class="col-sm-3 control-label no-padding-right" for="form-field-select-type"> 类型 </label>
 
                         <div class="col-sm-9">
@@ -669,6 +699,7 @@
     function getTextAreaCursorPosition() {
         return $("#form-field-textarea").getCursorPosition();
     }
+    /*
     function uploadImgBox() {
         var spin_img = "<div id='upload-loading-img' style='margin-left:30px;margin-top:10px;display: none;'><i class='fa fa-spinner icon-spin orange bigger-125'></i></div>";
         spin_img = "";
@@ -744,9 +775,6 @@
 
                         //$("#upload-loading-img").attr("style","display: none");
                     }
-                    /*"callback": function () {
-                        $('#rest-upload-form').ajaxSubmit(uploadArticleImageOptions);
-                    }*/
                 },
                 "cancel": {
                     "label": "<i class='fa fa-times'></i> 取消",
@@ -760,6 +788,7 @@
             }
         });
     }
+    */
     (function ($, undefined) {
         $.fn.getCursorPosition = function () {
             var el = $(this).get(0);
@@ -1180,6 +1209,7 @@ jQuery(function($){
         alert('Dropzone.js does not support older browsers!');
     }
 
+    $("#uploadTitleImageClick").click(uploadImgBox);
 });
 
 function voteOptionDeleteImg(ph){
@@ -1305,14 +1335,19 @@ function check(request) {
 
 function voteInfo(voteId, callback) {
     $.ajax({
-        url: '/app/feature/vote/detail?voteId=' + voteId,
+        url: '/app/feature/vote/detail?htmlDesc=html&voteId=' + voteId,
         type: 'GET',
         success: function (response) {
             if (response.code == 200) {
                 $('#form-field-title').val(response.body.title);
                 $('#form-field-textarea').val(response.body.description);
 
-                addUploadedImages();
+                if (response.body.picture) {
+                    $('#form-field-imgurl').attr("src",response.body.picture);
+                    $('#form-field-imgurl').show();
+                }
+                $("#delTitleImage").show();
+                //addUploadedImages();
 
                 var deadLine = new Date(response.body.deadLine);
                 var dateString = deadLine.toISOString().substr(0, 10); //assume the program will not run after year 10000
@@ -1436,6 +1471,7 @@ function postNewVote() {
     request.deadLine = new Date($('#form-field-date').val());
     //request.description = $('#form-field-textarea').val();
     request.description = generateJieLiContent() || "";
+    request.picture = $("#form-field-imgurl").attr("src") || "";
     request.options = {};
     var index=0;
     $('.vote-choice-text').each(function() {
@@ -1471,6 +1507,7 @@ function postEditVote(voteId) {
     request.deadLine = new Date($('#form-field-date').val());
     //request.description = $('#form-field-textarea').val();
     request.description = generateJieLiContent() || "";
+    request.picture = $("#form-field-imgurl").attr("src") || "";
     request.options = {};
     var index=0;
     $('.vote-choice-text').each(function() {
