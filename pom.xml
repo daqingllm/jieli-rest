@@ -99,6 +99,11 @@
             <version>3.1.2</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.baidu.push</groupId>
+            <artifactId>push-java-sdk</artifactId>
+            <version>0.0.1</version>
+        </dependency>
     </dependencies>
     
 </project>
