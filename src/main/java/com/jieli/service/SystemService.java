@@ -1,5 +1,11 @@
 package com.jieli.service;
 
+import com.baidu.push.DefaultPushClient;
+import com.baidu.push.auth.PushCredentials;
+import com.baidu.push.model.Empty;
+import com.baidu.push.model.Tag;
+import com.baidu.push.reqeust.SetTagRequest;
+import com.baidu.push.response.PushResponse;
 import com.jieli.association.AssociationDAO;
 import com.jieli.common.dao.AccountDAO;
 import com.jieli.common.dao.FeedbackDAO;
@@ -7,20 +13,27 @@ import com.jieli.common.entity.Account;
 import com.jieli.common.entity.Feedback;
 import com.jieli.common.entity.ResponseEntity;
 import com.jieli.common.entity.SystemInfo;
+import com.jieli.message.MessageType;
+import com.jieli.message.Send2AllTask;
 import com.jieli.mongo.BaseDAO;
 import com.jieli.user.dao.UserDAO;
 import com.jieli.user.entity.User;
 import com.jieli.util.IdentityUtils;
 import com.jieli.util.PasswordGenerator;
+import com.jieli.util.PushUtils;
 import com.jieli.util.SmsUtils;
 import com.sun.jersey.spi.resource.Singleton;
+import com.sun.org.apache.bcel.internal.generic.RETURN;
 import org.apache.commons.lang.StringUtils;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import com.baidu.push.PushClient;
 
 /**
  * Created with IntelliJ IDEA.
@@ -209,4 +222,28 @@ public class SystemService {
         return Response.status(200).entity(responseEntity).build();
     }
 
+
+    @POST
+    @Path("/pushTags")
+    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+    public Response setPushTags(@CookieParam("u")String sessionId, List<String> tags) {
+        if (!IdentityUtils.isSuper(sessionId)) {
+            return Response.status(403).build();
+        }
+
+        ResponseEntity responseEntity = new ResponseEntity();
+        if (tags == null || tags.size() == 0){
+            responseEntity.code = 5001;
+            responseEntity.msg = "未选择协会";
+            return Response.status(200).entity(responseEntity).build();
+        }
+
+        for (String eachTag : tags){
+            PushUtils.AddTagAndroid(eachTag);
+        }
+
+        responseEntity.code = 200;
+        responseEntity.msg = "已设置为推送分组";
+        return Response.status(200).entity(responseEntity).build();
+    }
 }

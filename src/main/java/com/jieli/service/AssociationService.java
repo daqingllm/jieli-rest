@@ -9,6 +9,7 @@ import com.jieli.user.dao.UserDAO;
 import com.jieli.user.entity.User;
 import com.jieli.util.IdentityUtils;
 import com.jieli.util.PasswordGenerator;
+import com.jieli.util.PushUtils;
 import com.sun.jersey.spi.resource.Singleton;
 import org.apache.commons.lang.StringUtils;
 import org.codehaus.jettison.json.JSONException;
@@ -105,6 +106,8 @@ public class AssociationService {
 
             accountDAO.save(account);
             uname = account.username;
+
+            PushUtils.AddTagAndroid(id);
         }
 
         JSONObject json = new JSONObject();

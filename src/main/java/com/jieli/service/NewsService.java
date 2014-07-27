@@ -5,8 +5,6 @@ import com.jieli.comment.TopicType;
 import com.jieli.common.entity.PushMessageResult;
 import com.jieli.common.entity.ResponseEntity;
 import com.jieli.message.CommentMessageUtil;
-import com.jieli.message.MessageType;
-import com.jieli.message.Send2AllTask;
 import com.jieli.mongo.BaseDAO;
 import com.jieli.news.*;
 import com.jieli.util.*;
@@ -164,7 +162,11 @@ public class NewsService {
                 PushMessageResult pushMessageResult = PushUtils.pushMessageToAssociation(newsMsg.msg, news.associationId);
                 if (!PushMessageResult.SUCCESS.equals(pushMessageResult)){
                     responseEntity.code = 3102;
-                    responseEntity.msg = "推送失败";
+                    if (PushMessageResult.NO_GROUP.equals(pushMessageResult)){
+                        responseEntity.msg = "推送失败，无此推送分组，请联系系统管理员。";
+                    }else {
+                        responseEntity.msg = "推送失败。";
+                    }
                     return Response.status(200).entity(responseEntity).build();
                 }
             }

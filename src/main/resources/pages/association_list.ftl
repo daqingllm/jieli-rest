@@ -209,6 +209,12 @@
                         </button>
                         &nbsp;&nbsp;&nbsp;&nbsp;
 
+                        <button id="addPushGroup" class="btn btn-info" type="button" style="font-weight:bold;margin-bottom: 20px;" onclick="">
+                            <i class="fa fa-plus bigger-110"></i>
+                            添加为推送分组
+                        </button>
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+
                         <!-- PAGE CONTENT BEGINS -->
                         <table id="grid-table"></table>
                         <div id="grid-pager"></div>
@@ -521,9 +527,9 @@ jQuery(function($) {
         rowNum:10,
         rowList:[10,20,30],
         pager : pager_selector,
-        altRows: true,
+        /*altRows: true,*/
         multiselect: true,
-        multiboxonly: true,
+        /*multiboxonly: true,*/
 
         loadComplete : function() {
             var table = this;
@@ -536,7 +542,7 @@ jQuery(function($) {
             }, 0);
         },
 
-        caption: "想要创建新的协会，请点击左侧协会管理->创建协会",
+        caption: "如果某个协会的所有用户都无法接收推送信息，请点击添加为推送分组",
         autowidth: true
     });
 	
@@ -553,6 +559,35 @@ jQuery(function($) {
 
 
     $(".ui-jqgrid-htable").css("font-family","微软雅黑");
+
+    $("#addPushGroup").click(function(){
+        var ids = $("#grid-table").getGridParam("selarrrow");
+        if(ids.length == 0) {
+            alert("请选择协会");
+            return;
+        }
+
+        var associationIds = [];
+        for (var i = 0; i < ids.length; i++) {
+            var aid = $("#grid-table > tbody > tr").eq(ids[i]).find("td").eq(1).attr("title");
+            associationIds.push(aid);
+        }
+
+        $.ajax({
+            url: '/app/sys/pushTags',
+            data: JSON.stringify(associationIds),
+            type: 'POST',
+            contentType: 'application/json',
+            success: function(json){
+                if (json && json.msg)
+                    alert(json.msg);
+            },
+            error: function(XMLHttpRequest, textStatus, errorThrown) {
+                alert("操作失败，错误码："+XMLHttpRequest.status);
+                return;
+            }
+        });
+    });
 });
 
 jQuery(function ($) {

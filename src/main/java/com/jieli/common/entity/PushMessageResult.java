@@ -5,7 +5,7 @@ package com.jieli.common.entity;
  */
 public enum PushMessageResult {
 
-    SKIP(0),SUCCESS(1),NETWORK(2),OTHER_ERROR(3);
+    SKIP(0),SUCCESS(1),NETWORK(2),OTHER_ERROR(3),NO_GROUP(4);
 
     private int value;
 

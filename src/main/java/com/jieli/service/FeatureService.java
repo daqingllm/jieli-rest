@@ -36,8 +36,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * 功能列表页接口
@@ -885,7 +883,12 @@ public class FeatureService {
             PushMessageResult pushMessageResult = PushUtils.pushMessageToAssociation(voteMsg.msg, associationId);
             if (!PushMessageResult.SUCCESS.equals(pushMessageResult)){
                 responseEntity.code = 3102;
-                responseEntity.msg = "推送失败";
+
+                if (PushMessageResult.NO_GROUP.equals(pushMessageResult)){
+                    responseEntity.msg = "推送失败，无此推送分组，请联系系统管理员。";
+                }else {
+                    responseEntity.msg = "推送失败。";
+                }
                 return Response.status(200).entity(responseEntity).build();
             }
         }

@@ -340,7 +340,7 @@ function postThisArticle(images,topPic){
                     suc = false;
 
                     if (ret.code == 3102){
-                        errmsg = "资讯添加或编辑成功,但是推送失败";
+                        errmsg = "资讯添加或编辑成功,但是" + (ret.msg || "");
                     }
                 }
             },
@@ -662,7 +662,7 @@ function finishActivity(type){
                 if (data.code != 200){
                     suc = false;
                     if (data.code == 3102){
-                        errmsg = "活动添加或编辑成功,但是推送失败";
+                        errmsg = "活动添加或编辑成功,但是" + (ret.msg || "");;
                     }
                 }
             },

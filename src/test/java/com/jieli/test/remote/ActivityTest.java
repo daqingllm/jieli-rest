@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jieli.activity.AcivityTag;
 import com.jieli.activity.Activity;
 import com.jieli.activity.Arrangement;
+import com.jieli.admin.CommonUtil;
 import com.jieli.util.PushUtils;
 import org.apache.http.client.fluent.Request;
 import org.apache.http.client.fluent.Response;
@@ -140,6 +141,21 @@ public class ActivityTest {
 
     @Test
     public void testPush() throws IOException {
-        PushUtils.pushMessageToAssociation("123","5348205ce4b00b2ae52d3f5a");
+        //PushUtils.pushMessageToAssociation("123", "5348205ce4b00b2ae52d3f5a");
+        String test = "and";
+        if (test == "ios" || test == "all") {
+            PushUtils.pushMessageToAssociation("from xx for jieli - sn2", CommonUtil.Test_AssociationId);
+        }
+        if (test == "and" || test == "all") {
+            PushUtils.AddTagAndroid(CommonUtil.Test_AssociationId);
+            //PushUtils.pushMessageToAssociation_Android("from xx for jieli - sn1", CommonUtil.QQX_AssociationId);
+            //PushUtils.pushMessageToAssociation_Android_ALL();
+        }
+    }
+
+    @Test
+    public void deleteTag(){
+        String tag = "test";
+        PushUtils.deleteTag(tag);
     }
 }

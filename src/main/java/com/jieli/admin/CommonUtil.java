@@ -225,7 +225,7 @@ public class CommonUtil {
         }
 
         // syea协会
-        if ("5348205ce4b00b2ae52d3f5a".equals(associationId)){
+        if (QQX_AssociationId.equals(associationId)){
             newUserFace += "?imageMogr/v2/gravity/Center/crop/780x780";
         }
 
@@ -246,4 +246,6 @@ public class CommonUtil {
         return dstText;
     }
 
+    public static final String QQX_AssociationId = "5348205ce4b00b2ae52d3f5a";
+    public static final String Test_AssociationId = "53855ab8e82d1e1013df7939";
 }
