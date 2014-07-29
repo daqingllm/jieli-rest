@@ -50,6 +50,9 @@ public class Model implements Serializable {
 
     @Override
     public int hashCode() {
-        return _id.hashCode();
+        if (_id != null)
+            return _id.hashCode();
+        else
+            return -1;
     }
 }
