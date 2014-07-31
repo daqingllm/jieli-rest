@@ -77,7 +77,7 @@ public class News {
             params.put("isSuper",true);
 
             String associationIdPointedBySuper = (!StringUtils.isEmpty(associationId) ? "associationId:\"" + associationId + "\"," : "");
-            newses = newsDAO.paginateInOrder(paramPage, paramRowNum,"{addTime:-1}", "{"+associationIdPointedBySuper+"type: {$in: " +
+            newses = newsDAO.paginateInOrder(paramPage, paramRowNum,"{topPic:-1,addTime:-1}", "{"+associationIdPointedBySuper+"type: {$in: " +
                     "[\""+NewsType.newsType+"\",\""+NewsType.associationType+"\",\""+NewsType.enterpriseType+"\",\"" +NewsType.benefitType+"\""+
                     "]}}");
         }else{
@@ -86,7 +86,7 @@ public class News {
             params.put("assIdOptionList","<option value='"+association+"' selected>&nbsp;</option>");
             String associationWhere = "";
             if (association != null && association != "") associationWhere = "associationId:\"" + association + "\",";
-            newses = newsDAO.paginateInOrder(paramPage, paramRowNum,"{addTime:-1}", "{"+associationWhere+"type: {$in: " +
+            newses = newsDAO.paginateInOrder(paramPage, paramRowNum,"{topPic:-1,addTime:-1}", "{"+associationWhere+"type: {$in: " +
                     "[\""+NewsType.associationType+"\",\""+NewsType.enterpriseType+"\",\""+NewsType.benefitType+"\",\"" + NewsType.historyType + "\"" +
                     "]}}");
         }
